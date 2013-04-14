@@ -1,0 +1,28 @@
+{
+  "name": "legoa-www",
+  "description": "",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.yandex-team.ru/lego/legoa-www.git"
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "dependencies": {
+    "inherit": "~1.0.4",
+    "vow": "~0.3.0",
+    "ym": "0.0.1",
+    "cookie": "0.0.6"
+  },
+  "devDependencies": {
+    "bem": "~0.5.30",
+    "nodemon": "~0.7.6"
+  },
+  "scripts": {
+    "start": "nodemon -w desktop.bundles/ -e '.node.js|.bemtree.xjst.js|.bemhtml.js' -d 1 ./desktop.bundles/common/_common.node.js"
+  },
+  "author": "lego-team@yandex-team.ru",
+  "readmeFilename": "README.md",
+  "private": true
+}

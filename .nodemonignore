@@ -1,0 +1,4 @@
+# .nodemonignore file
+# ignore uncompressed files match to `bundles/page/page.js` pattern
+:.*[^\/]+\/[^\/]+\/([^_])*.js$
+

@@ -1,0 +1,16 @@
+.DS_Store
+.idea
+.settings
+.project
+
+.bem/cache
+.bem/snapshots
+
+node_modules
+vendor
+datasrc
+
+desktop.bundles/*/*.*
+!desktop.bundles/*/*.bemdecl.js
+!desktop.bundles/.bem/*
+
