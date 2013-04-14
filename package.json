@@ -12,8 +12,8 @@
   "dependencies": {
     "inherit": "~1.0.4",
     "vow": "~0.3.0",
-    "ym": "0.0.1",
-    "cookie": "0.0.6"
+    "ym": "~0.0.1",
+    "cookie": "~0.0.6"
   },
   "devDependencies": {
     "bem": "~0.5.30",
