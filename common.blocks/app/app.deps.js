@@ -3,9 +3,9 @@
         { block : 'modules' }
     ],
     shouldDeps : [
-        { block : 'http' },
-        { block : 'handler', mods : { 'type' : 'common' } },
-        { block : 'cluster' },
+        { block : 'yana-http' },
+        { block : 'yana-handler', mods : { 'type' : 'common' } },
+        { block : 'yana-cluster' },
         { elem : 'config' }
     ]
 })
