@@ -1,28 +1,38 @@
 (function(app) {
 
-var hosts = {
+var OS = require('os'),
+    PATH = require('path'),
+    socketPath = PATH.join(OS.tmpDir(), ['varankinv-', PATH.basename(app.app_root), '-www.sock'].join('')),
+    hosts = {
         blackbox : {
             host : 'http://blackbox.yandex-team.ru',
             domain : 'yandex-team.ru'
         },
 
         passport : {
-            host : '//passport.yandex-team.ru',
+            host : 'http://passport.yandex-team.ru',
         },
 
         center : {
-            host : '//center.yandex-team.ru'
+            host : 'http://center.yandex-team.ru'
         }
     },
     node = {
-        port   : 3042,
-        socket : '', // TODO
-        workers : 2
+        debug : true,
+        app : {
+            socket : socketPath,
+            workers : 2
+        }
     };
 
-modules.define('yana:config', ['yana:util'], function(provide, util, config) {
+modules.define('yana-config', ['yana-util'], function(provide, util, config) {
 
-provide(util.extend(config, app, hosts, { debug : true, node : node }));
+provide(util.extend(
+    config,
+    app,
+    hosts,
+    node
+));
 
 });
 
