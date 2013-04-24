@@ -13,7 +13,6 @@ http://planner.yandex-team.ru/project/10690
       .bem/
         cache/
           # каждую библиотеку (и ее депенды) сливаем в кеш плоским списком (1)
-
           025b3385f5538eca3f2fffed4d375aef9cc4d329/
           345a0e972d28d19623a2f0ee1910857b806f5434/
           3717c40df3d5afa17ca728774d2c32dbceb61030/
