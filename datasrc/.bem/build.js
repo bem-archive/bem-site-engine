@@ -14,12 +14,19 @@ var CP = require('child_process'),
     nodes = BEM.require('./nodes/node'),
     libNodes = BEM.require('./nodes/lib'),
 
-    U = BEM.util,
+    U = BEM.util;
+
+process.env.__root_level_dir = PATH.resolve(__dirname, '../../.bem');
+
+var environ = require('../../.bem/environ'),
+    BGD_ROOT = environ.getLibPath('bem-gen-doc'),
 
     datasrcRoot = PATH.dirname(__dirname),
+    cacheRoot = PATH.join(datasrcRoot, '.bem/cache'),
     opts = {
-        root : PATH.join(datasrcRoot, '.bem/cache/fa9c837815fd65a33943168b1d0f01d15d02592d')
+        root : PATH.join(cacheRoot, '2c38c37dad23ac80adc43c34818292a459bbc510') // islands-popups
     };
+
 
 function createArch(opts) {
     var arch = new APW.Arch(),
@@ -67,12 +74,12 @@ function evalConfig(content, path) {
     VM.runInNewContext(
         content,
         U.extend({}, global, {
-            MAKE: require(opts.root + '/node_modules/bem/lib/nodesregistry'),
-            module: null,
-            __filename: path,
-            __dirname: PATH.dirname(path),
-            require: requireFunc,
-            include: getIncludeFunc(resolvePath)
+            MAKE : REGISTRY,
+            module : null,
+            __filename : path,
+            __dirname : PATH.dirname(path),
+            require : requireFunc,
+            include : getIncludeFunc(resolvePath)
         }),
         path);
 }
@@ -91,28 +98,27 @@ createArch(opts)
     .then(function(archNode) {
         var arch = archNode.arch,
             libs = archNode.getLibraries();
-        console.log(libs)
 
-        archNode.libraries = Object.keys(libs).reduce(function(list, id) {
-            var name = PATH.basename(id),
-                credential = libs[id],
-                ck = cacheKey(name),
-                pathCk = PATH.relative(__dirname, PATH.join('cache', ck));
-
-                if(!cache[pathCk]) {
-                    credential.originalId = id;
-                    cache[pathCk] = credential;
-                }
-
-            list[id] = {
-                type : 'symlink',
-                relative : PATH.relative(archNode.root, pathCk),
-                npmPackages : false
-            };
-
-            return list;
-        }, {});
-
+//        archNode.libraries = Object.keys(libs).reduce(function(list, id) {
+//            var name = PATH.basename(id),
+//                credential = libs[id],
+//                ck = cacheKey(name),
+//                pathCk = PATH.relative(__dirname, PATH.join('cache', ck));
+//
+//                if(!cache[pathCk]) {
+//                    credential.originalId = id;
+//                    cache[pathCk] = credential;
+//                }
+//
+//            list[id] = {
+//                type : 'symlink',
+//                relative : PATH.relative(archNode.root, pathCk),
+//                npmPackages : false
+//            };
+//
+//            return list;
+//        }, {});
+//
 //        var cacheNode = new nodes.Node('cache');
 //        arch.setNode(cacheNode);
 //
@@ -144,68 +150,70 @@ createArch(opts)
 
                     arch.setNode(libNode, lib.originalId);
                 }, archNode);
-
-                // XXX: восстанавливаем значение `__root_level_dir` на уровен проекта
-                process.env.__root_level_dir = PATH.resolve(__dirname, '../../.bem');
-
-                var environ = require('../../.bem/environ'),
-                    introspectNodes = require(environ.getLibPath('bem-gen-doc', '.bem/nodes/introspect.js')),
-                    outputNodes = require(environ.getLibPath('bem-gen-doc', '.bem/nodes/output.js'));
-
-                var introspectNode = new introspectNodes.IntrospectNode({
+*/
+                var introspectNodes = require(PATH.join(BGD_ROOT, '.bem/nodes/introspect.js')),
+                    introspectNode = new introspectNodes.IntrospectNode({
                         root : opts.root,
-                        paths : ['common.blocks'],
+                        paths : [
+                            'common.blocks',
+                            'islands-controls/common.blocks'
+                        ],
                         langs : ['ru']
-                    }),
-                    itemNode = new outputNodes.CatalogueItemNode({
-                        root : opts.root,
-                        level : PATH.join(opts.root, 'release'),
-                        item : { block : 'islands-popups' },
-                        techName : 'data.json'
                     });
 
-                var blockPath = PATH.join(datasrcRoot, '_islands-popups', 'blocks');
-
-                return QFS.makeTree(blockPath)
-                    .then(function() {
-                        return itemNode.getMeta();
-                    })
-                    .then(function(meta) {
-
-                        return Q.all(Object.keys(meta).map(function(block) {
-                            return this.translateMeta(meta[block])
-                                .then(function(data) {
-                                    return U.writeFileIfDiffers(
-                                            PATH.join(blockPath, [block, 'json.js'].join('.')),
-                                            JSON.stringify(data, null, 2));
-                                });
-                        }, this));
-
-                    }.bind(itemNode))
-                    .then(function() {
-                        return arch;
-                    });
-
-                arch.setNode(introspectNode, null, cacheNode);
+                arch.setNode(introspectNode);
 //                arch.setNode(itemNode, null, introspectNode);
 
 //                var node = siteNode.createCommonSiteNode();
 //                arch.addParents(node, cacheNode);
 //                siteNode.createSiteBundlesNode(node);
 
-                console.log(arch.toString())
+                console.log(arch.toString());
+                return arch;
+//            });
+
+//        return archNode.alterArch()
+//            .then(function() {
+//
+//
+//            });
+    })
+    .then(function(arch) {
+        process.env.__root_level_dir = PATH.join(opts.root, '.bem');
+
+        var outputNodes = require(PATH.join(BGD_ROOT, '.bem/nodes/output.js')),
+            itemNode = new outputNodes.CatalogueItemNode({
+                root : opts.root,
+                level : PATH.join(opts.root, 'release'),
+                item : { block : 'islands-popups' },
+                techName : 'data.json'
+            });
+
+        var blockPath = PATH.join(datasrcRoot, '_islands-popups', 'blocks');
+
+        return QFS.makeTree(blockPath)
+            .then(function() {
+                return itemNode.getMeta();
+            })
+            .then(function(meta) {
+
+                return Q.all(Object.keys(meta).map(function(block) {
+                    return this.translateMeta(meta[block])
+                        .then(function(data) {
+                            return U.writeFileIfDiffers(
+                                    PATH.join(blockPath, [block, 'json.js'].join('.')),
+                                    JSON.stringify(data, null, 2));
+                        });
+                }, this));
+
+            }.bind(itemNode))
+            .then(function() {
                 return arch;
             });
-
-        return archNode.alterArch()
-            .then(function() {
-
-
-            });
-        */
+        return arch;
     })
-//    .then(function(arch) {
-//        return new MAKE.APW(arch, MAKE.DEFAULT_WORKERS, opts)
-//            .findAndProcess(['machine-introspect*']);
-//    })
+    .then(function(arch) {
+        return new MAKE.APW(arch, MAKE.DEFAULT_WORKERS, opts)
+            .findAndProcess(['machine-introspect*']);
+    })
     .done();
