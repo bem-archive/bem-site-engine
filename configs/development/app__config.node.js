@@ -10,7 +10,7 @@ var OS = require('os'),
         },
 
         passport : {
-            host : 'http://passport.yandex-team.ru',
+            host : 'http://passport.yandex-team.ru'
         },
 
         center : {
