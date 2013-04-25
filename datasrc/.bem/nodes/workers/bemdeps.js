@@ -1,8 +1,15 @@
 var PATH = require('path'),
     FS = require('fs'),
     VM = require('vm'),
-    BEM = require('bem'),
-    Q = BEM.require('q'),
+    BEM;
+
+try {
+    BEM = require(PATH.join(process.cwd(), 'node_modules', 'bem'));
+} catch (e) {
+    BEM = require('bem');
+}
+
+var Q = BEM.require('q'),
     QFS = BEM.require('q-fs'),
     APW = BEM.require('apw'),
     registry = BEM.require('./nodesregistry');
@@ -63,16 +70,21 @@ function evalConfig(content, path) {
         path);
 }
 
-process.on('message', function(m) {
-    if(!m.root)
-        return;
+process.once('message', function(m) {
+    var root = m.root;
+    process.env.__root_level_dir = '';
 
-    createArch({ root : m.root })
+    createArch({ root : root })
         .then(function(archNode) {
-            var libs = archNode.getLibraries();
-            process.send(libs);
+            var libraries = archNode.getLibraries();
+            process.send({ root : root, code : 0, deps : libraries });
+        })
+        .fail(function(err) {
+            process.send({
+                root : root,
+                code : 1,
+                msg : err.stack || err
+            });
         })
         .done();
 });
-
-//process.exit();
