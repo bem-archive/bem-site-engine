@@ -20,7 +20,7 @@ var PATH = require('path'),
     .alterArch()
     .then(function(arch) {
         return new MAKE.APW(arch, MAKE.DEFAULT_WORKERS, opts)
-            .findAndProcess(['cache']);
+            .findAndProcess(['sources']);
     })
     .fin(function() {
         console.log(arch.toString());
