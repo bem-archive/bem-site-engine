@@ -92,7 +92,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
         this.__base(o);
         this.root = o.root;
         this.item = o.item;
-        this.path = '_' + o.item.id;
+        this.path = '_' + o.item._id;
     },
 
     getPath : function() {
@@ -100,37 +100,41 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
     },
 
     make : function() {
-        return this.ctx.arch.withLock(this.createIntrospectorNode(), this);
+        return this.ctx.arch.withLock(this.alterArch(), this);
+    },
+
+    alterArch : function() {
+        return function() {
+            return this.createIntrospectorNode();
+        };
     },
 
     createIntrospectorNode : function() {
-        var ctx = this.ctx;
-        return function() {
-            var arch = ctx.arch,
-                lib = this.item,
-                cacheItemNode = ctx.arch.getNode(lib._id + '*'),    // FIXME: hardcode
-                spectrNode = new introspectorNodes.IntrospectorNode({
-                    id : lib._id + '-spectr',
-                    root : cacheItemNode.getPath(),
-                    sources : ['common.blocks']     // FIXME: hardcode
-                }),
-                realSINode = new nodes.Node(this.path);
+        var ctx = this.ctx,
+            lib = this.item,
+            arch = ctx.arch,
+            cacheItemNode = ctx.arch.getNode(lib._id + '*'),    // FIXME: hardcode
+            spectrNode = new introspectorNodes.IntrospectorNode({
+                id : lib._id + '-spectr',
+                root : cacheItemNode.getPath(),
+                sources : ['common.blocks']     // FIXME: hardcode
+            }),
+            realSINode = new nodes.Node(this.path);
 
-            arch.setNode(realSINode, arch.getParents(this));
+        arch.setNode(realSINode, arch.getParents(this));
 
-            return spectrNode.getStruct()
-                .then(function(decl) {
-                    var spectrItemNode = new introspectorNodes.IntrospectorItemNode({
-                        root : this.root,
-                        path : lib._id,
-                        decl : decl
-                    });
+        return spectrNode.getStruct()
+            .then(function(decl) {
+                var spectrItemNode = new introspectorNodes.IntrospectorItemNode({
+                    root : this.root,
+                    path : lib._id,
+                    decl : decl
+                });
 
-                    arch.setNode(spectrItemNode, realSINode, cacheItemNode.getId());
+                arch.setNode(spectrItemNode, realSINode, cacheItemNode.getId());
 
-                    return spectrItemNode;
-                }.bind(this));
-        };
+                return spectrItemNode;
+            }.bind(this));
     }
 
 }, {
