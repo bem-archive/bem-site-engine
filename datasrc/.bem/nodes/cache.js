@@ -113,7 +113,7 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
             }));
     },
 
-    getAbsolutePath : function() {
+    getPath : function() {
         return PATH.join(this.root, this.path);
     }
 

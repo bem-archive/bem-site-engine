@@ -91,7 +91,7 @@ registry.decl(LibraryNodeName, {
                 var depNode = new libNodes.SymlinkLibraryNode({
                         root : this.getPath(),
                         target : lib,
-                        relative : PATH.relative(this.getPath(), cacheItemNode.getAbsolutePath()),
+                        relative : PATH.relative(this.getPath(), cacheItemNode.getPath()),
                         npmPackages : false
                     });
 
