@@ -29,21 +29,23 @@ registry.decl(LibraryNodeName, {
      * @override
      */
     installLibraryDependencies : function() {
-        return Q.when(this.__base.apply(this, arguments)).then(function() {
-            if(!this.bemDeps)
-                return;
-
-            return this.getBemDependensies()
-                .then(function(libs) {
-                    if(Array.isArray(libs))
-                        return Q.reject(libs);
-
-                    return this.addBemDependencies(libs);
-                }.bind(this));
-        }.bind(this));
+        var base = this.__base.bind(this, arguments);
+        return Q.when(this.getBemDependensies(),
+            function(libs) {
+                if(!libs || Array.isArray(libs)) {
+                    return;
+                }
+                return this.addBemDependencies(libs);
+            }.bind(this))
+            .fin(function() {
+                return base();
+            });
     },
 
     getBemDependensies : function() {
+        if(!this.bemDeps)
+            return;
+
         var defer = Q.defer(),
             root = this.getPath(),
             worker = CP.fork(PATH.join(__dirname, 'workers', 'bemdeps.js'), null, {
