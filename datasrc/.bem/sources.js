@@ -23,8 +23,8 @@ registry.decl(sourceNodes.SourceNodeName, {
         return [
 //            'islands-controls',
             'islands-popups',
-//            'islands-user',
-//            'islands-media'
+            'islands-user',
+            'islands-media'
         ];
     }
 

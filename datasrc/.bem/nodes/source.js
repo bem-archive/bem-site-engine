@@ -11,6 +11,7 @@ var PATH = require('path'),
     environ = require(PATH.join(PRJ_ROOT, '.bem/environ.js')),
     outputNodes = require(environ.getLibPath('bem-gen-doc', '.bem/nodes/output.js')),
 
+    U = BEM.util,
     CACHE_NODEID = exports.CACHE_NODEID = 'cache',
     SOURCE_NODEID = exports.SOURCE_NODEID = 'sources';
 
@@ -39,7 +40,10 @@ registry.decl(SourceNodeName, {
                         root : this.root,
                         item : lib
                     });
+
                 this.arch.setNode(itemNode, sourceNode);
+
+                return itemNode;
             }, this))
             .then(function() {
                 return this.arch;
@@ -122,12 +126,12 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 .then(function(page) {
                     return [
                         page,
-                        Q.fcall(this.createIntrospectorNode.bind(this), null, this._cacheItemNode.getId())
+                        Q.fcall(_t.createIntrospectorNode.bind(_t), null, _t._cacheItemNode.getId())
                     ];
-                }.bind(this))
+                })
                 .spread(function(page, spectr) {
-                    return Q.when(this.createPageItemNode(page, spectr));
-                }.bind(this))
+                    return Q.fcall(_t.createPageItemNode.bind(_t), page, spectr);
+                })
                 .then(function() {
                     return _t.ctx.arch;
                 });
@@ -168,11 +172,11 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 .then(function(data) {
                     var piNode = new pageNodes.PageItemNode({
                         root : this.root,
-                        data : data,
+                        data : this._decl,
                         path : PATH.join(parent.path, block)
                     });
 
-                    arch.setNode(piNode, parent, child);
+                    return arch.setNode(piNode, parent, child);
 
                     return piNode;
                 }.bind(this));
@@ -200,7 +204,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
         var item = this.item;
         return spectrNode.getStruct()
             .then(function(decl) {
-                this._decl = decl;
+                this._decl = U.extend({}, decl);
 
                 var spectrItemNode = new introspectorNodes.IntrospectorItemNode({
                     root : this.root,

@@ -26,9 +26,9 @@ registry.decl(IntrospectorNodeName, nodes.NodeName, {
         this.sources = o.sources;
     },
 
-    make : function() {
-        return this.ctx.arch.withLock(this.alterArch(), this);
-    },
+//    make : function() {
+//        return this.ctx.arch.withLock(this.alterArch(), this);
+//    },
 
     alterArch : function() {
         // TODO:

@@ -22,13 +22,13 @@ registry.decl(PageNodeName, nodes.NodeName, {
         this.path = this.__self.getNodePath(o);
     },
 
-    getPath : function() {
-        return PATH.join(this.root, this.path);
-    },
-
-    make : function() {
-        return QFS.makeTree(this.getPath());
-    }
+//    getPath : function() {
+//        return PATH.join(this.root, this.path);
+//    },
+//
+//    make : function() {
+//        return QFS.makeTree(this.getPath());
+//    }
 
 }, {
 
@@ -61,7 +61,12 @@ registry.decl(PageItemNodeName, fileNodes.GeneratedFileNodeName, {
     },
 
     make : function() {
-        return U.writeFileIfDiffers(this.getPath(), JSON.stringify(this.data, null, 2));
+        var path = this.getPath(),
+            data = this.data;
+        return QFS.makeTree(PATH.dirname(path))
+            .then(function() {
+                return U.writeFileIfDiffers(path, JSON.stringify(data, null, 2));
+            });
     }
 
 });
