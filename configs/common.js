@@ -22,8 +22,8 @@ module.exports = {
         { rule : '/', action : 'index' },
         { rule : '/libs', action : 'libraries' },
         { rule : '/libs/{id}', action : 'library' },
-        { rule : '/libs/{id}/catalogue', action : 'catalogue' },
-        { rule : '/libs/{id}/catalogue/{block}', action : 'item' }
+        { rule : '/libs/{id}/blocks', action : 'catalogue' },
+        { rule : '/libs/{id}/blocks/{block}', action : 'catalogue' }
     ]
 
 };

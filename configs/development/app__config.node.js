@@ -15,18 +15,24 @@ var OS = require('os'),
 
         center : {
             host : 'http://center.yandex-team.ru'
+        },
+
+        datasrc : {
+            root : PATH.join(app.app_root, 'datasrc')
         }
     },
     node = {
         debug : true,
         app : {
-            socket : socketPath,
+            port : 3014,
+            //socket : socketPath,
             workers : 2
-        }
+        },
+        static_host : '//127.0.0.1:8080/'
     };
 
 modules.define('yana-config', ['yana-util'], function(provide, util, config) {
-    provide(util.extend(config, app, hosts, node));
+    provide(util.extend(config, app, { hosts : hosts }, node));
 });
 
 }(require(require('path').resolve(__dirname, '../../configs/common.js'))));
