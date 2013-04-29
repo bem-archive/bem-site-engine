@@ -1,0 +1,10 @@
+block arrow {
+
+    content: {
+        block : 'service',
+        url : '/',
+        icon : false,
+        name : 'Лего'
+    }
+
+}
