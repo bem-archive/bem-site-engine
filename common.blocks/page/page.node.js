@@ -1,0 +1,55 @@
+modules.define(
+    'yana-view',
+    ['yana-template', 'yana-config', 'yana-logger', 'yana-util'],
+    function(provide, template, config, logger, util, View) {
+
+var URL = require('url');
+
+provide(View.decl('page', {
+
+    __constructor : function() {
+        this.__base.apply(this, arguments);
+
+        this._template = template.load(config.common_bundle_name);
+    },
+
+    createContext : function() {
+        return {
+            req : this._req,
+            res : this._res,
+            params : this._params,
+            bundleName : config.common_bundle_name,
+            staticUrl : URL.resolve(
+                    config.static_host, config.common_bundle_path),
+            yaApiHosts : config.hosts,
+            pageName : 'My page!'
+        };
+    },
+
+    getMode : function() {
+        return this._req.query.__mode;
+    },
+
+    _buildBemjson : function(ctx) {
+        return this._template.then(function(t) { return t.bemtree.call(ctx) });
+    },
+
+    _buildHtml : function(bemjson) {
+        return this._template.then(function(t) { return t.bemhtml.apply(bemjson) });
+    },
+
+    render : function(ctx) {
+        logger.debug('Going to render page "%s"', this._getName());
+
+        return this._buildBemjson(ctx).then(function(json) {
+            if(this.getMode() === 'json') {
+                return util.format('<pre>%s</pre>', JSON.stringify(json, null, 2));
+            }
+
+            return this._buildHtml(json);
+        }.bind(this));
+    }
+
+}));
+
+});
