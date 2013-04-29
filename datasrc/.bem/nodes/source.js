@@ -5,9 +5,11 @@ var PATH = require('path'),
     nodes = BEM.require('./nodes/node.js'),
     cacheNodes = require('./cache.js'),
     introspectorNodes = require('./introspector.js'),
+    pageNodes = require('./page.js'),
 
     PRJ_ROOT = PATH.resolve(__dirname, '../../../'),
     environ = require(PATH.join(PRJ_ROOT, '.bem/environ.js')),
+    outputNodes = require(environ.getLibPath('bem-gen-doc', '.bem/nodes/output.js')),
 
     CACHE_NODEID = exports.CACHE_NODEID = 'cache',
     SOURCE_NODEID = exports.SOURCE_NODEID = 'sources';
@@ -93,6 +95,9 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
         this.root = o.root;
         this.item = o.item;
         this.path = '_' + o.item._id;
+
+        this._decl = [];
+        this._cacheItemNode = null;
     },
 
     getPath : function() {
@@ -104,34 +109,106 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
     },
 
     alterArch : function() {
+        var _t = this,
+            ctx = this.ctx;
+
         return function() {
-            return this.createIntrospectorNode();
+            var arch = ctx.arch,
+                item = this.item;
+
+            _t._cacheItemNode = arch.getNode(item._id + '*');    // FIXME: hardcode
+
+            return Q.when(this.createPageNode())
+                .then(function(page) {
+                    return [
+                        page,
+                        Q.fcall(this.createIntrospectorNode.bind(this), null, this._cacheItemNode.getId())
+                    ];
+                }.bind(this))
+                .spread(function(page, spectr) {
+                    return Q.when(this.createPageItemNode(page, spectr));
+                }.bind(this))
+                .then(function() {
+                    return _t.ctx.arch;
+                });
         };
     },
 
-    createIntrospectorNode : function() {
+    createPageNode : function() {
         var ctx = this.ctx,
-            lib = this.item,
             arch = ctx.arch,
-            cacheItemNode = ctx.arch.getNode(lib._id + '*'),    // FIXME: hardcode
-            spectrNode = new introspectorNodes.IntrospectorNode({
-                id : lib._id + '-spectr',
-                root : cacheItemNode.getPath(),
-                sources : ['common.blocks']     // FIXME: hardcode
+            pageNode = new pageNodes.PageNode({
+                root : this.root,
+                item : this.item,
+                path : this.path
             }),
             realSINode = new nodes.Node(this.path);
 
-        arch.setNode(realSINode, arch.getParents(this));
+        arch.setNode(realSINode, arch.getParents(this), this._cacheItemNode.getId());
+        arch.setNode(pageNode, realSINode);
 
+        return pageNode;
+    },
+
+    createPageItemNode : function(parent, child) {
+        var arch = this.ctx.arch,
+            decl = this._decl,
+
+            // FIXME: ugly!
+            root = this._cacheItemNode.getPath(),
+            itemNode = new outputNodes.CatalogueItemNode({
+                root : root,
+                level : '',
+                item : { block : this.item._id },
+                techName : 'json.js'
+            });
+
+        return Q.all(Object.keys(decl).map(function(block) {
+            return Q.fcall(itemNode.translateMeta.bind(itemNode), decl[block])
+                .then(function(data) {
+                    var piNode = new pageNodes.PageItemNode({
+                        root : this.root,
+                        data : data,
+                        path : PATH.join(parent.path, block)
+                    });
+
+                    arch.setNode(piNode, parent, child);
+
+                    return piNode;
+                }.bind(this));
+        }, this));
+    },
+
+    createIntrospectorNode : function(parent, child) {
+        var arch = this.ctx.arch,
+            root = this._cacheItemNode.getPath(),
+            spectrNode = new introspectorNodes.IntrospectorNode({
+                root : this.root,
+                item : this.item,
+                libRoot : root,
+                sources : ['common.blocks']     // FIXME: hardcode
+            });
+
+//        parent = arch.getNode(this.path);
+//
+//        arch.setNode(spectrNode, parent, child);
+//        // FIXME: ugly!
+//        spectrNode._sourceItemNode = this;
+//
+//        return spectrNode;
+
+        var item = this.item;
         return spectrNode.getStruct()
             .then(function(decl) {
+                this._decl = decl;
+
                 var spectrItemNode = new introspectorNodes.IntrospectorItemNode({
                     root : this.root,
-                    path : lib._id,
+                    path : item._id,
                     decl : decl
                 });
 
-                arch.setNode(spectrItemNode, realSINode, cacheItemNode.getId());
+                arch.setNode(spectrItemNode, parent, child);
 
                 return spectrItemNode;
             }.bind(this));

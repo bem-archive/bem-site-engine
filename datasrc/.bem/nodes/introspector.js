@@ -20,15 +20,40 @@ registry.decl(IntrospectorNodeName, nodes.NodeName, {
     __constructor : function(o) {
         this.__base(o);
         this.root = o.root;
+        this.item = o.item;
+
+        this.libRoot = o.libRoot;
         this.sources = o.sources;
     },
 
     make : function() {
-        return this.getStruct().then(console.log);
+        return this.ctx.arch.withLock(this.alterArch(), this);
+    },
+
+    alterArch : function() {
+        // TODO:
+        var ctx = this.ctx;
+        return function() {
+            var arch = ctx.arch;
+
+            return this.getStruct().then(function(decl) {
+                this._sourceItemNode._decl = decl;
+
+                var spectrItemNode = new (registry.getNodeClass(IntrospectorItemNodeName))({
+                    root : this.root,
+                    path : this.item._id,
+                    decl : decl
+                });
+
+                arch.setNode(spectrItemNode, arch.getParents(this));
+
+                return spectrItemNode;
+            }.bind(this));
+        };
     },
 
     getStruct : function() {
-        var root = this.root;
+        var root = this.libRoot;
         return Q.reduceLeft(this.sources, function(decls, level) {
             var levelPath = PATH.resolve(root, level);
 
@@ -46,7 +71,7 @@ registry.decl(IntrospectorNodeName, nodes.NodeName, {
 }, {
 
     createId : function(o) {
-        return o.id;
+        return o.item._id + '/introspect*';
     }
 
 });
