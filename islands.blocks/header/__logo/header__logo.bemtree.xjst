@@ -1,0 +1,8 @@
+block header, elem logo {
+
+    content: {
+        block : 'logo',
+        mods : { lang : 'ru' }
+    }
+
+}

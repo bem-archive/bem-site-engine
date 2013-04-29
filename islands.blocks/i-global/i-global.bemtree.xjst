@@ -1,0 +1,24 @@
+this._mode === '', !this.data {
+
+    true: {
+        return applyNext(
+            this._mode = '',
+            this.data = this.ctx,
+            this.ctx = [
+                { block : 'i-global' },
+                { block : 'b-page' }
+            ]
+        );
+    }
+
+    this._.isArray(this.ctx): {
+        return applyNext(this.ctx = this.ctx[0]);
+    }
+
+}
+
+block i-global {
+
+    default: false
+
+}
