@@ -24,7 +24,15 @@ MAKE.decl('Arch', {
         'bem-gen-doc',
         'bem-yana @ unstable',
         'bem-yana-stub',
-        'romochka @ 2.10.11'
+        'romochka @ 2.10.11',
+        'islands-page @ dev',   // FIXME: dev
+        'bem-controls',
+        'islands-controls',
+        'islands-media',
+        'islands-user',
+        'islands-services',
+        'islands-media',
+        'islands-search'
     ]
 
 });
@@ -47,17 +55,43 @@ MAKE.decl('BundleNode', {
 
     getLevels : function() {
         return [
+                // bem-core
                 'bem-core/common.blocks',
+                // bem-yana
                 'bem-yana/common.blocks',
                 'bem-yana/app.blocks',
+                // bem-yana-stub
                 'bem-yana-stub/common.blocks',
+                // bem-controls
+                'bem-controls/common.blocks',
+                'bem-controls/desktop.blocks',
+                // islands-controls
+                'islands-controls/common.blocks',
+                'islands-controls/desktop.blocks',
+                // islands-media
+                'islands-media/common.blocks',
+                // islands-page
+                'islands-page/common.blocks',
+                'islands-page/desktop.blocks',
+                // islands-user
                 'islands-user/common.blocks',
-                'islands-user/desktop.blocks'
+                'islands-user/desktop.blocks',
+                // islands-services
+                'islands-services/common.blocks',
+                'islands-services/desktop.blocks',
+                // islands-search
+                'islands-search/common.blocks',
+                'islands-search/desktop.blocks',
+                // bem-bl + romochka
+                'romochka/bem-bl/blocks-desktop',
+                'romochka/blocks-common',
+                'romochka/blocks-desktop'
             ]
             .map(function(path) { return PATH.resolve(environ.LIB_ROOT, path); })
             .concat([
-                'common.blocks',
                 'ycommon.blocks',
+                'islands.blocks',
+                'common.blocks',
                 'desktop.blocks',
                 'configs/current'
             ]
