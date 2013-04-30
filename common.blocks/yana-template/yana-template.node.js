@@ -1,15 +1,15 @@
-modules.define(
-    'yana-template',
-    ['yana-config', 'yana-logger', 'http-provider', 'file-provider', /*'ya-auth',*/ 'vow'],
-    function(provide, config, logger, httpProvider, fileProvider, /*yaAuth,*/ Vow) {
+(function() {
 
 var PATH = require('path'),
     VM = require('vm'),
-    VFS = require('vow-fs'),
-    cache = {},
-    DEBUG = config.debug;
+    FS = require('vow-fs');
 
-provide({
+modules.define(
+    'yana-template',
+    ['yana-config', 'yana-util', 'http-provider', 'file-provider', /*'ya-auth',*/ 'vow'],
+    function(provide, config, util, httpProvider, fileProvider, /*yaAuth,*/ Vow, template) {
+
+provide(util.extend(template, {
 
     getBemhtml : function(path) {
         return require(path).BEMHTML;
@@ -25,7 +25,7 @@ provide({
                 yaAuth : false, //yaAuth,
                 Vow : Vow
             };
-        return VFS.read(path).then(VM.createScript)
+        return FS.read(path).then(VM.createScript)
             .then(function(bemtree) {
                 bemtree.runInNewContext(ctx);
                 return ctx.BEMTREE;
@@ -37,32 +37,19 @@ provide({
         return PATH.join(path, name, [name, '.', typ].join(''));
     },
 
-    loadFromCache : function(name) {
-        if(cache[name]) {
-            logger.debug('Template "%s" cache hit', name);
-            return cache[name];
-        }
-    },
-
     loadFromFs : function(name) {
         var bemhtml = this.getPath(name, 'bemhtml.js'),
-            bemtree = this.getPath(name, 'bemtree.xjst.js');
+            bemtree = this.getPath(name, 'bemtree.xjst.js'),
+            cache = this._cache;
 
         return Vow.all([this.getBemhtml(bemhtml), this.getBemtree(bemtree)])
             .spread(function(bemhtml, bemtree) {
                 return cache[name] = { bemhtml : bemhtml, bemtree : bemtree };
             });
-    },
-
-    load : function(name) {
-        var templates;
-
-        DEBUG || (templates = this.loadFromCache(name));
-        templates || (templates = this.loadFromFs(name));
-
-        return Vow.promise(templates);
     }
 
-});
+}));
 
 });
+
+}());
