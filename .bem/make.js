@@ -25,14 +25,13 @@ MAKE.decl('Arch', {
         'bem-yana @ unstable',
         'bem-yana-stub',
         'romochka @ 2.10.11',
-        'islands-page @ dev',   // FIXME: dev
         'bem-controls',
         'islands-controls',
         'islands-media',
-        'islands-user',
+        'islands-page @ dev',   // FIXME: dev
+        'islands-search',
         'islands-services',
-        'islands-media',
-        'islands-search'
+        'islands-user'
     ]
 
 });
@@ -53,49 +52,58 @@ MAKE.decl('BundleNode', {
         ];
     },
 
+    getOptimizerTechs : function() {
+        return [
+            'css',
+            'ie9.css',
+            'browser.js',
+            'node.js'
+        ];
+    },
+
     getLevels : function() {
         return [
-                // bem-core
-                'bem-core/common.blocks',
-                // bem-yana
-                'bem-yana/common.blocks',
-                'bem-yana/app.blocks',
-                // bem-yana-stub
-                'bem-yana-stub/common.blocks',
-                // bem-controls
-                'bem-controls/common.blocks',
-                'bem-controls/desktop.blocks',
-                // islands-controls
-                'islands-controls/common.blocks',
-                'islands-controls/desktop.blocks',
-                // islands-media
-                'islands-media/common.blocks',
-                // islands-page
-                'islands-page/common.blocks',
-                'islands-page/desktop.blocks',
-                // islands-user
-                'islands-user/common.blocks',
-                'islands-user/desktop.blocks',
-                // islands-services
-                'islands-services/common.blocks',
-                'islands-services/desktop.blocks',
-                // islands-search
-                'islands-search/common.blocks',
-                'islands-search/desktop.blocks',
-                // bem-bl + romochka
-                'romochka/bem-bl/blocks-desktop',
-                'romochka/blocks-common',
-                'romochka/blocks-desktop'
-            ]
-            .map(function(path) { return PATH.resolve(environ.LIB_ROOT, path); })
-            .concat([
-                'ycommon.blocks',
-                'islands.blocks',
-                'common.blocks',
-                'desktop.blocks',
-                'configs/current'
-            ]
-            .map(function(path) { return PATH.resolve(environ.PRJ_ROOT, path); }));
+            // bem-core
+            'bem-core/common.blocks',
+            // bem-yana
+            'bem-yana/common.blocks',
+            'bem-yana/app.blocks',
+            // bem-yana-stub
+            'bem-yana-stub/common.blocks',
+            // bem-controls
+            'bem-controls/common.blocks',
+            'bem-controls/desktop.blocks',
+            // islands-controls
+            'islands-controls/common.blocks',
+            'islands-controls/desktop.blocks',
+            // islands-media
+            'islands-media/common.blocks',
+            // islands-page
+            'islands-page/common.blocks',
+            'islands-page/desktop.blocks',
+            // islands-user
+            'islands-user/common.blocks',
+            'islands-user/desktop.blocks',
+            // islands-services
+            'islands-services/common.blocks',
+            'islands-services/desktop.blocks',
+            // islands-search
+            'islands-search/common.blocks',
+            'islands-search/desktop.blocks',
+            // bem-bl + romochka
+            'romochka/bem-bl/blocks-desktop',
+            'romochka/blocks-common',
+            'romochka/blocks-desktop'
+        ]
+        .map(function(path) { return PATH.resolve(environ.LIB_ROOT, path) })
+        .concat([
+            'ycommon.blocks',
+            'islands.blocks',
+            'common.blocks',
+            'desktop.blocks',
+            'configs/current'
+        ]
+        .map(function(path) { return PATH.resolve(environ.PRJ_ROOT, path) }));
     }
 
 });
