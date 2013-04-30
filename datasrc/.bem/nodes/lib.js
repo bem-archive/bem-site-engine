@@ -86,7 +86,6 @@ registry.decl(LibraryNodeName, {
             var cacheiid = CacheItemNode.createId({ item : item });
             if(arch.hasNode(cacheiid)) {
                 var cacheItemNode = arch.getNode(cacheiid);
-                arch.addParents(cacheItemNode, arch.getParents(this));
 
                 var depNode = new libNodes.SymlinkLibraryNode({
                         root : this.getPath(),
@@ -98,6 +97,8 @@ registry.decl(LibraryNodeName, {
                 depNode.id = PATH.join(this.id, depNode.id);
 
                 arch.setNode(depNode, arch.getParents(this));
+
+                arch.addChildren(depNode, cacheItemNode);
             }
         }, this));
     }

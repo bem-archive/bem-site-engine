@@ -34,14 +34,17 @@ registry.decl(CacheNodeName, nodes.NodeName, {
 
         var item = this.cache[cachekey] = lib,
             arch = this.arch,
-            node = new (registry.getNodeClass(CacheItemNodeName))({
+            CacheItemNode = registry.getNodeClass(CacheItemNodeName);
+
+        if(!arch.hasNode(CacheItemNode.createId({ item : item }))) {
+            var node = new CacheItemNode({
                 root : this.root,
                 item : item,
                 cachekey : cachekey
             });
 
-        arch.hasNode(node.getId()) ||
             arch.setNode(node, this);
+        }
     },
 
     getLibCacheKey : function(credential) {
@@ -90,13 +93,22 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
         var ctx = this.ctx;
         return function() {
             var arch = ctx.arch,
-                fakeLibNode = new nodes.Node(this.item._id),
+                fakeLibNode,
+                cacheLibNode;
+
+            if(arch.hasNode(this.item._id)) {
+                fakeLibNode = arch.getNode(this.item._id);
+            } else {
+                fakeLibNode = new nodes.Node(this.item._id);
+                arch.setNode(fakeLibNode, arch.getParents(this));
+            }
+
+            if(arch.hasNode(this.path)) {
+                cacheLibNode = arch.getNode(this.path);
+            } else {
                 cacheLibNode = this.createLibNode();
-
-            arch.setNode(fakeLibNode, arch.getParents(this));
-
-            arch.hasNode(cacheLibNode.getId()) ||
                 arch.setNode(cacheLibNode, fakeLibNode);
+            }
         }.bind(this);
     },
 
