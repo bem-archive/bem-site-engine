@@ -41,9 +41,7 @@ registry.decl(SourceNodeName, {
                         item : lib
                     });
 
-                this.arch.setNode(itemNode, sourceNode);
-
-                return itemNode;
+                return this.arch.setNode(itemNode, sourceNode);
             }, this))
             .then(function() {
                 return this.arch;
@@ -172,7 +170,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 .then(function(data) {
                     var piNode = new pageNodes.PageItemNode({
                         root : this.root,
-                        data : this._decl,
+                        data : data,
                         path : PATH.join(parent.path, block)
                     });
 
