@@ -1,10 +1,11 @@
-require('./sources.js')
+require('./sources.js');
 
 var PATH = require('path'),
     BEM = require('bem'),
 
     APW = BEM.require('apw'),
     registry = BEM.require('./nodesregistry'),
+    LOGGER = BEM.require('./logger'),
     MAKE = BEM.require('./make'),
 
     arch = new APW.Arch(),
@@ -16,6 +17,7 @@ var PATH = require('path'),
         verbosity : 'silly'
     };
 
+LOGGER.time('Build total');
 (new SourcesNode(opts))
     .alterArch()
     .then(function(arch) {
@@ -23,6 +25,7 @@ var PATH = require('path'),
             .findAndProcess(['sources']);
     })
     .fin(function() {
-        console.log(arch.toString());
+        LOGGER.timeEnd('Build total');
+        LOGGER.info(arch.toString());
     })
     .done();
