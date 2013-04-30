@@ -11,18 +11,24 @@ var PATH = require('path'),
     arch = new APW.Arch(),
     SourcesNode = registry.getNodeClass('SourceNode'),
 
+    targets = process.argv.slice(2),
     opts = {
         root : PATH.dirname(__dirname),
-        arch : arch,
-        verbosity : 'silly'
+        arch : arch
     };
+
+if(!targets.length) {
+    targets = ['sources'];
+}
+
+targets.indexOf('cache') > -1 && (opts.force = true);
 
 LOGGER.time('Build total');
 (new SourcesNode(opts))
     .alterArch()
     .then(function(arch) {
         return new MAKE.APW(arch, MAKE.DEFAULT_WORKERS, opts)
-            .findAndProcess(['sources']);
+            .findAndProcess(targets);
     })
     .fin(function() {
         LOGGER.timeEnd('Build total');
