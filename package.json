@@ -12,9 +12,10 @@
   "dependencies": {
     "inherit": "~1.0.4",
     "vow": "~0.3.0",
+    "vow-fs": "~0.1.10",
     "ym": "~0.0.1",
     "cookie": "~0.0.6",
-    "vow-fs": "~0.1.10"
+    "legoa-repodb": "git://github.yandex-team.ru/varankinv/legoa-repodb.git#0.1.1"
   },
   "devDependencies": {
     "bem": "~0.5.30",

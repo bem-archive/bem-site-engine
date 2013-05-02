@@ -4,7 +4,7 @@ var BEM = require('bem');
 
 module.exports = {
 
-    libraries : BEM.util.extend(require('../repo.db'), {
+    libraries : BEM.util.extend(require('legoa-repodb'), {
         'bem-yana-stub' : {
             type : 'git',
             url  : 'git://github.com/narqo/bem-yana-stub.git'
