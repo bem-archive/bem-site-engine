@@ -1,31 +1,19 @@
 block content {
 
     content: {
-        var PATH = require('path');
-            hosts = this.data.yaApiHosts,
-            params = this.data.params,
-            datasrc = hosts.datasrc.root,
-            path = PATH.join(datasrc, '_' + params.id, 'blocks', params.block + '.json');
-
+        var params = this.data.params;
         return this.doAsync(function() {
-                return fileProvider.create({ path : path, dataType : 'json' }).run();
+                return datasrc.blockInfo({ lib : params.id, block : params.block });
             })
-            .then(
-                function(result) {
-                    return applyNext(
-                        this.ctx.content = {
-                            tag : 'pre',
-                            content : JSON.stringify(result, null, 2)
-                        }
-                    );
-                }.bind(this),
-                function(err) {
-                    return applyNext(
-                        this._mode = '',
-                        this.ctx.content = err
-                    );
-                }.bind(this)
-            );
+            .then(function(result) {
+                return applyNext(
+                    this.ctx.content = {
+                        tag : 'pre',
+                        content : JSON.stringify(result, null, 2)
+                    }
+                );
+            }.bind(this),
+            function(err) { console.log(err) });
     }
 
 }
