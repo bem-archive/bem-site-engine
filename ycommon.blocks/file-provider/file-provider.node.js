@@ -3,7 +3,6 @@
 var PATH = require('path'),
     FS = require('vow-fs');
 
-
 modules.define(
     'file-provider',
     ['inherit', 'objects', 'vow'],
@@ -29,13 +28,10 @@ provide(inherit({
 
     run : function() {
         var params = this.params;
-
         return FS.read(params.path, params.encoding)
-            .then(
-                function(data) {
-                    return processData(data, params.dataType);
-                }
-            );
+            .then(function(data) {
+                return processData(data, params.dataType);
+            });
     },
 
     abort : function() {},
