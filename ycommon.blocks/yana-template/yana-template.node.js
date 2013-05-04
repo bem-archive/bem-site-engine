@@ -7,7 +7,7 @@ var PATH = require('path'),
 modules.define(
     'yana-template',
     ['yana-config', 'yana-util', 'http-provider', 'file-provider', 'ya-auth', 'legoa-datasrc', 'vow'],
-    function(provide, config, util, httpProvider, fileProvider, yaAuth, datasrc, Vow, template) {
+    function(provide, config, util, httpProvider, fileProvider, yaAuth, leDatasrc, Vow, template) {
 
 provide(util.extend(template, {
 
@@ -23,7 +23,7 @@ provide(util.extend(template, {
                 httpProvider : httpProvider,
                 fileProvider : fileProvider,
                 yaAuth : yaAuth,
-                datasrc : datasrc,
+                leDatasrc : leDatasrc,
                 Vow : Vow
             };
         return FS.read(path).then(VM.createScript)
