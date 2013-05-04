@@ -1,5 +1,5 @@
 var PATH = require('path'),
-    BEM = require('BEM'),
+    BEM = require('bem'),
     Q = BEM.require('qq'),
     QFS = BEM.require('q-fs'),
     registry = BEM.require('./nodesregistry.js'),
