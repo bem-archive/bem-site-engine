@@ -1,7 +1,10 @@
 /* jshint node:true */
 /* global modules:false */
 
-modules.define('yana-request', ['inherit'], function(provide, inherit, Request) {
+modules.define(
+    'yana-request',
+    ['inherit', 'yana-logger', 'yana-config'],
+    function(provide, inherit, logger, config, Request) {
 
 provide(inherit(Request, {
 
@@ -12,6 +15,12 @@ provide(inherit(Request, {
 
                 req.userip = headers['x-real-ip'] ||
                     headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+                req.logger = logger;
+
+                req.env = {
+                    config : config
+                };
 
                 return req;
             });
