@@ -1,31 +1,48 @@
 var PATH = require('path'),
     BEM = require('bem'),
-    Q = BEM.require('q'),
-    QFS = BEM.require('q-fs'),
-    registry = BEM.require('./nodesregistry.js'),
-    cacheNodes = require('./nodes/cache.js'),
-    libNodes = require('./nodes/lib.js'),
-    sourceNodes = require('./nodes/source.js');
-
-    U = BEM.util,
+    registry = BEM.require('./nodesregistry'),
+    libsNodes = require('./nodes/lib.js'),
+    cacherNodes = require('./nodes/cacher.js'),
+    sourceNodes = require('./nodes/source.js'),
     PRJ_ROOT = PATH.resolve(__dirname, '../../');
 
 process.env.__root_level_dir = PRJ_ROOT;
-var environ = require('../../.bem/environ');
+
+
+registry.decl(cacherNodes.CacherNodeName, {
+
+    sources : [
+        'bem-articles',
+        'bem-tools',
+        'islands-controls',
+        'islands-core',
+        'islands-dynamic',
+        'islands-islands',
+        'islands-media',
+        'islands-page',
+        'islands-popups',
+        'islands-search',
+        'islands-services',
+        'islands-user'
+    ]
+
+});
 
 
 registry.decl(sourceNodes.SourceNodeName, {
 
-    getLibraries : function() {
-        return [
-            'islands-controls',
-            'islands-media',
-            'islands-page',
-            'islands-popups',
-            'islands-search',
-            'islands-services',
-            'islands-user'
-        ];
+    getSets : function() {
+        return {
+//            'bem-tools' : {
+//                blocks : ['docs']
+//            },
+//            'bem-articles' : {
+//                blocks : ['.']
+//            },
+            'islands-popups' : {
+                blocks : ['common.blocks', 'desktop.blocks']
+            }
+        };
     }
 
 });

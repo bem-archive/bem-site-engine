@@ -3,6 +3,7 @@ var PATH = require('path'),
     Q = BEM.require('q'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
+    cacherNodes = require('./cacher.js'),
     cacheNodes = require('./cache.js'),
     introspectorNodes = require('./introspector.js'),
     pageNodes = require('./page.js'),
@@ -12,7 +13,6 @@ var PATH = require('path'),
     outputNodes = require(environ.getLibPath('bem-gen-doc', '.bem/nodes/output.js')),
 
     U = BEM.util,
-    CACHE_NODEID = exports.CACHE_NODEID = 'cache',
     SOURCE_NODEID = exports.SOURCE_NODEID = 'sources';
 
 
@@ -24,11 +24,41 @@ Object.defineProperty(exports, SourceNodeName, {
 registry.decl(SourceNodeName, {
 
     __constructor : function(o) {
-        this.arch = o.arch;
         this.root = o.root;
+        this.arch = o.arch;
     },
 
+//    make : function() {
+//        return this.ctx.arch.withLock(this.alterArch(), this);
+//    },
+
     alterArch : function() {
+        var arch = this.arch;
+
+        if(!arch.hasNode(cacherNodes.CACHE_NODEID)) {
+            return Q.resolve(1);
+        }
+
+        var source = this.createSourceNode(),
+            cache = arch.getNode(cacherNodes.CACHE_NODEID);
+
+        var sets = this.getSets();
+        return Q.all(Object.keys(sets).map(function(lib) {
+                cache.pushToCache(lib);
+
+                var item = new (registry.getNodeClass(SourceItemNodeName))({
+                        root : this.root,
+                        item : cache.getCredentials(lib),
+                        sources : sets[lib]
+                    });
+
+                return arch.setNode(item, source);
+            }, this))
+            .then(function() {
+                return arch;
+            });
+
+
         var cacheNode = this.createCacheNode(),
             sourceNode = this.createSourcesNode();
 
@@ -48,38 +78,10 @@ registry.decl(SourceNodeName, {
             }.bind(this));
     },
 
-    createCacheNode : function() {
-        var node = new cacheNodes.CacheNode({
-                id   : CACHE_NODEID,
-                arch : this.arch,
-                root : this.root
-            });
-        this.arch.setNode(node);
-        return node;
-    },
-
-    createSourcesNode : function() {
+    createSourceNode : function() {
         var node = new nodes.Node(SOURCE_NODEID);
         this.arch.setNode(node);
         return node;
-    },
-
-    getLibraries : function() {
-        return [];
-    },
-
-    getLibCredentials : function(lib) {
-        var id = PATH.basename(lib),
-            credential = environ.getConf().libraries[id];
-
-        if(credential == null) {
-            throw new Error('Library "' + id + '" (' + lib + ') is not registered!');
-        }
-
-        credential._id = id;
-        credential._bemDeps = true;
-
-        return credential;
     }
 
 });
@@ -96,6 +98,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
         this.__base(o);
         this.root = o.root;
         this.item = o.item;
+        this.sources = o.sources;
         this.path = '_' + o.item._id;
 
         this._decl = [];
@@ -188,7 +191,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 root : this.root,
                 item : this.item,
                 libRoot : root,
-                sources : ['common.blocks']     // FIXME: hardcode
+                sources : this.sources.blocks
             });
 
 //        parent = arch.getNode(this.path);

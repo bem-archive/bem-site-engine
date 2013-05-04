@@ -1,37 +1,28 @@
-require('./sources.js');
+/* global MAKE */
 
-var PATH = require('path'),
-    BEM = require('bem'),
+var sources = require('./sources.js'),
+    CacherNode = MAKE.getNodeClass('CacherNode'),
+    SourceNode = MAKE.getNodeClass('SourceNode');
 
-    APW = BEM.require('apw'),
-    registry = BEM.require('./nodesregistry'),
-    LOGGER = BEM.require('./logger'),
-    MAKE = BEM.require('./make'),
+MAKE.decl('Arch', {
 
-    arch = new APW.Arch(),
-    SourcesNode = registry.getNodeClass('SourceNode'),
+    alterArch : function() {
+        return this.createCacher()
+            .then(function() {
+                return this.createSourcer();
+            }.bind(this))
+            .then(function() {
+                console.log(this.arch.toString());
+                return this.arch;
+            }.bind(this));
+    },
 
-    targets = process.argv.slice(2),
-    opts = {
-        root : PATH.dirname(__dirname),
-        arch : arch
-    };
+    createCacher : function() {
+        return (new CacherNode({ root : this.root, arch : this.arch })).alterArch();
+    },
 
-if(!targets.length) {
-    targets = ['sources'];
-}
+    createSourcer : function() {
+        return (new SourceNode({ root : this.root, arch : this.arch })).alterArch();
+    }
 
-targets.indexOf('cache') > -1 && (opts.force = true);
-
-LOGGER.time('Build total');
-(new SourcesNode(opts))
-    .alterArch()
-    .then(function(arch) {
-        return new MAKE.APW(arch, MAKE.DEFAULT_WORKERS, opts)
-            .findAndProcess(targets);
-    })
-    .fin(function() {
-        LOGGER.timeEnd('Build total');
-        LOGGER.info(arch.toString());
-    })
-    .done();
+});

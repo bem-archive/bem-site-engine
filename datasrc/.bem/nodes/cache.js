@@ -4,6 +4,7 @@ var CRYPTO = require('crypto'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
     libNodes = BEM.require('./nodes/lib.js'),
+    repo = require('legoa-repodb'),
     U = BEM.util;
 
 
@@ -24,11 +25,18 @@ registry.decl(CacheNodeName, nodes.NodeName, {
     },
 
     pushToCache : function(lib) {
+        lib = this.getCredentials(lib);
+
         // пропускаем библиотеки-симлинки, с ними не поянтно, что делать
         if(lib.type === 'symlink')
             return;
 
-        var cachekey = this.getLibCacheKey(lib);
+        // явно просим выгружать зависимые библиотеки если не сказано обратное
+        if(lib.bemDeps !== false) {
+            lib.bemDeps = true;
+        }
+
+        var cachekey = this.getCacheKey(lib);
         if(this.cache[cachekey])
             return;
 
@@ -47,7 +55,7 @@ registry.decl(CacheNodeName, nodes.NodeName, {
         }
     },
 
-    getLibCacheKey : function(credential) {
+    getCacheKey : function(credential) {
         var shasum = CRYPTO.createHash('sha1'),
             key = [
                 credential.url,
@@ -57,6 +65,21 @@ registry.decl(CacheNodeName, nodes.NodeName, {
 
         shasum.update(key, 'utf8');
         return shasum.digest('hex');
+    },
+
+    getCredentials : function(lib) {
+        if(typeof lib === 'object') {
+            return lib;
+        }
+
+        var id = PATH.basename(lib),
+            credential = repo[id];
+
+        if(credential == null) {
+            throw new Error('Library "' + id + '" (' + lib + ') is not registered!');
+        }
+
+        return credential;
     }
 
 }, {
@@ -82,7 +105,7 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
         this.item = o.item;
         this.cachekey = o.cachekey;
         this.path = PATH.join('.bem', 'cache', this.cachekey);
-        this.bemDeps = o.item._bemDeps;
+        this.bemDeps = o.item.bemDeps;
     },
 
     make : function() {

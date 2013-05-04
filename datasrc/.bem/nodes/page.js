@@ -22,13 +22,50 @@ registry.decl(PageNodeName, nodes.NodeName, {
         this.path = this.__self.getNodePath(o);
     },
 
-//    getPath : function() {
-//        return PATH.join(this.root, this.path);
-//    },
-//
-//    make : function() {
-//        return QFS.makeTree(this.getPath());
-//    }
+    getPath : function() {
+        return PATH.join(this.root, this.path + '.json');
+    },
+
+    make : function() {
+        return this.__base.apply(this, arguments)
+            .then(function() {
+                var arch = this.ctx.arch,
+                    items = arch.getChildren(this)
+                        .filter(function(i) {
+                            return arch.getNode(i) instanceof exports.PageItemNode;
+                        })
+                        .map(function(i) {
+                            return arch.getNode(i);
+                        }),
+                    path = this.getPath(),
+                    index = [];
+
+                return items.reduce(function(promise, item) {
+                    return promise
+                        .invoke.call(U, 'readFile', item.getPath())
+                        .then(function(json) {
+                            return JSON.parse(json);
+                        })
+                        .then(function(json) {
+                            var name = json.name,
+                                title;
+
+                            while(title = json.title.pop()) {
+                                if(title.content) {
+                                    title = title.content;
+                                    break;
+                                }
+                            }
+
+                            return index.push({ name : name, title : title });
+                        });
+                }, Q.when())
+                .then(function() {
+                    return U.writeFileIfDiffers(path, JSON.stringify(index, null, 2));
+                }.bind(this));
+
+            }.bind(this));
+    }
 
 }, {
 
