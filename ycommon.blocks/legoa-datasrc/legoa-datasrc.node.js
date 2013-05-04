@@ -16,8 +16,11 @@ provide({
 
     _buildPath : function(params) {
         var lib = params.lib,
-            block = params.block;
-        return PATH.join(datasrc.root, '_' + lib, 'blocks', block + '.json');
+            path = [datasrc.root, '_' + lib, 'blocks'];
+
+        params.block && path.push(params.block);
+
+        return PATH.join.apply(null, path) + '.json';
     },
 
     blockInfo : function(params) {
