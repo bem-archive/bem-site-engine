@@ -24,8 +24,8 @@ var OS = require('os'),
     node = {
         debug : true,
         app : {
-            port : 3014,
-            //socket : socketPath,
+            //port : 3014,
+            socket : socketPath,
             workers : 2
         },
         logger : {
