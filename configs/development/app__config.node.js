@@ -28,6 +28,9 @@ var OS = require('os'),
             //socket : socketPath,
             workers : 2
         },
+        logger : {
+            level : 'debug'
+        },
         static_host : '//127.0.0.1:8080/'
     };
 

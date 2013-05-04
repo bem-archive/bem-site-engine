@@ -16,14 +16,6 @@ module.exports = {
 
     common_bundle_name : COMMON_BUNDLE_NAME,
 
-    common_bundle_path : UTIL.format('/%s/%s/', BUNDLES_PATH, COMMON_BUNDLE_NAME),
-
-    routes : [
-        { rule : '/', action : 'index' },
-        { rule : '/libs', action : 'libraries' },
-        { rule : '/libs/{id}', action : 'library' },
-        { rule : '/libs/{id}/blocks', action : 'catalogue' },
-        { rule : '/libs/{id}/blocks/{block}', action : 'catalogue' }
-    ]
+    common_bundle_path : UTIL.format('/%s/%s/', BUNDLES_PATH, COMMON_BUNDLE_NAME)
 
 };
