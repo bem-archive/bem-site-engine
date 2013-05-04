@@ -78,18 +78,26 @@ registry.decl(LibraryNodeName, {
             var id = PATH.basename(lib),
                 item = deps[lib];
 
+            // XXX: нормализуем ревизиты библиотеки в соответствии с ожиданиями кешера
             item._id = id;
+            item.bemDeps = false;
 
             CacheNode.pushToCache(item);
 
             var cacheiid = CacheItemNode.createId({ item : item });
             if(arch.hasNode(cacheiid)) {
-                var cacheItemNode = arch.getNode(cacheiid);
+                var cacheItemNode = arch.getNode(cacheiid),
+                    libRoot = this.getPath();
 
+                if(id !== lib) {
+                    libRoot = PATH.join(libRoot, PATH.dirname(lib));
+                }
+
+                // FIXME: https://github.com/bem/bem-tools/issues/342
                 var depNode = new libNodes.SymlinkLibraryNode({
                         root : this.getPath(),
                         target : lib,
-                        relative : PATH.relative(this.getPath(), cacheItemNode.getPath()),
+                        relative : PATH.relative(libRoot, cacheItemNode.getPath()),
                         npmPackages : false
                     });
 
