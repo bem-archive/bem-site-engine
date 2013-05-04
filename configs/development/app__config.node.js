@@ -31,7 +31,7 @@ var OS = require('os'),
         logger : {
             level : 'debug'
         },
-        static_host : '//127.0.0.1:8080/'
+        //static_host : '//127.0.0.1:8080/'
     };
 
 modules.define('yana-config', ['yana-util'], function(provide, util, config) {
