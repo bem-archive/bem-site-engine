@@ -3,7 +3,7 @@ block content {
     content: {
         var params = this.data.params;
         return this.doAsync(function() {
-                return datasrc.blockInfo({ lib : params.id, block : params.block });
+                return leDatasrc.blockInfo({ lib : params.id, block : params.block });
             })
             .then(function(result) {
                 return applyNext(

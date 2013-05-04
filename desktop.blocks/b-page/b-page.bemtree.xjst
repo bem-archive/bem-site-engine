@@ -7,9 +7,22 @@ block b-page {
     content: [
         {
             block : 'header',
-            mix : { block: 'layout', mods: { type: 'serp' } }
+            mix : { block : 'layout', mods : { type : 'serp' } }
         },
-        { block : 'content' },
+        {
+            block : 'body',
+            mix : { block : 'layout', mods : { section : '100' } },
+            content : [
+                {
+                    block : 'content',
+                    mix : { block : 'layout', elem : 'col' }
+                }
+//                {
+//                    block : 'sidebar',
+//                    mix : { block : 'layout', elem : 'col' }
+//                }
+            ]
+        },
         { block : 'footer' }
     ]
 
