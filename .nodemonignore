@@ -1,4 +1,6 @@
 # .nodemonignore file
 # ignore uncompressed files match to `bundles/page/page.js` pattern
-:.*[^\/]+\/[^\/]+\/([^_])*.js$
+#:.*[^\/]+\/[^\/]+\/([^_])*.js$
+
+:.*[^\/]+\/[^\/]+\/(?:[^_])*.(node|bemhtml)\.js$
 
