@@ -14,11 +14,13 @@ provide(View.decl('yana-view', {
     },
 
     createContext : function() {
+        var route = this._req.route;
         return {
             req : this._req,
             res : this._res,
             params : this._params,
             view : this._getName(),
+            page : route.name,
             bundleName : config.common_bundle_name,
             staticUrl : URL.resolve(
                     config.static_host, config.common_bundle_path),
