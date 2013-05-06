@@ -3,7 +3,13 @@ modules.define(
     ['yana-router'],
     function(provide, router, View) {
 
-router.addRoute({ rule : '/libs/{id}', action : 'page' });
+router.addRoute({
+    name : 'library',
+    rule : '/libs/{id}',
+    data : {
+        action : 'page'
+    }
+});
 
 provide(View);
 

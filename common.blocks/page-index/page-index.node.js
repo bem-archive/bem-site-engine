@@ -3,7 +3,13 @@ modules.define(
     ['yana-router'],
     function(provide, router, View) {
 
-router.addRoute({ rule : '/', action : 'page' });
+router.addRoute({
+    name : 'index',
+    rule : '/',
+    data : {
+        action : 'page'
+    }
+});
 
 provide(View);
 
