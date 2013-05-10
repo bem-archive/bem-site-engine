@@ -23,8 +23,7 @@ MAKE.decl('Arch', {
         'bem-pr',
         'bem-gen-doc',
         'bem-yana @ unstable',
-        'bem-yana-stub',
-        'romochka @ 2.10.11',
+        'romochka @ 2.10.12',
         'bem-controls',
         'islands-controls',
         'islands-media',
@@ -68,8 +67,6 @@ MAKE.decl('BundleNode', {
             // bem-yana
             'bem-yana/common.blocks',
             'bem-yana/app.blocks',
-            // bem-yana-stub
-            'bem-yana-stub/common.blocks',
             // bem-controls
             'bem-controls/common.blocks',
             'bem-controls/desktop.blocks',

@@ -5,8 +5,7 @@ var PATH = require('path'),
     resolve = PATH.resolve.bind(null, __dirname),
 
     PRJ_TECHS = resolve('../techs/'),
-    BEMCORE_TECHS = environ.getLibPath('bem-core', '.bem/techs'),
-    BEMTREE_TECHS = environ.getLibPath('bem-yana-stub', '.bem/techs');
+    BEMCORE_TECHS = environ.getLibPath('bem-core', '.bem/techs');
 
 exports.getTechs = function() {
     var techs = {
@@ -18,16 +17,14 @@ exports.getTechs = function() {
         'ie6.css'       : 'ie6.css',
         'ie7.css'       : 'ie7.css',
         'ie8.css'       : 'ie8.css',
-        'ie9.css'       : 'ie9.css',
-
-        'bemtree.xjst'  : join(BEMTREE_TECHS, 'bemtree.xjst.js')
+        'ie9.css'       : 'ie9.css'
     };
 
-    ['html', 'bemhtml', 'vanilla.js', 'browser.js', 'node.js'].forEach(function(name) {
+    ['html', 'bemhtml', 'bemtree.xjst', 'vanilla.js', 'browser.js', 'node.js'].forEach(function(name) {
         techs[name] = join(BEMCORE_TECHS, [name, 'js'].join('.'));
     });
 
     return techs;
 };
 
-exports.defaultTechs = ['css', 'js', 'bemhtml'];
+exports.defaultTechs = ['css', 'vanilla.js', 'deps.js', 'bemhtml', 'bemtree.xjst'];
