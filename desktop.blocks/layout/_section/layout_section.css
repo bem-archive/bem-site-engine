@@ -1,7 +1,22 @@
-.layout_section_100 .layout__col
+.layout_section_2-1,
+.layout_section_100
+{
+    padding-left: 20px;
+}
+
+.layout__col
 {
     box-sizing: border-box;
+}
 
-    padding: 0 20px;
+.layout_section_100 .layout__col
+{
+    padding-right: 20px;
     width: 100%;
+}
+
+
+.layout_section_2-1 .layout__col
+{
+    width: 70%;
 }
