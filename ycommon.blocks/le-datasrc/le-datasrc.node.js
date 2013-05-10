@@ -6,7 +6,7 @@
 var PATH = require('path');
 
 modules.define(
-    'legoa-datasrc',
+    'le-datasrc',
     ['file-provider', 'yana-config', 'yana-error_type_http'],
     function(provide, fileProvider, config, HttpError) {
 
@@ -23,14 +23,22 @@ provide({
         return PATH.join.apply(null, path) + '.json';
     },
 
-    blockInfo : function(params) {
+    _do : function(params) {
         var path = this._buildPath(params);
         return fileProvider.create({ path : path, dataType : 'json' })
             .run()
             .fail(function(err) {
                 var message = 'Block "' + params.block + '" for library "' + params.lib + '" not found';
-                throw new HttpError(404, message);
+                return new HttpError(404, message);
             });
+    },
+
+    libInfo : function(params) {
+        return this._do(params);
+    },
+
+    blockInfo : function(params) {
+        return this._do(params);
     }
 
 });
