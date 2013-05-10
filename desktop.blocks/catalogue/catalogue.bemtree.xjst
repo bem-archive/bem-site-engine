@@ -1,0 +1,83 @@
+block catalogue {
+
+    default: {
+        this.ctx.id = this.data.params.id;
+        return applyNext(this._datasrc = this.data.params);
+    }
+
+    content, (this._datasrc && !this.ctx.content): {
+        var data = this.data;
+        return this.doAsync(
+                leDatasrc.libInfo.bind(leDatasrc, { lib : this._datasrc.id })
+            )
+            .then(function(result) {
+                return apply(
+                    this._mode = '',
+                    this.data = data,
+                    this.ctx = {
+                        elem : 'list',
+                        content : result
+                    }
+                );
+            }.bind(this));
+    }
+
+    elem list {
+
+        default {
+
+            this.ctx.name: {
+                return apply(
+                    this._mode = '',
+                    this.ctx.elem = 'list-item',
+                    this._libid = this.data.params.id,
+                    this._blockname = this.ctx.name
+                );
+            }
+
+            this._.isArray(this.ctx.content): {
+                var i = 0,
+                    buf = [],
+                    item;
+
+                while(item = this.ctx.content[i]) {
+                    buf[i++] = apply(this.ctx = item);
+                }
+
+                return buf;
+            }
+
+        }
+
+    }
+
+    elem list-item {
+
+        default: {
+            var title = apply('title'),
+                url = apply('url');
+
+            return applyCtx({
+                elem : this.elem,
+                name : this._blockname,
+                title : title,
+                url : url
+            });
+        }
+
+        title: {
+            var title = this.ctx.title;
+            if(title) {
+                title = title.trim();
+            }
+            return title || this._blockname;
+        }
+
+        url: {
+            // TODO: `router.reverse()`
+            return '/libs/' + this._libid + '/blocks/' + this._blockname;
+        }
+
+    }
+
+}

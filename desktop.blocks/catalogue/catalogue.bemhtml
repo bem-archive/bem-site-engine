@@ -1,0 +1,41 @@
+block catalogue {
+
+    content: {
+        elem : 'list',
+        content : this.ctx.content
+    }
+
+    elem list {
+        tag: 'table'
+    }
+
+    elem row {
+        tag: 'tr'
+    }
+
+    elem list-item {
+
+        default: {
+            applyCtx({ elem : 'row', content : this.ctx })
+        }
+
+        tag: 'td'
+
+        content: {
+            block : 'topic',
+            url : this.ctx.url,
+            content : [
+                {
+                    elem : 'name',
+                    content : this.ctx.name
+                },
+                {
+                    elem : 'title',
+                    content : this.ctx.title
+                }
+            ]
+        }
+
+    }
+
+}
