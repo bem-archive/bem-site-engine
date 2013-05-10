@@ -21,7 +21,7 @@ provide(View.decl('yana-view', {
             res : this._res,
             params : this._params,
             view : this._getName(),
-            page : route.name,
+            page : route.data.name,
             bundleName : config.common_bundle_name,
             staticUrl : URL.resolve(
                     config.static_host, config.common_bundle_path),
