@@ -1,6 +1,14 @@
 ({
-    mustDeps : [],
+    mustDeps : [
+        { block : 'i-bem', elems : ['tree'] }
+    ],
     shouldDeps : [
+        { block : 'static-text' },
+        { block : 'headline' },
+        { block : 'link' },
+        { block : 'olist' },
+        { block : 'ulist' },
+        { block : 'island' },
         { mods : { theme : 'normal' } },
         { block : 'header' },
         { block : 'layout', mods : { type : 'serp' } },
