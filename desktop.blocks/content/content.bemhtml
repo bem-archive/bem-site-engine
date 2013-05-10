@@ -1,0 +1,16 @@
+block content {
+
+    default: {
+        applyCtx({
+            block : 'body',
+            mix : {
+                block : 'layout',
+                mods : { section : '2-1' }
+            },
+            content : this.ctx
+        })
+    }
+
+    mix: { block : 'layout', elem : 'col' }
+
+}
