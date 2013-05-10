@@ -1,7 +1,8 @@
 block b-page {
 
     default: {
-        return applyNext(this.ctx.mods = { theme : 'normal' })
+        this.ctx.mods = { theme : 'normal', page : this.data.page };
+        return applyCtx(this.ctx);
     }
 
     content: [
@@ -9,20 +10,7 @@ block b-page {
             block : 'header',
             mix : { block : 'layout', mods : { type : 'serp' } }
         },
-        {
-            block : 'body',
-            mix : { block : 'layout', mods : { section : '100' } },
-            content : [
-                {
-                    block : 'content',
-                    mix : { block : 'layout', elem : 'col' }
-                }
-//                {
-//                    block : 'sidebar',
-//                    mix : { block : 'layout', elem : 'col' }
-//                }
-            ]
-        },
+        { block : 'content' },
         { block : 'footer' }
     ]
 

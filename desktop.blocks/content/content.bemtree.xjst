@@ -1,19 +1,36 @@
 block content {
 
-    content: {
-        var params = this.data.params;
-        return this.doAsync(function() {
-                return leDatasrc.blockInfo({ lib : params.id, block : params.block });
-            })
-            .then(function(result) {
-                return applyNext(
-                    this.ctx.content = {
-                        tag : 'pre',
-                        content : JSON.stringify(result, null, 2)
-                    }
-                );
-            }.bind(this),
-            function(err) { console.log(err) });
+//    default: {
+//        console.log(this.data);
+//        return applyNext();
+//    }
+
+    content {
+
+        true: {
+            block : 'step-history'
+        }
+
+        this.data.page === 'library': {
+            var content = applyNext();
+            return [
+                content,
+                {
+                    block : 'catalogue'
+                }
+            ];
+        }
+
+        this.data.page === 'document': {
+            var content = applyNext();
+            return [
+                content,
+                {
+                    block : 'document'
+                }
+            ];
+        }
+
     }
 
 }
