@@ -1,0 +1,39 @@
+block bk-subject {
+
+    elem title {
+
+        tag: 'h1'
+
+        mix: [
+            { block : 'document', elem : 'title' },
+            { block : 'headline' }
+        ]
+
+        content: [
+            { elem : 'block-name', content : this.ctx.name },
+            { elem : 'block-title', content : this.ctx.title }
+        ]
+
+    }
+
+    this.elem === 'block-name' || this.elem === 'block-title' {
+
+        tag: 'span'
+
+        !this.ctx.content, tag: ''
+
+    }
+
+    elem block-title, this.ctx.content {
+
+        default: {
+            return applyCtx([': ', this.ctx])
+        }
+
+        content: {
+            return this.ctx.content.toLowerCase()
+        }
+
+    }
+
+}

@@ -1,0 +1,51 @@
+block bk-subject {
+
+    elem elem {
+
+        !this._firstElem, default: {
+            this._firstElem = this.ctx;
+
+            applyCtx([
+                { block: 'headline', mods: { level: 3 }, content: 'Элементы' },
+                this.ctx
+            ]);
+        }
+
+        default: applyNext(this._isElem = true, this._firstMod = null)
+
+        mix: { block : 'section' }
+
+        content: [
+            {
+                elem: 'elem-name',
+                content: this.ctx.name
+            },
+            {
+                elem: 'elem-title',
+                content: this.ctx.title
+            },
+            this.ctx.description,
+            this.ctx.examples,
+            this.ctx.content
+        ]
+
+    }
+
+    elem mod, this._isElem, !this._firstMod, default: {
+        this._firstMod = this.ctx;
+
+        applyCtx([
+            { block: 'headline', mods: { level: 5 }, content: 'Модификаторы элемента' },
+            this.ctx
+        ]);
+    }
+
+    elem elem-name {
+
+        tag: 'h4'
+
+        mix: { block: 'headline', mods: { level: 4 } }
+
+    }
+
+}

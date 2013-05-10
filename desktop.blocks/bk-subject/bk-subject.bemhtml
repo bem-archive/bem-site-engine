@@ -1,0 +1,23 @@
+block bk-subject {
+
+    content: [
+        {
+            elem : 'title',
+            name : this.ctx.name,
+            title : this.ctx.title
+        },
+        (this.ctx.description && {
+                elem : 'description',
+                content : this.ctx.description
+            }),
+        this.ctx.examples,
+        this.ctx.content
+    ]
+
+    elem level {
+
+        tag: ''
+
+    }
+
+}

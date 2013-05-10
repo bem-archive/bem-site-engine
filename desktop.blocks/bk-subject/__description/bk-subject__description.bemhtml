@@ -1,0 +1,9 @@
+block bk-subject, elem description {
+
+    mix: [
+        { block : 'static-text' },
+        { block : 'island' },
+        { block : 'section'}
+    ]
+
+}
