@@ -3,7 +3,8 @@ modules.define(
     ['inherit', 'yana-template', 'yana-config', 'yana-logger', 'yana-util'],
     function(provide, inherit, template, config, logger, util, View) {
 
-var URL = require('url');
+var URL = require('url'),
+    JsonStringify = require('json-stringify-safe');
 
 provide(View.decl('yana-view', {
 
@@ -45,7 +46,7 @@ provide(View.decl('yana-view', {
 
         return this._buildBemjson(ctx).then(function(json) {
             if(this.getMode() === 'json') {
-                return util.format('<pre>%s</pre>', JSON.stringify(json, null, 2));
+                return util.format('<pre>%s</pre>', JsonStringify(json, null, 2));
             }
 
             return this._buildHtml(json);
