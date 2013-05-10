@@ -1,0 +1,34 @@
+block document {
+
+    default: applyNext(this._datasrc = this.data.params)
+
+    content {
+
+        this._datasrc.block: {
+            var data = this.data,
+                params = this._datasrc;
+            return this.doAsync(
+                    leDatasrc.blockInfo.bind(leDatasrc, {
+                        lib : params.id,
+                        block : params.block
+                    })
+                )
+                .then(function(result) {
+                    return apply(
+                        this._mode = '',
+                        this.data = data,
+                        this.ctx = {
+                            block : 'bk-declaration',
+                            content : result
+                        }
+                    );
+                }.bind(this))
+                .fail(function(e) {
+                    console.error(e.toString());
+                    console.debug(e.stack);
+                }.bind(this));
+        }
+
+    }
+
+}
