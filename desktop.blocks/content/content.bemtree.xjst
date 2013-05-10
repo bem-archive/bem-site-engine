@@ -8,7 +8,7 @@ block content {
     content {
 
         true: {
-            block : 'step-history'
+            block : 'breadcrumbs'
         }
 
         this.data.page === 'library': {

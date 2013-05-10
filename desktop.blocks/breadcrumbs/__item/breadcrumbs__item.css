@@ -1,0 +1,22 @@
+.breadcrumbs__item
+{
+    display: inline-block;
+    margin: 0;
+}
+
+.breadcrumbs__item::after
+{
+    content: '›';
+
+    color: '#000';
+    font-size: 1em;
+
+    padding: 1em;
+}
+
+.breadcrumbs__item_pos_last:after
+{
+    content: '';
+
+    padding: 0;
+}

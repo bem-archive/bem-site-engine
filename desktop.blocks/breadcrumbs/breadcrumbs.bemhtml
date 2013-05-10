@@ -1,0 +1,34 @@
+block breadcrumbs {
+
+    tag: 'ul'
+
+    content: [
+        { elem : 'item', content : 'Главная' },
+        { elem : 'item', content : 'Библиотеки' },
+        { elem : 'item', content : 'islands-popups', elemMods : { active : 'yes' } }
+    ]
+
+    elem item {
+
+        tag: 'li'
+
+        content: {
+            block : 'link',
+            url   : '!#',
+            content : this.ctx.content
+        }
+
+        this._.isLast(), mix: { mods : { pos : 'last' } }
+
+        elemMod active yes {
+
+            content: {
+                tag : 'b',
+                content : this.ctx.content
+            }
+
+        }
+
+    }
+
+}
