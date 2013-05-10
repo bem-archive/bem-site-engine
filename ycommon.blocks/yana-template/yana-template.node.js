@@ -6,8 +6,8 @@ var PATH = require('path'),
 
 modules.define(
     'yana-template',
-    ['yana-config', 'yana-util', 'http-provider', 'file-provider', 'ya-auth', 'legoa-datasrc', 'vow'],
-    function(provide, config, util, httpProvider, fileProvider, yaAuth, leDatasrc, Vow, template) {
+    ['yana-config', 'yana-logger', 'yana-util', 'http-provider', 'file-provider', 'ya-auth', 'le-datasrc', 'vow'],
+    function(provide, config, logger, util, httpProvider, fileProvider, yaAuth, leDatasrc, Vow, template) {
 
 provide(util.extend(template, {
 
@@ -17,9 +17,9 @@ provide(util.extend(template, {
 
     getBemtree : function(path) {
         var ctx = {
-                BEMTREE : {},
+                exports : exports,
                 require : require,
-                console : console,
+                console : logger,
                 httpProvider : httpProvider,
                 fileProvider : fileProvider,
                 yaAuth : yaAuth,
@@ -29,7 +29,7 @@ provide(util.extend(template, {
         return FS.read(path).then(VM.createScript)
             .then(function(bemtree) {
                 bemtree.runInNewContext(ctx);
-                return ctx.BEMTREE;
+                return ctx.exports.BEMTREE;
             });
     },
 
