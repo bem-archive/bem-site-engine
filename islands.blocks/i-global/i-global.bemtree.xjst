@@ -1,9 +1,9 @@
 this._mode === '', !this.data {
 
     true: {
+        this.data = this.ctx;
         return applyNext(
             this._mode = '',
-            this.data = this.ctx,
             this.ctx = [
                 { block : 'i-global' },
                 { block : 'b-page' }

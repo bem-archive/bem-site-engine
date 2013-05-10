@@ -1,23 +1,26 @@
 block b-page {
 
     default: {
-        var bundle = this.data.bundleName,
-            cssUrl = apply('asset-url', this.ctx.name = bundle, this.ctx.ext = 'css'),
-            jsUrl = apply('asset-url', this.ctx.name = bundle, this.ctx.ext = 'js');
-
+        var head = apply('head');
         return applyCtx({
                 block : this.block,
+                title : this.data.pageTitle,
                 mods : this.ctx.mods,
-                head : [
-                    { elem : 'css', url : cssUrl },
-                    { elem : 'js', url : jsUrl }
-                ],
+                head : head,
                 content: this.ctx.content
             });
     }
 
-    asset-url: {
-        return [this.data.staticUrl, '_', this.ctx.name, '.', this.ctx.ext].join('');
+    head: {
+        return applyCtx([
+            { elem : 'css' },
+            { elem : 'js'}
+        ]);
+    }
+
+    asset, this.elem !== '': {
+        prefix : [this.data.staticUrl, '_', this.data.bundleName].join(''),
+        suffix : this.ctx.ext
     }
 
 }

@@ -1,0 +1,9 @@
+block headline {
+
+    tag: 'h1'
+
+    this.mods.level, tag: 'h' + this.mods.level
+
+    !this.mods.level, mix: { mods: { level: 1 } }
+
+}

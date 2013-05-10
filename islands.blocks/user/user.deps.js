@@ -1,5 +1,5 @@
 ({
     mustDeps : [
-        { block : 'i-bem', elems : ['xjst'] }
+        { block : 'i-bem', elems : ['tree'] }
     ]
 })

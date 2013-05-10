@@ -1,0 +1,10 @@
+.static-text
+{
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.static-text p
+{
+    margin: 0 0 1em;
+}
