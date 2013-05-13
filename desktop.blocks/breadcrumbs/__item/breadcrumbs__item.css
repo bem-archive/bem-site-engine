@@ -9,9 +9,9 @@
     content: '›';
 
     color: '#000';
-    font-size: 1em;
+    font-size: 16px;
 
-    padding: 1em;
+    padding: 13px;
 }
 
 .breadcrumbs__item_pos_last:after
