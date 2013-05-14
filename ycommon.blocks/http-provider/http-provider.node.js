@@ -73,40 +73,49 @@ provide(inherit({
             .then(function(ip) {
                 var url = this._url,
                     query = QS.stringify(
-                                hasBody? url.query : objects.extend(url.query, params.data)),
-                    options = {
-                        method   : params.method,
-                        auth     : params.auth,
-                        headers  : objects.extend(
-                                params.headers || {},
-                                hasBody?
-                                    {
-                                        'Content-Type'   : 'application/x-www-form-urlencoded',
-                                        'Content-length' : Buffer.byteLength(body)
-                                    } :
-                                    {}),
-                        protocol : url.protocol,
-                        hostname : url.hostname,
-                        port     : url.port,
-                        path     : url.pathname + (query? '?' + query : '')
-                    };
-
+                                hasBody? url.query : objects.extend(url.query, params.data));
+                    hostname = url.hostname,
+                    headers = params.headers || {},
+                    options = {};
+                    
                 if(ip) {
-                    options.hostname = ip;
-                    options.headers['Host'] = url.hostname;
+                    headers['Host'] = hostname;
+                    hostname = ip;
                 }
 
                 if(params.allowGzip) {
-                    var enc = options.headers['Accept-Encoding'];
+                    var enc = headers['Accept-Encoding'];
                     if(!enc) {
                         enc = 'gzip, *';
-                    } else if(!~enc.indexOf('gzip')) {
+                    } else if(enc.indexOf('gzip') === -1) {
                         enc = 'gzip, ' + enc;
                     }
 
-                    options.headers['Accept-Encoding'] = enc;
+                    headers['Accept-Encoding'] = enc;
                 }
 
+                // See https://github.com/nodejitsu/node-http-proxy/pull/338
+                if(hasBody || params.method === 'DELETE') {
+                    var len = headers['Content-Length'];
+                    if(!len) {
+                        len = Buffer.byteLength(body) || 0;
+                    }
+                    
+                    headers['content-length'] = len;
+                }
+
+                options = {
+                    method   : params.method,
+                    auth     : params.auth,
+                    headers  : objects.extend(
+                            headers,
+                            hasBody? { 'Content-Type' : 'application/x-www-form-urlencoded' } : {}),
+                    protocol : url.protocol,
+                    hostname : hostname,
+                    port     : url.port,
+                    path     : url.pathname + (query? '?' + query : '')
+                };
+                
                 return this._doHttp(options, params.dataType, body);
             }.bind(this));
     },
