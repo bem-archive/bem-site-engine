@@ -101,7 +101,7 @@ provide(inherit({
                         len = Buffer.byteLength(body) || 0;
                     }
                     
-                    headers['content-length'] = len;
+                    headers['Content-Length'] = len;
                 }
 
                 options = {
