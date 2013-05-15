@@ -1,4 +1,5 @@
 .document__title
 {
-    margin: 35px 0 25px 16px;
+    padding: 20px 0 0.8em 16px;
+    margin: 0;
 }
