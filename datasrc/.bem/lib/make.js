@@ -9,14 +9,14 @@ try {
     BEM = require('bem');
 }
 
-var Q = BEM.require('q'),
-    QFS = BEM.require('q-fs'),
-    APW = BEM.require('apw'),
-    registry = BEM.require('./nodesregistry');
+var QFS = BEM.require('q-fs'),
+    registry = BEM.require('./nodesregistry.js');
+
+exports.BEM = BEM;
+exports.createArch = createArch;
 
 function createArch(opts) {
-    var arch = new APW.Arch(),
-        DefaultArch = BEM.require('./default-arch'),
+    var Arch = BEM.require('./default-arch.js'),
         rootMakefile = PATH.join(opts.root, '.bem', 'make.js');
 
     return QFS.exists(rootMakefile)
@@ -24,7 +24,7 @@ function createArch(opts) {
             if(exists) return include(rootMakefile);
         })
         .then(function() {
-            return new (DefaultArch.Arch)(arch, opts);
+            return Arch;
         });
 }
 
@@ -69,22 +69,3 @@ function evalConfig(content, path) {
         }),
         path);
 }
-
-process.once('message', function(m) {
-    var root = m.root;
-    process.env.__root_level_dir = '';
-
-    createArch({ root : root })
-        .then(function(archNode) {
-            var libraries = archNode.getLibraries();
-            process.send({ root : root, code : 0, deps : libraries });
-        })
-        .fail(function(err) {
-            process.send({
-                root : root,
-                code : 1,
-                msg : err.stack || err
-            });
-        })
-        .done();
-});

@@ -40,7 +40,37 @@ registry.decl(sourceNodes.SourceNodeName, {
 //                blocks : ['.']
 //            },
             'islands-popups' : {
-                blocks : ['common.blocks', 'desktop.blocks']
+                paths : ['common.blocks', 'desktop.blocks'],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
+                    'bem-controls/common.blocks',
+                    'bem-controls/desktop.blocks',
+                    'islands-controls/common.blocks',
+                    'islands-controls/desktop.blocks',
+                    'islands-page/common.blocks',
+                    'islands-page/desktop.blocks',
+                    'islands-search/common.blocks',
+                    'islands-search/desktop.blocks',
+                    'islands-media/common.blocks',
+                    'islands-media/desktop.blocks',
+                    'islands-user/common.blocks',
+                    'islands-user/desktop.blocks',
+                    'lego/blocks-common',
+                    'lego/blocks-desktop',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
+            },
+            'islands-dynamic' : {
+                paths : ['common.blocks', 'desktop.blocks'],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
+                    'lego/blocks-common',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
             }
         };
     }
