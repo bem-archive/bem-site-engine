@@ -6,6 +6,7 @@ var PATH = require('path'),
     cacherNodes = require('./cacher.js'),
     cacheNodes = require('./cache.js'),
     introspectorNodes = require('./introspector.js'),
+    examplerNodes = require('./exampler.js'),
     pageNodes = require('./page.js'),
 
     PRJ_ROOT = PATH.resolve(__dirname, '../../../'),
@@ -27,10 +28,6 @@ registry.decl(SourceNodeName, {
         this.root = o.root;
         this.arch = o.arch;
     },
-
-//    make : function() {
-//        return this.ctx.arch.withLock(this.alterArch(), this);
-//    },
 
     alterArch : function() {
         var arch = this.arch;
@@ -58,7 +55,7 @@ registry.decl(SourceNodeName, {
                 return arch;
             });
 
-
+        /*
         var cacheNode = this.createCacheNode(),
             sourceNode = this.createSourcesNode();
 
@@ -76,6 +73,7 @@ registry.decl(SourceNodeName, {
             .then(function() {
                 return this.arch;
             }.bind(this));
+        */
     },
 
     createSourceNode : function() {
@@ -99,10 +97,11 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
         this.root = o.root;
         this.item = o.item;
         this.sources = o.sources;
-        this.path = '_' + o.item._id;
 
         this._decl = [];
         this._cacheItemNode = null;
+        
+        this.path = this.__self.createNodePath(o);
     },
 
     getPath : function() {
@@ -123,20 +122,36 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
 
             _t._cacheItemNode = arch.getNode(item._id + '*');    // FIXME: hardcode
 
-            return Q.when(this.createPageNode())
-                .then(function(page) {
+            return Q.all([this.createPageNode(), this.createExamplerNode()])
+                .spread(function(page, exampler) {
                     return [
                         page,
+                        exampler,
                         Q.fcall(_t.createIntrospectorNode.bind(_t), null, _t._cacheItemNode.getId())
                     ];
                 })
-                .spread(function(page, spectr) {
+                .spread(function(page, exampler, spectr) {
                     return Q.fcall(_t.createPageItemNode.bind(_t), page, spectr);
                 })
                 .then(function() {
                     return _t.ctx.arch;
                 });
         };
+    },
+    
+    getOrCreateRealSourceItemNode : function() {
+        var arch = this.ctx.arch,
+            id = this.path,
+            node;
+        
+        if(arch.hasNode(id)) {
+            node = arch.getNode(id);
+        } else {
+            node = new nodes.Node(this.path);
+            arch.setNode(node, arch.getParents(this), this._cacheItemNode.getId());
+        }
+        
+        return node;
     },
 
     createPageNode : function() {
@@ -147,9 +162,8 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 item : this.item,
                 path : this.path
             }),
-            realSINode = new nodes.Node(this.path);
-
-        arch.setNode(realSINode, arch.getParents(this), this._cacheItemNode.getId());
+            realSINode = this.getOrCreateRealSourceItemNode();
+        
         arch.setNode(pageNode, realSINode);
 
         return pageNode;
@@ -191,7 +205,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 root : this.root,
                 item : this.item,
                 libRoot : root,
-                sources : this.sources.blocks
+                sources : this.sources.paths
             });
 
 //        parent = arch.getNode(this.path);
@@ -217,12 +231,34 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
 
                 return spectrItemNode;
             }.bind(this));
+    },
+    
+    createExamplerNode : function() {
+        var arch = this.ctx.arch,
+            sources = this.sources,
+            libRoot = this._cacheItemNode.getPath(),
+            examplerNode = new examplerNodes.ExamplerNode({
+                root : this.root,
+                path : this.path,
+                libRoot : libRoot,
+                sources : sources.paths,
+                levels  : sources.examplesLevels
+            }),
+            realSINode = this.getOrCreateRealSourceItemNode();
+        
+        arch.setNode(examplerNode, realSINode, this._cacheItemNode.getId());
+        
+        return examplerNode;
     }
 
 }, {
 
     createId : function(o) {
-        return '_' + o.item._id + '*';
+        return this.createNodePath(o) + '*';
+    },
+    
+    createNodePath : function(o) {
+        return '_' + o.item._id;
     }
 
 });
