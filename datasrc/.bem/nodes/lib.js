@@ -47,7 +47,7 @@ registry.decl(LibraryNodeName, {
     getBemDependensies : function() {
         var defer = Q.defer(),
             root = this.getPath(),
-            worker = CP.fork(PATH.join(__dirname, 'workers', 'bemdeps.js'), null, {
+            worker = CP.fork(PATH.join(__dirname, 'workers', 'bem-deps.js'), null, {
                 cwd : root,
                 env : { __root_level_dir : '' }
             });
