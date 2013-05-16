@@ -22,7 +22,14 @@ block bk-example {
     
     url: {
         // TODO
-        return 'http://localhost:8080/datasrc/' + '_islands-user/examples/domik/' + this.ctx
+        var Glob = this['i-global'];
+        return [
+            Glob['datasrc-host'],
+            '_' + Glob.lib, 
+            'examples',
+            Glob.block,
+            this.ctx
+        ].join('/');
     }
     
     elem title {
