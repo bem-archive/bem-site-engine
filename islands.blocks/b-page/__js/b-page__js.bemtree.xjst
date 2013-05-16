@@ -2,7 +2,10 @@ block b-page, elem js {
 
     default: {
         var url = apply('asset', this.ctx.ext = this.elem);
-        return { elem : this.elem, url : url.prefix + '.' + url.suffix };
+        return [
+            { block : 'i-jquery', elem : 'core' },
+            { elem : this.elem, url : url.prefix + '.' + url.suffix }
+        ];
     }
 
 }
