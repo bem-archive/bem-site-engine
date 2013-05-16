@@ -99,3 +99,5 @@ registry.decl(sourceNodes.SourceNodeName, {
 });
 
 // TODO: разобраться с npm-пакетами в библиотеках (Error: Cannot find module 'dom-js')
+// FIXME: "Error: channel closed" во время сборки примеров
+
