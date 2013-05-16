@@ -19,6 +19,16 @@ this._mode === '', !this.data {
 
 block i-global {
 
-    default: false
+    default: {
+        var data = this.data,
+            hosts = data.yaApiHosts,
+            params = this._.extend(data.params, {
+                'id' : 'lego',
+                'center-host'  : hosts.center.host,
+                'datasrc-host' : hosts.datasrc.host
+            });
+        
+        return applyCtx({ block : this.block, params : params });
+    }
 
 }
