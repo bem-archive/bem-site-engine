@@ -1,0 +1,17 @@
+block bk-subject, elem examples {
+    
+    default, !this._firstExample: {
+        applyNext(this._firstExample = true)
+    }
+    
+    content, this._firstExample: {
+        elem : 'incut',
+        content : 'Примеры'
+    }
+    
+    content: {
+        var content = applyNext();
+        return [content, this.ctx.content];
+    }
+    
+}

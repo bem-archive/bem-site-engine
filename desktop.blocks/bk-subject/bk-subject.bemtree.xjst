@@ -12,6 +12,7 @@ block bk-subject, (!this.elem || ['elem', 'mod', 'mod-val'].indexOf(this.elem) !
                     block : this.block,
                     elem  : this.elem,
                     name  : this.ctx.name,
+                    mods  : { 'is-first' : this.ctx['is-first'], 'is-last' : this.ctx['is-last'] },
                     title : title,
                     description : description,
                     examples : examples,

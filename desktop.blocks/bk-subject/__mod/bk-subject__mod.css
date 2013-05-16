@@ -1,0 +1,27 @@
+.bk-subject__mod.section
+{
+}
+
+.bk-subject__mod-val-list
+{
+    border: 0;
+    border-collapse: collapse;
+    
+    margin: 0;
+    
+    text-align: left;
+}
+
+.bk-subject__mod-val-name, 
+.bk-subject__mod-val-title
+{
+    margin: 0;
+    padding: 3px 0;
+    
+    visibility: baseline;
+}
+
+.bk-subject__mod-val-title
+{
+    padding-right: 8px;
+}

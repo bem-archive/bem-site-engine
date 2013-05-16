@@ -10,7 +10,10 @@ block bk-subject {
                 elem : 'description',
                 content : this.ctx.description
             }),
-        this.ctx.examples,
+        (this.ctx.examples && {
+                elem : 'examples',
+                content : this.ctx.examples
+            }),
         this.ctx.content
     ]
 

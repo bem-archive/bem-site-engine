@@ -6,29 +6,34 @@ block bk-subject {
             this._firstMod = this.ctx;
 
             applyCtx([
-                { block: 'headline', mods: { level: 3 }, content: 'Модификаторы' },
+                { 
+                    block : 'headline', 
+                    mods  : { level : 3 }, 
+                    mix   : { block : 'section', elem : 'title' },
+                    content : 'Модификаторы' 
+                },
                 this.ctx
             ]);
         }
 
-        !this._isElem, mix: { block : 'section' }
+        mix: { block : 'section' }
 
         content: {
             var ctx = this.ctx;
 
             return [
                 {
-                    elem: 'mod-name',
-                    content: ctx.name
+                    elem : 'mod-name',
+                    content : ctx.name
                 },
                 {
-                    elem: 'mod-title',
-                    content: ctx.title
+                    elem : 'mod-title',
+                    content : ctx.title
                 },
                 ctx.description,
                 {
-                    elem: 'mod-val-list',
-                    content: ctx.content
+                    elem : 'mod-val-list',
+                    content : ctx.content
                 },
                 ctx.examples
             ];
@@ -40,7 +45,7 @@ block bk-subject {
 
         tag: 'h4'
 
-        mix: { block: 'headline', mods: { level: 4 } }
+        mix: { block : 'headline', mods : { level : 4 } }
 
     }
 
@@ -49,15 +54,15 @@ block bk-subject {
     elem mod-val {
 
         default: applyCtx({
-            tag: 'tr',
-            content: [
+            tag : 'tr',
+            content : [
                 {
-                    elem: 'mod-val-name',
-                    content: this.ctx.name
+                    elem : 'mod-val-name',
+                    content : this.ctx.name
                 },
                 {
-                    elem: 'mod-val-title',
-                    content: this.ctx.title
+                    elem : 'mod-val-title',
+                    content : this.ctx.title
                 }
             ]
         })

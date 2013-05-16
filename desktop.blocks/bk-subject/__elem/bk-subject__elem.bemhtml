@@ -6,7 +6,12 @@ block bk-subject {
             this._firstElem = this.ctx;
 
             applyCtx([
-                { block: 'headline', mods: { level: 3 }, content: 'Элементы' },
+                { 
+                    block : 'headline', 
+                    mods  : { level : 3 }, 
+                    mix   : { block : 'section', elem : 'title' },
+                    content : 'Элементы' 
+                },
                 this.ctx
             ]);
         }
@@ -17,12 +22,12 @@ block bk-subject {
 
         content: [
             {
-                elem: 'elem-name',
-                content: this.ctx.name
+                elem : 'elem-name',
+                content : this.ctx.name
             },
             {
-                elem: 'elem-title',
-                content: this.ctx.title
+                elem : 'elem-title',
+                content : this.ctx.title
             },
             this.ctx.description,
             this.ctx.examples,
@@ -35,7 +40,12 @@ block bk-subject {
         this._firstMod = this.ctx;
 
         applyCtx([
-            { block: 'headline', mods: { level: 5 }, content: 'Модификаторы элемента' },
+            { 
+                block : 'headline', 
+                mods  : { level : 5 }, 
+                mix   : { block : 'section', elem : 'title' },
+                content : 'Модификаторы элемента' 
+            },
             this.ctx
         ]);
     }
@@ -44,7 +54,7 @@ block bk-subject {
 
         tag: 'h4'
 
-        mix: { block: 'headline', mods: { level: 4 } }
+        mix: { block : 'headline', mods : { level: 4 } }
 
     }
 

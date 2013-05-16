@@ -23,6 +23,9 @@ block bk-declaration {
             obj.examples = ctx.examples || [];
 
             ctx.url && (obj.url = ctx.url);
+            
+            ctx.first && (obj['is-first'] = 'yes');
+            ctx.last && (obj['is-last'] = 'yes');
 
             var content = obj.content || (obj.content = []);
 
@@ -39,8 +42,13 @@ block bk-declaration {
         }
 
         this._.isArray(this.ctx): {
-            var buf = [];
-            this.ctx.forEach(function(item) {
+            var buf = [],
+                len = this.ctx.length - 1;
+            this.ctx.forEach(function(item, i) {
+                i === 0 && (item.first = true);
+                i === len && (item.last = true);
+                console.log(item);
+                
                 buf.push(apply(this.ctx=item))
             }, this);
             return buf;

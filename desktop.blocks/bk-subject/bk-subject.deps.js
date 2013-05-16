@@ -3,6 +3,17 @@
         { block : 'i-bem', elems : ['tree'] }
     ],
     shouldDeps : [
-        { elems : [ 'level', 'mod', 'elem', 'title', 'description' ] }
+        { block : 'bk-example' },
+        { 
+            elems : [ 
+                'level', 
+                'mod', 
+                'elem', 
+                'title', 
+                'incut',
+                'description',
+                'examples'
+            ] 
+        }
     ]
 })
