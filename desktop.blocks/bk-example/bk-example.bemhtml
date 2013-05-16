@@ -1,0 +1,35 @@
+block bk-example {
+    
+    js: true
+    
+    mix: { block : 'island' }
+    
+    content: [
+        {
+            elem : 'title',
+            content : this.ctx.title
+        },
+        {
+            elem : 'live',
+            url : this.ctx.url
+        }
+    ]
+    
+    elem live {
+        
+        tag : ''
+        
+        this.ctx.url {
+            
+            tag: 'iframe'
+                
+            attrs: { 
+                src : 'http://localhost:8080/datasrc/' + '_islands-popups/examples/popup/' + this.ctx.url 
+            }
+                
+        }
+        
+    }
+    
+    
+}

@@ -1,0 +1,19 @@
+.bk-example
+{
+    padding: 12px;    
+}
+
+.bk-example__title
+{
+    line-height: 18px;
+    
+    margin-top: -2px;
+}
+
+.bk-example__live
+{
+    border: 0;
+
+    width: 100%;
+    overflow-x: hidden;
+}
