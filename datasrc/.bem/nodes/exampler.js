@@ -32,7 +32,8 @@ registry.decl(ExamplerNodeName, nodes.NodeName, {
     },
     
     make : function() {
-        return this.createExamples().fail(console.log.bind(null, '[EEE]'));
+        // TODO: use bem/lib/logger
+        return this.createExamples().fail(console.log);
     },
     
     createExamples : function() {
@@ -45,10 +46,10 @@ registry.decl(ExamplerNodeName, nodes.NodeName, {
         worker.once('message', function(m) {
             worker.kill();
     
-            if(m.code === 0 || m.uid === this.libRoot)
+            if(m.code === 0)
                 return defer.resolve(m);
     
-            defer.reject(m.msg);
+            defer.reject(new Error(m.msg));
         });
     
         worker.send({ 

@@ -1,7 +1,8 @@
 var PATH = require('path'),
+    BEM = require('bem'),
+    APW = BEM.require('apw'),
+    MAKE = BEM.require('./make.js'),
     make = require('../../lib/make.js'),
-    APW = make.BEM.require('apw'),
-    MAKE = make.BEM.require('./make.js'),
     arch = new APW.Arch();
 
 function appendExamplesNodes(DefaultArch) {
@@ -48,11 +49,21 @@ process.once('message', function(m) {
             });
         })
         .fail(function(err) {
+            var msg = err.message + '\n' + err.stack;
+            
             process.send({
-                root : uid,
                 code : 1,
-                msg  : err.stack || err
+                msg  : msg
             });
         })
         .done();
+});
+
+process.on('uncaughtException', function(err) {
+    var msg = err.message + '\n' + err.stack;
+    
+    process.send({
+        code : 1,
+        msg  : msg
+    });
 });

@@ -17,7 +17,6 @@ var CP = require('child_process'),
     createLevel = BEM.createLevel,
     U = BEM.util;
 
-
 registry.decl('Arch', {
     
     createExamplesNodes : function(opts) {
@@ -105,6 +104,7 @@ registry.decl('ExamplesLevelNode', 'DocumentNode', {
         return this.ctx.arch.withLock(this.alterArch(), this);
     },
     
+    /** @returns {Function} */
     alterArch : function() {
         var ctx = this.ctx;
         return function() {
@@ -222,6 +222,7 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
         return this.ctx.arch.withLock(this.alterArch(), this);
     },
     
+    /** @returns {Function} */
     alterArch : function() {
         var ctx = this.ctx;
         

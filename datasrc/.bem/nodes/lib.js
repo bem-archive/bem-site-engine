@@ -55,10 +55,10 @@ registry.decl(LibraryNodeName, {
         worker.once('message', function(m) {
             worker.kill();
 
-            if(m.code === 0 || m.root === root)
+            if(m.code === 0)
                 return defer.resolve(m.deps);
 
-            defer.reject(m.msg);
+            defer.reject(new Error(m.msg));
         });
 
         worker.send({ root : root });

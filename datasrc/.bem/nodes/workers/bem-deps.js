@@ -1,6 +1,7 @@
 var PATH = require('path'),
-    MAKE = require('../../lib/make.js'),
-    APW = MAKE.BEM.require('apw'),
+    BEM = require('bem'),
+    APW = BEM.require('apw'),
+    make = require('../../lib/make.js'),
     arch = new APW.Arch();
 
 process.once('message', function(m) {
@@ -9,24 +10,33 @@ process.once('message', function(m) {
     
     process.env.__root_level_dir = '';
 
-    MAKE.createArch(opts)
+    make.createArch(opts)
         .then(function(Arch) {
             return new (Arch.Arch)(arch, opts);
         })
         .then(function(archNode) {
             var libraries = archNode.getLibraries();
-            process.send({ 
-                root : root, 
+            process.send({
                 code : 0, 
                 deps : libraries 
             });
         })
         .fail(function(err) {
+            var msg = err.message + '\n' + err.stack;
+            
             process.send({
-                root : root,
                 code : 1,
-                msg : err.stack || err
+                msg  : msg
             });
         })
         .done();
+});
+
+process.on('uncaughtException', function(err) {
+    var msg = err.message + '\n' + err.stack;
+    
+    process.send({
+        code : 1,
+        msg  : msg
+    });
 });

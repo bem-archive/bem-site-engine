@@ -1,18 +1,10 @@
 var PATH = require('path'),
     FS = require('fs'),
     VM = require('vm'),
-    BEM;
-
-try {
-    BEM = require(PATH.join(process.cwd(), 'node_modules', 'bem'));
-} catch (e) {
-    BEM = require('bem');
-}
-
-var QFS = BEM.require('q-fs'),
+    BEM = require('bem'),
+    QFS = BEM.require('q-fs'),
     registry = BEM.require('./nodesregistry.js');
 
-exports.BEM = BEM;
 exports.createArch = createArch;
 
 function createArch(opts) {
