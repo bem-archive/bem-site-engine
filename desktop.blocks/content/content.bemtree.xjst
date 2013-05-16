@@ -11,6 +11,10 @@ block content {
             block : 'breadcrumbs'
         }
 
+        this.data.page === 'index': {
+            block : 'showcase'
+        }
+        
         this.data.page === 'library': {
             var content = applyNext();
             return [

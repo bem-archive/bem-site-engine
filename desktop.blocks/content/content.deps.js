@@ -4,6 +4,7 @@
     ],
     shouldDeps : [
         { block : 'breadcrumbs' },
+        { block : 'showcase' },
         { block : 'catalogue' },
         { block : 'document' }
     ]

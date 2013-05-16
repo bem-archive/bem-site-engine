@@ -1,0 +1,30 @@
+block showcase {
+    
+    content: [
+        {
+            elem : 'item',
+            name : 'romochka',
+            url  : 'https://2-10.lego.yandex-team.ru/',
+            repo : 'https://github.yandex-team.ru/lego/romochka'
+        },
+        {
+            elem : 'item',
+            name : 'islands-dynamic',
+            url  : '/libs/islands-dynamic',
+            repo : 'https://github.yandex-team.ru/lego/islands-dynamic'
+        },
+        {
+            elem : 'item',
+            name : 'islands-popups',
+            url  : '/libs/islands-popups',
+            repo : 'https://github.yandex-team.ru/lego/islands-popups'
+        },
+        {
+            elem : 'item',
+            name : 'islands-user',
+            url  : '/libs/islands-user',
+            repo : 'https://github.yandex-team.ru/lego/islands-user'
+        }
+    ]
+    
+}
