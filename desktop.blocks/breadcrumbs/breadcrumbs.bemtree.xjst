@@ -1,0 +1,39 @@
+block breadcrumbs {
+    
+    content: {
+        var content = [
+                { 
+                    elem : 'item', 
+                    elemMods : { root : 'yes' },
+                    url : '/',
+                    content : 'Главная'
+                },
+                {
+                    elem : 'item', 
+                    url : '/libs',
+                    content : 'Библиотеки'
+                }
+            ],
+            page = this.data.page,
+            datasrc = this.data.params;
+        
+        datasrc.lib && 
+            content.push({ 
+                elem : 'item',
+                elemMods : (page === 'library'? { active : 'yes' } : ''),
+                url : '/libs/' + datasrc.lib,
+                content : datasrc.lib
+            });
+        
+        datasrc.block && 
+            content.push({ 
+                elem : 'item',
+                elemMods : (page === 'document'? { active : 'yes' } : ''),
+                url : '/libs/' + datasrc.lib + '/blocks/' + datasrc.block,
+                content : datasrc.block
+            });
+        
+        return content;
+    }
+    
+}

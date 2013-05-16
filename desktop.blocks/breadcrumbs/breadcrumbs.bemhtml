@@ -2,19 +2,13 @@ block breadcrumbs {
 
     tag: 'ul'
 
-    content: [
-        { elem : 'item', content : 'Главная' },
-        { elem : 'item', content : 'Библиотеки' },
-        { elem : 'item', content : 'islands-popups', elemMods : { active : 'yes' } }
-    ]
-
     elem item {
 
         tag: 'li'
 
         content: {
             block : 'link',
-            url   : '!#',
+            url   : this.ctx.url,
             content : this.ctx.content
         }
 
