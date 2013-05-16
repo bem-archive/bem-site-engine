@@ -4,16 +4,38 @@ block bk-example {
     
     mix: { block : 'island' }
     
-    content: [
-        {
-            elem : 'title',
-            content : this.ctx.title
-        },
-        {
-            elem : 'live',
-            url : this.ctx.url
+    content: {
+        var url = apply('url', this.ctx=this.ctx.url);
+        
+        return [
+            {
+                elem : 'title',
+                url  : url,
+                content : this.ctx.title || this.ctx.url
+            },
+            {
+                elem : 'live',
+                url  : url
+            }
+        ];
+    }
+    
+    url: {
+        // TODO
+        return 'http://localhost:8080/datasrc/' + '_islands-user/examples/domik/' + this.ctx
+    }
+    
+    elem title {
+        
+        content: {
+            block : 'link',
+            mods  : { external : 'yes' },
+            attrs : { target : '_blank' },
+            url   : this.ctx.url,
+            content : this.ctx.content
         }
-    ]
+        
+    }
     
     elem live {
         
@@ -24,7 +46,7 @@ block bk-example {
             tag: 'iframe'
                 
             attrs: { 
-                src : 'http://localhost:8080/datasrc/' + '_islands-popups/examples/popup/' + this.ctx.url 
+                src : this.ctx.url 
             }
                 
         }
