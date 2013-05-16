@@ -12,8 +12,8 @@ process.env.__root_level_dir = PRJ_ROOT;
 registry.decl(cacherNodes.CacherNodeName, {
 
     sources : [
-        'bem-articles',
-        'bem-tools',
+//        'bem-articles',
+//        'bem-tools',
         'islands-controls',
         'islands-core',
         'islands-dynamic',
