@@ -4,10 +4,12 @@
     ],
     shouldDeps : [
         { block : 'static-text' },
+        { block : 'b-text' },
         { block : 'headline' },
         { block : 'link' },
         { block : 'olist' },
         { block : 'ulist' },
+        { block : 'para' },
         { block : 'island' },
         { mods : { theme : 'normal' } },
         { block : 'header' },
