@@ -44,10 +44,13 @@ block bk-subject, (!this.elem || ['elem', 'mod', 'mod-val'].indexOf(this.elem) !
     }
 
     description: {
-        var buf = [];
+        var buf = [],
+            content;
         this.ctx.forEach(function(item) {
-            item.content &&
-                buf.push({ elem : 'level', name : item.level, content : item.content });
+            if(item.content) {
+                content = applyCtx(item.content);
+                buf.push({ elem : 'level', name : item.level, content : content });
+            }
         }, this);
         return buf;
     }

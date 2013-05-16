@@ -1,5 +1,7 @@
-.bk-subject__mod.section
+.bk-subject__mod-name
 {
+    margin: 0;
+    padding: 0;
 }
 
 .bk-subject__mod-val-list
