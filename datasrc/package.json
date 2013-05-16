@@ -1,0 +1,27 @@
+{
+  "name": "legoa-datasrc",
+  "description": "",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.yandex-team.ru/lego/legoa-datasrc.git"
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "dependencies": {
+    "legoa-repodb": "git://github.yandex-team.ru/varankinv/legoa-repodb.git#0.2.0",
+    "mkdirp": "~0.3.5",
+    "dom-js": "0.0.9",
+    "ometajs": "~3.2.4",
+    "xjst": "~0.4.13",
+    "marked": "~0.2.8",
+    "shmakowiki": "~0.4.0"
+  },
+  "devDependencies": {
+    "bem": "~0.5.30"
+  },
+  "author": "lego-team@yandex-team.ru",
+  "readmeFilename": "README.md",
+  "private": true
+}
