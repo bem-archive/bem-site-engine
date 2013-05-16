@@ -5,7 +5,7 @@ modules.define(
 
 router.addRoute({
     name : 'library',
-    rule : '/libs/{id}',
+    rule : '/libs/{lib}',
     data : {
         action : 'page'
     }

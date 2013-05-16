@@ -9,7 +9,7 @@ block document {
                 params = this._datasrc;
             return this.doAsync(
                     leDatasrc.blockInfo.bind(leDatasrc, {
-                        lib : params.id,
+                        lib : params.lib,
                         block : params.block
                     })
                 )

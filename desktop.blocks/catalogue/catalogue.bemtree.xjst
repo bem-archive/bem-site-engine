@@ -1,14 +1,14 @@
 block catalogue {
 
     default: {
-        this.ctx.id = this.data.params.id;
+        this.ctx.id = this.data.params.lib;
         return applyNext(this._datasrc = this.data.params);
     }
 
     content, (this._datasrc && !this.ctx.content): {
         var data = this.data;
         return this.doAsync(
-                leDatasrc.libInfo.bind(leDatasrc, { lib : this._datasrc.id })
+                leDatasrc.libInfo.bind(leDatasrc, { lib : this._datasrc.lib })
             )
             .then(function(result) {
                 return apply(
@@ -30,7 +30,7 @@ block catalogue {
                 return apply(
                     this._mode = '',
                     this.ctx.elem = 'list-item',
-                    this._libid = this.data.params.id,
+                    this._libid = this.data.params.lib,
                     this._blockname = this.ctx.name
                 );
             }
