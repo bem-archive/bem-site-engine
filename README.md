@@ -26,6 +26,12 @@ http://planner.yandex-team.ru/project/10690
           popup.data.json
           dropdown.json.js
           ...
+        examples/
+          popup.examples/
+            .bem/level.js   # baseLevelPath ➝ путь/до/библиотеки/в/кэше/.bem/levels/bundles.js (FIXME: hardcode)
+            10-simple/
+              10-simple.bemjson.js
+          ...
 
 ###### Примечания
 
@@ -41,6 +47,15 @@ http://planner.yandex-team.ru/project/10690
 в JSON-формате.**
 
 Полученный JSON загружается в рантайме и через `bemtree.xjst` + `bemhtml` генерируется страница.
+
+**3) В `examples` собираем примеры библиотеки.**
+
+Сборка примеров запускается в отдельном child-процессе, на основе make.js-файла библиотеки 
+(с доопределением нужных узлов).
+
+Для запуска сборки реализуем [мини-bem-make](datasrc/lib/make.js), который умеет возвращать 
+архитектуру сборки по умолчанию (`DefaultArch`) для библиотеки. Но с возможностью програмно 
+влиять на конечный `Arch` из кода воркера, запускающего процесс сборки.
 
 ### Как поднять копию ###
 
