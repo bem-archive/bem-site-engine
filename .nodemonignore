@@ -2,5 +2,6 @@
 # ignore uncompressed files match to `bundles/page/page.js` pattern
 #:.*[^\/]+\/[^\/]+\/([^_])*.js$
 
-:.*[^\/]+\/[^\/]+\/(?:[^_])*.(node|bemhtml)\.js$
+# игнорировать изменения в несжатых `page.node.js` файлах бандла
+:.*[^\/]+\/[^\/]+\/(?:[^_])*\.node\.js$
 
