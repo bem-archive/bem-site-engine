@@ -1,5 +1,6 @@
 .layout_section_2-1,
-.layout_section_100
+.layout_section_100,
+.layout_section_center
 {
     padding-left: 20px;
 }
@@ -15,8 +16,16 @@
     width: 100%;
 }
 
-
 .layout_section_2-1 .layout__col
 {
     width: 70%;
 }
+
+.layout_section_center .layout__col
+{
+    padding-right: 20px;
+    padding-left: 120px;
+
+    width: 100%;
+}
+

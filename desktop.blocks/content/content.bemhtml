@@ -5,7 +5,7 @@ block content {
             block : 'body',
             mix : {
                 block : 'layout',
-                mods : { section : '2-1' }
+                mods : { section : 'center' }
             },
             content : this.ctx
         })
