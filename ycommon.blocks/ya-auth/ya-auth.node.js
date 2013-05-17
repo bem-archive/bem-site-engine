@@ -8,8 +8,8 @@ var QS = require('querystring'),
 
 modules.define(
     'ya-auth',
-    ['objects', 'yana-config', 'http-provider'],
-    function(provide, objects, config, httpProvider) {
+    ['objects', 'yana-config', 'yana-logger', 'http-provider'],
+    function(provide, objects, config, logger, httpProvider) {
 
 var bb = config.hosts.blackbox,
     defaultParams = {
@@ -104,14 +104,14 @@ provide({
     },
 
     _getProviderParams : function(params) {
-        return objects.extend(defaultParams, params, {
+        return objects.extend(params, {
                 url : this._buildUrl(params),
                 method : 'GET'  // XXX: ugly!
             });
     },
 
     _runMethod : function(params) {
-        var opts = this._getProviderParams(params);
+        var opts = this._getProviderParams(objects.extend(defaultParams, params));
         return httpProvider.create(opts).run();
     },
 
