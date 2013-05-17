@@ -1,12 +1,7 @@
 block user {
 
     content: [
-        { elem : 'icon' },
-        {
-            elem : 'notice',
-            count : 6
-        },
-        { elem : 'name' }
+        { elem : 'icon' }
     ]
 
 }
