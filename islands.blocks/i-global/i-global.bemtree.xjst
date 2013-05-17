@@ -21,14 +21,42 @@ block i-global {
 
     default: {
         var data = this.data,
+            req = this.data.req,
             hosts = data.yaApiHosts,
             params = this._.extend(data.params, {
                 'id' : 'lego',
                 'center-host'  : hosts.center.host,
                 'datasrc-host' : hosts.datasrc.host
             });
-        
-        return applyCtx({ block : this.block, params : params });
+
+        return this.doAsync(function() {
+                return yaAuth.auth(req);
+            })
+            .then(
+                function(result) {
+                    var status = result.status;
+                    console.debug('yaAuth received %j', status)
+
+                    if(!status || status.id !== 0)
+                        return params;
+
+                    params.login = result.login;
+                    params.displayName = result['display_name']
+
+                    return params;
+                }.bind(this),
+                function(err) {
+                    console.error(err.message, err.stack);
+                    return params;
+                }.bind(this)
+            )
+            .then(function(params) {
+                return applyNext(
+                    this._mode = '',
+                    this.data = data,
+                    this.ctx = { block : this.block, params : params }
+                );
+            }.bind(this));
     }
 
 }
