@@ -18,7 +18,8 @@ var OS = require('os'),
         },
 
         datasrc : {
-            root : PATH.join(app.app_root, 'datasrc')
+            root : PATH.join(app.app_root, 'datasrc'),
+            host : '/datasrc'
         }
     },
     node = {
