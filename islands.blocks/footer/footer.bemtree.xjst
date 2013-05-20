@@ -18,7 +18,7 @@ block footer {
                 {
                     elem : 'link',
                     url : '/',
-                    content : 'О проекте'
+                    content : 'О&#160;проекте'
                 },
                 {
                     block : 'copyright',
