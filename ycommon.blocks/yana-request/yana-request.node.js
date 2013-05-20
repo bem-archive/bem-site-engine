@@ -13,8 +13,7 @@ provide(inherit(Request, {
             .then(function(req) {
                 var headers = req.headers;
 
-                req.userip = headers['x-real-ip'] ||
-                    headers['x-forwarded-for'] || req.connection.remoteAddress;
+                req.userip = headers['x-real-ip'] || req.connection.remoteAddress;
 
                 req.logger = logger;
 
