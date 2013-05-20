@@ -59,6 +59,7 @@ provide(inherit({
                     URL.parse(url, true) : url;
 
         this._hasBody = _params.method === 'POST' || _params.method === 'PUT';
+        this._dataType = _params.dataType;
         this._redirCounter = _params.maxRedirects;
 
         this._url = parsedUrl;
