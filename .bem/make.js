@@ -30,7 +30,7 @@ MAKE.decl('Arch', {
         'islands-page @ dev',   // FIXME: dev
         'islands-search',
         'islands-services',
-        'islands-user'
+        'islands-user @ dev'    // FIXME: islands-user#dev
     ]
 
 });
