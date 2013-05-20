@@ -111,6 +111,8 @@ provide({
     },
 
     _runMethod : function(params) {
+        logger.debug('yaAuth: Running "%s" \\w params: %j', params.method, params);
+
         var opts = this._getProviderParams(objects.extend(defaultParams, params));
         return httpProvider.create(opts).run();
     },
