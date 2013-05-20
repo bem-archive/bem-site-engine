@@ -27,7 +27,7 @@ MAKE.decl('Arch', {
         'bem-controls',
         'islands-controls',
         'islands-media',
-        'islands-page @ dev',   // FIXME: dev
+        'islands-page @ dev',   // FIXME: islands-page#dev
         'islands-search',
         'islands-services',
         'islands-user @ dev'    // FIXME: islands-user#dev
