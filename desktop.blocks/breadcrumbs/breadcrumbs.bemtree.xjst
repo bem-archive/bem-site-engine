@@ -2,17 +2,17 @@ block breadcrumbs {
     
     content: {
         var content = [
-                { 
+                {
                     elem : 'item', 
                     elemMods : { root : 'yes' },
                     url : '/',
-                    content : 'Главная'
-                },
-                {
-                    elem : 'item', 
-                    url : '/libs',
                     content : 'Библиотеки'
                 }
+                //{
+                //    elem : 'item', 
+                //    url : '/libs',
+                //    content : 'Библиотеки'
+                //}
             ],
             page = this.data.page,
             datasrc = this.data.params;
