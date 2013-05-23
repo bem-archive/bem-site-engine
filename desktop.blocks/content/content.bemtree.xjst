@@ -1,14 +1,13 @@
 block content {
 
-//    default: {
-//        console.log(this.data);
-//        return applyNext();
-//    }
-
     content {
 
         true: {
             block : 'breadcrumbs'
+        }
+
+        this.data.page === 'error': {
+            block : 'error'
         }
 
         this.data.page === 'index': {
