@@ -25,7 +25,7 @@ provide(View.decl('yana-view', {
             bundleName : config.common_bundle_name,
             staticUrl : URL.resolve(
                     config.static_host, config.common_bundle_path),
-            yaApiHosts : config.hosts,
+            yaApiHosts : config.hosts
         };
     },
 

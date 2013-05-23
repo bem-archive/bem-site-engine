@@ -36,9 +36,9 @@ provide({
 
     /**
      * @param {Object} params
-     * @param {String} params['bb-host']
-     * @param {String} params['method']
-     * @param {String} params['format']
+     * @property {String} params['bb-host']
+     * @property {String} params['method']
+     * @property {String} params['format']
      * @returns {String}
      */
     _buildUrl : function(params) {
@@ -48,7 +48,7 @@ provide({
 
     /**
      * @param {Object} params
-     * @param {String} params.method
+     * @property {String} params.method
      * @returns {String}
      */
     _buildMethodPath : function(params) {
