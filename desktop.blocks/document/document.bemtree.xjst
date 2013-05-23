@@ -13,20 +13,22 @@ block document {
                         block : params.block
                     })
                 )
-                .then(function(result) {
-                    return apply(
-                        this._mode = '',
-                        this.data = data,
-                        this.ctx = {
-                            block : 'bk-declaration',
-                            content : result
-                        }
-                    );
-                }.bind(this))
-                .fail(function(e) {
-                    console.error(e.toString());
-                    console.debug(e.stack);
-                }.bind(this));
+                .then(
+                    function(result) {
+                        return apply(
+                            this._mode = '',
+                            this.data = data,
+                            this.ctx = {
+                                block : 'bk-declaration',
+                                content : result
+                            }
+                        );
+                    },
+                    function(err) {
+                        return apply('error', this.ctx = err);
+                    },
+                    this
+                );
         }
 
     }

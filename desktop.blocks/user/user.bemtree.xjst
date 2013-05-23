@@ -1,0 +1,8 @@
+block user {
+
+    this.data.error, default: {
+        // NOTE: не показывать блок пользователя на странице ошибки
+        return false;
+    }
+
+}

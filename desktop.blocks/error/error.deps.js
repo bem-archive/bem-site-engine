@@ -1,10 +1,9 @@
 ({
     mustDeps : [
         { block : 'i-bem', elems : ['html', 'tree'] },
-        { block : 'island' },
-        { block : 'error' }
+        { block : 'i-global' }
     ],
     shouldDeps : [
-        { block  : 'bk-declaration' }
+        { block : 'b-page', mods : { page : 'error' } }
     ]
 })
