@@ -39,21 +39,70 @@ registry.decl(sourceNodes.SourceNodeName, {
 //            'bem-articles' : {
 //                blocks : ['.']
 //            },
-            'islands-user' : {
+              // TODO: Error: Tech module with path
+              // '/home/varankinv/web/vendor/bem-bl/blocks-common/i-bem/bem/techs/bemhtml.js'
+              // not found on require search paths
+            /*'islands-controls' : {
+                paths : [
+                    'bem-controls/common.blocks',
+                    'bem-controls/desktop.blocks',
+                    'common.blocks',
+                    'desktop.blocks'
+                ],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
+                    'lego/blocks-common',
+                    'lego/blocks-desktop',
+                    'bem-controls/common.blocks',
+                    'bem-controls/desktop.blocks',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
+            },*/
+            'islands-dynamic' : {
                 paths : ['common.blocks', 'desktop.blocks'],
                 examplesLevels : [
                     'bem-bl/blocks-common',
                     'bem-bl/blocks-desktop',
-                    'islands-media/common.blocks',
-                    'islands-media/desktop.blocks',
-                    'islands-page/common.blocks',
-                    'islands-page/desktop.blocks',
+                    'lego/blocks-common',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
+            },
+            'islands-media' : {
+                paths : ['common.blocks'],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
                     'bem-controls/common.blocks',
                     'bem-controls/desktop.blocks',
                     'islands-controls/common.blocks',
                     'islands-controls/desktop.blocks',
                     'islands-popups/common.blocks',
                     'islands-popups/desktop.blocks',
+                    'lego/blocks-common',
+                    'lego/blocks-desktop',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
+            },
+            'islands-page' : {
+                paths : ['common.blocks', 'desktop.blocks'],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
+                    'bem-controls/common.blocks',
+                    'islands-controls/common.blocks',
+                    'islands-controls/desktop.blocks',
+                    'islands-media/common.blocks',
+                    'islands-media/desktop.blocks',
+                    'islands-user/common.blocks',
+                    'islands-user/desktop.blocks',
+                    'islands-popups/common.blocks',
+                    'islands-popups/desktop.blocks',
+                    'islands-services/common.blocks',
+                    'islands-services/desktop.blocks',
                     'lego/blocks-common',
                     'lego/blocks-desktop',
                     'common.blocks',
@@ -83,12 +132,44 @@ registry.decl(sourceNodes.SourceNodeName, {
                     'desktop.blocks'
                 ]
             },
-            'islands-dynamic' : {
+            'islands-services' : {
                 paths : ['common.blocks', 'desktop.blocks'],
                 examplesLevels : [
                     'bem-bl/blocks-common',
                     'bem-bl/blocks-desktop',
+                    'islands-media/common.blocks',
+                    'islands-media/desktop.blocks',
+                    'islands-page/common.blocks',
+                    'islands-page/desktop.blocks',
+                    'bem-controls/common.blocks',
+                    'bem-controls/desktop.blocks',
+                    'islands-controls/common.blocks',
+                    'islands-controls/desktop.blocks',
+                    'islands-popups/common.blocks',
+                    'islands-popups/desktop.blocks',
                     'lego/blocks-common',
+                    'lego/blocks-desktop',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
+            },
+            'islands-user' : {
+                paths : ['common.blocks', 'desktop.blocks'],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
+                    'islands-media/common.blocks',
+                    'islands-media/desktop.blocks',
+                    'islands-page/common.blocks',
+                    'islands-page/desktop.blocks',
+                    'bem-controls/common.blocks',
+                    'bem-controls/desktop.blocks',
+                    'islands-controls/common.blocks',
+                    'islands-controls/desktop.blocks',
+                    'islands-popups/common.blocks',
+                    'islands-popups/desktop.blocks',
+                    'lego/blocks-common',
+                    'lego/blocks-desktop',
                     'common.blocks',
                     'desktop.blocks'
                 ]
