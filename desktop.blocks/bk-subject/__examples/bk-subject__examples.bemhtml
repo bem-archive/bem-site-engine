@@ -1,9 +1,15 @@
 block bk-subject, elem examples {
-    
-    default, !this._firstExample: {
-        applyNext(this._firstExample = true)
+
+    default {
+
+        !this._firstExample: {
+            applyNext(this._firstExample = true)
+        }
+
+        (this.ctx.content && !this.ctx.content.length): false
+
     }
-    
+
     content, this._firstExample: {
         elem : 'incut',
         content : 'Примеры'
