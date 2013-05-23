@@ -29,7 +29,7 @@ provide({
             .run()
             .fail(function(err) {
                 var message = 'Block "' + params.block + '" for library "' + params.lib + '" not found';
-                return new HttpError(404, message);
+                throw new HttpError(404, message);
             });
     },
 
