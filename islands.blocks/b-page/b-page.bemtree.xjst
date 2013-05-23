@@ -1,14 +1,19 @@
 block b-page {
 
     default: {
-        var head = apply('head');
+        var head = apply('head'),
+            title = apply('title');
         return applyCtx({
-                block : this.block,
-                title : this.data.pageTitle,
-                mods : this.ctx.mods,
-                head : head,
-                content: this.ctx.content
-            });
+            block : this.block,
+            title : title,
+            mods : this.ctx.mods,
+            head : head,
+            content : this.ctx.content
+        });
+    }
+
+    title: {
+        return this.data.pageTitle;
     }
 
     head: {

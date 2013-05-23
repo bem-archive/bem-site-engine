@@ -8,6 +8,7 @@ this._mode === 'error', this.data: {
     res.writeHead(this.ctx.code || 404);
 
     data.page = 'error';
+    // TODO: локализация
     data.pageTitle = 'Несуществующая страница';
     data.error = this.ctx;
 

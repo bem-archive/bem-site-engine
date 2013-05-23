@@ -44,11 +44,12 @@ block i-global {
                     params.displayName = result['display_name']
 
                     return params;
-                }.bind(this),
+                },
                 function(err) {
                     console.error(err.message, err.stack);
                     return params;
-                }.bind(this)
+                },
+                this
             )
             .then(function(params) {
                 return applyNext(
@@ -56,7 +57,8 @@ block i-global {
                     this.data = data,
                     this.ctx = { block : this.block, params : params }
                 );
-            }.bind(this));
+            },
+            this);
     }
 
 }
