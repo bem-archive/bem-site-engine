@@ -1,0 +1,42 @@
+this._mode === 'error', this.data: {
+
+    console.error(this.ctx);
+
+    var data = this.data,
+        res = data.res;
+
+    res.writeHead(this.ctx.code || 404);
+
+    data.page = 'error';
+    data.pageTitle = 'Несуществующая страница';
+    data.error = this.ctx;
+
+    // FIXME: hack! для подмены BEMJSON-содержимого страницы
+    // NOTE: при этом, скорее всего, будут неверно резолвиться промисы :(
+    this._buf = apply(
+        this._mode = '',
+        this.ctx = [
+            {
+                block : 'b-page',
+                mods : { page : 'error' }
+            }
+        ]
+    );
+
+    return this._buf;
+
+}
+
+
+block error {
+
+    this.data.error, default: {
+        var ctx = this.ctx;
+
+        ctx.title = 'Несуществующая страница';
+        ctx.content = 'Страница, которую вы читаете, не существует :P';
+
+        return ctx;
+    }
+
+}
