@@ -50,11 +50,15 @@ registry.decl(PageNodeName, nodes.NodeName, {
                             var name = json.name,
                                 title;
 
-                            while(title = json.title.pop()) {
-                                if(title.content) {
-                                    title = title.content;
-                                    break;
+                            if(json.title) {
+                                while(title = json.title.pop()) {
+                                    if(title.content) {
+                                        title = title.content;
+                                        break;
+                                    }
                                 }
+                            } else {
+                                title = name;
                             }
 
                             return index.push({ name : name, title : title });
