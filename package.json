@@ -17,7 +17,8 @@
     "cookie": "~0.0.6",
     "legoa-repodb": "git://github.yandex-team.ru/varankinv/legoa-repodb.git#0.2.0",
     "log": "~1.4.0",
-    "json-stringify-safe": "~4.0.0"
+    "json-stringify-safe": "~4.0.0",
+    "dom-js": "0.0.9"
   },
   "devDependencies": {
     "bem": "~0.5.30",

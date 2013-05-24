@@ -1,14 +1,23 @@
 this._mode === '', !this.data {
 
     true: {
-        this.data = this.ctx;
-        return applyNext(
+        return apply(
             this._mode = '',
+            this.data = this.ctx,
             this.ctx = [
                 { block : 'i-global' },
                 { block : 'b-page' }
             ]
         );
+    }
+
+    BEM && BEM.I18N: {
+        var lang = this.ctx.lang = 'ru';
+
+        BEM.I18N.lang(lang);
+        console.debug('Language is exposed to "%s"', lang);
+
+        return applyNext();
     }
 
     this._.isArray(this.ctx): {
@@ -25,6 +34,7 @@ block i-global {
             hosts = data.yaApiHosts,
             params = this._.extend(data.params, {
                 'id' : 'lego',
+                'lang' : data.lang,
                 'center-host'  : hosts.center.host,
                 'datasrc-host' : hosts.datasrc.host
             });

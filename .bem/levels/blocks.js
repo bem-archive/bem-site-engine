@@ -4,7 +4,7 @@ var PATH = require('path'),
     join = PATH.join,
     resolve = PATH.resolve.bind(null, __dirname),
 
-    PRJ_TECHS = resolve('../techs/'),
+    LEGO_TECHS = environ.getLibPath('romochka', 'tools/bem/techs/nodejs'),
     BEMCORE_TECHS = environ.getLibPath('bem-core', '.bem/techs');
 
 exports.getTechs = function() {
@@ -22,6 +22,10 @@ exports.getTechs = function() {
 
     ['html', 'bemhtml', 'bemtree.xjst', 'vanilla.js', 'browser.js', 'node.js'].forEach(function(name) {
         techs[name] = join(BEMCORE_TECHS, [name, 'js'].join('.'));
+    });
+
+    ['i18n', 'i18n.keys.js'].forEach(function(name) {
+        techs[name] = join(LEGO_TECHS, [name, 'js'].join('.'));
     });
 
     return techs;

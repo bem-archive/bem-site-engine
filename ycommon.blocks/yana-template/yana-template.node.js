@@ -1,3 +1,6 @@
+/* jshint node:true */
+/* global modules:false */
+
 (function() {
 
 var PATH = require('path'),
@@ -6,31 +9,24 @@ var PATH = require('path'),
 
 modules.define(
     'yana-template',
-    ['yana-config', 'yana-logger', 'yana-util', 'http-provider', 'file-provider', 'ya-auth', 'le-datasrc', 'vow'],
-    function(provide, config, logger, util, httpProvider, fileProvider, yaAuth, leDatasrc, Vow, template) {
+    ['yana-config', 'yana-logger', 'yana-util', 'yana-template__context', 'vow'],
+    function(provide, config, logger, util, context, Vow, template) {
 
 provide(util.extend(template, {
 
-    getBemhtml : function(path) {
-        return require(path).BEMHTML;
+    createContext : function() {
+        return context;
     },
 
-    getBemtree : function(path) {
-        var ctx = {
-                exports : exports,
-                require : require,
-                console : logger,
-                httpProvider : httpProvider,
-                fileProvider : fileProvider,
-                yaAuth : yaAuth,
-                leDatasrc : leDatasrc,
-                Vow : Vow
-            };
-        return FS.read(path).then(VM.createScript)
-            .then(function(bemtree) {
-                bemtree.runInNewContext(ctx);
-                return ctx.exports.BEMTREE;
-            });
+    _fillContext : function(ctx, code) {
+        VM.runInNewContext(code, ctx);
+        return ctx;
+    },
+
+    fillContext : function(path, ctx) {
+        logger.debug('Going to fill "%s" context', path);
+        return FS.read(path)
+            .then(this._fillContext.bind(this, ctx));
     },
 
     getPath : function(name, typ) {
@@ -39,13 +35,22 @@ provide(util.extend(template, {
     },
 
     loadFromFs : function(name) {
-        var bemhtml = this.getPath(name, 'bemhtml.js'),
+        var ctx = this.createContext(),
+            i18n = this.getPath(name, 'i18n/all.keys.js'),
+            bemhtml = this.getPath(name, 'bemhtml.js'),
             bemtree = this.getPath(name, 'bemtree.xjst.js'),
             cache = this._cache;
 
-        return Vow.all([this.getBemhtml(bemhtml), this.getBemtree(bemtree)])
-            .spread(function(bemhtml, bemtree) {
-                return cache[name] = { bemhtml : bemhtml, bemtree : bemtree };
+        return Vow.when(ctx)
+            .then(this.fillContext.bind(this, i18n))
+            .then(function(ctx) {
+                return Vow.all([
+                    this.fillContext(bemhtml, ctx),
+                    this.fillContext(bemtree, ctx)
+                ]);
+            }, this)
+            .spread(function(ctx) {
+                return cache[name] = { bemhtml : ctx.BEMHTML, bemtree : ctx.BEMTREE };
             });
     }
 
