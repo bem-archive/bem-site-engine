@@ -11,6 +11,11 @@ this._mode === '', !this.data {
         );
     }
 
+    this.ctx.page === 'error': {
+        this.data = this.ctx;
+        return apply('error', this.ctx = this.data.params);
+    }
+
     BEM && BEM.I18N: {
         var lang = this.ctx.lang = 'ru';
 
