@@ -44,6 +44,8 @@ MAKE.decl('BundleNode', {
             'deps.js',
             'css',
             'ie9.css',
+            'i18n',
+            'i18n.keys.js',
             'bemhtml',
             'bemtree.xjst',
             'browser.js',
@@ -101,6 +103,14 @@ MAKE.decl('BundleNode', {
             'configs/current'
         ]
         .map(function(path) { return PATH.resolve(environ.PRJ_ROOT, path) }));
+    },
+
+    'create-i18n.keys.js-node' : function(tech, bundleNode, magicNode) {
+        return this.setBemCreateNode(
+            tech,
+            this.level.resolveTech(tech),
+            bundleNode,
+            magicNode);
     }
 
 });
