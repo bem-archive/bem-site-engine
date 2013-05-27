@@ -9,10 +9,6 @@
 node_modules
 vendor
 
-datasrc/*
-!datasrc/.bem
-datasrc/.bem/cache
-
 desktop.bundles/*/*.*
 !desktop.bundles/*/*.bemdecl.js
 !desktop.bundles/.bem/*
