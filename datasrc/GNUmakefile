@@ -1,5 +1,5 @@
 BIN := ./node_modules/.bin
-NPM_DEPS := $(addprefix node_modules/,
+NPM_DEPS := $(addprefix node_modules/,\
 	$(shell node -pe "Object.keys(require('./package.json').dependencies).join(' ')"))
 
 all:: build
