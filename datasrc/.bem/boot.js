@@ -1,3 +1,5 @@
+// Tests only
+
 require('./sources.js');
 
 var PATH = require('path'),

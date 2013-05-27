@@ -376,8 +376,7 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
                 var d = Q.defer(),
                     worker = CP.fork(
                             BEM.require.resolve('./nodes/workers/bemcreate.js'), 
-                            null, 
-                            { env: process.env }),
+                            { env : process.env }),
                     handler = function(m) {
                         (m.code !== 0)? d.reject(m.msg) : d.resolve();
                     };

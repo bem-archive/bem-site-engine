@@ -7,8 +7,6 @@ var PATH = require('path'),
 process.once('message', function(m) {
     var root = m.root,
         opts = { root : root };
-    
-    process.env.__root_level_dir = '';
 
     make.createArch(opts)
         .then(function(Arch) {
@@ -23,7 +21,7 @@ process.once('message', function(m) {
         })
         .fail(function(err) {
             var msg = err.message + '\n' + err.stack;
-            
+
             process.send({
                 code : 1,
                 msg  : msg
