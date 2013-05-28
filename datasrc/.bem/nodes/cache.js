@@ -61,7 +61,7 @@ registry.decl(CacheNodeName, nodes.NodeName, {
                 credential.url,
                 credential.treesh || credential.branch || '-',
                 credential.revision || '-'
-            ].join('!');
+            ].join('\00');
 
         shasum.update(key, 'utf8');
         return shasum.digest('hex');
