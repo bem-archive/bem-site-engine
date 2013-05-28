@@ -1,13 +1,16 @@
-var PATH = require('path'),
-    BEM = require('bem'),
+var BEM = require('bem'),
     APW = BEM.require('apw'),
     MAKE = BEM.require('./make.js'),
     make = require('../../lib/make.js'),
-    arch = new APW.Arch();
+    arch = new APW.Arch(),
+
+    // FIXME: с 10 воркерами (bem-tools, default) сборка падает:
+    // "Error: channel closed"
+    DEFAULT_WORKERS = 4;
 
 function appendExamplesNodes(DefaultArch) {
     require('../examples.js');
-    
+
     return DefaultArch;
 }
 
@@ -23,8 +26,6 @@ process.once('message', function(m) {
             srcPaths : m.sources,
             srcBuildLevels : m.levels
         };
-    
-    process.env.__root_level_dir = '';
 
     make.createArch(opts)
         .then(appendExamplesNodes)
@@ -40,7 +41,7 @@ process.once('message', function(m) {
                 });
         })
         .then(function(arch) {
-            return new MAKE.APW(arch, MAKE.DEFAULT_WORKERS, opts).findAndProcess(targets);
+            return new MAKE.APW(arch, DEFAULT_WORKERS, opts).findAndProcess(targets);
         })
         .then(function() {
             process.send({
@@ -50,7 +51,7 @@ process.once('message', function(m) {
         })
         .fail(function(err) {
             var msg = err.message + '\n' + err.stack;
-            
+
             process.send({
                 code : 1,
                 msg  : msg
@@ -61,7 +62,7 @@ process.once('message', function(m) {
 
 process.on('uncaughtException', function(err) {
     var msg = err.message + '\n' + err.stack;
-    
+
     process.send({
         code : 1,
         msg  : msg

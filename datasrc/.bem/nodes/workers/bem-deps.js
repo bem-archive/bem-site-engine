@@ -1,5 +1,4 @@
-var PATH = require('path'),
-    BEM = require('bem'),
+var BEM = require('bem'),
     APW = BEM.require('apw'),
     make = require('../../lib/make.js'),
     arch = new APW.Arch();
@@ -15,8 +14,8 @@ process.once('message', function(m) {
         .then(function(archNode) {
             var libraries = archNode.getLibraries();
             process.send({
-                code : 0, 
-                deps : libraries 
+                code : 0,
+                deps : libraries
             });
         })
         .fail(function(err) {
@@ -32,7 +31,7 @@ process.once('message', function(m) {
 
 process.on('uncaughtException', function(err) {
     var msg = err.message + '\n' + err.stack;
-    
+
     process.send({
         code : 1,
         msg  : msg
