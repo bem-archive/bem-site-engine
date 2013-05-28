@@ -80,7 +80,7 @@ registry.decl(IntrospectorNodeName, nodes.NodeName, {
 }, {
 
     createId : function(o) {
-        return o.item._id + '/introspect*';
+        return 'introspect/' + o.item._id + '*';
     }
 
 });
@@ -121,7 +121,7 @@ registry.decl(IntrospectorItemNodeName, fileNodes.GeneratedFileNodeName, {
 }, {
 
     createId : function(o) {
-        return o.path + '/introspect';
+        return 'introspect/' + o.path;
     }
 
 });
