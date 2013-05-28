@@ -1,32 +1,53 @@
 var PATH = require('path'),
     BEM = require('bem'),
     registry = BEM.require('./nodesregistry'),
+    // XXX: `./nodes/lib.js` доопределяет узлы из bem-tools
     libsNodes = require('./nodes/lib.js'),
-    cacherNodes = require('./nodes/cacher.js'),
+//    cacherNodes = require('./nodes/cacher.js'),
+//    cacheNodes = require('./nodes/cache.js'),
     sourceNodes = require('./nodes/source.js'),
     PRJ_ROOT = PATH.resolve(__dirname, '../../');
 
-process.env.__root_level_dir = PRJ_ROOT;
 
-
-registry.decl(cacherNodes.CacherNodeName, {
-
-    sources : [
+//registry.decl(cacherNodes.CacherNodeName, {
+//
+//    sources : [
 //        'bem-articles',
 //        'bem-tools',
-        'islands-controls',
-        'islands-core',
-        'islands-dynamic',
-        'islands-islands',
-        'islands-media',
-        'islands-page',
-        'islands-popups',
-        'islands-search',
-        'islands-services',
-        'islands-user'
-    ]
+//        'islands-controls',
+//        'islands-core',
+//        'islands-dynamic',
+//        'islands-islands',
+//        'islands-media',
+//        'islands-page',
+//        'islands-popups',
+//        'islands-search',
+//        'islands-services',
+//        'islands-user'
+//    ]
+//
+//});
 
-});
+
+//registry.decl(cacheNodes.CacheNodeName, {
+//
+//    /**
+//     * @override
+//     */
+//    getCredentials : function() {
+//        var credentials = this.__base.apply(this, arguments);
+//
+//        // FIXME: hardcode, development only!
+//        if(credentials._id.lastIndexOf('islands-controls', 0) === 0 &&
+//                credentials.type === 'git' &&
+//                !(credentials.branch || credentials.treeish)) {
+//            credentials.branch = 'dev';
+//        }
+//
+//        return credentials;
+//    }
+//
+//});
 
 
 registry.decl(sourceNodes.SourceNodeName, {
@@ -34,15 +55,12 @@ registry.decl(sourceNodes.SourceNodeName, {
     getSets : function() {
         return {
 //            'bem-tools' : {
-//                blocks : ['docs']
+//                paths : ['docs']
 //            },
 //            'bem-articles' : {
-//                blocks : ['.']
+//                paths : ['.']
 //            },
-              // TODO: Error: Tech module with path
-              // '/home/varankinv/web/vendor/bem-bl/blocks-common/i-bem/bem/techs/bemhtml.js'
-              // not found on require search paths
-            /*'islands-controls' : {
+            'islands-controls' : {
                 paths : [
                     'bem-controls/common.blocks',
                     'bem-controls/desktop.blocks',
@@ -59,7 +77,7 @@ registry.decl(sourceNodes.SourceNodeName, {
                     'common.blocks',
                     'desktop.blocks'
                 ]
-            },*/
+            },
             'islands-dynamic' : {
                 paths : ['common.blocks', 'desktop.blocks'],
                 examplesLevels : [
@@ -132,6 +150,36 @@ registry.decl(sourceNodes.SourceNodeName, {
                     'desktop.blocks'
                 ]
             },
+            'islands-promo' : {
+                paths : ['common.blocks', 'desktop.blocks'],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
+                    'bem-controls/common.blocks',
+                    'bem-controls/desktop.blocks',
+                    'islands-controls/common.blocks',
+                    'islands-controls/desktop.blocks',
+                    'lego/blocks-common',
+                    'lego/blocks-desktop',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
+            },
+            'islands-search' : {
+                paths : ['common.blocks', 'desktop.blocks'],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
+                    'bem-controls/common.blocks',
+                    'islands-controls/common.blocks',
+                    'islands-popups/common.blocks',
+                    'islands-popups/desktop.blocks',
+                    'lego/blocks-common',
+                    'lego/blocks-desktop',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
+            },
             'islands-services' : {
                 paths : ['common.blocks', 'desktop.blocks'],
                 examplesLevels : [
@@ -180,5 +228,4 @@ registry.decl(sourceNodes.SourceNodeName, {
 });
 
 // TODO: разобраться с npm-пакетами в библиотеках (Error: Cannot find module 'dom-js')
-// FIXME: "Error: channel closed" во время сборки примеров
 
