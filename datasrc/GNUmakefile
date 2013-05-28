@@ -21,6 +21,7 @@ sources cache::
 
 clean::
 	@$(RM) -r ./_*
+	@$(RM) -r ./.bem/cache*
 
 .PHONY: all build deps sources cache clean
 
