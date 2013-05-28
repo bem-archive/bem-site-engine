@@ -92,6 +92,15 @@ registry.decl(CacheNodeName, nodes.NodeName, {
 });
 
 
+// TODO
+//var CacheMetaNodeName = exports.CacheMetaNodeName = 'CacheMetaNode';
+//Object.defineProperty(exports, CacheMetaNodeName, {
+//    get : function() { return registry.getNodeClass(CacheMetaNodeName) }
+//});
+//
+//registry.decl(CacheMetaNodeName, {});
+
+
 var CacheItemNodeName = exports.CacheItemNodeName = 'CacheItemNode';
 Object.defineProperty(exports, CacheItemNodeName, {
     get : function() { return registry.getNodeClass(CacheItemNodeName) }
@@ -197,8 +206,8 @@ registry.decl(CacheItemMetaNodeName, CacheItemNodeName, {
         return o.item._id;
     },
 
-    createNodePath : function(o) {
-        return PATH.join('.bem', 'cache', o.item._id + '-cache.js');
+    createNodePath : function() {
+        return this.__base.apply(this, arguments) + '-meta.js';
     }
 
 });
