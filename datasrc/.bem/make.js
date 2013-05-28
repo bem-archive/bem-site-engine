@@ -12,7 +12,6 @@ MAKE.decl('Arch', {
                 return this.createSourcer();
             }.bind(this))
             .then(function() {
-                console.log(this.arch.toString());
                 return this.arch;
             }.bind(this));
     },
