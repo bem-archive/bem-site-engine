@@ -16,7 +16,7 @@ node_modules::
 sources:: cache
 
 sources cache::
-	$(INFO ===> Building "$@")
+	$(info ===> Building "$@")
 	$(BIN)/bem make $@
 
 clean::
