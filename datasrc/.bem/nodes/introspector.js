@@ -25,6 +25,8 @@ registry.decl(IntrospectorNodeName, nodes.NodeName, {
 
         this.libRoot = o.libRoot;
         this.sources = o.sources;
+
+        this._sourceItemNode = {};
     },
 
 //    make : function() {
