@@ -1,6 +1,7 @@
 var CRYPTO = require('crypto'),
     PATH = require('path'),
     BEM = require('bem'),
+    QFS = BEM.require('q-fs'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
     libNodes = BEM.require('./nodes/lib.js'),
@@ -104,8 +105,9 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
         this.root = o.root;
         this.item = o.item;
         this.cachekey = o.cachekey;
-        this.path = PATH.join('.bem', 'cache', this.cachekey);
         this.bemDeps = o.item.bemDeps;
+
+        this.path = this.__self.createNodePath(this);
     },
 
     make : function() {
@@ -116,23 +118,31 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
         var ctx = this.ctx;
         return function() {
             var arch = ctx.arch,
-                fakeLibNode,
+                metaNode,
                 cacheLibNode;
 
             if(arch.hasNode(this.item._id)) {
-                fakeLibNode = arch.getNode(this.item._id);
+                metaNode = arch.getNode(this.item._id);
             } else {
-                fakeLibNode = new nodes.Node(this.item._id);
-                arch.setNode(fakeLibNode, arch.getParents(this));
+                metaNode = this.createMetaNode();
+                arch.setNode(metaNode, arch.getParents(this));
             }
 
             if(arch.hasNode(this.path)) {
                 cacheLibNode = arch.getNode(this.path);
             } else {
                 cacheLibNode = this.createLibNode();
-                arch.setNode(cacheLibNode, fakeLibNode);
+                arch.setNode(cacheLibNode, metaNode);
             }
         }.bind(this);
+    },
+
+    createMetaNode : function() {
+        return new (registry.getNodeClass(CacheItemMetaNodeName))({
+                root : this.root,
+                item : this.item,
+                cachekey : this.cachekey
+            });
     },
 
     createLibNode : function() {
@@ -156,6 +166,39 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
 
     createId : function(o) {
         return o.item._id + '*';
+    },
+
+    createNodePath : function(o) {
+        return PATH.join('.bem', 'cache', o.cachekey);
+    }
+
+});
+
+
+var CacheItemMetaNodeName = exports.CacheItemMetaNodeName = 'CacheItemMetaNode';
+Object.defineProperty(exports, CacheItemMetaNodeName, {
+    get : function() { return registry.getNodeClass(CacheItemMetaNodeName) }
+});
+
+registry.decl(CacheItemMetaNodeName, CacheItemNodeName, {
+
+    make : function() {
+        var meta = U.extend({}, this.item, {
+                cachekey : this.cachekey,
+                bemDeps  : this.bemDeps
+            });
+
+        return QFS.write(this.getPath(), '(' + JSON.stringify(meta, null, 2) + ')');
+    }
+
+}, {
+
+    createId : function(o) {
+        return o.item._id;
+    },
+
+    createNodePath : function(o) {
+        return PATH.join('.bem', 'cache', o.item._id + '-cache.js');
     }
 
 });
