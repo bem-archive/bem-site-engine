@@ -22,4 +22,5 @@ sources cache::
 clean::
 	@$(RM) -r ./_*
 
-.PHONY: build deps sources cache clean
+.PHONY: all build deps sources cache clean
+
