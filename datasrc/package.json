@@ -19,7 +19,7 @@
     "shmakowiki": "~0.4.0"
   },
   "devDependencies": {
-    "bem": "~0.5.30"
+    "bem": "~0.5.32"
   },
   "author": "lego-team@yandex-team.ru",
   "readmeFilename": "README.md",

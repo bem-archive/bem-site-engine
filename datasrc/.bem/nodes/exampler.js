@@ -3,7 +3,7 @@ var CP = require('child_process'),
 //    UTIL = require('util'),
     BEM = require('bem'),
     Q = BEM.require('q'),
-//    QFS = BEM.require('q-fs'),
+    LOGGER = BEM.require('./logger.js'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
 
@@ -30,11 +30,14 @@ registry.decl(ExamplerNodeName, nodes.NodeName, {
     },
 
     make : function() {
-        // TODO: use bem/lib/logger
-        return this.createExamples().fail(console.log);
+        return this.createExamples().fail(LOGGER.error);
     },
 
     createExamples : function() {
+        if(!this.sources) {
+            return Q.reject(new Error('No example sources declared for "' + this.libRoot + '"'));
+        }
+
         var defer = Q.defer(),
             worker = CP.fork(PATH.join(__dirname, 'workers', 'make-examples.js'), {
                 cwd : this.libRoot,

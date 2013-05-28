@@ -2,6 +2,7 @@ var PATH = require('path'),
     BEM = require('bem'),
     Q = BEM.require('qq'),
     QFS = BEM.require('q-fs'),
+    LOGGER = BEM.require('./logger.js'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
     fileNodes = BEM.require('./nodes/file.js'),
@@ -57,21 +58,29 @@ registry.decl(IntrospectorNodeName, nodes.NodeName, {
         return Q.reduceLeft(this.sources, function(decls, level) {
             var levelPath = PATH.resolve(root, level);
 
-            createLevel(levelPath).getDeclByIntrospection().forEach(function(decl) {
-                var name = decl.name;
+            return QFS.exists(levelPath)
+                .then(function(exists) {
+                    if(!exists) {
+                        LOGGER.warn('Specified source level "' + levelPath + '" does not exists.');
+                        return decls;
+                    }
 
-                decl.level = { path : level };
-                (decls[name] || (decls[name] = [])).push(decl);
-            });
+                    createLevel(levelPath).getDeclByIntrospection().forEach(function(decl) {
+                        var name = decl.name;
 
-            return decls;
+                        decl.level = { path : level };
+                        (decls[name] || (decls[name] = [])).push(decl);
+                    });
+
+                    return decls;
+                });
         }, {});
     }
 
 }, {
 
     createId : function(o) {
-        return o.item._id + '/introspect*';
+        return 'introspect/' + o.item._id + '*';
     }
 
 });
@@ -112,7 +121,7 @@ registry.decl(IntrospectorItemNodeName, fileNodes.GeneratedFileNodeName, {
 }, {
 
     createId : function(o) {
-        return o.path + '/introspect';
+        return 'introspect/' + o.path;
     }
 
 });

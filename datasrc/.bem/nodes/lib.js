@@ -213,24 +213,3 @@ registry.decl(LibraryNodeName, {
     */
 
 });
-
-
-registry.decl(libNodes.SymlinkLibraryNodeName, {
-
-    /**
-     * Monkey patching until #384
-     */
-    getLibraryContent: function() {
-        var base = this.__base.bind(this),
-            parent = PATH.dirname(this.getPath());
-        return QFS.exists(parent)
-            .then(function(exists) {
-                if(!exists) {
-                    return QFS.makeTree(parent);
-                }
-                return Q.resolve(exists);
-            })
-            .then(base);
-    }
-
-});

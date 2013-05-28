@@ -1,10 +1,11 @@
 var PATH = require('path'),
     BEM = require('bem'),
     Q = BEM.require('q'),
+    LOGGER = BEM.require('./logger.js'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
     cacherNodes = require('./cacher.js'),
-    cacheNodes = require('./cache.js'),
+//    cacheNodes = require('./cache.js'),
     introspectorNodes = require('./introspector.js'),
     examplerNodes = require('./exampler.js'),
     pageNodes = require('./page.js'),
@@ -41,39 +42,24 @@ registry.decl(SourceNodeName, {
 
         var sets = this.getSets();
         return Q.all(Object.keys(sets).map(function(lib) {
+                var sources = sets[lib];
+
+                if(U.isEmptyObject(sources)) {
+                    LOGGER.warn('Source declaration for library "' + lib + '" is not specified. Skipping');
+                    return;
+                }
+
                 cache.pushToCache(lib);
 
                 var item = new (registry.getNodeClass(SourceItemNodeName))({
                         root : this.root,
                         item : cache.getCredentials(lib),
-                        sources : sets[lib]
+                        sources : sources
                     });
 
                 return arch.setNode(item, source);
             }, this))
-            .then(function() {
-                return arch;
-            });
-
-        /*
-        var cacheNode = this.createCacheNode(),
-            sourceNode = this.createSourcesNode();
-
-        return Q.all(this.getLibraries().map(function(id) {
-                var lib = this.getLibCredentials(id);
-                cacheNode.pushToCache(lib);
-
-                var itemNode = new (registry.getNodeClass(SourceItemNodeName))({
-                        root : this.root,
-                        item : lib
-                    });
-
-                return this.arch.setNode(itemNode, sourceNode);
-            }, this))
-            .then(function() {
-                return this.arch;
-            }.bind(this));
-        */
+            .thenResolve(arch);
     },
 
     createSourceNode : function() {
@@ -100,7 +86,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
 
         this._decl = [];
         this._cacheItemNode = null;
-        
+
         this.path = this.__self.createNodePath(o);
     },
 
@@ -133,24 +119,22 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 .spread(function(page, exampler, spectr) {
                     return Q.fcall(_t.createPageItemNode.bind(_t), page, spectr);
                 })
-                .then(function() {
-                    return _t.ctx.arch;
-                });
+                .thenResolve(_t.ctx.arch);
         };
     },
-    
+
     getOrCreateRealSourceItemNode : function() {
         var arch = this.ctx.arch,
             id = this.path,
             node;
-        
+
         if(arch.hasNode(id)) {
             node = arch.getNode(id);
         } else {
             node = new nodes.Node(this.path);
             arch.setNode(node, arch.getParents(this), this._cacheItemNode.getId());
         }
-        
+
         return node;
     },
 
@@ -163,7 +147,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 path : this.path
             }),
             realSINode = this.getOrCreateRealSourceItemNode();
-        
+
         arch.setNode(pageNode, realSINode);
 
         return pageNode;
@@ -192,8 +176,6 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                     });
 
                     return arch.setNode(piNode, parent, child);
-
-                    return piNode;
                 }.bind(this));
         }, this));
     },
@@ -232,7 +214,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 return spectrItemNode;
             }.bind(this));
     },
-    
+
     createExamplerNode : function() {
         var arch = this.ctx.arch,
             sources = this.sources,
@@ -245,9 +227,9 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
                 levels  : sources.examplesLevels
             }),
             realSINode = this.getOrCreateRealSourceItemNode();
-        
+
         arch.setNode(examplerNode, realSINode, this._cacheItemNode.getId());
-        
+
         return examplerNode;
     }
 
@@ -256,7 +238,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
     createId : function(o) {
         return this.createNodePath(o) + '*';
     },
-    
+
     createNodePath : function(o) {
         return '_' + o.item._id;
     }

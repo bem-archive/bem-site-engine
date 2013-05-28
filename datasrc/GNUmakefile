@@ -16,11 +16,12 @@ node_modules::
 sources:: cache
 
 sources cache::
-	$(INFO ===> Building "$@")
+	$(info ===> Building "$@")
 	$(BIN)/bem make $@
 
 clean::
 	@$(RM) -r ./_*
+	@$(RM) -r ./.bem/cache*
 
 .PHONY: all build deps sources cache clean
 
