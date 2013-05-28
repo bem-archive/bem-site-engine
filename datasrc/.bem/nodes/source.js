@@ -1,10 +1,11 @@
 var PATH = require('path'),
     BEM = require('bem'),
     Q = BEM.require('q'),
+    LOGGER = BEM.require('./logger.js'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
     cacherNodes = require('./cacher.js'),
-    cacheNodes = require('./cache.js'),
+//    cacheNodes = require('./cache.js'),
     introspectorNodes = require('./introspector.js'),
     examplerNodes = require('./exampler.js'),
     pageNodes = require('./page.js'),
@@ -41,12 +42,19 @@ registry.decl(SourceNodeName, {
 
         var sets = this.getSets();
         return Q.all(Object.keys(sets).map(function(lib) {
+                var sources = sets[lib];
+
+                if(U.isEmptyObject(sources)) {
+                    LOGGER.warn('Source declaration for library "' + lib + '" is not specified. Skipping');
+                    return;
+                }
+
                 cache.pushToCache(lib);
 
                 var item = new (registry.getNodeClass(SourceItemNodeName))({
                         root : this.root,
                         item : cache.getCredentials(lib),
-                        sources : sets[lib]
+                        sources : sources
                     });
 
                 return arch.setNode(item, source);
