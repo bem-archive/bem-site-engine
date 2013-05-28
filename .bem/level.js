@@ -5,7 +5,8 @@ exports.getTechs = function() {
     return {
         'blocks'    : '',
         'bundles'   : '',
-        'md'        : ''
+        'md'        : '',
+        'txt'       : ''
     };
 
 };
