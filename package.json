@@ -25,7 +25,7 @@
     "nodemon": "~0.7.6"
   },
   "scripts": {
-    "start": "nodemon -w desktop.bundles/ -e '.node.js|.bemtree.xjst.js|.bemhtml.js' -d 1 ./desktop.bundles/common/_common.node.js"
+    "start": "nodemon -w desktop.bundles/ -e node.js,bemtree.xjst.js,bemhtml.js -d 1 ./desktop.bundles/common/_common.node.js"
   },
   "author": "lego-team@yandex-team.ru",
   "readmeFilename": "README.md",
