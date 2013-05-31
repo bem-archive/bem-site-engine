@@ -3,19 +3,3 @@
     font-size: 14px;
     line-height: 22px;
 }
-
-.static-text p
-{
-    margin: 0 0 1em;
-}
-
-.static-text tt
-{
-    background: #f5f3e4;
-    
-    font-family: monospace;
-    
-    padding: 0 3px;
-    
-    white-space: pre-wrap;
-}
