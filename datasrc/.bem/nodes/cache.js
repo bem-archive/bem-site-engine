@@ -137,15 +137,8 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
         var ctx = this.ctx;
         return function() {
             var arch = ctx.arch,
-                metaNode,
+                metaNode = this.createMetaNode(),
                 cacheLibNode;
-
-            if(arch.hasNode(this.item._id)) {
-                metaNode = arch.getNode(this.item._id);
-            } else {
-                metaNode = this.createMetaNode();
-                arch.setNode(metaNode, arch.getParents(this));
-            }
 
             if(arch.hasNode(this.path)) {
                 cacheLibNode = arch.getNode(this.path);
@@ -157,11 +150,23 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
     },
 
     createMetaNode : function() {
-        return new (registry.getNodeClass(CacheItemMetaNodeName))({
+        var arch = this.ctx.arch,
+            NodeClass = registry.getNodeClass(CacheItemMetaNodeName),
+            opts = {
                 root : this.root,
                 item : this.item,
                 cachekey : this.cachekey
-            });
+            },
+            nodeid = NodeClass.createId(opts);
+
+        if(arch.hasNode(nodeid)) {
+            return arch.getNode(nodeid);
+        }
+
+        var metaNode = new NodeClass(opts);
+        arch.setNode(metaNode, arch.getParents(this));
+
+        return metaNode;
     },
 
     createLibNode : function() {
