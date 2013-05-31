@@ -23,14 +23,14 @@ MAKE.decl('Arch', {
         'bem-pr',
         'bem-gen-doc',
         'bem-yana @ unstable',
-        'romochka @ 2.10.12',
+        'romochka @ feature/bem-core',  // FIXME: romochka#feature/bem-core
         'bem-controls',
-        'islands-controls',
+        'islands-controls @ dev',
         'islands-media',
-        'islands-page @ dev',   // FIXME: islands-page#dev
+        'islands-page @ feature/bem-core',   // FIXME: islands-page#feature/bem-core
         'islands-search',
         'islands-services',
-        'islands-user @ dev'    // FIXME: islands-user#dev
+        'islands-user @ feature/bem-core'    // FIXME: islands-user#feature/bem-core
     ]
 
 });
