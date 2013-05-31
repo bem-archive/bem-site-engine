@@ -5,7 +5,7 @@ var PATH = require('path'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
     cacherNodes = require('./cacher.js'),
-//    cacheNodes = require('./cache.js'),
+    cacheNodes = require('./cache.js'),
     introspectorNodes = require('./introspector.js'),
     examplerNodes = require('./exampler.js'),
     pageNodes = require('./page.js'),
@@ -110,7 +110,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
             var arch = ctx.arch,
                 item = this.item;
 
-            _t._cacheItemNode = arch.getNode(item._id + '*');    // FIXME: hardcode
+            _t._cacheItemNode = arch.getNode(cacheNodes.CacheItemNode.createId({ item : item }));
 
             return Q.all([this.createPageNode(), this.createExamplerNode()])
                 .spread(function(page, exampler) {
