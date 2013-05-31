@@ -1,5 +1,4 @@
-var PATH = require('path'),
-    BEM = require('bem'),
+var BEM = require('bem'),
     Q = BEM.require('q'),
     registry = BEM.require('./nodesregistry.js'),
     cacheNodes = require('./cache.js'),

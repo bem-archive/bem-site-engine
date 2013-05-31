@@ -36,12 +36,6 @@ registry.decl(LibraryNodeName, {
         var base = this.__base.bind(this, arguments);
         return Q.when(this.installBemDependencies())
             .then(base);
-        /*
-        return Q.all([
-            this.installBemDependencies(),
-            this.installNpmDependencies()
-        ]);
-        */
     },
 
     getBemDependensies : function() {
@@ -55,8 +49,9 @@ registry.decl(LibraryNodeName, {
         worker.once('message', function(m) {
             worker.kill();
 
-            if(m.code === 0)
+            if(m.code === 0) {
                 return defer.resolve(m.deps);
+            }
 
             defer.reject(new Error(m.msg));
         });
@@ -67,25 +62,45 @@ registry.decl(LibraryNodeName, {
     },
 
     addBemDependencies : function(deps) {
+        LOGGER.fdebug('dependencies for lib "%s" (%s) resolved: %j', this.id, this.url, deps);
+
         var arch = this.ctx.arch;
-        if(!arch.hasNode(cacherNodes.CACHE_NODEID))
+        if(!arch.hasNode(cacherNodes.CACHE_NODEID)) {
             return;
+        }
 
         var CacheNode = arch.getNode(cacherNodes.CACHE_NODEID),
-            CacheItemNode = registry.getNodeClass(cacheNodes.CacheItemNodeName);
+            CacheItemNode = cacheNodes.CacheItemNode;
 
         return Q.all(Object.keys(deps).map(function(lib) {
             var id = PATH.basename(lib),
                 item = deps[lib];
 
-            // XXX: нормализуем ревизиты библиотеки в соответствии с ожиданиями кешера
+            if(item.type === 'symlink') {
+                //LOGGER.debug('Skipping symlink library');
+                //return;
+
+                // NOTE: (пытаемся) заменяем библиотеки `type=symlink` на эквивалентные
+                // из репозитория
+                LOGGER.info('Looking for equivalent symlink-library id "' + id + '" in the repo');
+
+                // NOTE: `getCredentials` стригерит эксепшн если не найдет библиотеку, поэтому
+                // результат работы дополнительно не проверяем — все равно (скорее всего)
+                // не будет работать интроспекция
+                item = CacheNode.getCredentials(id);
+                LOGGER.debug('symlink library "%s" was found in repo: %j, switching', item);
+            }
+
+            // NOTE: нормализуем реквизиты библиотеки в соответствии с ожиданиями кэшера
             item._id = id;
             item.bemDeps = false;
 
+            LOGGER.fdebug('going to push library %j to cache', item);
             CacheNode.pushToCache(item);
 
             var cacheiid = CacheItemNode.createId({ item : item });
             if(arch.hasNode(cacheiid)) {
+                LOGGER.fdebug('cache item node "%s" found in arch', cacheiid);
                 var cacheItemNode = arch.getNode(cacheiid),
                     libRoot = this.getPath();
 
@@ -93,7 +108,6 @@ registry.decl(LibraryNodeName, {
                     libRoot = PATH.join(libRoot, PATH.dirname(lib));
                 }
 
-                // FIXME: https://github.com/bem/bem-tools/issues/342
                 var depNode = new libNodes.SymlinkLibraryNode({
                         root : this.getPath(),
                         target : lib,
@@ -101,29 +115,35 @@ registry.decl(LibraryNodeName, {
                         npmPackages : false
                     });
 
+                // NOTE: id-узла приводим к виду: `thisLib/depend`
                 depNode.id = PATH.join(this.id, depNode.id);
 
                 arch
                     .setNode(depNode, arch.getParents(this))
                     .addChildren(depNode, cacheItemNode);
+
+                return depNode;
             }
         }, this));
     },
 
     installBemDependencies : function() {
         if(this.bemDeps == null) {
-            LOGGER.finfo('bemDeps config variable is not set, skip installing BEM dependencies for the %s library', this.target);
+            LOGGER.finfo('bemDeps config variable is not set, skip installing BEM dependencies for %s library',
+                    this.target);
             return;
         }
 
         return Q.when(this.getBemDependensies())
             .then(function(libs) {
-                if(!libs || Array.isArray(libs))
+                if(!libs || Array.isArray(libs)) {
                     return;
+                }
                 return this.addBemDependencies(libs);
             }.bind(this));
     }
 
+    // TODO: npm dependencies
     /*
     getNpmDependencies : function(pkg) {
         var excludePkgs = ['bem'],

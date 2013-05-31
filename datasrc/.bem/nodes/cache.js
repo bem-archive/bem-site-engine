@@ -2,6 +2,7 @@ var CRYPTO = require('crypto'),
     PATH = require('path'),
     BEM = require('bem'),
     QFS = BEM.require('q-fs'),
+    LOGGER = BEM.require('./logger.js'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
     libNodes = BEM.require('./nodes/lib.js'),
@@ -29,26 +30,34 @@ registry.decl(CacheNodeName, nodes.NodeName, {
         lib = this.getCredentials(lib);
 
         // пропускаем библиотеки-симлинки, с ними не поянтно, что делать
-        if(lib.type === 'symlink')
+        if(lib.type === 'symlink') {
+            LOGGER.info('Cache: skip symlink library "' + lib.relative + '"');
             return;
+        }
 
         // явно просим выгружать зависимые библиотеки если не сказано обратное
         if(lib.bemDeps !== false) {
+            LOGGER.fdebug('Should load BEM-dependencies for %j', lib);
             lib.bemDeps = true;
         }
 
         var cachekey = this.getCacheKey(lib);
-        if(this.cache[cachekey])
+        if(this.cache[cachekey]) {
+            LOGGER.fdebug('Library "%s" (cache key: "%s") is already cached, skip', lib.url, cachekey);
             return;
+        }
 
-        var item = this.cache[cachekey] = lib,
-            arch = this.arch,
+        this.cache[cachekey] = lib;
+
+        var arch = this.arch,
             CacheItemNode = registry.getNodeClass(CacheItemNodeName);
 
-        if(!arch.hasNode(CacheItemNode.createId({ item : item }))) {
+        if(!arch.hasNode(CacheItemNode.createId({ item : lib }))) {
+            LOGGER.fdebug('Pushing library %j (cache key "%s") to cache', lib, cachekey);
+
             var node = new CacheItemNode({
                 root : this.root,
-                item : item,
+                item : lib,
                 cachekey : cachekey
             });
 
@@ -60,11 +69,12 @@ registry.decl(CacheNodeName, nodes.NodeName, {
         var shasum = CRYPTO.createHash('sha1'),
             key = [
                 credential.url,
-                credential.treesh || credential.branch || '-',
+                credential.treeish || credential.branch || '-',
                 credential.revision || '-'
             ].join('\00');
 
         shasum.update(key, 'utf8');
+
         return shasum.digest('hex');
     },
 
@@ -90,6 +100,15 @@ registry.decl(CacheNodeName, nodes.NodeName, {
     }
 
 });
+
+
+// TODO
+//var CacheMetaNodeName = exports.CacheMetaNodeName = 'CacheMetaNode';
+//Object.defineProperty(exports, CacheMetaNodeName, {
+//    get : function() { return registry.getNodeClass(CacheMetaNodeName) }
+//});
+//
+//registry.decl(CacheMetaNodeName, {});
 
 
 var CacheItemNodeName = exports.CacheItemNodeName = 'CacheItemNode';
@@ -118,15 +137,8 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
         var ctx = this.ctx;
         return function() {
             var arch = ctx.arch,
-                metaNode,
+                metaNode = this.createMetaNode(),
                 cacheLibNode;
-
-            if(arch.hasNode(this.item._id)) {
-                metaNode = arch.getNode(this.item._id);
-            } else {
-                metaNode = this.createMetaNode();
-                arch.setNode(metaNode, arch.getParents(this));
-            }
 
             if(arch.hasNode(this.path)) {
                 cacheLibNode = arch.getNode(this.path);
@@ -138,11 +150,23 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
     },
 
     createMetaNode : function() {
-        return new (registry.getNodeClass(CacheItemMetaNodeName))({
+        var arch = this.ctx.arch,
+            NodeClass = registry.getNodeClass(CacheItemMetaNodeName),
+            opts = {
                 root : this.root,
                 item : this.item,
                 cachekey : this.cachekey
-            });
+            },
+            nodeid = NodeClass.createId(opts);
+
+        if(arch.hasNode(nodeid)) {
+            return arch.getNode(nodeid);
+        }
+
+        var metaNode = new NodeClass(opts);
+        arch.setNode(metaNode, arch.getParents(this));
+
+        return metaNode;
     },
 
     createLibNode : function() {
@@ -165,7 +189,29 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
 }, {
 
     createId : function(o) {
-        return o.item._id + '*';
+        return this.createNodePrefix(o.item) + '*';
+    },
+
+    createNodePrefix : function(item) {
+        var suffix = '';
+
+        /**
+         * NOTE: CacheItemNode не создается для библиотек `type=symlink`,
+         * поэтому их не учитываем
+         */
+        switch(item.type) {
+
+        case 'git':
+            suffix = item.treeish || item.branch || 'master';
+            break;
+
+        case 'svn':
+            suffix = item.revision;
+            break;
+
+        }
+
+        return item.url + '#' + suffix;
     },
 
     createNodePath : function(o) {
@@ -184,9 +230,9 @@ registry.decl(CacheItemMetaNodeName, CacheItemNodeName, {
 
     make : function() {
         var meta = U.extend({}, this.item, {
-                cachekey : this.cachekey,
-                bemDeps  : this.bemDeps
-            });
+            cachekey : this.cachekey,
+            bemDeps  : this.bemDeps
+        });
 
         return QFS.write(this.getPath(), '(' + JSON.stringify(meta, null, 2) + ')');
     }
@@ -194,11 +240,11 @@ registry.decl(CacheItemMetaNodeName, CacheItemNodeName, {
 }, {
 
     createId : function(o) {
-        return o.item._id;
+        return this.createNodePrefix(o.item);
     },
 
-    createNodePath : function(o) {
-        return PATH.join('.bem', 'cache', o.item._id + '-cache.js');
+    createNodePath : function() {
+        return this.__base.apply(this, arguments) + '-meta.js';
     }
 
 });

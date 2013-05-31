@@ -1,12 +1,10 @@
-var PATH = require('path'),
-    BEM = require('bem'),
+var BEM = require('bem'),
     registry = BEM.require('./nodesregistry'),
     // XXX: `./nodes/lib.js` доопределяет узлы из bem-tools
     libsNodes = require('./nodes/lib.js'),
 //    cacherNodes = require('./nodes/cacher.js'),
-//    cacheNodes = require('./nodes/cache.js'),
-    sourceNodes = require('./nodes/source.js'),
-    PRJ_ROOT = PATH.resolve(__dirname, '../../');
+    cacheNodes = require('./nodes/cache.js'),
+    sourceNodes = require('./nodes/source.js');
 
 
 //registry.decl(cacherNodes.CacherNodeName, {
@@ -29,25 +27,25 @@ var PATH = require('path'),
 //});
 
 
-//registry.decl(cacheNodes.CacheNodeName, {
-//
-//    /**
-//     * @override
-//     */
-//    getCredentials : function() {
-//        var credentials = this.__base.apply(this, arguments);
-//
-//        // FIXME: hardcode, development only!
-//        if(credentials._id.lastIndexOf('islands-controls', 0) === 0 &&
-//                credentials.type === 'git' &&
-//                !(credentials.branch || credentials.treeish)) {
-//            credentials.branch = 'dev';
-//        }
-//
-//        return credentials;
-//    }
-//
-//});
+registry.decl(cacheNodes.CacheNodeName, {
+
+    /**
+     * @override
+     */
+    getCredentials : function() {
+        var credentials = this.__base.apply(this, arguments);
+
+        // FIXME: hardcode, development only!
+        if(credentials._id.lastIndexOf('islands-', 0) === 0 &&
+                credentials.type === 'git' &&
+                !(credentials.branch || credentials.treeish)) {
+            credentials.branch = 'dev';
+        }
+
+        return credentials;
+    }
+
+});
 
 
 registry.decl(sourceNodes.SourceNodeName, {
