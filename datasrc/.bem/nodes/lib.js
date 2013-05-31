@@ -70,13 +70,28 @@ registry.decl(LibraryNodeName, {
         }
 
         var CacheNode = arch.getNode(cacherNodes.CACHE_NODEID),
-            CacheItemNode = registry.getNodeClass(cacheNodes.CacheItemNodeName);
+            CacheItemNode = cacheNodes.CacheItemNode;
 
         return Q.all(Object.keys(deps).map(function(lib) {
             var id = PATH.basename(lib),
                 item = deps[lib];
 
-            // XXX: нормализуем ревизиты библиотеки в соответствии с ожиданиями кешера
+            if(item.type === 'symlink') {
+                //LOGGER.debug('Skipping symlink library');
+                //return;
+
+                // NOTE: (пытаемся) заменяем библиотеки `type=symlink` на эквивалентные
+                // из репозитория
+                LOGGER.info('Looking for equivalent symlink-library id "' + id + '" in the repo');
+
+                // NOTE: `getCredentials` стригерит эксепшн если не найдет библиотеку, поэтому
+                // результат работы дополнительно не проверяем — все равно (скорее всего)
+                // не будет работать интроспекция
+                item = CacheNode.getCredentials(id);
+                LOGGER.debug('symlink library "%s" was found in repo: %j, switching', item);
+            }
+
+            // NOTE: нормализуем реквизиты библиотеки в соответствии с ожиданиями кэшера
             item._id = id;
             item.bemDeps = false;
 
