@@ -6,6 +6,7 @@
         { block : 'link' },
         { block : 'ulist' },
         { block : 'olist' },
-        { block : 'headline' }
+        { block : 'headline' },
+        { block : 'code' }
     ]
 })
