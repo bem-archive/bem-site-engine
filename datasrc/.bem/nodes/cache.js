@@ -60,11 +60,12 @@ registry.decl(CacheNodeName, nodes.NodeName, {
         var shasum = CRYPTO.createHash('sha1'),
             key = [
                 credential.url,
-                credential.treesh || credential.branch || '-',
+                credential.treeish || credential.branch || '-',
                 credential.revision || '-'
             ].join('\00');
 
         shasum.update(key, 'utf8');
+
         return shasum.digest('hex');
     },
 
@@ -174,7 +175,29 @@ registry.decl(CacheItemNodeName, nodes.NodeName, {
 }, {
 
     createId : function(o) {
-        return o.item._id + '*';
+        return this.createNodePrefix(o.item) + '*';
+    },
+
+    createNodePrefix : function(item) {
+        var suffix = '';
+
+        /**
+         * NOTE: CacheItemNode не создается для библиотек `type=symlink`,
+         * поэтому их не учитываем
+         */
+        switch(item.type) {
+
+        case 'git':
+            suffix = item.treeish || item.branch || 'master';
+            break;
+
+        case 'svn':
+            suffix = item.revision;
+            break;
+
+        }
+
+        return item.url + '#' + suffix;
     },
 
     createNodePath : function(o) {
@@ -203,7 +226,7 @@ registry.decl(CacheItemMetaNodeName, CacheItemNodeName, {
 }, {
 
     createId : function(o) {
-        return o.item._id;
+        return this.createNodePrefix(o.item);
     },
 
     createNodePath : function() {
