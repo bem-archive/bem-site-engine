@@ -24,12 +24,12 @@ MAKE.decl('Arch', {
         'bem-gen-doc',
         'bem-yana @ unstable',
         'romochka @ feature/bem-core',  // FIXME: romochka#feature/bem-core
-        'bem-controls',
+        'bem-controls @ dev',
         'islands-controls @ dev',
-        'islands-media',
+        'islands-media @ dev',
         'islands-page @ feature/bem-core',   // FIXME: islands-page#feature/bem-core
-        'islands-search',
-        'islands-services',
+        'islands-search @ dev',
+        'islands-services @ dev',
         'islands-user @ feature/bem-core'    // FIXME: islands-user#feature/bem-core
     ]
 
