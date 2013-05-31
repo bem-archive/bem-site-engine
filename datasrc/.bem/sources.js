@@ -1,12 +1,10 @@
-var PATH = require('path'),
-    BEM = require('bem'),
+var BEM = require('bem'),
     registry = BEM.require('./nodesregistry'),
     // XXX: `./nodes/lib.js` доопределяет узлы из bem-tools
     libsNodes = require('./nodes/lib.js'),
 //    cacherNodes = require('./nodes/cacher.js'),
-//    cacheNodes = require('./nodes/cache.js'),
-    sourceNodes = require('./nodes/source.js'),
-    PRJ_ROOT = PATH.resolve(__dirname, '../../');
+    cacheNodes = require('./nodes/cache.js'),
+    sourceNodes = require('./nodes/source.js');
 
 
 //registry.decl(cacherNodes.CacherNodeName, {
