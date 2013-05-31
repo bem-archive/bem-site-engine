@@ -62,6 +62,10 @@ registry.decl(SourceNodeName, {
             .thenResolve(arch);
     },
 
+    getSets : function() {
+        return {};
+    },
+
     createSourceNode : function() {
         var node = new nodes.Node(SOURCE_NODEID);
         this.arch.setNode(node);
