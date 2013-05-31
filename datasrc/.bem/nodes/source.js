@@ -152,7 +152,7 @@ registry.decl(SourceItemNodeName, nodes.NodeName, {
             }),
             realSINode = this.getOrCreateRealSourceItemNode();
 
-        arch.setNode(pageNode, realSINode);
+        arch.setNode(pageNode, realSINode, this._cacheItemNode.getId());
 
         return pageNode;
     },
