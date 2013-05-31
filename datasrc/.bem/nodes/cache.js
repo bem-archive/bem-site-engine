@@ -230,9 +230,9 @@ registry.decl(CacheItemMetaNodeName, CacheItemNodeName, {
 
     make : function() {
         var meta = U.extend({}, this.item, {
-                cachekey : this.cachekey,
-                bemDeps  : this.bemDeps
-            });
+            cachekey : this.cachekey,
+            bemDeps  : this.bemDeps
+        });
 
         return QFS.write(this.getPath(), '(' + JSON.stringify(meta, null, 2) + ')');
     }
