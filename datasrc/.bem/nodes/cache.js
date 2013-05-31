@@ -2,6 +2,7 @@ var CRYPTO = require('crypto'),
     PATH = require('path'),
     BEM = require('bem'),
     QFS = BEM.require('q-fs'),
+    LOGGER = BEM.require('./logger.js'),
     registry = BEM.require('./nodesregistry.js'),
     nodes = BEM.require('./nodes/node.js'),
     libNodes = BEM.require('./nodes/lib.js'),
@@ -29,26 +30,34 @@ registry.decl(CacheNodeName, nodes.NodeName, {
         lib = this.getCredentials(lib);
 
         // пропускаем библиотеки-симлинки, с ними не поянтно, что делать
-        if(lib.type === 'symlink')
+        if(lib.type === 'symlink') {
+            LOGGER.info('Cache: skip symlink library "' + lib.relative + '"');
             return;
+        }
 
         // явно просим выгружать зависимые библиотеки если не сказано обратное
         if(lib.bemDeps !== false) {
+            LOGGER.fdebug('Should load BEM-dependencies for %j', lib);
             lib.bemDeps = true;
         }
 
         var cachekey = this.getCacheKey(lib);
-        if(this.cache[cachekey])
+        if(this.cache[cachekey]) {
+            LOGGER.fdebug('Library "%s" (cache key: "%s") is already cached, skip', lib.url, cachekey);
             return;
+        }
 
-        var item = this.cache[cachekey] = lib,
-            arch = this.arch,
+        this.cache[cachekey] = lib;
+
+        var arch = this.arch,
             CacheItemNode = registry.getNodeClass(CacheItemNodeName);
 
-        if(!arch.hasNode(CacheItemNode.createId({ item : item }))) {
+        if(!arch.hasNode(CacheItemNode.createId({ item : lib }))) {
+            LOGGER.fdebug('Pushing library %j (cache key "%s") to cache', lib, cachekey);
+
             var node = new CacheItemNode({
                 root : this.root,
-                item : item,
+                item : lib,
                 cachekey : cachekey
             });
 
