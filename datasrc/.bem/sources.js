@@ -27,25 +27,25 @@ var BEM = require('bem'),
 //});
 
 
-//registry.decl(cacheNodes.CacheNodeName, {
-//
-//    /**
-//     * @override
-//     */
-//    getCredentials : function() {
-//        var credentials = this.__base.apply(this, arguments);
-//
-//        // FIXME: hardcode, development only!
-//        if(credentials._id.lastIndexOf('islands-controls', 0) === 0 &&
-//                credentials.type === 'git' &&
-//                !(credentials.branch || credentials.treeish)) {
-//            credentials.branch = 'dev';
-//        }
-//
-//        return credentials;
-//    }
-//
-//});
+registry.decl(cacheNodes.CacheNodeName, {
+
+    /**
+     * @override
+     */
+    getCredentials : function() {
+        var credentials = this.__base.apply(this, arguments);
+
+        // FIXME: hardcode, development only!
+        if(credentials._id.lastIndexOf('islands-', 0) === 0 &&
+                credentials.type === 'git' &&
+                !(credentials.branch || credentials.treeish)) {
+            credentials.branch = 'dev';
+        }
+
+        return credentials;
+    }
+
+});
 
 
 registry.decl(sourceNodes.SourceNodeName, {
