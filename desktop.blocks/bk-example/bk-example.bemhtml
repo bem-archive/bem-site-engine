@@ -5,7 +5,8 @@ block bk-example {
     mix: { block : 'island' }
     
     content: {
-        var url = apply('url', this.ctx=this.ctx.url);
+        var url = apply('url', this.ctx = this.ctx.url),
+            source = apply('url', this.ctx = this.ctx.source);
         
         return [
             {
@@ -16,6 +17,10 @@ block bk-example {
             {
                 elem : 'live',
                 url  : url
+            },
+            {
+                elem : 'source',
+                url  : source
             }
         ];
     }
@@ -59,6 +64,5 @@ block bk-example {
         }
         
     }
-    
-    
+
 }
