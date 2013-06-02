@@ -69,11 +69,12 @@ block bk-subject, (!this.elem || ['elem', 'mod', 'mod-val'].indexOf(this.elem) !
     example {
         this.ctx.url: {
             var title = apply('title', this.ctx = this.ctx.title),
-                url = this.ctx.url + '.html';
+                prefix = this.ctx.url;
 
             return {
                 block : 'bk-example',
-                url   : url,
+                url   : prefix + '.html',
+                source : prefix + '.bemjson.js',
                 title : title
             };
         }
