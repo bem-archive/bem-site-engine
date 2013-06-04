@@ -11,6 +11,7 @@
     display: inline-block;
     
     position: relative;
+    z-index: 9;
     
     margin-bottom: 1px;
     padding: 6px 12px 3px 12px;
