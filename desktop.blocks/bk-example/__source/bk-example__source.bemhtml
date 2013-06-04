@@ -5,8 +5,13 @@ block bk-example {
         content: {
             block : 'check-button',
             mods  : { size : 's', pseudo : 'yes' },
-            mix   : [{ block : this.block, elem : 'source-trigger' }],
-            js    : { url : this.ctx.url },
+            mix   : [
+                {
+                    block : this.block,
+                    elem : 'source-trigger',
+                    js : { url : this.ctx.url }
+                }
+            ],
             content : 'BEMJSON'
         }
 
