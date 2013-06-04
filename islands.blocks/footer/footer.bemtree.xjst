@@ -13,12 +13,12 @@ block footer {
                 {
                     elem : 'link',
                     url : 'http://wiki.yandex-team.ru/HR/NDA',
-                    content : 'Конфидициально'
+                    content : BEM.I18N('footer', 'nda')
                 },
                 {
                     elem : 'link',
                     url : '/',
-                    content : 'О&#160;проекте'
+                    content : BEM.I18N('footer', 'about')
                 },
                 {
                     block : 'copyright',
