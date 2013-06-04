@@ -4,9 +4,9 @@ provide(DOM.decl('bk-example', {
 
     onSetMod : {
 
-        'js' : {
+        js : {
 
-            'inited' : function() {
+            inited : function() {
                 var _this = this;
 
                 this.elem('live').load(function() {
@@ -28,7 +28,7 @@ provide(DOM.decl('bk-example', {
 
         if (this._actualHeight != height) {
             iframe.attr('height', height);
-            
+
             this._actualHeight = height;
         }
     }
