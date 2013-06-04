@@ -1,0 +1,35 @@
+.bk-example__source
+{
+    padding-top: 5px;
+}
+
+.bk-example__source-code
+{
+    background: #fff;
+
+    -webkit-box-shadow: 0 0 0 1px #dddcda;
+    -moz-box-shadow: 0 0 0 1px #dddcda;
+    box-shadow: 0 0 0 1px #dddcda;
+
+    position: relative;
+
+    margin: 0 15px 12px;
+    padding: 10px;
+
+    display: none;
+}
+
+.bk-example__source-code_visible_yes
+{
+    display: block;
+}
+
+.bk-example__source-code .code
+{
+    font-size: 12px;
+    line-height: 15px;
+
+    margin: 0;
+
+    max-height: 500px;
+}
