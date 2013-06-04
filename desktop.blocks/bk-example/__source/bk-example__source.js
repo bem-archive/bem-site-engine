@@ -3,6 +3,7 @@ modules.define(
     ['jquery'],
     function(provide, $, DOM) {
 
+// TODO: использовать islands-page/slide
 // TODO: `BEMHTML.apply()`
 function buildSourceCodeHtml(data) {
     return $('<div class="bk-example__source-code">' +
