@@ -1,4 +1,4 @@
-/* global MAKE:false */
+/* global MAKE */
 
 require('./nodes');
 
@@ -96,7 +96,8 @@ MAKE.decl('BundleNode', {
             // bem-bl + romochka
             'romochka/bem-bl/blocks-desktop',
             'romochka/blocks-common',
-            'romochka/blocks-desktop'
+            'romochka/blocks-desktop',
+            'romochka/intranet/blocks-desktop'
         ]
         .map(function(path) { return PATH.resolve(environ.LIB_ROOT, path) })
         .concat([

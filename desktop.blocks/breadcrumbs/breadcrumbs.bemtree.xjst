@@ -6,7 +6,7 @@ block breadcrumbs {
                     elem : 'item', 
                     elemMods : { root : 'yes' },
                     url : '/',
-                    content : 'Библиотеки'
+                    content : BEM.I18N('breadcrumbs', 'libraries')   // 'Библиотеки'
                 }
                 //{
                 //    elem : 'item', 

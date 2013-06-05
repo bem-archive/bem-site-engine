@@ -10,7 +10,7 @@ block bk-subject {
                     block : 'headline', 
                     mods  : { level : 3 }, 
                     mix   : { block : 'section', elem : 'title' },
-                    content : 'Модификаторы' 
+                    content : BEM.I18N('bk-subject', 'mods')    // 'Модификаторы'
                 },
                 this.ctx
             ]);
