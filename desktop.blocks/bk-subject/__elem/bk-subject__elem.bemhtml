@@ -10,7 +10,7 @@ block bk-subject {
                     block : 'headline', 
                     mods  : { level : 3 }, 
                     mix   : { block : 'section', elem : 'title' },
-                    content : 'Элементы' 
+                    content : BEM.I18N('bk-subject', 'elems')   // 'Элементы'
                 },
                 this.ctx
             ]);
@@ -44,7 +44,7 @@ block bk-subject {
                 block : 'headline', 
                 mods  : { level : 5 }, 
                 mix   : { block : 'section', elem : 'title' },
-                content : 'Модификаторы элемента' 
+                content : BEM.I18N('bk-subject', 'elem-mods')   // 'Модификаторы элемента'
             },
             this.ctx
         ]);

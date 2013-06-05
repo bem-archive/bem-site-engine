@@ -12,7 +12,7 @@ block bk-subject, elem examples {
 
     content, this._firstExample: {
         elem : 'incut',
-        content : 'Примеры'
+        content : BEM.I18N('bk-subject', 'examples')    // 'Примеры'
     }
     
     content: {
