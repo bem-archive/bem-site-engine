@@ -2,9 +2,9 @@ block arrow {
 
     content: {
         block : 'service',
-        url : '/',
-        icon : false,
-        name : 'Лего'
+        url   : '/',
+        icon  : false,
+        service : 'lego'
     }
 
 }
