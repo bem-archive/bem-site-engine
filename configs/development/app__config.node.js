@@ -2,7 +2,10 @@
 
 var OS = require('os'),
     PATH = require('path'),
-    socketPath = PATH.join(OS.tmpDir(), ['varankinv-', PATH.basename(app.app_root), '-www.sock'].join('')),
+
+    join = PATH.join,
+    socketPath = join(OS.tmpDir(), ['varankinv-', PATH.basename(app.app_root), '-www.sock'].join('')),
+
     hosts = {
         blackbox : {
             host : 'http://blackbox.yandex-team.ru',
@@ -18,7 +21,7 @@ var OS = require('os'),
         },
 
         datasrc : {
-            root : PATH.join(app.app_root, 'datasrc'),
+            root : join(app.app_root, 'datasrc'),
             host : '/datasrc'
         }
     },
