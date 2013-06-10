@@ -1,6 +1,6 @@
 this._mode === 'error', this.data: {
 
-    console.error(this.ctx);
+    console.error('[bemtree] "%s"', this.data.req.url, this.ctx);
 
     var data = this.data,
         res = data.res;
