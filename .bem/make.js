@@ -19,20 +19,20 @@ MAKE.decl('Arch', {
     bundlesLevelsRegexp : /^.+?\.bundles$/,
 
     libraries : [
-        // FIXME: LEGO-9684
-        'bem-core @ 6974c09e1d04f122878ec4ce1b9215c0e6040c80',
         'bem-pr',
         'bem-gen-doc',
+        // FIXME: LEGO-9684
+        'bem-core @ 6974c09e1d04f122878ec4ce1b9215c0e6040c80',
         'bem-yana @ unstable',
         // FIXME: romochka#feature/bem-core
         'romochka @ feature/bem-core',
         'bem-controls @ dev',
         'islands-controls @ dev',
-        'islands-media @ dev',
+        'islands-media @ v1',
         // FIXME: islands-page#feature/bem-core
         'islands-page @ feature/bem-core',
         'islands-search @ dev',
-        'islands-services @ dev',
+        'islands-services @ v1',
         // FIXME: islands-user#feature/bem-core
         'islands-user @ feature/bem-core'
     ]
