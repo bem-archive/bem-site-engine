@@ -49,11 +49,16 @@ registry.decl(SourceNodeName, {
                     return;
                 }
 
+                // XXX: kind of hack!
+                sources.treeish && (lib += ' @ ' + sources.treeish);
+
+                lib = cache.getCredentials(lib);
+
                 cache.pushToCache(lib);
 
                 var item = new (registry.getNodeClass(SourceItemNodeName))({
                         root : this.root,
-                        item : cache.getCredentials(lib),
+                        item : lib,
                         sources : sources
                     });
 
