@@ -2,6 +2,9 @@
 
 var FS = require('fs'),
     OS = require('os'),
+
+    nworkers = OS.cpus().length - 2,
+
     hosts = {
         blackbox : {
             host : 'http://blackbox.yandex-team.ru',
@@ -26,7 +29,7 @@ var FS = require('fs'),
         app : {
             environment : 'testing',
             socket : '/var/run/yandex/legoa-www.sock',
-            workers : OS.cpus().length - 1
+            workers : nworkers < 1 || 1
         },
         logger : {
             level : 'info',
