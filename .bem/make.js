@@ -19,8 +19,8 @@ MAKE.decl('Arch', {
     bundlesLevelsRegexp : /^.+?\.bundles$/,
 
     libraries : [
-        'bem-pr',
-        'bem-gen-doc',
+        'bem-pr @ 0.0.5',
+        'bem-gen-doc @ 0.4.0',
         // FIXME: LEGO-9684
         'bem-core @ 6974c09e1d04f122878ec4ce1b9215c0e6040c80',
         'bem-yana @ unstable',
