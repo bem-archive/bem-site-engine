@@ -7,7 +7,8 @@ var CRYPTO = require('crypto'),
     nodes = BEM.require('./nodes/node.js'),
     libNodes = BEM.require('./nodes/lib.js'),
     repo = require('legoa-repodb'),
-    U = BEM.util;
+    U = BEM.util,
+    DECL_SEP = '@';
 
 
 var CacheNodeName = exports.CacheNodeName = 'CacheNode';
@@ -26,13 +27,26 @@ registry.decl(CacheNodeName, nodes.NodeName, {
         this.cache = {};
     },
 
-    pushToCache : function(lib) {
+    /**
+     * @param {String} lib
+     * @param {String} [treeish]
+     */
+    pushToCache : function(lib, treeish) {
         lib = this.getCredentials(lib);
 
         // пропускаем библиотеки-симлинки, с ними не поянтно, что делать
         if(lib.type === 'symlink') {
             LOGGER.info('Cache: skip symlink library "' + lib.relative + '"');
             return;
+        }
+
+        if(treeish) {
+            if(lib.type === 'svn') {
+                lib.revision = treeish;
+            } else if(lib.type === 'git') {
+                delete lib.branch;
+                lib.treeish = treeish;
+            }
         }
 
         // явно просим выгружать зависимые библиотеки если не сказано обратное
@@ -83,12 +97,22 @@ registry.decl(CacheNodeName, nodes.NodeName, {
             return lib;
         }
 
+        var parts, treeish;
+        if(lib.indexOf(DECL_SEP) !== -1) {
+            parts = lib.split(DECL_SEP);
+
+            lib = parts[0].trim();
+            treeish = parts.splice(1).join(DECL_SEP).trim();
+        }
+
         var id = PATH.basename(lib),
             credential = repo[id];
 
         if(credential == null) {
             throw new Error('Library "' + id + '" (' + lib + ') is not registered!');
         }
+
+        treeish && (credential.treeish = treeish);
 
         return credential;
     }
