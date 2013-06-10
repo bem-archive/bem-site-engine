@@ -1,10 +1,10 @@
-(function(app) {
+(function(conf) {
 
 var OS = require('os'),
     PATH = require('path'),
 
     join = PATH.join,
-    socketPath = join(OS.tmpDir(), ['varankinv-', PATH.basename(app.app_root), '-www.sock'].join('')),
+    socketPath = join(OS.tmpDir(), ['varankinv-', PATH.basename(conf.app_root), '-www.sock'].join('')),
 
     hosts = {
         blackbox : {
@@ -21,7 +21,7 @@ var OS = require('os'),
         },
 
         datasrc : {
-            root : join(app.app_root, 'datasrc'),
+            root : join(conf.app_root, 'datasrc'),
             host : '/datasrc'
         }
     },
@@ -39,7 +39,7 @@ var OS = require('os'),
     };
 
 modules.define('yana-config', ['yana-util'], function(provide, util, config) {
-    provide(util.extend(config, app, { hosts : hosts }, node));
+    provide(util.extend(config, conf, { hosts : hosts }, node));
 });
 
-}(require(require('path').resolve(__dirname, '../../configs/common.js'))));
+}(require('legoa-conf')));

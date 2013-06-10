@@ -42,4 +42,4 @@ modules.define('yana-config', ['yana-util'], function(provide, util, config) {
     provide(util.extend(config, app, { hosts : hosts }, node));
 });
 
-}(require(require('path').resolve(__dirname, '../../configs/common.js'))));
+}(require('legoa-conf')));
