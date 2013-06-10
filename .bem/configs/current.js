@@ -5,10 +5,6 @@ var BEM = require('bem');
 module.exports = {
 
     libraries : BEM.util.extend(require('legoa-repodb'), {
-        'bem-yana-stub' : {
-            type : 'git',
-            url  : 'git://github.com/narqo/bem-yana-stub.git'
-        },
         'bem-controls' : {
             type : 'git',
             url  : 'git://github.com/ymaps/bem-controls.git'
