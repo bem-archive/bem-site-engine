@@ -1,0 +1,53 @@
+#!/usr/bin/make -f
+
+PRJDIR=legoa/
+YENV=production
+
+NPM=npm
+
+include /usr/share/cdbs/1/class/verstka-with-static.mk
+
+make::configs/current
+	$(NPM) install
+	YENV=$(YENV) $(shell $(NPM) bin)/bem make --force
+
+configs/current::
+	ln -sf $(YENV) $(@)
+
+install/$(DEB_SOURCE_PACKAGE)::make
+	# копируем только то, что нужно
+	cp -r \
+		robots.txt \
+		configs \
+		desktop.bundles \
+		node_modules \
+		$(DEB_PRJWWW_DESTDIR)
+
+	# Удаляем dev-зависимости npm
+	echo ===> rm -r $(DEB_PRJWWW_DESTDIR)/node_modules/{$(shell node -pe "Object.keys(require('./package.json').devDependencies).join(',')")}
+
+	find $(DEB_PRJWWW_DESTDIR)/desktop.bundles \
+		-not \( -name "*.i18n" -o -name "*.node.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \)
+
+	# Проставляем версии
+	dh_versions $(DEB_PRJWWW_DESTDIR)/{configs/*/*,desktop.bundles/*/*}
+
+	dh_environment -p$(DEB_SOURCE_PACKAGE) --fail-missing
+
+install/$(STATIC_PACKAGE)::make
+#·   ycssjs $(STATIC_PACKAGE_DESTDIR)pages
+
+·   # NOTE: костыль из-за того что в пакете возможно нет картинок
+·   mkdir -p $(STATIC_PACKAGE_DESTDIR)freeze
+
+	cp -r \
+		desktop.bundles/common/_common* \
+		freeze \
+		$(STATIC_PACKAGE_DESTDIR)
+	rm -r desktop.bundles/common/_common.node.js
+
+·   mkdir -p $(STATIC_PACKAGE_DESTDIR)../_/
+
+clean::
+	rm -rf configs/current
+

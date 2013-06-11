@@ -1,0 +1,9 @@
+/var/log/yandex/legoa/*.log {
+    daily
+    rotate 7
+    compress
+    missingok
+    notifempty
+    sharedscripts
+    copytruncate
+}
