@@ -267,8 +267,9 @@ registry.decl(CacheItemMetaNodeName, CacheItemNodeName, {
         return this.createNodePrefix(o.item);
     },
 
-    createNodePath : function() {
-        return this.__base.apply(this, arguments) + '-meta.js';
+    createNodePath : function(o) {
+        var path = this.createNodePrefix(o.item).replace(/([:\/\\])+/g, '~');
+        return PATH.join('.bem', 'cache', path + '-meta.js');
     }
 
 });
