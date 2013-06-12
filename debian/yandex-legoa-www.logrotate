@@ -7,3 +7,12 @@
     sharedscripts
     copytruncate
 }
+
+/var/log/nodeubic/legoa/*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    nocreate
+}

@@ -1,5 +1,6 @@
 etc/logrotate.d
 usr/lib/yandex/legoa
 var/lib/yandex/legoa
+var/log/nodeubic/legoa
 var/log/yandex/legoa
 var/run/yandex/legoa
