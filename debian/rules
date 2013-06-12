@@ -30,14 +30,20 @@ install/$(DEB_SOURCE_PACKAGE)::make
 	# Удаляем dev-зависимости npm
 	rm -r $(DEB_PRJWWW_DESTDIR)node_modules/{$(shell node -pe "Object.keys(require('./package.json').devDependencies).join(',')")}
 
+	# Удаляем не нужное
 	find $(DEB_PRJWWW_DESTDIR)desktop.bundles \
 		-type f \
-		-not \( -name "*.i18n" -o -name "*.node.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) -delete
+		-not \( -name "*.i18n" -o -name "*.node.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
+		-delete
+
+	# Чистим VCS-остатки (на всякий случай)
+	dh_clearvcs -p$(DEB_PRJWWW_DESTDIR)
 
 	# Проставляем версии
 	dh_versions $(DEB_PRJWWW_DESTDIR){configs/*/*,desktop.bundles/*/*}
 
 	dh_environment -p$(DEB_SOURCE_PACKAGE) --fail-missing
+	dh_nodeubic -p$(DEB_SOURCE_PACKAGE)
 
 install/$(STATIC_PACKAGE)::make
 #·   ycssjs $(STATIC_PACKAGE_DESTDIR)pages
