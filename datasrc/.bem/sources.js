@@ -36,7 +36,12 @@ registry.decl(sourceNodes.SourceNodeName, {
 //            },
             'islands-components' : {
                 treeish : 'v1.0.0',
-                paths : ['bem-bl/blocks-common', 'bem-bl/blocks-desktop', 'common.blocks', 'desktop.blocks'],
+                paths : [
+                    'bem-controls/common.blocks',
+                    'bem-controls/desktop.blocks',
+                    'common.blocks',
+                    'desktop.blocks'
+                ],
                 examplesLevels : [
                     'bem-bl/blocks-common',
                     'bem-bl/blocks-desktop',
