@@ -15,6 +15,12 @@ block showcase {
         },
         {
             elem : 'item',
+            name : 'islands-icons',
+            url  : '/libs/islands-icons',
+            repo : 'http://github.yandex-team.ru/lego/islands-icons'
+        },
+        {
+            elem : 'item',
             name : 'islands-media',
             url  : '/libs/islands-media',
             repo : 'http://github.yandex-team.ru/lego/islands-media'

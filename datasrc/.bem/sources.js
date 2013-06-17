@@ -56,6 +56,20 @@ registry.decl(sourceNodes.SourceNodeName, {
                     'desktop.blocks'
                 ]
             },
+            'islands-icons' : {
+                treeish : 'v1.0.0',
+                paths : ['common.blocks', 'desktop.blocks'],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
+                    'lego/blocks-common',
+                    'lego/blocks-desktop',
+                    'islands-media/common.blocks',
+                    'islands-media/desktop.blocks',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
+            },
             'islands-media' : {
                 treeish : 'v1.0.0',
                 paths : ['common.blocks', 'desktop.blocks'],
