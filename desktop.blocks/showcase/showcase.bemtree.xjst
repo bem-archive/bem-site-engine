@@ -1,5 +1,5 @@
 block showcase {
-    
+
     content: [
         {
             elem : 'item',
@@ -9,15 +9,9 @@ block showcase {
         },
         {
             elem : 'item',
-            name : 'islands-controls',
-            url  : '/libs/islands-controls',
-            repo : 'http://github.yandex-team.ru/lego/islands-controls'
-        },
-        {
-            elem : 'item',
-            name : 'islands-dynamic',
-            url  : '/libs/islands-dynamic',
-            repo : 'http://github.yandex-team.ru/lego/islands-dynamic'
+            name : 'islands-components',
+            url  : '/libs/islands-components',
+            repo : 'http://github.yandex-team.ru/lego/islands-components'
         },
         {
             elem : 'item',
@@ -33,21 +27,9 @@ block showcase {
         },
         {
             elem : 'item',
-            name : 'islands-popups',
-            url  : '/libs/islands-popups',
-            repo : 'http://github.yandex-team.ru/lego/islands-popups'
-        },
-        {
-            elem : 'item',
             name : 'islands-promo',
             url  : '/libs/islands-promo',
             repo : 'http://github.yandex-team.ru/lego/islands-promo'
-        },
-        {
-            elem : 'item',
-            name : 'islands-search',
-            url  : '/libs/islands-search',
-            repo : 'http://github.yandex-team.ru/lego/islands-search'
         },
         {
             elem : 'item',
@@ -62,5 +44,5 @@ block showcase {
             repo : 'http://github.yandex-team.ru/lego/islands-user'
         }
     ]
-    
+
 }
