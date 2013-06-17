@@ -6,7 +6,8 @@ var BEM = require('bem'),
 
     // FIXME: с 10 воркерами (bem-tools, default) сборка падает:
     // "Error: channel closed"
-    DEFAULT_WORKERS = 4;
+    //DEFAULT_WORKERS = 4;
+    DEFAULT_WORKERS = 12;
 
 function appendExamplesNodes(DefaultArch) {
     require('../examples.js');
