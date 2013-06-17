@@ -9,16 +9,16 @@ var CP = require('child_process'),
     nodes = BEM.require('./nodes/node.js'),
     blockNodes = BEM.require('./nodes/block.js'),
     fileNodes = BEM.require('./nodes/file.js'),
-    
+
     PRJ_ROOT = PATH.resolve(__dirname, '../../../'),
     environ = require(PATH.join(PRJ_ROOT, '.bem/environ.js')),
     setsNodes = require(environ.getLibPath('bem-pr', 'bem/nodes/sets.js')),
-    
+
     createLevel = BEM.createLevel,
     U = BEM.util;
 
 registry.decl('Arch', {
-    
+
     createExamplesNodes : function(opts) {
         var arch = this.arch,
             node = new (registry.getNodeClass('ExamplesLevelNode'))({
@@ -29,30 +29,30 @@ registry.decl('Arch', {
                 srcBuildLevels : opts.srcBuildLevels
             }),
             rootNode = new nodes.Node('__examples__');
-        
+
         arch.setNode(rootNode).setNode(node, rootNode);
-        
+
         return node;
     }
-    
+
 });
 
 /*
 registry.decl('ExamplesLevelNode', nodes.NodeName, {
-    
+
     __constructor : function(o) {
         this.root = o.root;         // legoa/
         this.path = o.path;         // _islands-dynamic/examples/
         this.srcRoot = o.srcRoot;   // .bem/cache/089f9d248c75dbc8fbf76f5dcbc6cfd32cb45a4c/
         this.srcPaths = o.srcPaths; // ['common.blocks', 'desktop.blocks']
     }
-    
+
 });
 */
 
 
 registry.decl('DocumentNode', fileNodes.FileNode, {
-    
+
     useOrCreateDocumentNode : function() {
         var arch = this.ctx.arch,
             path = this.path,
@@ -63,66 +63,66 @@ registry.decl('DocumentNode', fileNodes.FileNode, {
         } else {
             pathNode = this.createDocumentNode();
         }
-        
+
         return Q.when(pathNode);
     },
-    
+
     createDocumentNode : function() {
         return this.makeTree()
             .then(function() {
                 return new fileNodes.FileNode({ root : this.root, path : this.path });
             }.bind(this));
     },
-    
+
     makeTree : function() {
         return QFS.exists(this.getPath())
             .then(function(exists) {
                 if(!exists) return QFS.makeTree(this.getPath());
             }.bind(this));
     },
-    
+
     make : function() {
         return Q.resolve();
     }
-    
+
 });
 
 
 registry.decl('ExamplesLevelNode', 'DocumentNode', {
-    
+
     __constructor : function(o) {
         this.__base(o);
-        
+
         this.root = o.root;
         this.path = o.path;
         this.srcRoot = o.srcRoot;
         this.srcPaths = o.srcPaths;
         this.srcBuildLevels = o.srcBuildLevels;
     },
-    
+
     make : function() {
         return this.ctx.arch.withLock(this.alterArch(), this);
     },
-    
+
     /** @returns {Function} */
     alterArch : function() {
         var ctx = this.ctx;
         return function() {
             var arch = ctx.arch,
                 srcs = this.scanSources();
-            
+
             return this.createExamplesRootNode()
                 .then(function(examplesRoot) {
                     arch.addParents(examplesRoot, arch.getParents(this));
-                    
-                    return srcs.map(function(item) {                        
+
+                    return srcs.map(function(item) {
                         var level = this.createExampleLevelNode(item);
                         arch.addParents(level, examplesRoot);
                     }, this);
                 }.bind(this));
         };
     },
-    
+
     createExamplesRootNode : function() {
         var arch = this.ctx.arch;
         return this.useOrCreateDocumentNode()
@@ -131,7 +131,7 @@ registry.decl('ExamplesLevelNode', 'DocumentNode', {
                 return node;
             });
     },
-    
+
     createExampleLevelNode : function(item) {
         var opts = {
                 root  : this.root,
@@ -141,12 +141,12 @@ registry.decl('ExamplesLevelNode', 'DocumentNode', {
                 item : item
             },
             level = new (registry.getNodeClass('ExampleLevelNode'))(opts);
-        
+
         this.ctx.arch.setNode(level);
-        
+
         return level;
     },
-    
+
     getSourceItemTechs : function() {
         return [
             'examples'
@@ -157,8 +157,9 @@ registry.decl('ExamplesLevelNode', 'DocumentNode', {
         if(!this._srcPaths) {
             var absolutivize = PATH.resolve.bind(null, this.srcRoot);
             this._srcPaths = this.srcPaths.map(function(level) {
-                    if(typeof level === 'string')
+                    if(typeof level === 'string') {
                         return createLevel(absolutivize(level));
+                    }
                     return level;
                 });
         }
@@ -187,54 +188,54 @@ registry.decl('ExamplesLevelNode', 'DocumentNode', {
                 return false;
             });
     }
-    
+
 }, {
-    
+
     createId : function(o) {
         return o.path + '*';
     }
-    
+
 });
 
 
 registry.decl('ExampleLevelNode', 'DocumentNode', {
-   
+
     __constructor : function(o) {
         this.item = o.item;
         this.srcRoot = o.srcRoot;
         this.srcBuildLevels = o.srcBuildLevels;
-        
+
         this._level = o.level;
-        
+
         this._srcItemLevel = {};
         this._srcBlockLevelNode = {};
-        
+
         Object.defineProperty(this, 'level', {
             get : function() {
                 return createLevel(this._level);
             }
         });
-        
+
         return this.__base(U.extend({ path : this.__self.createNodePath(o) }, o));
     },
-    
+
     make : function() {
         return this.ctx.arch.withLock(this.alterArch(), this);
     },
-    
+
     /** @returns {Function} */
     alterArch : function() {
         var ctx = this.ctx;
-        
+
         return function() {
             var arch = ctx.arch,
                 blockSource = this.createBlockSourceNode();
-            
+
             this._srcBlockLevelNode = blockSource;
-            
+
             this._srcItemLevel = createLevel(
                     this._srcBlockLevelNode.level.getPathByObj(this.item, this.item.tech));
-            
+
             return this.createBlockExampleRootNode()
                 .then(function(blockExampleRoot) {
                     arch.addParents(blockExampleRoot, arch.getParents(this));
@@ -248,21 +249,21 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
                             // original bemjson file from block's example
                             exampleReferenceNode = new fileNodes.FileNode({
                                 root : this.srcRoot,
-                                path : PATH.relative(this.srcRoot, 
+                                path : PATH.relative(this.srcRoot,
                                         this._srcItemLevel.getPathByObj(item, item.tech))
                             });
-                            
+
                         arch
                             .setNode(exampleReferenceNode)
                             .addParents(exampleBundleNode, blockExampleRoot)
                             .addParents(exampleSourceNode, exampleBundleNode)
                             .addChildren(exampleSourceNode, [this._srcBlockLevelNode, exampleReferenceNode]);
                     }, this);
-                    
+
                 }.bind(this));
         };
     },
-    
+
     createBlockExampleRootNode : function() {
         var arch = this.ctx.arch;
         return this.useOrCreateDocumentNode()
@@ -271,7 +272,7 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
                 return node;
             });
     },
-    
+
     createBlockSourceNode : function() {
         var arch = this.ctx.arch,
             opts = {
@@ -279,7 +280,7 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
                 item  : this.item,
                 level : this.item.level
             };
-        
+
         var node,
             id = blockNodes.BlockNode.createId(opts);
 
@@ -289,10 +290,10 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
             node = new blockNodes.BlockNode(opts);
             arch.setNode(node);
         }
-        
+
         return node;
     },
-    
+
     createBlockExampleSourceNode : function(item) {
         var opts = {
                 root : this.root,
@@ -302,12 +303,12 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
                 item : item
             },
             source = new (registry.getNodeClass('ExampleSourceNode'))(opts);
-        
+
         this.ctx.arch.setNode(source);
-        
+
         return source;
     },
-    
+
     createBlockExampleBundleNode : function(item) {
         var opts = {
                 root  : this.root,
@@ -318,12 +319,12 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
                 item : item
             },
             bundle = registry.getNodeClass('ExampleBundleNode').create(opts);
-        
+
         this.ctx.arch.setNode(bundle);
-        
+
         return bundle;
     },
-    
+
     /** @override */
     createDocumentNode : function() {
         return this.makePathLevel()
@@ -337,15 +338,15 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
                 return new fileNodes.FileNode({ root : this.root, path : this.path });
             }.bind(this));
     },
-    
+
     makePathLevel : function() {
         var path = this.getPath();
-        
+
         return QFS.exists(path)
             .then(function(exists) {
                 if(exists && U.isLevel(path)) {
                     return Q.reject({
-                        type : 'LEVEL_EXISTS', 
+                        type : 'LEVEL_EXISTS',
                         message : UTIL.format('"%s" is already exists', this.path)
                     });
                 }
@@ -360,7 +361,7 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
             }.bind(this))
             .then(function(level) {
                 var p = { cmd : 'level' };
-                
+
                 p.opts = {
                     outputDir : PATH.dirname(path),
                     level : level,
@@ -369,13 +370,13 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
                 p.args = {
                     names : [ PATH.basename(path) ]
                 };
-                
+
                 return p;
             })
             .then(function(p) {
                 var d = Q.defer(),
                     worker = CP.fork(
-                            BEM.require.resolve('./nodes/workers/bemcreate.js'), 
+                            BEM.require.resolve('./nodes/workers/bemcreate.js'),
                             { env : process.env }),
                     handler = function(m) {
                         (m.code !== 0)? d.reject(m.msg) : d.resolve();
@@ -396,59 +397,59 @@ registry.decl('ExampleLevelNode', 'DocumentNode', {
                 return d.promise;
             });
     },
-    
+
     getSourceItemTechs : function() {
         return ['bemjson.js'];
     },
 
     scanSourceLevel : function() {
         var techs = this.getSourceItemTechs();
-        
+
         return this._srcItemLevel
             .getItemsByIntrospection()
             .filter(function(item) {
                 return ~techs.indexOf(item.tech);
             });
     }
-    
+
 }, {
-    
+
     createId : function(o) {
         return this.createNodePath(o) + '*';
     },
-    
+
     createNodePath : function(o) {
         var level = o.level,
             item = o.item;
         // TODO: `level` should be "simple"
         return PATH.relative(o.root, createLevel(level).getPathByObj(item, item.tech));
     }
-    
+
 });
 
 
 registry.decl('ExampleSourceNode', fileNodes.GeneratedFileNodeName, {
-    
+
     __constructor : function(o) {
         this.item = o.item;
         this.srcRoot = o.srcRoot;
         this.srcLevel = o.srcLevel;
-        
+
         this._level = o.level;
-        
+
         Object.defineProperty(this, 'level', {
             get : function() {
                 return createLevel(this._level);
             }
         });
-        
+
         return this.__base(U.extend({ path : this.__self.createNodePath(o) }, o));
     },
-    
+
     make : function() {
         var source = this.srcLevel.getPathByObj(this.item, this.item.tech),
             dest = this.getPath();
-        
+
         return QFS.exists(PATH.dirname(dest))
             .then(function(exists) {
                 if(!exists) return QFS.makeTree(PATH.dirname(dest));
@@ -460,45 +461,45 @@ registry.decl('ExampleSourceNode', fileNodes.GeneratedFileNodeName, {
                 return U.writeFileIfDiffers(dest, data);
             });
     }
-    
+
 }, {
-    
+
     createId : function(o) {
         return this.createNodePath(o);
     },
-    
+
     createNodePath : function(o) {
         var level = o.level,
             item = o.item;
         return PATH.relative(o.root, createLevel(level).getPathByObj(item, item.tech));
     }
-    
+
 });
 
 
 registry.decl('ExampleBundleNode', setsNodes.ExampleNodeName, {
-   
+
     __constructor : function(o) {
         this.__base(o);
 
         this.srcRoot = o.srcRoot;
         this.srcLevel = o.srcLevel;
         this.buildLevels = o.buildLevels;
-        
+
         this._level = o.level;
-        
+
         Object.defineProperty(this, 'level', {
             get : function() {
                 return createLevel(this._level);
             }
         });
     },
-    
+
 //    getTechs : function() {
 //        // FIXME: hardcode
 //        return ['bemjson.js', 'bemdecl.js', 'deps.js', 'css', 'js'];
 //    },
-    
+
     getSourceNodePrefix : function() {
         if(!this._sourceNodePrefix) {
             this._sourceNodePrefix = this.__self.createNodePrefix({
@@ -507,18 +508,18 @@ registry.decl('ExampleBundleNode', setsNodes.ExampleNodeName, {
                 item  : this.item
             });
         }
-        
+
         return this._sourceNodePrefix;
     },
-    
+
     getLevels : function(tech) {
         var resolve = PATH.resolve.bind(null, this.srcRoot);
-            
+
         return this.buildLevels
             .concat([this.srcLevel.getTech('blocks').getPath(this.getSourceNodePrefix())])
             .map(function(level) {
                 return resolve(level);
             });
     }
-    
+
 });

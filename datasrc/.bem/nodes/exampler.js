@@ -47,8 +47,9 @@ registry.decl(ExamplerNodeName, nodes.NodeName, {
         worker.once('message', function(m) {
             worker.kill();
 
-            if(m.code === 0)
+            if(m.code === 0) {
                 return defer.resolve(m);
+            }
 
             defer.reject(new Error(m.msg));
         });
