@@ -23,4 +23,9 @@ block bk-subject {
 
     }
 
+    ['description', 'elem', 'mod'].indexOf(this.elem) !== -1 && this._mode === 'mix': [
+        { block : 'static-text' },
+        { block : 'section'}
+    ]
+
 }

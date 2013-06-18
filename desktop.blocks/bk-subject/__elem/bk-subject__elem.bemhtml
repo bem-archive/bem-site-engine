@@ -6,9 +6,9 @@ block bk-subject {
             this._firstElem = this.ctx;
 
             applyCtx([
-                { 
-                    block : 'headline', 
-                    mods  : { level : 3 }, 
+                {
+                    block : 'headline',
+                    mods  : { level : 3 },
                     mix   : { block : 'section', elem : 'title' },
                     content : BEM.I18N('bk-subject', 'elems')   // 'Элементы'
                 },
@@ -17,8 +17,6 @@ block bk-subject {
         }
 
         default: applyNext(this._isElem = true, this._firstMod = null)
-
-        mix: { block : 'section' }
 
         content: [
             {
@@ -40,9 +38,9 @@ block bk-subject {
         this._firstMod = this.ctx;
 
         applyCtx([
-            { 
-                block : 'headline', 
-                mods  : { level : 5 }, 
+            {
+                block : 'headline',
+                mods  : { level : 5 },
                 mix   : { block : 'section', elem : 'title' },
                 content : BEM.I18N('bk-subject', 'elem-mods')   // 'Модификаторы элемента'
             },

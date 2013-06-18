@@ -2,9 +2,4 @@ block bk-subject, elem description {
 
     tag: 'article'
 
-    mix: [
-        { block : 'static-text' },
-        { block : 'section'}
-    ]
-
 }

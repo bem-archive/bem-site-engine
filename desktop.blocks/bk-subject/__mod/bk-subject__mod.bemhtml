@@ -6,17 +6,15 @@ block bk-subject {
             this._firstMod = this.ctx;
 
             applyCtx([
-                { 
-                    block : 'headline', 
-                    mods  : { level : 3 }, 
+                {
+                    block : 'headline',
+                    mods  : { level : 3 },
                     mix   : { block : 'section', elem : 'title' },
                     content : BEM.I18N('bk-subject', 'mods')    // 'Модификаторы'
                 },
                 this.ctx
             ]);
         }
-
-        mix: { block : 'section' }
 
         content: {
             var ctx = this.ctx;
