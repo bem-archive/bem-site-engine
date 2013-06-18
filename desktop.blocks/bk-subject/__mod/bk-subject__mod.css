@@ -8,22 +8,22 @@
 {
     border: 0;
     border-collapse: collapse;
-    
-    margin: 0;
-    
+
+    margin: 10px 0;
+
     text-align: left;
 }
 
-.bk-subject__mod-val-name, 
+.bk-subject__mod-val-name,
 .bk-subject__mod-val-title
 {
     margin: 0;
-    padding: 3px 0;
-    
-    visibility: baseline;
+    padding: 5px 0;
+
+    vertical-align: baseline;
 }
 
 .bk-subject__mod-val-name
 {
-    padding-right: 8px;
+    padding-right: 10px;
 }
