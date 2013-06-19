@@ -1,32 +1,3 @@
 .bk-subject__incut
 {
-    background: #fff;
-    box-shadow: 0 0 0 1px #dddcda;
-    
-    color: #888;
-    
-    font-size: 13px;
-    line-height: 16px;
-    
-    display: inline-block;
-    
-    position: relative;
-    z-index: 9;
-    
-    margin-bottom: 1px;
-    padding: 6px 12px 3px 12px;
-}
-
-.bk-subject__incut::before
-{
-    content: '';
-    
-    background: #fff;
-    
-    position: absolute;
-    
-    height: 1px;
-    bottom: -1px;
-    left: 0;
-    right: 0;
 }

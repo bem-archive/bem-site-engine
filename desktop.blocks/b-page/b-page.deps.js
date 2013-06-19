@@ -3,6 +3,7 @@
         { block : 'i-bem', elems : ['tree', 'html'] }
     ],
     shouldDeps : [
+        { mods : { theme : 'normal' } },
         { block : 'static-text' },
         { block : 'b-text' },
         { block : 'headline' },
@@ -11,7 +12,6 @@
         { block : 'ulist' },
         { block : 'para' },
         { block : 'island' },
-        { mods : { theme : 'normal' } },
         { block : 'header' },
         { block : 'layout', mods : { type : 'serp' } },
         { block : 'layout', mods : { section : '100' } },

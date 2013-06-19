@@ -1,5 +1,7 @@
 block breadcrumbs {
 
+    mix: { block : 'layout', mods : { section : '100' } }
+
     tag: 'ul'
 
     elem item {

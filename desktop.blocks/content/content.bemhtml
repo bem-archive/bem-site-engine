@@ -3,10 +3,13 @@ block content {
     default: {
         applyCtx({
             block : 'body',
-            mix : {
-                block : 'layout',
-                mods : { section : 'center' }
-            },
+            mix : [
+                { block : 'island' },
+                {
+                    block : 'layout',
+                    mods : { section : '100' }
+                }
+            ],
             content : this.ctx
         })
     }

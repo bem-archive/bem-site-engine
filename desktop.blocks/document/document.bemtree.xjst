@@ -4,7 +4,7 @@ block document {
 
     content {
 
-        this._datasrc.block: {
+        !this.elem && this._datasrc.block: {
             var data = this.data,
                 params = this._datasrc;
             return this.doAsync(

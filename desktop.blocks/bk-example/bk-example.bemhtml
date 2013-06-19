@@ -1,13 +1,13 @@
 block bk-example {
-    
+
     js: true
-    
-    mix: { block : 'island' }
-    
+
+    //mix: { block : 'island' }
+
     content: {
         var url = apply('url', this.ctx = this.ctx.url),
             source = apply('url', this.ctx = this.ctx.source);
-        
+
         return [
             {
                 elem : 'title',
@@ -24,21 +24,21 @@ block bk-example {
             }
         ];
     }
-    
+
     url: {
         // TODO
         var Glob = this['i-global'];
         return [
             Glob['datasrc-host'],
-            '_' + Glob.lib, 
+            '_' + Glob.lib,
             'examples',
             Glob.block,
             this.ctx
         ].join('/');
     }
-    
+
     elem title {
-        
+
         content: {
             block : 'link',
             mods  : { external : 'yes' },
@@ -46,23 +46,23 @@ block bk-example {
             url   : this.ctx.url,
             content : this.ctx.content
         }
-        
+
     }
-    
+
     elem live {
-        
+
         tag : ''
-        
+
         this.ctx.url {
-            
+
             tag: 'iframe'
-                
-            attrs: { 
-                src : this.ctx.url 
+
+            attrs: {
+                src : this.ctx.url
             }
-                
+
         }
-        
+
     }
 
 }
