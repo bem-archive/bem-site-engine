@@ -27,7 +27,7 @@ cache sources::
 
 clean::
 	$(RM) -r ./.bem/cache*
-	$(RM) -r $(SOURCES_PATHS)
+	$(RM) -r _*
 	$(call do_npm,prune)
 	$(call do_npm,uninstall,$(NPM_DEPS))
 
