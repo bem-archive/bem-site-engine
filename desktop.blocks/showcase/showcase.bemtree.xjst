@@ -37,12 +37,6 @@ block showcase {
         },
         {
             elem : 'item',
-            name : 'islands-promo',
-            url  : '/libs/islands-promo',
-            repo : 'http://github.yandex-team.ru/lego/islands-promo'
-        },
-        {
-            elem : 'item',
             name : 'islands-services',
             url  : '/libs/islands-services',
             repo : 'http://github.yandex-team.ru/lego/islands-services'
