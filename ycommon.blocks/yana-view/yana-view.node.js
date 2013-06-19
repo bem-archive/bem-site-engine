@@ -34,7 +34,7 @@ provide(View.decl('yana-view', {
     },
 
     _buildBemjson : function(ctx) {
-        return this._template.then(function(t) { return t.bemtree.call(ctx) });
+        return this._template.then(function(t) { return t.bemtree.apply(ctx) });
     },
 
     _buildHtml : function(bemjson) {
