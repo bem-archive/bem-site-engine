@@ -5,18 +5,6 @@ NPM_BIN := $(shell $(NPM) bin)
 NPM_DEPS := $(shell node -pe "Object.keys(require('./package.json').dependencies).join(' ')")
 NPM_DEPS_PATHS := $(addprefix node_modules/,$(NPM_DEPS))
 
-SOURCES := \
-	islands-components \
-	islands-icons \
-	islands-media \
-	islands-page \
-	islands-promo \
-	islands-services \
-	islands-user
-#	islands-search \
-#	islands-core
-SOURCES_PATHS := $(addprefix _,$(SOURCES))
-
 with_npm_registry_flag:=--registry http://npm.yandex-team.ru
 do_npm = $(NPM) $(with_npm_registry_flag) $(1) $(2) $(3) $(4) $(5)
 
@@ -31,13 +19,11 @@ $(NPM_DEPS_PATHS):: node_modules
 node_modules::
 	$(call do_npm,install)
 
-sources:: $(SOURCES_PATHS)
+sources:: cache
 
-$(SOURCES_PATHS):: cache
-
-cache $(SOURCES_PATHS)::
+cache sources::
 	$(info ===> Building "$@")
-	$(NPM_BIN)/bem make -w 16 $@
+	$(NPM_BIN)/bem make -w 12 $@
 
 clean::
 	$(RM) -r ./.bem/cache*
