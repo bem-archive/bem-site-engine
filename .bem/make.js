@@ -3,13 +3,14 @@
 require('./nodes');
 
 var PATH = require('path'),
+    LOGGER = require('bem/lib/logger'),
     environ = require('./environ');
 
 try {
     require(environ.getLibPath('bem-core', '.bem/nodes/bundle.js'));
-    require(environ.getLibPath('bem-yana-stub', '.bem/nodes/bundle.js'));
-} catch (e) {
+} catch(e) {
     // TODO: handle exception
+    LOGGER.error(e);
 }
 
 MAKE.decl('Arch', {
