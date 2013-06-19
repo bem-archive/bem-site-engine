@@ -4,6 +4,7 @@
     ],
     shouldDeps : [
         { mods : { theme : 'normal' } },
+        { mods : { page : 'error' } },
         { block : 'static-text' },
         { block : 'b-text' },
         { block : 'headline' },
