@@ -11,9 +11,11 @@ provide(inherit(Request, {
     __constructor : function() {
         return this.__base.apply(this, arguments)
             .then(function(req) {
-                var headers = req.headers;
-
-                req.userip = headers['x-real-ip'] || req.connection.remoteAddress;
+                Object.defineProperty(req, 'userip', {
+                    get : function() {
+                        return this.headers['x-real-ip'] || this.connection.remoteAddress;
+                    }
+                });
 
                 req.logger = logger;
 
