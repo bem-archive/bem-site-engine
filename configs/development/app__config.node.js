@@ -4,7 +4,7 @@ var OS = require('os'),
     PATH = require('path'),
 
     join = PATH.join,
-    socketPath = join(OS.tmpDir(), ['varankinv-', PATH.basename(conf.app_root), '-www.sock'].join('')),
+    socketPath = join(OS.tmpDir(), ''.concat('varankinv-', PATH.basename(conf.app_root), '-www.sock')),
 
     hosts = {
         blackbox : {
@@ -30,12 +30,12 @@ var OS = require('os'),
         app : {
             //port : 3014,
             socket : socketPath,
-            workers : 2
+            workers : 3
         },
         logger : {
             level : 'debug'
         },
-        //static_host : '//127.0.0.1:8080/'
+        static_host : ''
     };
 
 modules.define('yana-config', ['yana-util'], function(provide, util, config) {
