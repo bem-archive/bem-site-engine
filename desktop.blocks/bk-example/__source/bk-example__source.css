@@ -1,19 +1,15 @@
 .bk-example__source
 {
-    padding-top: 5px;
+    padding: 5px 0 10px;
 }
 
 .bk-example__source-code
 {
-    background: #fff;
-
-    -webkit-box-shadow: 0 0 0 1px #dddcda;
-    -moz-box-shadow: 0 0 0 1px #dddcda;
-    box-shadow: 0 0 0 1px #dddcda;
+    background: #f5f3e4;
 
     position: relative;
 
-    margin: 0 15px 12px;
+    margin: 0 0 10px;
     padding: 10px;
 
     display: none;

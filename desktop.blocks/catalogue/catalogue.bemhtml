@@ -1,8 +1,46 @@
 block catalogue {
 
+    (this.ctx.content && this.ctx.content._res), default: {
+        apply(this.ctx.content = this.ctx.content._res)
+    }
+
     content: {
         elem : 'list',
         content : this.ctx.content
+    }
+
+    elem list {
+
+        mix : { block : 'layout', mods : { section : '4' } }
+
+        this._.isArray(this.ctx.content), content: {
+            var content = this.ctx.content,
+                len = content.length,
+                block = this.block,
+                elem = this.elem,
+                cols = [
+                    { block : 'layout', elem : 'col', mods : { 'is-first' : 'yes' }, content : [] },
+                    { block : 'layout', elem : 'col', content : [] },
+                    { block : 'layout', elem : 'col', content : [] },
+                    { block : 'layout', elem : 'col', mods : { 'is-last' : 'yes' }, content : [] }
+                ],
+                factor = cols.length,
+                i = 0,
+                item,
+                col;
+
+            while(i < len) {
+                item = content[i];
+                item.block = block;
+
+                cols[i % factor].content.push(item);
+
+                i++;
+            }
+
+            return applyCtx(cols);
+        }
+
     }
 
     elem list-item {

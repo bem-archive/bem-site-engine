@@ -1,13 +1,11 @@
 block showcase {
-    
+
     content: [
         this.ctx.content
     ]
 
     elem item {
-        
-        mix: { block : 'island' }
-        
+
         content: [
             {
                 elem : 'title',
@@ -27,20 +25,20 @@ block showcase {
                 }
             }
         ]
-        
+
     }
 
     elem title {
-        
+
         tag: ''
-        
+
         content: {
             block : 'headline',
             mods : { level : 3 },
             mix : { block : this.block, elem : this.elem },
             content : this.ctx.content
         }
-        
+
     }
-    
+
 }

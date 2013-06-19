@@ -3,6 +3,7 @@
         { block : 'i-bem', elems : ['html', 'tree', 'i18n'] }
     ],
     shouldDeps : [
+        { block : 'section' },
         { block : 'bk-example' },
         {
             elems : [

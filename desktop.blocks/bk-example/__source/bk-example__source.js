@@ -64,7 +64,7 @@ DOM.decl('bk-example', {
 
                     this._source = this.findElem(source, 'source-code');
 
-                    DOM.after(this.domElem, source);
+                    DOM.append(this.domElem, source);
 
                     onSuccess.call(this);
                 },

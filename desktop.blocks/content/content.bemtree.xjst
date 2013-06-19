@@ -1,10 +1,13 @@
 block content {
 
-    content {
+    default: {
+        return applyCtx([
+            { block : 'breadcrumbs' },
+            this.ctx
+        ]);
+    }
 
-        true: {
-            block : 'breadcrumbs'
-        }
+    content {
 
         this.data.page === 'error': {
             block : 'error'
@@ -13,25 +16,13 @@ block content {
         this.data.page === 'index': {
             block : 'showcase'
         }
-        
+
         this.data.page === 'library': {
-            var content = applyNext();
-            return [
-                content,
-                {
-                    block : 'catalogue'
-                }
-            ];
+            block : 'catalogue'
         }
 
         this.data.page === 'document': {
-            var content = applyNext();
-            return [
-                content,
-                {
-                    block : 'document'
-                }
-            ];
+            block : 'document'
         }
 
     }

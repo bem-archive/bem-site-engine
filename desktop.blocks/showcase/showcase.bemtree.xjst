@@ -2,6 +2,10 @@ block showcase {
 
     content: [
         {
+            block : 'headline',
+            content : BEM.I18N('showcase', 'title') // Библиотеки и компоненты
+        },
+        {
             elem : 'item',
             name : 'romochka',
             url  : 'https://2-10.lego.yandex-team.ru/',

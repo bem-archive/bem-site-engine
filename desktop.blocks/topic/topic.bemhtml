@@ -3,8 +3,6 @@ block topic {
     default: {
         applyNext(this._url = this.ctx.url);
     }
-    
-    mix: { block : 'island' }
 
     elem name {
 
