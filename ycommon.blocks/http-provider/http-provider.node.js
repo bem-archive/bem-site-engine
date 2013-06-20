@@ -59,7 +59,7 @@ provide(inherit({
         var _params = this.params = objects.extend(this.getDefaultParams(), params),
             url = _params.url,
             parsedUrl = typeof url === 'string'?
-                    URL.parse(url, true) : url;
+                    URL.parse(url, true, true) : url;
 
         this._hasBody = _params.method === 'POST' || _params.method === 'PUT';
         this._dataType = _params.dataType;
@@ -77,7 +77,7 @@ provide(inherit({
             .then(function(ip) {
                 var url = this._url,
                     query = QS.stringify(
-                                hasBody? url.query : objects.extend(url.query, params.data)),
+                        hasBody? objects.extend(url.query, params.data) : url.query),
                     hostname = url.hostname,
                     headers = params.headers || {};
 
@@ -119,6 +119,8 @@ provide(inherit({
                     port     : url.port,
                     path     : url.pathname + (query? '?' + query : '')
                 };
+
+                logger.debug('Requesting %s%s', URL.format(options), options.path);
 
                 return this._doHttp(options, params.dataType, body);
             }, this);
@@ -169,12 +171,13 @@ provide(inherit({
                     promise.fulfill(processResponse(buf, dtype));
                 }
                 catch(e) {
-                    logger.error('Request for %j finished with error', _t._url, e);
+                    logger.error('Request for %s finished with error', _t._url.href, e);
                     promise.reject(e);
                 }
             })
             .once('close', function() {
-                logger.error('Request for %j was closed', _t._url);
+                logger.error('Request for %s was closed', _t._url.href);
+
                 promise.reject(new HttpError(500, 'connection closed'));
             });
     },
@@ -211,13 +214,13 @@ provide(inherit({
 
         curReq
             .once('error', function(e) {
-                logger.error('Request for %j was failed', this._url, e);
+                logger.error('Request for %s was failed', _t._url.href, e, curReq);
                 promise.reject(e);
             })
             .once('timeout', function() {
-                logger.error('Request for %j was timeouted', this._url);
-                this.abort();
+                logger.error('Request for %s was timed out', _t._url.href);
 
+                _t.abort();
                 promise.reject(new HttpError(504, 'request timeout'));
             })
             .end();
