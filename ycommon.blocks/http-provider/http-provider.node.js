@@ -240,10 +240,10 @@ provide(inherit({
 
     getDefaultParams : function() {
         return {
-            'method'       : 'GET',
-            'encoding'     : 'utf8',
-            'maxRedirects' : 5,
-            'timeout'      : null,
+            method       : 'GET',
+            encoding     : 'utf8',
+            maxRedirects : 5,
+            timeout      : null,
             'allowGzip'    : true
         };
     }
