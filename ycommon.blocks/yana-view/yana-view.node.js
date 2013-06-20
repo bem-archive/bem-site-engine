@@ -1,7 +1,7 @@
 modules.define(
     'yana-view',
-    ['inherit', 'yana-template', 'yana-config', 'yana-logger', 'yana-util'],
-    function(provide, inherit, template, config, logger, util, View) {
+    ['yana-template', 'yana-config', 'yana-logger', 'yana-util'],
+    function(provide, template, config, logger, util, View) {
 
 var URL = require('url'),
     JsonStringify = require('json-stringify-safe');
@@ -11,7 +11,7 @@ provide(View.decl('yana-view', {
     __constructor : function() {
         this.__base.apply(this, arguments);
 
-        this._template = template.load(config.common_bundle_name);
+        this._template = this._loadTemplate();
     },
 
     createContext : function() {
@@ -31,6 +31,10 @@ provide(View.decl('yana-view', {
 
     getMode : function() {
         return this._req.query.__mode;
+    },
+
+    _loadTemplate : function() {
+        return template.load(config.common_bundle_name);
     },
 
     _buildBemjson : function(ctx) {
