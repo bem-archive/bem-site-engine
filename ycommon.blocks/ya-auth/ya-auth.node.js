@@ -97,7 +97,11 @@ provide({
             }
         }
 
-        // TODO:
+        // TODO: filtering out some of unnecessary params
+        ['bb-host', 'allowGzip', 'timeout'].forEach(function(key) {
+            delete params[key];
+        });
+
         objects.extend(qs, params);
 
         return QS.stringify(qs);
@@ -111,9 +115,10 @@ provide({
     },
 
     _runMethod : function(params) {
-        logger.debug('yaAuth: Running "%s" \\w params: %j', params.method, params);
+        var opts = this._getProviderParams(objects.extend({}, defaultParams, params));
 
-        var opts = this._getProviderParams(objects.extend(defaultParams, params));
+        logger.debug('yaAuth: Running "%s" \\w params: %j', params.method, opts);
+
         return httpProvider.create(opts).run();
     },
 
