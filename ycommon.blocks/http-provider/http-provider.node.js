@@ -188,15 +188,25 @@ provide(inherit({
             curReq = this._curReq = (params.protocol === 'https:'? HTTPS : HTTP).request(
                 params,
                 function(res) {
+                    var statusCode = res.statusCode;
+
                     // handling redirects
-                    if(res.statusCode === 301 || res.statusCode === 302) {
-                        return --_t._redirCounter?
-                            // TODO: testme
-                            promise.sync(_t._doHttp(URL.parse(res.headers['location'], true), dataType)) :
-                            promise.reject(new HttpError(500, 'too many redirects'));
+                    if(statusCode === 301 || statusCode === 302) {
+                        if(!--_t._redirCounter) {
+                            return promise.reject(new HttpError(500, 'too many redirects'));
+                        }
+
+                        var location = URL.resolve(_t._url.href, res.headers['location'] || '');
+                        params = URL.parse(location, true, true);
+
+                        logger.debug('Redirecting from %s to %s', _t._url.href, location);
+
+                        // TODO: testme
+                        return _t._doHttp(params, dataType);
                     }
                     // handling HTTP-errors
-                    else if(res.statusCode >= 400) {
+                    else if(statusCode >= 400) {
+                        logger.error('Request for %s responded with error code %d', _t._url.href, statusCode);
                         return promise.reject(new HttpError(res.statusCode));
                     }
 
