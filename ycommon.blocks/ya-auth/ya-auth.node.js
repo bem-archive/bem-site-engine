@@ -97,7 +97,11 @@ provide({
             }
         }
 
-        // TODO:
+        // TODO: filtering out some of unnecessary params
+        ['bb-host', 'allowGzip', 'timeout'].forEach(function(key) {
+            delete params[key];
+        });
+
         objects.extend(qs, params);
 
         return QS.stringify(qs);
