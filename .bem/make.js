@@ -108,7 +108,8 @@ MAKE.decl('BundleNode', {
             'desktop.blocks',
             'configs/current'
         ]
-        .map(function(path) { return PATH.resolve(environ.PRJ_ROOT, path) }));
+        .map(function(path) { return PATH.resolve(environ.PRJ_ROOT, path) }))
+        .concat([PATH.resolve(this.root, PATH.dirname(this.getNodePrefix()), 'blocks')]);
     },
 
     'create-i18n.keys.js-node' : function(tech, bundleNode, magicNode) {
