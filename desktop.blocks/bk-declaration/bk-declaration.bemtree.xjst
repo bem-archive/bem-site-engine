@@ -47,8 +47,7 @@ block bk-declaration {
             this.ctx.forEach(function(item, i) {
                 i === 0 && (item.first = true);
                 i === len && (item.last = true);
-                console.log(item);
-                
+
                 buf.push(apply(this.ctx=item))
             }, this);
             return buf;
