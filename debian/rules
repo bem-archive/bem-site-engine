@@ -43,7 +43,8 @@ install/$(DEB_SOURCE_PACKAGE)::make
 	dh_versions $(DEB_PRJWWW_DESTDIR){configs/*/*,desktop.bundles/*/*}
 
 	dh_environment -p$(DEB_SOURCE_PACKAGE) --fail-missing
-	dh_nodeubic -p$(DEB_SOURCE_PACKAGE)
+#	dh_nodeubic -p$(DEB_SOURCE_PACKAGE)
+	dh_installinit -p$(DEB_SOURCE_PACKAGE)
 
 install/$(STATIC_PACKAGE)::make
 #·   ycssjs $(STATIC_PACKAGE_DESTDIR)pages
