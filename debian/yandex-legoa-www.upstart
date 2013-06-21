@@ -1,0 +1,110 @@
+description "upstart configuration for legoa"
+author "Lego Team <lego-team@yandex-team.ru>"
+
+env APP="legoa"
+env APP_DIR="/usr/lib/yandex/$APP"
+env BOOT_FILE="$APP_ROOT/desktop.bundles/common/_common.js"
+
+env DAEMON="node"
+env DAEMON_OWN="www-data"
+env DAEMON_PID="/var/run/yandex/$APP/$APP.pid"
+env DAEMON_PORT=""  #example: "12345", если указать порт, то при стопе будет сначала закрывать его в фаерволе;
+
+env YENV="production"
+env YENV_FILE="/etc/yandex/environment.type"
+
+start on filesystem or runlevel [2345]
+stop on runlevel [06]
+
+# настройки stdout,stderr,stdin http://upstart.ubuntu.com/cookbook/#console
+# если опция не активирована по умолчанию считается console none
+# console none   #- stdin,stder,stdout -> /dev/null
+# console log    #- stdin -> /dev/null, stder,stdout -> /var/log/upstart/
+# console output #- stdin,stder,stdout -> /dev/console
+
+# upstart pid контролирует собственными силами http://upstart.ubuntu.com/cookbook/#expect
+# У него есть 3 режима отслеживания PID процесса:
+#  expect        #- закомментирован, приложение берёт первый пид который получает после команды exec
+#  expect fork   #- upstart ждёт первого fork приложения и считает это главным пидом
+#  expect daemon #- upstart ждёт 2 fork_ов от приложения и второй pid считает главным.
+
+# секция выполняется при старте скприпта
+script
+    echo $$ > $DAEMON_PID
+
+    # exec /usr/bin/yandex-tools-plan-manage.py celeryd -l INFO \
+    #  --pidfile=/run/yandex-tools-plan/celeryd.pid --logfile=/var/log/yandex/tools-plan/celeryd.log
+    exec su $DAEMON_OWN -c "$DAEMON $APP_FILE >> /var/log/yandex/$APP/node.log 2>&1"
+end script
+
+# секция выполняется перед тем как запускается exec со скриптом и подгатавливает под него почву
+pre-start script
+    if [ -d  /var/log/$APP  ];
+    then
+        echo "create and chown dir  /var/log/yandex/$APP/"
+        mkdir -p /var/log/$APP/
+        chown -R $DAEMON_OWN /var/log/yandex/$APP/
+    fi;
+
+    # пишем в лог приложения сообщения системы, в формате `new Date().toString()`
+    echo "[`LC_ALL=en_US date "+%a %b %d %Y %T GMT%z (%Z)"`] SYS Starting" >> /var/log/yandex/$APP/node.log
+
+    mkdir -p /var/run/yandex/$APP
+    chown -R $DAEMON_OWN /var/run/yandex/$APP
+
+#    if [ -f /etc/default/$APP ];
+#    then
+#        echo "load default settings  /etc/default/$APP"
+#        . /etc/default/$APP
+#    fi;
+
+    if [ -f /etc/yandex/$APP/ulimit.conf ];
+    then
+        echo "load ulimit  /etc/yandex/$APP";
+        . /etc/yandex/$APP/ulimit.conf;
+    fi;
+
+    if [ -f "$DAEMON_PID" ];
+    then
+        pid=`cat $DAEMON_PID`
+        if `ps aufx | grep $pid | grep -v grep>/dev/null`
+        then
+            echo "$DAEMON already start"
+            exit 1
+        else
+            echo "Hmm.. old pid.. i'll remove it"
+            rm $DAEMON_PID
+        fi;
+    fi;
+
+    # открыаем фаервол, если DAEMON_PORT переменная установлена
+    if [ ! -z $DAEMON_PORT ];
+    then
+        echo "firewall port  $DAEMON_PORT  is up"
+        /usr/sbin/iptruler $DAEMON_PORT up
+    fi;
+
+    if [ -f "$YENV_FILE" ];
+    then
+        YENV=`cat "$YENV_FILE"`
+    fi
+end script
+
+# секция выполняется перед тем, как послать скрипту
+#  kill -SIGTERM && sleep 5 || kill -SIGKILL,
+# здесь можно закрыться от фаервола, послать какой-то предварительный сигнал,
+# и если сервису нужно больше времени, что бы застопиться вставить sleep.
+pre-stop script
+    echo "[`LC_ALL=en_US date "+%a %b %d %Y %T GMT%z (%Z)"`] SYS Stoping" >> /var/log/yandex/$APP/node.log
+
+    # закрываем фаервол и ждём 5 секунд, если DAEMON_PORT переменная установлена
+    if [ ! -z $DAEMON_PORT ];
+    then
+        echo "firewall port  $DAEMON_PORT  is down";
+        /usr/sbin/iptruler $DAEMON_PORT down;
+        sleep 5;
+    fi;
+
+    kill -SIGINT $DAEMON_PID && sleep 5
+end script
+
