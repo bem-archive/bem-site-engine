@@ -1,26 +1,28 @@
-description "upstart configuration for legoa"
-author "Lego Team <lego-team@yandex-team.ru>"
+description "upstart configuration for legoa front-end"
+author "Vladimir Varankin <varankinv@yandex-team.ru> (http://staff/varankinv)"
+version "1.0.0"
 
-env APP="legoa"
-env APP_DIR="/usr/lib/yandex/$APP"
-env BOOT_FILE="$APP_ROOT/desktop.bundles/common/_common.js"
+env YENV=production
+env YENV_FILE=/etc/yandex/environment.type
 
-env DAEMON="node"
-env DAEMON_OWN="www-data"
-env DAEMON_PID="/var/run/yandex/$APP/$APP.pid"
+env DAEMON=node
+env DAEMON_OWN=www-data
+env DAEMON_PID=/var/run/yandex/legoa/legoa.pid
+env DAEMON_LOG=/var/log/yandex/legoa/node-upstart.log
 env DAEMON_PORT=""  #example: "12345", если указать порт, то при стопе будет сначала закрывать его в фаерволе;
 
-env YENV="production"
-env YENV_FILE="/etc/yandex/environment.type"
+env APP_ROOT=/usr/lib/yandex/legoa
 
 start on filesystem or runlevel [2345]
 stop on runlevel [06]
 
+respawn
+
 # настройки stdout,stderr,stdin http://upstart.ubuntu.com/cookbook/#console
 # если опция не активирована по умолчанию считается console none
-# console none   #- stdin,stder,stdout -> /dev/null
-# console log    #- stdin -> /dev/null, stder,stdout -> /var/log/upstart/
-# console output #- stdin,stder,stdout -> /dev/console
+#console none   #- stdin,stder,stdout -> /dev/null
+#console log    #- stdin -> /dev/null, stder,stdout -> /var/log/upstart/
+#console output #- stdin,stder,stdout -> /dev/console
 
 # upstart pid контролирует собственными силами http://upstart.ubuntu.com/cookbook/#expect
 # У него есть 3 режима отслеживания PID процесса:
@@ -28,83 +30,90 @@ stop on runlevel [06]
 #  expect fork   #- upstart ждёт первого fork приложения и считает это главным пидом
 #  expect daemon #- upstart ждёт 2 fork_ов от приложения и второй pid считает главным.
 
-# секция выполняется при старте скприпта
 script
-    echo $$ > $DAEMON_PID
-
-    # exec /usr/bin/yandex-tools-plan-manage.py celeryd -l INFO \
-    #  --pidfile=/run/yandex-tools-plan/celeryd.pid --logfile=/var/log/yandex/tools-plan/celeryd.log
-    exec su $DAEMON_OWN -c "$DAEMON $APP_FILE >> /var/log/yandex/$APP/node.log 2>&1"
-end script
-
-# секция выполняется перед тем как запускается exec со скриптом и подгатавливает под него почву
-pre-start script
-    if [ -d  /var/log/$APP  ];
-    then
-        echo "create and chown dir  /var/log/yandex/$APP/"
-        mkdir -p /var/log/$APP/
-        chown -R $DAEMON_OWN /var/log/yandex/$APP/
-    fi;
-
-    # пишем в лог приложения сообщения системы, в формате `new Date().toString()`
-    echo "[`LC_ALL=en_US date "+%a %b %d %Y %T GMT%z (%Z)"`] SYS Starting" >> /var/log/yandex/$APP/node.log
-
-    mkdir -p /var/run/yandex/$APP
-    chown -R $DAEMON_OWN /var/run/yandex/$APP
-
-#    if [ -f /etc/default/$APP ];
-#    then
-#        echo "load default settings  /etc/default/$APP"
-#        . /etc/default/$APP
-#    fi;
-
-    if [ -f /etc/yandex/$APP/ulimit.conf ];
-    then
-        echo "load ulimit  /etc/yandex/$APP";
-        . /etc/yandex/$APP/ulimit.conf;
-    fi;
-
-    if [ -f "$DAEMON_PID" ];
-    then
-        pid=`cat $DAEMON_PID`
-        if `ps aufx | grep $pid | grep -v grep>/dev/null`
-        then
-            echo "$DAEMON already start"
-            exit 1
-        else
-            echo "Hmm.. old pid.. i'll remove it"
-            rm $DAEMON_PID
-        fi;
-    fi;
-
-    # открыаем фаервол, если DAEMON_PORT переменная установлена
-    if [ ! -z $DAEMON_PORT ];
-    then
-        echo "firewall port  $DAEMON_PORT  is up"
-        /usr/sbin/iptruler $DAEMON_PORT up
-    fi;
+    bootfile=$APP_ROOT/desktop.bundles/common/_common.node.js
 
     if [ -f "$YENV_FILE" ];
     then
         YENV=`cat "$YENV_FILE"`
     fi
+
+    if ! which "$DAEMON";
+    then
+        echo "node executable $DAEMON not found"
+        exit 1
+    fi
+    #then
+    #    DAEMON=/opt/nodejs/0.10/bin/node
+    #fi;
+
+    if [ -n "$YENV" ];
+    then
+        DAEMON="/usr/bin/env NODE_ENV=$YENV $DAEMON"
+    fi;
+
+    exec start-stop-daemon --start --quit --background \
+        --make-pidfile --pidfile $DAEMON_PID --chuid $DAEMON_OWN --chdir $APP_ROOT \
+        --exec $DAEMON -- $bootfile >> $DAEMON_LOG 2>&1
 end script
 
-# секция выполняется перед тем, как послать скрипту
-#  kill -SIGTERM && sleep 5 || kill -SIGKILL,
-# здесь можно закрыться от фаервола, послать какой-то предварительный сигнал,
-# и если сервису нужно больше времени, что бы застопиться вставить sleep.
+pre-start script
+    log_dir=`dirname $DAEMON_LOG`
+    pid_dir=`dirname $DAEMON_PID`
+
+    if [ ! -d "$log_dir" ];
+    then
+        mkdir -p $log_dir
+        chown -R $DAEMON_OWN $log_dir
+    fi;
+
+    # пишем в лог приложения сообщения системы, в формате `new Date().toString()`
+    echo "[`LC_ALL=en_US date \"+%a %b %d %Y %T GMT%z (%Z)\"`] SYSTEM Starting" >> $DAEMON_LOG
+
+    if [ -f /etc/default/legoa ];
+    then
+        . /etc/default/legoa
+    fi;
+
+    if [ -f /etc/yandex/legoa/ulimit.conf ];
+    then
+        . /etc/yandex/legoa/ulimit.conf;
+    fi;
+
+    mkdir -p $pid_dir
+    chown -R $DAEMON_OWN $pid_dir
+
+    if [ -f "$DAEMON_PID" ];
+    then
+        pid=`cat $DAEMON_PID`
+        if `ps aux | grep $pid | grep -v grep>/dev/null`
+        then
+            echo "$DAEMON ($DAEMON_PID) already start"
+            exit 1
+        else
+            rm -f $DAEMON_PID
+        fi;
+    fi;
+
+    # открыаем фаервол, если DAEMON_PORT переменная установлена
+    if [ ! -z "$DAEMON_PORT" ];
+    then
+        /usr/sbin/iptruler $DAEMON_PORT up
+    fi;
+end script
+
 pre-stop script
-    echo "[`LC_ALL=en_US date "+%a %b %d %Y %T GMT%z (%Z)"`] SYS Stoping" >> /var/log/yandex/$APP/node.log
+    echo "[`LC_ALL=en_US date \"+%a %b %d %Y %T GMT%z (%Z)\"`] SYS Stoping" >> $DAEMON_LOG
 
     # закрываем фаервол и ждём 5 секунд, если DAEMON_PORT переменная установлена
-    if [ ! -z $DAEMON_PORT ];
+    if [ ! -z "$DAEMON_PORT" ];
     then
-        echo "firewall port  $DAEMON_PORT  is down";
         /usr/sbin/iptruler $DAEMON_PORT down;
         sleep 5;
     fi;
+end script
 
-    kill -SIGINT $DAEMON_PID && sleep 5
+post-stop script
+    rm -f $DAEMON_PID
 end script
 
