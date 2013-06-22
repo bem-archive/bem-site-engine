@@ -13,9 +13,10 @@ include /usr/share/cdbs/1/class/verstka-with-static.mk
 make::debian/build-timestamp
 
 debian/build-timestamp::
-	ln -s $(YENV) configs/current
+	ln -sfn $(YENV) configs/current
 	$(NPM) install --registry=http://npm.yandex-team.ru
-	YENV=$(YENV) $(NPM_BIN)/bem make
+	YENV=$(YENV) $(NPM_BIN)/bem make vendor
+	YENV=$(YENV) $(NPM_BIN)/bem make desktop.bundles
 	touch $(@)
 
 install/$(DEB_SOURCE_PACKAGE)::make
@@ -30,21 +31,20 @@ install/$(DEB_SOURCE_PACKAGE)::make
 	# Удаляем dev-зависимости npm
 	rm -r $(DEB_PRJWWW_DESTDIR)node_modules/{$(shell node -pe "Object.keys(require('./package.json').devDependencies).join(',')")}
 
-	# Удаляем не нужное
+	# Удаляем ненужное
 	find $(DEB_PRJWWW_DESTDIR)desktop.bundles \
 		-type f \
-		-not \( -name "*.i18n" -o -name "*.node.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
+		-not \( -path "*.i18n/*" -o -name "*.node.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
 		-delete
 
 	# Чистим VCS-остатки (на всякий случай)
-	dh_clearvcs -p$(DEB_PRJWWW_DESTDIR)
+	dh_clearvcs -p$(DEB_SOURCE_PACKAGE)
 
 	# Проставляем версии
 	dh_versions $(DEB_PRJWWW_DESTDIR){configs/*/*,desktop.bundles/*/*}
 
 	dh_environment -p$(DEB_SOURCE_PACKAGE) --fail-missing
-#	dh_nodeubic -p$(DEB_SOURCE_PACKAGE)
-	dh_installinit -p$(DEB_SOURCE_PACKAGE)
+	dh_installinit -p$(DEB_SOURCE_PACKAGE) --upstart-only
 
 install/$(STATIC_PACKAGE)::make
 #·   ycssjs $(STATIC_PACKAGE_DESTDIR)pages
@@ -57,11 +57,12 @@ install/$(STATIC_PACKAGE)::make
 		desktop.bundles/common/_common* \
 		freeze \
 		$(STATIC_PACKAGE_DESTDIR)
-	rm -r desktop.bundles/common/_common.node.js
+	rm -r $(STATIC_PACKAGE_DESTDIR)_common.node.js
 
 	mkdir -p $(STATIC_PACKAGE_DESTDIR)../_/
 
 clean::
 	rm -rf configs/current
+	rm -rf vendor
 	rm -f debian/build-timestamp
 
