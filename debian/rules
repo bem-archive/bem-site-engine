@@ -15,7 +15,7 @@ make::debian/build-timestamp
 debian/build-timestamp::
 	ln -sfn $(YENV) configs/current
 	$(NPM) install --registry=http://npm.yandex-team.ru
-	YENV=$(YENV) $(NPM_BIN)/bem make vendor
+	YENV=$(YENV) $(NPM_BIN)/bem make libs
 	YENV=$(YENV) $(NPM_BIN)/bem make desktop.bundles
 	touch $(@)
 
@@ -63,6 +63,6 @@ install/$(STATIC_PACKAGE)::make
 
 clean::
 	rm -rf configs/current
-	rm -rf vendor
+	rm -rf libs
 	rm -f debian/build-timestamp
 
