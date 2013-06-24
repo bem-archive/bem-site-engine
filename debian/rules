@@ -6,7 +6,7 @@ NPM_BIN=$(shell $(NPM) bin)
 WWWDIR=usr/lib/yandex/
 PRJDIR=legoa/
 
-YENV=production
+YENV?=production
 
 include /usr/share/cdbs/1/class/verstka-with-static.mk
 
@@ -83,5 +83,6 @@ clean::
 	rm -f .borschik
 	rm -f configs/current
 	rm -rf libs
+	rm -rf freeze
 	rm -f debian/build-timestamp
 
