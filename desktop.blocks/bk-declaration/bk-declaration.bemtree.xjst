@@ -23,7 +23,7 @@ block bk-declaration {
             obj.examples = ctx.examples || [];
 
             ctx.url && (obj.url = ctx.url);
-            
+
             ctx.first && (obj['is-first'] = 'yes');
             ctx.last && (obj['is-last'] = 'yes');
 
