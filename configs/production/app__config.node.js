@@ -24,8 +24,8 @@ var FS = require('fs'),
         },
 
         'datasrc' : {
-            host : '/data/',
-            root : '/var/lib/yandex/legoa/data'
+            host : '/datasrc/',
+            root : '/var/lib/yandex/legoa/datasrc'
         }
     },
     node = {
