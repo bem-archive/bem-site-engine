@@ -12,12 +12,14 @@ fi
 NAME=legoa
 
 # Setting rights and owners
-chown -R www-data:www-data /var/run/yandex/${NAME}
-chown -R www-data:www-data /var/log/yandex/${NAME}
-
-nginx-enable-mod 90-${NAME}.conf
-service nginx reload
+chown -R www-data:www-data /var/run/yandex/legoa
+chown -R www-data:www-data /var/log/yandex/legoa
 
 #DEBHELPER#
+
+NGINX_CONF_FILE=90-${NAME}.conf
+
+nginx-enable-mod ${NGINX_CONF_FILE}
+invoke-rc.d nginx reload
 
 exit 0
