@@ -23,7 +23,6 @@ debian/build-timestamp::
 install/$(DEB_SOURCE_PACKAGE)::make
 	# копируем только то, что нужно
 	cp -r \
-		robots.txt \
 		configs \
 		desktop.bundles \
 		node_modules \
