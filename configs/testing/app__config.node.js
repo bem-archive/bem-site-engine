@@ -7,7 +7,7 @@ var FS = require('fs'),
 
     hosts = {
         'static' : {
-            host : '//yandex.st/legoa/{{DEBIAN_VERSION}}'
+            host : '//st.coal.dev.yandex.net/legoa/{{DEBIAN_VERSION}}'
         },
 
         'blackbox' : {
