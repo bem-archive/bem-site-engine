@@ -7,16 +7,18 @@ env YENV_FILE=/etc/yandex/environment.type
 
 env DAEMON=node
 env DAEMON_OWN=www-data
+env DEAMON_DEFAULTS=/etc/default/yandex-legoa-www
 env DAEMON_PID=/var/run/yandex/legoa/legoa.pid
-env DAEMON_LOG=/var/log/yandex/legoa/node-upstart.log
+env DAEMON_LOG=/var/log/yandex/legoa/nodejs-upstart.log
 env DAEMON_PORT=""  #example: "12345", если указать порт, то при стопе будет сначала закрывать его в фаерволе;
 
 env APP_ROOT=/usr/lib/yandex/legoa
+env APP_FILE=""
 
 start on filesystem or runlevel [2345]
 stop on runlevel [06]
 
-respawn
+#respawn
 
 # настройки stdout,stderr,stdin http://upstart.ubuntu.com/cookbook/#console
 # если опция не активирована по умолчанию считается console none
@@ -31,38 +33,37 @@ respawn
 #  expect daemon #- upstart ждёт 2 fork_ов от приложения и второй pid считает главным.
 
 script
-    bootfile=$APP_ROOT/desktop.bundles/common/_common.node.js
+    # обновляем переменные окружения DAEMON, APP_ROOT, APP_FILE, и тд
+    [ -f "$DEAMON_DEFAULTS" ] && source "$DAEMON_DEFAULT"
 
-    if [ -f "$YENV_FILE" ];
-    then
-        YENV=`cat "$YENV_FILE"`
-    fi
-
-    if ! which "$DAEMON";
-    then
-        echo "node executable $DAEMON not found"
+    if ! which "$DAEMON"; then
+        echo "node executable not found \"$DAEMON\""
+        stop
         exit 1
     fi
-    #then
-    #    DAEMON=/opt/nodejs/0.10/bin/node
-    #fi;
 
-    if [ -n "$YENV" ];
-    then
+    appfile=$APP_ROOT/$APP_FILE
+    if [ ! -f "$appfile" ]; then
+        echo "app file not found \"$appfile"\"
+        stop
+        exit 1
+    fi
+
+    [ -f "$YENV_FILE" ] && YENV=`cat "$YENV_FILE"`
+
+    [ -n "$YENV" ] && \
         DAEMON="/usr/bin/env NODE_ENV=$YENV $DAEMON"
-    fi;
 
-    exec start-stop-daemon --start --quit --background \
+    exec start-stop-daemon --start \
         --make-pidfile --pidfile $DAEMON_PID --chuid $DAEMON_OWN --chdir $APP_ROOT \
-        --exec $DAEMON -- $bootfile >> $DAEMON_LOG 2>&1
+        --exec $DAEMON -- $appfile >> $DAEMON_LOG 2>&1
 end script
 
 pre-start script
     log_dir=`dirname $DAEMON_LOG`
     pid_dir=`dirname $DAEMON_PID`
 
-    if [ ! -d "$log_dir" ];
-    then
+    if [ ! -d "$log_dir" ]; then
         mkdir -p $log_dir
         chown -R $DAEMON_OWN $log_dir
     fi;
@@ -70,50 +71,44 @@ pre-start script
     # пишем в лог приложения сообщения системы, в формате `new Date().toString()`
     echo "[`LC_ALL=en_US date \"+%a %b %d %Y %T GMT%z (%Z)\"`] SYSTEM Starting" >> $DAEMON_LOG
 
-    if [ -f /etc/default/legoa ];
-    then
-        . /etc/default/legoa
+    if [ -f "$DEAMON_DEFAULTS" ]; then
+        . $DEAMON_DEFAULTS
     fi;
 
-    if [ -f /etc/yandex/legoa/ulimit.conf ];
-    then
+    if [ -f /etc/yandex/legoa/ulimit.conf ]; then
         . /etc/yandex/legoa/ulimit.conf;
     fi;
 
     mkdir -p $pid_dir
     chown -R $DAEMON_OWN $pid_dir
 
-    if [ -f "$DAEMON_PID" ];
-    then
+    if [ -f "$DAEMON_PID" ]; then
         pid=`cat $DAEMON_PID`
-        if `ps aux | grep $pid | grep -v grep>/dev/null`
-        then
+        if `ps aux | grep $pid | grep -v grep>/dev/null`; then
             echo "$DAEMON ($DAEMON_PID) already start"
             exit 1
         else
             rm -f $DAEMON_PID
-        fi;
-    fi;
+        fi
+    fi
 
     # открыаем фаервол, если DAEMON_PORT переменная установлена
-    if [ ! -z "$DAEMON_PORT" ];
-    then
+    if [ ! -z "$DAEMON_PORT" ]; then
         /usr/sbin/iptruler $DAEMON_PORT up
-    fi;
+    fi
 end script
 
 pre-stop script
-    echo "[`LC_ALL=en_US date \"+%a %b %d %Y %T GMT%z (%Z)\"`] SYS Stoping" >> $DAEMON_LOG
+    echo "[`LC_ALL=en_US date \"+%a %b %d %Y %T GMT%z (%Z)\"`] SYSTEM Stoping" >> $DAEMON_LOG
 
     # закрываем фаервол и ждём 5 секунд, если DAEMON_PORT переменная установлена
-    if [ ! -z "$DAEMON_PORT" ];
-    then
-        /usr/sbin/iptruler $DAEMON_PORT down;
-        sleep 5;
-    fi;
+    if [ ! -z "$DAEMON_PORT" ]; then
+        /usr/sbin/iptruler $DAEMON_PORT down
+        sleep 5
+    fi
 end script
 
 post-stop script
-    rm -f $DAEMON_PID
+    [ -f "$DAEMON_PID" ] && rm -f $DAEMON_PID
 end script
 

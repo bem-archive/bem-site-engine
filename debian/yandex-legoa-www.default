@@ -1,1 +1,2 @@
 DAEMON=/opt/nodejs/0.10/bin/node
+APP_FILE=desktop.bundles/common/_common.node.js
