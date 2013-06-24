@@ -8,7 +8,7 @@ var OS = require('os'),
 
     hosts = {
         'static' : {
-            host : '//st.legoa.coal.dev.yandex.net/legoa/1.0'
+            host : ''
         },
 
         'blackbox' : {
