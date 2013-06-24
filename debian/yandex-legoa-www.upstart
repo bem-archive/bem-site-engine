@@ -7,7 +7,7 @@ env YENV_FILE=/etc/yandex/environment.type
 
 env DAEMON=node
 env DAEMON_OWN=www-data
-env DEAMON_DEFAULTS=/etc/default/yandex-legoa-www
+env DAEMON_DEFAULTS=/etc/default/yandex-legoa-www
 env DAEMON_PID=/var/run/yandex/legoa/legoa.pid
 env DAEMON_LOG=/var/log/yandex/legoa/nodejs-upstart.log
 env DAEMON_PORT=""  #example: "12345", если указать порт, то при стопе будет сначала закрывать его в фаерволе;
@@ -34,7 +34,9 @@ stop on runlevel [06]
 
 script
     # обновляем переменные окружения DAEMON, APP_ROOT, APP_FILE, и тд
-    [ -f "$DEAMON_DEFAULTS" ] && source "$DAEMON_DEFAULT"
+    if [ -f "$DAEMON_DEFAULTS" ]; then
+        . $DAEMON_DEFAULTS
+    fi
 
     if ! which "$DAEMON"; then
         echo "node executable not found \"$DAEMON\""
@@ -66,18 +68,18 @@ pre-start script
     if [ ! -d "$log_dir" ]; then
         mkdir -p $log_dir
         chown -R $DAEMON_OWN $log_dir
-    fi;
+    fi
 
     # пишем в лог приложения сообщения системы, в формате `new Date().toString()`
     echo "[`LC_ALL=en_US date \"+%a %b %d %Y %T GMT%z (%Z)\"`] SYSTEM Starting" >> $DAEMON_LOG
 
-    if [ -f "$DEAMON_DEFAULTS" ]; then
-        . $DEAMON_DEFAULTS
-    fi;
+    if [ -f "$DAEMON_DEFAULTS" ]; then
+        . $DAEMON_DEFAULTS
+    fi
 
     if [ -f /etc/yandex/legoa/ulimit.conf ]; then
-        . /etc/yandex/legoa/ulimit.conf;
-    fi;
+        . /etc/yandex/legoa/ulimit.conf
+    fi
 
     mkdir -p $pid_dir
     chown -R $DAEMON_OWN $pid_dir
