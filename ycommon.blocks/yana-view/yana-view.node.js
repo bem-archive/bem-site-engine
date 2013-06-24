@@ -23,8 +23,7 @@ View.decl('yana-view', {
             view : this._getName(),
             page : route.data.name,
             bundleName : config.common_bundle_name,
-            staticUrl : URL.resolve(
-                    config.static_host, config.common_bundle_path),
+            staticUrl : URL.resolve(config.static.host, config.common_bundle_path),
             yaApiHosts : config.hosts
         };
     },
