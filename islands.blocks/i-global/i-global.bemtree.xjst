@@ -41,7 +41,8 @@ block i-global {
                 'id' : 'lego',
                 'lang' : data.lang,
                 'center-host'  : hosts.center.host,
-                'datasrc-host' : hosts.datasrc.host
+                'datasrc-host' : hosts.datasrc.host,
+                'static-host'  : hosts.static.host
             });
 
         return this.doAsync(function() {
