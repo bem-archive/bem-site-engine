@@ -14,6 +14,7 @@ Priority: optional
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
+ yandex-legoa-data,
  yandex-environment,
  nodejs-0.10 | nodejs (>= 0.8.23-yandex1) | nodejs-0.8,
  nginx
