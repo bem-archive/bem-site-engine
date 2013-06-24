@@ -1,0 +1,9 @@
+{
+    "paths" : {
+        "./": "//st.legoa.coal.dev.yandex.net/legoa/{{DEBIAN_VERSION}}/",
+        "freeze/": "//st.legoa.coal.dev.yandex.net/legoa/_/"
+    },
+    "freeze_paths" : {
+        "./": "freeze/"
+    }
+}
