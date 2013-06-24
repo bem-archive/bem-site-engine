@@ -6,7 +6,7 @@ modules.define(
 var URL = require('url'),
     JsonStringify = require('json-stringify-safe');
 
-provide(View.decl('yana-view', {
+View.decl('yana-view', {
 
     __constructor : function() {
         this.__base.apply(this, arguments);
@@ -15,11 +15,11 @@ provide(View.decl('yana-view', {
     },
 
     createContext : function() {
-        var route = this._req.route;
+        var route = this.req.route;
         return {
-            req : this._req,
-            res : this._res,
-            params : this._params,
+            req : this.req,
+            res : this.res,
+            params : this.params,
             view : this._getName(),
             page : route.data.name,
             bundleName : config.common_bundle_name,
@@ -30,7 +30,7 @@ provide(View.decl('yana-view', {
     },
 
     getMode : function() {
-        return this._req.query.__mode;
+        return this.req.query.__mode;
     },
 
     _loadTemplate : function() {
@@ -54,9 +54,11 @@ provide(View.decl('yana-view', {
             }
 
             return this._buildHtml(json);
-        }.bind(this));
+        }, this);
     }
 
-}));
+});
+
+provide(View);
 
 });

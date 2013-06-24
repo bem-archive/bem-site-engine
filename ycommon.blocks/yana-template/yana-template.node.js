@@ -1,16 +1,14 @@
 /* jshint node:true */
 /* global modules:false */
 
-(function() {
-
-var PATH = require('path'),
-    VM = require('vm'),
-    FS = require('vow-fs');
-
 modules.define(
     'yana-template',
     ['yana-config', 'yana-logger', 'yana-util', 'yana-template__context', 'vow'],
     function(provide, config, logger, util, context, Vow, template) {
+
+var PATH = require('path'),
+    VM = require('vm'),
+    FS = require('vow-fs');
 
 provide(util.extend(template, {
 
@@ -57,5 +55,3 @@ provide(util.extend(template, {
 }));
 
 });
-
-}());
