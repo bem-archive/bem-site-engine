@@ -14,6 +14,7 @@ make::debian/build-timestamp
 
 debian/build-timestamp::
 	ln -sfn $(YENV) configs/current
+	ln -sfn configs/current/borschik .borschik
 	$(NPM) install --registry=http://npm.yandex-team.ru
 	YENV=$(YENV) $(NPM_BIN)/bem make libs
 	YENV=$(YENV) $(NPM_BIN)/bem make desktop.bundles
@@ -47,22 +48,41 @@ install/$(DEB_SOURCE_PACKAGE)::make
 	dh_installinit -p$(DEB_SOURCE_PACKAGE) --upstart-only
 
 install/$(STATIC_PACKAGE)::make
-#·   ycssjs $(STATIC_PACKAGE_DESTDIR)pages
-
 	# NOTE: костыль из-за того что в пакете возможно нет картинок
-	mkdir -p freeze
-	#mkdir -p $(STATIC_PACKAGE_DESTDIR)freeze
+	mkdir -p freeze $(STATIC_PACKAGE_DESTDIR)libs
 
 	cp -r \
-		desktop.bundles/common/_common* \
+		desktop.bundles \
 		freeze \
 		$(STATIC_PACKAGE_DESTDIR)
-	rm -r $(STATIC_PACKAGE_DESTDIR)_common.node.js
+
+	find libs/* \
+		-maxdepth 0 -type d \
+		-not \( -name "romochka" -o -name "bem-gen-doc" -o -name "bem-pr" \) | \
+			xargs -I {} cp -r "{}" $(STATIC_PACKAGE_DESTDIR)libs
 
 	mkdir -p $(STATIC_PACKAGE_DESTDIR)../_/
 
+binary-strip/$(STATIC_PACKAGE)::
+	find $(STATIC_PACKAGE_DESTDIR) -depth -type d \( -name "node_modules" -o -name "*.examples*" \) | xargs rm -rf
+	
+	find $(STATIC_PACKAGE_DESTDIR) \
+		-not \( -name "*.js" -o -name "*.deps.js" \
+			-o -name "*.css" \
+			-o -name "*.gif" -o -name "*.png" -o -name "*.jp*g" \
+			-o -name "*.swf" -o -name "*.ico" -o -name "*.svg" \
+			-o -name "*.eot" -o -name "*.ttf" -o -name "*.otf" -o -name "*.woff" \) \
+		-a -not -type d \
+		-delete
+
+	find $(STATIC_PACKAGE_DESTDIR) \
+		-type f \
+		\( -name "*.node.js" -o -name "*.priv.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
+		-delete
+
 clean::
-	rm -rf configs/current
+	rm -f .borschik
+	rm -f configs/current
 	rm -rf libs
 	rm -f debian/build-timestamp
 
