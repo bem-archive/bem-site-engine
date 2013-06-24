@@ -15,7 +15,8 @@ View.decl('yana-view', {
     },
 
     createContext : function() {
-        var route = this.req.route;
+        var route = this.req.route,
+            hosts = config.hosts;
         return {
             req : this.req,
             res : this.res,
@@ -23,8 +24,8 @@ View.decl('yana-view', {
             view : this._getName(),
             page : route.data.name,
             bundleName : config.common_bundle_name,
-            staticUrl : URL.resolve(config.static.host, config.common_bundle_path),
-            yaApiHosts : config.hosts
+            staticUrl  : ''.concat(hosts.static.host, config.common_bundle_path),
+            yaApiHosts : hosts
         };
     },
 
