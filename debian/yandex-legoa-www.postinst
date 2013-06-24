@@ -1,0 +1,23 @@
+#!/bin/sh
+# postinst script for yandex-legoa-www
+#
+# see: dh_installdeb(1)
+
+set -e
+
+if [ -e /etc/yandex/environment.type ]; then
+    yandex_environment=$(cat /etc/yandex/environment.type)
+fi
+
+NAME=legoa
+
+# Setting rights and owners
+chmod 777 /var/run/yandex/legoa
+chown www-data:www-data /var/run/yandex/legoa
+
+chmod 777 /var/log/yandex/legoa
+chown www-data:www-data /var/log/yandex/legoa
+
+#DEBHELPER#
+
+exit 0

@@ -1,42 +1,45 @@
 (function(app) {
 
-var OS = require('os'),
-    PATH = require('path'),
-    FS = require('fs'),
+var FS = require('fs'),
+    OS = require('os'),
 
-    join = PATH.join,
-    logStream = FS.createWriteStream(
-        '/var/log/yandex/legoa-www/nodejs.log', { flags : 'a' }),
+    nworkers = OS.cpus().length - 2,
 
     hosts = {
-        blackbox : {
+        'static' : {
+            host : '//st.legoa.coal.dev.yandex.net/legoa/1.0'
+        },
+
+        'blackbox' : {
             host : 'http://blackbox.yandex-team.ru',
             domain : 'yandex-team.ru'
         },
 
-        passport : {
+        'passport' : {
             host : 'http://passport.yandex-team.ru'
         },
 
-        center : {
+        'center' : {
             host : 'http://center.yandex-team.ru'
         },
 
-        datasrc : {
-            root : join(app.app_root, 'datasrc'),
+        'datasrc' : {
+            root : '/var/lib/yandex/legoa',
             host : '/datasrc'
         }
     },
     node = {
         debug : false,
+
         app : {
             environment : 'production',
-            socket : '/var/run/yandex/legoa-www.sock',
-            workers : OS.cpus().length - 1
+            socket : '/var/run/yandex/legoa/nodejs.sock',
+            workers : nworkers < 1? 1 : nworkers
         },
+
         logger : {
-            level : 'debug',
-            transport : logStream
+            level : 'info',
+            transport : FS.createWriteStream('/var/log/yandex/legoa/nodejs.log', { flags : 'a' })
         }
     };
 

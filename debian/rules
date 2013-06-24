@@ -1,0 +1,68 @@
+#!/usr/bin/make -f
+
+NPM=npm
+NPM_BIN=$(shell $(NPM) bin)
+
+WWWDIR=usr/lib/yandex/
+PRJDIR=legoa/
+
+YENV=production
+
+include /usr/share/cdbs/1/class/verstka-with-static.mk
+
+make::debian/build-timestamp
+
+debian/build-timestamp::
+	ln -sfn $(YENV) configs/current
+	$(NPM) install --registry=http://npm.yandex-team.ru
+	YENV=$(YENV) $(NPM_BIN)/bem make vendor
+	YENV=$(YENV) $(NPM_BIN)/bem make desktop.bundles
+	touch $(@)
+
+install/$(DEB_SOURCE_PACKAGE)::make
+	# копируем только то, что нужно
+	cp -r \
+		robots.txt \
+		configs \
+		desktop.bundles \
+		node_modules \
+		$(DEB_PRJWWW_DESTDIR)
+
+	# Удаляем dev-зависимости npm
+	rm -r $(DEB_PRJWWW_DESTDIR)node_modules/{$(shell node -pe "Object.keys(require('./package.json').devDependencies).join(',')")}
+
+	# Удаляем ненужное
+	find $(DEB_PRJWWW_DESTDIR)desktop.bundles \
+		-type f \
+		-not \( -path "*.i18n/*" -o -name "*.node.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
+		-delete
+
+	# Чистим VCS-остатки (на всякий случай)
+	dh_clearvcs -p$(DEB_SOURCE_PACKAGE)
+
+	# Проставляем версии
+	dh_versions $(DEB_PRJWWW_DESTDIR){configs/*/*,desktop.bundles/*/*}
+
+	dh_environment -p$(DEB_SOURCE_PACKAGE) --fail-missing
+	dh_installinit -p$(DEB_SOURCE_PACKAGE) --upstart-only
+
+install/$(STATIC_PACKAGE)::make
+#·   ycssjs $(STATIC_PACKAGE_DESTDIR)pages
+
+	# NOTE: костыль из-за того что в пакете возможно нет картинок
+	mkdir -p freeze
+	#mkdir -p $(STATIC_PACKAGE_DESTDIR)freeze
+
+	cp -r \
+		desktop.bundles/common/_common* \
+		freeze \
+		$(STATIC_PACKAGE_DESTDIR)
+	rm -r $(STATIC_PACKAGE_DESTDIR)_common.node.js
+
+	mkdir -p $(STATIC_PACKAGE_DESTDIR)../_/
+
+clean::
+	rm -rf configs/current
+	rm -rf vendor
+	rm -f debian/build-timestamp
+
