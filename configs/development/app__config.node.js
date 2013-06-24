@@ -25,8 +25,8 @@ var OS = require('os'),
         },
 
         'datasrc' : {
-            root : join(conf.app_root, 'datasrc'),
-            host : '/datasrc'
+            host : '/datasrc',
+            root : join(conf.app_root, 'datasrc')
         }
     },
     node = {
