@@ -7,35 +7,40 @@ var OS = require('os'),
     socketPath = join(OS.tmpDir(), ''.concat('varankinv-', PATH.basename(conf.app_root), '-www.sock')),
 
     hosts = {
-        blackbox : {
+        'static' : {
+            host : '//st.legoa.coal.dev.yandex.net/legoa/1.0'
+        },
+
+        'blackbox' : {
             host : 'http://blackbox.yandex-team.ru',
             domain : 'yandex-team.ru'
         },
 
-        passport : {
+        'passport' : {
             host : 'http://passport.yandex-team.ru'
         },
 
-        center : {
+        'center' : {
             host : 'http://center.yandex-team.ru'
         },
 
-        datasrc : {
+        'datasrc' : {
             root : join(conf.app_root, 'datasrc'),
             host : '/datasrc'
         }
     },
     node = {
         debug : true,
+
         app : {
             //port : 3014,
             socket : socketPath,
             workers : 3
         },
+
         logger : {
             level : 'debug'
-        },
-        static_host : ''
+        }
     };
 
 modules.define('yana-config', ['yana-util'], function(provide, util, config) {
