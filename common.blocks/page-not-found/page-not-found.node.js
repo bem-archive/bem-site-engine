@@ -3,7 +3,7 @@ modules.define(
     ['yana-logger'],
     function(provide, logger, View) {
 
-provide(View.decl({ block : 'not-found', base : 'page' }, {
+provide(View.decl({ name : 'not-found', base : 'page' }, {
 
     __constructor : function(req, res, path, params) {
         // FIXME: ugly!

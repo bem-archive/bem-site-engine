@@ -1,5 +1,5 @@
 ({
-    shoulDeps : [
+    mustDeps : [
         { block : 'yana-view' }
     ]
 })
