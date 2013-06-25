@@ -29,11 +29,10 @@ MAKE.decl('Arch', {
         'romochka @ feature/bem-core',
         'bem-controls @ dev',
         'islands-controls @ dev',
-        'islands-media @ v1',
+        'islands-media @ v1.0.0',
         // FIXME: islands-page#feature/bem-core
         'islands-page @ feature/bem-core',
-        'islands-search @ dev',
-        'islands-services @ v1',
+        'islands-services @ v1.0.0',
         // FIXME: islands-user#feature/bem-core
         'islands-user @ feature/bem-core'
     ]
@@ -91,9 +90,6 @@ MAKE.decl('BundleNode', {
             // islands-services
             'islands-services/common.blocks',
             'islands-services/desktop.blocks',
-            // islands-search
-            'islands-search/common.blocks',
-            'islands-search/desktop.blocks',
             // bem-bl + romochka
             'romochka/bem-bl/blocks-desktop',
             'romochka/blocks-common',
@@ -105,8 +101,7 @@ MAKE.decl('BundleNode', {
             'ycommon.blocks',
             'islands.blocks',
             'common.blocks',
-            'desktop.blocks',
-            'configs/current'
+            'desktop.blocks'
         ]
         .map(function(path) { return PATH.resolve(environ.PRJ_ROOT, path) }))
         .concat([PATH.resolve(this.root, PATH.dirname(this.getNodePrefix()), 'blocks')]);

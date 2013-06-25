@@ -17,9 +17,9 @@ chown -R www-data:www-data /var/log/yandex/legoa
 
 #DEBHELPER#
 
-NGINX_CONF_FILE=90-${NAME}.conf
-
-nginx-enable-mod ${NGINX_CONF_FILE}
-invoke-rc.d nginx reload
+#NGINX_CONF_FILE=10-${NAME}.conf
+#
+#nginx-enable-mod ${NGINX_CONF_FILE}
+#invoke-rc.d nginx reload
 
 exit 0
