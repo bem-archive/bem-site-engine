@@ -1,0 +1,7 @@
+block user {
+
+    content: [
+        { elem : 'icon' }
+    ]
+
+}

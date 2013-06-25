@@ -1,0 +1,50 @@
+.bk-example
+{
+    margin: 5px 0;
+    padding: 10px 0;
+
+    position: relative;
+    z-index: 4;
+}
+
+.bk-example::after
+{
+    background: rgba(0, 0, 0, 0.1);
+
+    content: '';
+
+    display: block;
+    margin: 10px auto;
+
+    width: 80%;
+    height: 1px;
+}
+
+.bk-example:last-child::after
+{
+    display: none;
+    margin: 0;
+}
+
+.bk-example__title
+{
+    font-size: 14px;
+    line-height: 18px;
+
+    padding-bottom: 5px;
+}
+
+/*
+.bk-example__title .link_external_yes
+{
+    color: #070;
+}
+*/
+
+.bk-example__live
+{
+    border: 0;
+
+    width: 100%;
+    overflow-x: hidden;
+}

@@ -1,0 +1,72 @@
+block bk-subject {
+
+    elem mod {
+
+        !this._firstMod, default: {
+            this._firstMod = this.ctx;
+
+            applyCtx([
+                {
+                    block : 'headline',
+                    mods  : { level : 3 },
+                    mix   : { block : 'section', elem : 'title' },
+                    content : BEM.I18N('bk-subject', 'mods')    // 'Модификаторы'
+                },
+                this.ctx
+            ]);
+        }
+
+        content: {
+            var ctx = this.ctx;
+
+            return [
+                {
+                    elem : 'mod-name',
+                    content : ctx.name
+                },
+                {
+                    elem : 'mod-title',
+                    content : ctx.title
+                },
+                ctx.description,
+                {
+                    elem : 'mod-val-list',
+                    content : ctx.content
+                },
+                ctx.examples
+            ];
+        }
+
+    }
+
+    elem mod-name {
+
+        tag: 'h4'
+
+        mix: { block : 'headline', mods : { level : 4 } }
+
+    }
+
+    elem mod-val-list, tag: 'table'
+
+    elem mod-val {
+
+        default: applyCtx({
+            tag : 'tr',
+            content : [
+                {
+                    elem : 'mod-val-name',
+                    content : this.ctx.name
+                },
+                {
+                    elem : 'mod-val-title',
+                    content : this.ctx.title
+                }
+            ]
+        })
+    }
+
+    elem mod-val-name, tag: 'th'
+    elem mod-val-title, tag: 'td'
+
+}

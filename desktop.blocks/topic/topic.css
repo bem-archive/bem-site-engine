@@ -1,0 +1,16 @@
+.topic
+{
+    padding: 0 0 25px;
+}
+
+.topic__name
+{
+    font-size: 16px;
+    line-height: 18px;
+
+    margin-bottom: 4px;
+}
+
+.topic__title
+{
+}

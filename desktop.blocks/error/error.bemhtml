@@ -1,0 +1,10 @@
+block error {
+
+    tag: ''
+
+    content: [
+        { block : 'headline', content : this.ctx.title },
+        { block : 'para', content : this.ctx.content }
+    ]
+
+}

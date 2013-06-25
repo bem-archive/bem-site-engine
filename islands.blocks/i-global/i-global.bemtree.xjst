@@ -1,0 +1,80 @@
+this._mode === '', !this.data {
+
+    true: {
+        this.data = this.ctx;
+        return apply(
+            this._mode = '',
+            this.ctx = [
+                { block : 'i-global' },
+                { block : 'b-page' }
+            ]
+        );
+    }
+
+    this.ctx.page === 'error': {
+        this.data = this.ctx;
+        return apply('error', this.ctx = this.data.params);
+    }
+
+    BEM && BEM.I18N: {
+        var lang = this.ctx.lang = 'ru';
+
+        BEM.I18N.lang(lang);
+        console.debug('Language is exposed to "%s"', lang);
+
+        return applyNext();
+    }
+
+    this._.isArray(this.ctx): {
+        return applyNext(this.ctx = this.ctx[0]);
+    }
+
+}
+
+block i-global {
+
+    default: {
+        var data = this.data,
+            req = this.data.req,
+            hosts = data.yaApiHosts,
+            params = this._.extend(data.params, {
+                'id' : 'lego',
+                'lang' : data.lang,
+                'center-host'  : hosts.center.host,
+                'datasrc-host' : hosts.datasrc.host,
+                'static-host'  : hosts.static.host
+            });
+
+        return this.doAsync(function() {
+                return yaAuth.auth(req);
+            })
+            .then(
+                function(result) {
+                    var status = result.status;
+                    console.debug('yaAuth received %j', status)
+
+                    if(!status || status.id !== 0)
+                        return params;
+
+                    params.login = result.login;
+                    params.displayName = result['display_name']
+
+                    return params;
+                },
+                function(err) {
+                    console.error(err.message, err.stack);
+                    return params;
+                },
+                this
+            )
+            .then(function(params) {
+                return applyNext(
+                    this._mode = '',
+                    this.data = data,
+                    this.ctx = { block : this.block, params : params }
+                );
+            },
+            this);
+    }
+
+}

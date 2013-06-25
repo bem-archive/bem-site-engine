@@ -1,0 +1,18 @@
+block b-page {
+
+    default: {
+        this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.page },
+            this.ctx.mods);
+        return applyCtx(this.ctx);
+    }
+
+    content: [
+        {
+            block : 'header',
+            mix : { block : 'layout', mods : { type : 'serp' } }
+        },
+        { block : 'content' },
+        { block : 'footer' }
+    ]
+
+}

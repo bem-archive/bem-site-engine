@@ -1,0 +1,30 @@
+block content {
+
+    default: {
+        return applyCtx([
+            { block : 'breadcrumbs' },
+            this.ctx
+        ]);
+    }
+
+    content {
+
+        this.data.page === 'error': {
+            block : 'error'
+        }
+
+        this.data.page === 'index': {
+            block : 'showcase'
+        }
+
+        this.data.page === 'library': {
+            block : 'catalogue'
+        }
+
+        this.data.page === 'document': {
+            block : 'document'
+        }
+
+    }
+
+}

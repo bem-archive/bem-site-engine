@@ -1,0 +1,25 @@
+block bk-subject, elem examples {
+
+    default {
+
+        !this._firstExample: {
+            applyNext(this._firstExample = true)
+        }
+
+        (this.ctx.content && !this.ctx.content.length): false
+
+    }
+
+    content, this._firstExample: {
+        block : 'headline',
+        mods  : { level : 3 },
+        mix   : { block : 'section', elem : 'title' },
+        content : BEM.I18N('bk-subject', 'examples')    // 'Примеры'
+    }
+
+    content: {
+        var content = applyNext();
+        return [content, this.ctx.content];
+    }
+
+}

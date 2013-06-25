@@ -1,0 +1,31 @@
+block footer {
+
+    content: [
+        {
+            elem : 'column',
+            content : [
+            ]
+        },
+        {
+            elem : 'column',
+            elemMods : { side : 'right' },
+            content : [
+                {
+                    elem : 'link',
+                    url : 'http://wiki.yandex-team.ru/HR/NDA',
+                    content : BEM.I18N('footer', 'nda')
+                },
+                {
+                    elem : 'link',
+                    url : '/',
+                    content : BEM.I18N('footer', 'about')
+                },
+                {
+                    block : 'copyright',
+                    start : 2008
+                }
+            ]
+        }
+    ]
+
+}

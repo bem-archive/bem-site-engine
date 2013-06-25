@@ -1,0 +1,57 @@
+block bk-declaration {
+
+    default: {
+        return apply('translate', this.ctx=this.ctx.content)
+    }
+
+    translate {
+
+        true: {
+            var ctx = this.ctx,
+                type = this._type;
+
+            if(!ctx) return;
+
+            var obj = {};
+
+            !type || type === 'block'?
+                (obj.block = 'bk-subject') : (obj.elem = type);
+
+            obj.name = ctx.name;
+            obj.title = ctx.title || [];
+            obj.description = ctx.description || [];
+            obj.examples = ctx.examples || [];
+
+            ctx.url && (obj.url = ctx.url);
+
+            ctx.first && (obj['is-first'] = 'yes');
+            ctx.last && (obj['is-last'] = 'yes');
+
+            var content = obj.content || (obj.content = []);
+
+            var mods = apply(this.ctx=ctx.mods, this._type='mod');
+            mods && [].push.apply(content, mods);
+
+            var vals = apply(this.ctx=ctx.vals, this._type='mod-val');
+            vals && [].push.apply(content, vals);
+
+            var elems = apply(this.ctx=ctx.elems, this._type='elem');
+            elems && [].push.apply(content, elems);
+
+            return applyCtx(obj);
+        }
+
+        this._.isArray(this.ctx): {
+            var buf = [],
+                len = this.ctx.length - 1;
+            this.ctx.forEach(function(item, i) {
+                i === 0 && (item.first = true);
+                i === len && (item.last = true);
+
+                buf.push(apply(this.ctx=item))
+            }, this);
+            return buf;
+        }
+    }
+
+}

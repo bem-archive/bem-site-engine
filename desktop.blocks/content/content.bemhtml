@@ -1,0 +1,12 @@
+block content {
+
+    default: {
+        applyCtx({
+            block : 'body',
+            content : this.ctx
+        })
+    }
+
+    mix: { block : 'layout', elem : 'col' }
+
+}

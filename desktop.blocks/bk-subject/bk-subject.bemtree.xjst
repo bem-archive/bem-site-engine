@@ -1,0 +1,91 @@
+block bk-subject, (!this.elem || ['elem', 'mod', 'mod-val'].indexOf(this.elem) !== -1) {
+
+    default, (this.elem && this._wrapped !== this.elem) || !this._wrapped: {
+        var title = apply('title', this.ctx = this.ctx.title),
+            description = apply('description', this.ctx = this.ctx.description),
+            examples = apply('examples', this.ctx = this.ctx.examples);
+
+        return apply(
+                this._mode = '',
+                this._wrapped = this.elem || true,
+                this.ctx = {
+                    block : this.block,
+                    elem  : this.elem,
+                    name  : this.ctx.name,
+                    mods  : { 'is-first' : this.ctx['is-first'], 'is-last' : this.ctx['is-last'] },
+                    title : title,
+                    description : description,
+                    examples : examples,
+                    content : this.ctx.content
+                }
+            );
+    }
+
+    title {
+        true: {
+            return this.ctx.trim();
+        }
+
+        this._.isArray(this.ctx): {
+            var text = '';
+            while(text = this.ctx.pop()) {
+                if(!text.content)
+                    continue;
+
+                text = apply(this.ctx = text.content);
+                if(text)
+                    return text;
+            };
+        }
+
+        !this.ctx: {
+            return '';
+        }
+    }
+
+    description: {
+        var buf = [],
+            content;
+        this.ctx.forEach(function(item) {
+            if(item.content) {
+                content = applyCtx(item.content);
+                buf.push({ elem : 'level', name : item.level, content : content });
+            }
+        }, this);
+        return buf;
+    }
+
+    examples: {
+        var buf = [];
+        this.ctx.forEach(function(item) {
+            if(!item.content)
+                return;
+            var content = apply('example', this.ctx = item.content);
+            buf.push({ elem : 'level', name : item.level, content : content });
+        }, this);
+        return buf;
+    }
+
+    example {
+        this.ctx.url: {
+            var title = apply('title', this.ctx = this.ctx.title),
+                prefix = this.ctx.url;
+
+            return {
+                block : 'bk-example',
+                url   : prefix + '.html',
+                source : prefix + '.bemjson.js',
+                title : title
+            };
+        }
+
+        this._.isArray(this.ctx): {
+            var buf = [], i = 0, item
+            while(item = this.ctx[i++]) {
+                buf.push(apply(this.ctx = item));
+            }
+            return buf;
+        }
+    }
+
+}

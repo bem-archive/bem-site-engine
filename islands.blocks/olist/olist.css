@@ -1,0 +1,20 @@
+.olist
+{
+    margin: 0.5em 0 1em 1.2em;
+    padding: 0;
+}
+
+.olist .olist__li
+{
+    background: none;
+
+    list-style-type: decimal;
+
+    padding-left: 0.3em;
+    margin-left: 2em;
+}
+
+/* :( */
+.olist .olist .olist__li {
+    margin-left: 0;
+}

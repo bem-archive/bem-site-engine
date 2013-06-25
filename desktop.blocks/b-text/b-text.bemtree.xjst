@@ -1,0 +1,32 @@
+block b-text {
+    
+    default {
+        
+        this.elem === 'p': {
+            return applyCtx({ block : 'para', content : this.ctx.content });
+        }
+        
+        this.elem === 'ul': {
+            return applyCtx({ block : 'ulist', content : this.ctx.content });
+        }
+        
+        this.elem === 'ol': {
+            return applyCtx({ block : 'olist', content : this.ctx.content });
+        }
+        
+        ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].indexOf(this.elem) !== -1: {
+            return applyCtx({
+                block : 'headline',
+                mods  : { level: this.elem.charAt(1) },
+                attrs : this.ctx.attrs,
+                content : this.ctx.content
+            });
+        }
+
+    }
+
+    this.ctx.tag === 'pre': {
+        return applyCtx({ block : 'code', content : this.ctx.content });
+    }
+    
+}

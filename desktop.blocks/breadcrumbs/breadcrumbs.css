@@ -1,0 +1,10 @@
+.breadcrumbs
+{
+    list-style: none;
+
+    margin: 0;
+    padding-top: 20px;
+    padding-bottom: 12px;
+
+    vertical-align: middle;
+}

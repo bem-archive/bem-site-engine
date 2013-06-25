@@ -1,0 +1,9 @@
+block header, elem main {
+
+    content: [
+        { elem : 'logo' },
+        { elem : 'search' },
+        { elem : 'nav' }
+    ]
+
+}

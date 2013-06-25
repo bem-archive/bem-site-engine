@@ -1,0 +1,37 @@
+Source: yandex-legoa-www
+Section: yandex
+Priority: optional
+Build-Depends:
+ yandex-verstka-cdbs (>= 1.0.9),
+ yandex-debhelper-all (>= 1.3.5),
+ conductor-utils,
+ git-core
+Maintainer: Vladimir Varankin <varankinv@yandex-team.ru>
+
+Package: yandex-legoa-www
+Section: yandex
+Priority: optional
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ yandex-legoa-data,
+ yandex-environment,
+ nodejs-0.10 | nodejs (>= 0.8.23-yandex1) | nodejs-0.8,
+ nginx
+Architecture: all
+Description: Front-end for legoa
+
+Package: yandex-legoa-www-static-1-0
+Section: yandex
+Priority: optional
+Pre-Depends: yandex-ycssjs-freeze-keeper
+Architecture: all
+Description: Static for WWW for legoa
+
+Package: yandex-legoa-www-static
+Section: yandex
+Priority: optional
+Depends: yandex-legoa-www-static-1-0 (>= 1.0)
+Architecture: all
+Description: Depends on latest yandex-legoa-www-static-*
+

@@ -1,0 +1,20 @@
+block body {
+
+    mix {
+
+        true: [
+            { block : 'island' },
+            {
+                block : 'layout',
+                mods : { section : '100' }
+            }
+        ]
+
+        this._isErrorPage: {
+            block : 'layout',
+            mods : { section : 'center' }
+        }
+
+    }
+
+}

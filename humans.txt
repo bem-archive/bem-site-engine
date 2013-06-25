@@ -1,0 +1,7 @@
+/* TEAM */
+Maintainer: Vladimir Varankin
+Contact: varankinv@yandex-team.ru
+Twitter: @tvii
+
+/* SITE */
+

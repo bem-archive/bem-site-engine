@@ -1,0 +1,31 @@
+.bk-example__source
+{
+    padding: 5px 0 10px;
+}
+
+.bk-example__source-code
+{
+    background: #f5f3e4;
+
+    position: relative;
+
+    margin: 0 0 10px;
+    padding: 10px;
+
+    display: none;
+}
+
+.bk-example__source-code_visible_yes
+{
+    display: block;
+}
+
+.bk-example__source-code .code
+{
+    font-size: 12px;
+    line-height: 15px;
+
+    margin: 0;
+
+    max-height: 500px;
+}

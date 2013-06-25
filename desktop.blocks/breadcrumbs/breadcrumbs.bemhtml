@@ -1,0 +1,30 @@
+block breadcrumbs {
+
+    mix: { block : 'layout', mods : { section : '100' } }
+
+    tag: 'ul'
+
+    elem item {
+
+        tag: 'li'
+
+        content: {
+            block : 'link',
+            url   : this.ctx.url,
+            content : this.ctx.content
+        }
+
+        this._.isLast(), mix: { mods : { pos : 'last' } }
+
+        elemMod active yes {
+
+            content: {
+                tag : 'b',
+                content : this.ctx.content
+            }
+
+        }
+
+    }
+
+}

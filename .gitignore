@@ -7,10 +7,8 @@
 .bem/snapshots
 
 node_modules
-vendor
-datasrc
+libs
 
-desktop.bundles/*/*.*
-!desktop.bundles/*/*.bemdecl.js
-!desktop.bundles/.bem/*
-
+*.bundles/*/*.*
+!*.bundles/*/*.bemdecl.js
+!*.bundles/.bem/*

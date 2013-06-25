@@ -1,0 +1,16 @@
+.bk-subject__mod,
+.bk-subject__elem
+{
+    padding: 10px 0 10px;
+}
+
+.bk-subject__mod_is-last_yes,
+.bk-subject__elem_is-last-yes
+{
+    padding-bottom: 30px;
+}
+
+.bk-subject .section__title
+{
+    margin: 0;
+}

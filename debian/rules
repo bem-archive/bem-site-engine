@@ -1,0 +1,88 @@
+#!/usr/bin/make -f
+
+NPM=npm
+NPM_BIN=$(shell $(NPM) bin)
+
+WWWDIR=usr/lib/yandex/
+PRJDIR=legoa/
+
+YENV?=production
+
+include /usr/share/cdbs/1/class/verstka-with-static.mk
+
+make::debian/build-timestamp
+
+debian/build-timestamp::
+	ln -sfn $(YENV) configs/current
+	ln -sfn configs/current/borschik .borschik
+	$(NPM) install --registry=http://npm.yandex-team.ru
+	YENV=$(YENV) $(NPM_BIN)/bem make libs
+	YENV=$(YENV) $(NPM_BIN)/bem make desktop.bundles
+	touch $(@)
+
+install/$(DEB_SOURCE_PACKAGE)::make
+	# копируем только то, что нужно
+	cp -r \
+		configs \
+		desktop.bundles \
+		node_modules \
+		$(DEB_PRJWWW_DESTDIR)
+
+	# Удаляем dev-зависимости npm
+	rm -r $(DEB_PRJWWW_DESTDIR)node_modules/{$(shell node -pe "Object.keys(require('./package.json').devDependencies).join(',')")}
+
+	# Удаляем ненужное
+	find $(DEB_PRJWWW_DESTDIR)desktop.bundles \
+		-type f \
+		-not \( -path "*.i18n/*" -o -name "*.node.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
+		-delete
+
+	# Чистим VCS-остатки (на всякий случай)
+	dh_clearvcs -p$(DEB_SOURCE_PACKAGE)
+
+	# Проставляем версии
+	dh_versions $(DEB_PRJWWW_DESTDIR){configs/*/*,desktop.bundles/*/*}
+
+	dh_environment -p$(DEB_SOURCE_PACKAGE) --fail-missing
+	dh_installinit -p$(DEB_SOURCE_PACKAGE) --upstart-only
+
+install/$(STATIC_PACKAGE)::make
+	# NOTE: костыль из-за того что в пакете возможно нет картинок
+	mkdir -p freeze $(STATIC_PACKAGE_DESTDIR)libs
+
+	cp -r \
+		desktop.bundles \
+		freeze \
+		$(STATIC_PACKAGE_DESTDIR)
+
+	find libs/* \
+		-maxdepth 0 -type d \
+		-not \( -name "romochka" -o -name "bem-gen-doc" -o -name "bem-pr" \) | \
+			xargs -I {} cp -r "{}" $(STATIC_PACKAGE_DESTDIR)libs
+
+	mkdir -p $(STATIC_PACKAGE_DESTDIR)../_/
+
+binary-strip/$(STATIC_PACKAGE)::
+	find $(STATIC_PACKAGE_DESTDIR) -depth -type d \( -name "node_modules" -o -name "*.examples*" \) | xargs rm -rf
+	
+	find $(STATIC_PACKAGE_DESTDIR) \
+		-not \( -name "*.js" -o -name "*.deps.js" \
+			-o -name "*.css" \
+			-o -name "*.gif" -o -name "*.png" -o -name "*.jp*g" \
+			-o -name "*.swf" -o -name "*.ico" -o -name "*.svg" \
+			-o -name "*.eot" -o -name "*.ttf" -o -name "*.otf" -o -name "*.woff" \) \
+		-a -not -type d \
+		-delete
+
+	find $(STATIC_PACKAGE_DESTDIR) \
+		-type f \
+		\( -name "*.node.js" -o -name "*.priv.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
+		-delete
+
+clean::
+	rm -f .borschik
+	rm -f configs/current
+	rm -rf libs
+	rm -rf freeze
+	rm -f debian/build-timestamp
+

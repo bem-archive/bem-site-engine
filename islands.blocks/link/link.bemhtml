@@ -1,0 +1,13 @@
+block link {
+
+    tag: 'span'
+
+    this.ctx.url {
+        tag: 'a'
+
+        attrs: {
+            href : this.ctx.url
+        }
+    }
+
+}
