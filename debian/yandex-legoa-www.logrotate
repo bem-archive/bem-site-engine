@@ -6,5 +6,8 @@
     notifempty
     sharedscripts
     copytruncate
+    postrotate
+        [ -f /var/run/yandex/legoa/legoa.pid ] && kill -USR2 `cat /var/run/yandex/legoa/legoa.pid`
+    endscript
 }
 

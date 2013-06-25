@@ -1,7 +1,6 @@
-var FS = require('fs'),
-    OS = require('os'),
+var OS = require('os'),
 
-    nworkers = OS.cpus().length - 2,
+    nworkers = OS.cpus().length - 2;
 
 module.exports = {
     debug : false,
@@ -12,6 +11,6 @@ module.exports = {
     },
     logger : {
         level : 'info',
-        transport : FS.createWriteStream('/var/log/yandex/legoa/nodejs.log', { flags : 'a' })
+        file : '/var/log/yandex/legoa/nodejs.log'
     }
 };
