@@ -2,5 +2,5 @@
     mustDeps : [],
     shouldDeps : [
         { block : 'arrow' }
-    ],
+    ]
 })
