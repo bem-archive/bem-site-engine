@@ -84,5 +84,6 @@ clean::
 	rm -f configs/current
 	rm -rf libs
 	rm -rf freeze
+	ln -sfn development configs/current
 	rm -f debian/build-timestamp
 

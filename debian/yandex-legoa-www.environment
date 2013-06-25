@@ -1,2 +1,1 @@
 usr/lib/yandex/legoa/configs/* usr/lib/yandex/legoa/configs/current
-usr/lib/yandex/legoa/configs/*/nginx.conf /etc/nginx/sites-available/90-legoa.conf
