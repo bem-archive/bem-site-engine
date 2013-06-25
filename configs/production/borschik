@@ -2,7 +2,7 @@
     "paths" : {
         "./": "//yandex.st/legoa/{{DEBIAN_VERSION}}/",
         "freeze/": "//yandex.st/legoa/_/",
-        "libs/romochka/freeze": "//yandex.st/lego/_/"
+        "libs/romochka/freeze/": "//yandex.st/lego/_/"
     },
     "freeze_paths" : {
         "./": "freeze/",
