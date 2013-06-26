@@ -224,7 +224,7 @@ provide(inherit({
 
         curReq
             .once('error', function(e) {
-                logger.error('Request for %s was failed', _t._url.href, e, curReq);
+                logger.error('Request for %s was failed', _t._url.href, e);
                 promise.reject(e);
             })
             .once('timeout', function() {
