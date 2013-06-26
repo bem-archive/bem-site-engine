@@ -178,6 +178,7 @@ provide(inherit({
             .once('close', function() {
                 logger.error('Request for %s was closed', _t._url.href);
 
+                // FIXME: shouldn't we `stream.destroy()`?
                 promise.reject(new HttpError(500, 'connection closed'));
             });
     },
