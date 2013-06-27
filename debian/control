@@ -16,8 +16,9 @@ Depends:
  ${misc:Depends},
  yandex-legoa-data,
  yandex-environment,
- nodejs-0.10 | nodejs (>= 0.8.23-yandex1) | nodejs-0.8,
- nginx
+ nodejs-0.10 | nodejs (>= 0.8.23-yandex1),
+ nginx,
+ config-tools-nginx-vhost (>= 1-4-200)
 Architecture: all
 Description: Front-end for legoa
 
