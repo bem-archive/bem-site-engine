@@ -28,14 +28,8 @@ registry.decl(sourceNodes.SourceNodeName, {
 
     getSets : function() {
         return {
-//            'bem-tools' : {
-//                paths : ['docs']
-//            },
-//            'bem-articles' : {
-//                paths : ['.']
-//            },
             'islands-components' : {
-                treeish : 'v1.0.0',
+                treeish : 'v1.20.0',
                 paths : [
                     'bem-controls/common.blocks',
                     'bem-controls/desktop.blocks',
@@ -88,7 +82,7 @@ registry.decl(sourceNodes.SourceNodeName, {
                 ]
             },
             'islands-page' : {
-                treeish : 'v1.0.0',
+                treeish : 'v1.12.0',
                 paths : ['common.blocks', 'desktop.blocks'],
                 examplesLevels : [
                     'bem-bl/blocks-common',
@@ -127,24 +121,24 @@ registry.decl(sourceNodes.SourceNodeName, {
 //                    'desktop.blocks'
 //                ]
 //            },
-//            'islands-search' : {
-//                treeish : 'v1.0.0',
-//                paths : ['common.blocks', 'desktop.blocks'],
-//                examplesLevels : [
-//                    'bem-bl/blocks-common',
-//                    'bem-bl/blocks-desktop',
-//                    'bem-controls/common.blocks',
-//                    'islands-controls/common.blocks',
-//                    'islands-popups/common.blocks',
-//                    'islands-popups/desktop.blocks',
-//                    'lego/blocks-common',
-//                    'lego/blocks-desktop',
-//                    'common.blocks',
-//                    'desktop.blocks'
-//                ]
-//            },
+            'islands-search' : {
+                treeish : 'v1.6.0',
+                paths : ['common.blocks', 'desktop.blocks'],
+                examplesLevels : [
+                    'bem-bl/blocks-common',
+                    'bem-bl/blocks-desktop',
+                    'bem-controls/common.blocks',
+                    'islands-controls/common.blocks',
+                    'islands-popups/common.blocks',
+                    'islands-popups/desktop.blocks',
+                    'lego/blocks-common',
+                    'lego/blocks-desktop',
+                    'common.blocks',
+                    'desktop.blocks'
+                ]
+            },
             'islands-services' : {
-                treeish : 'v1.0.0',
+                treeish : 'v1.3.0',
                 paths : ['common.blocks', 'desktop.blocks'],
                 examplesLevels : [
                     'bem-bl/blocks-common',
@@ -162,7 +156,7 @@ registry.decl(sourceNodes.SourceNodeName, {
                 ]
             },
             'islands-user' : {
-                treeish : 'v1.0.0',
+                treeish : 'v1.13.0',
                 paths : ['common.blocks', 'desktop.blocks'],
                 examplesLevels : [
                     'bem-bl/blocks-common',
