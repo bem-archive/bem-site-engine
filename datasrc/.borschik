@@ -1,0 +1,8 @@
+{
+    "paths": {
+        "./": "/datasrc"
+    },
+    "freeze_paths": {
+        "./": "_/"
+    }
+}
