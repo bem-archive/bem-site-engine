@@ -178,6 +178,7 @@ provide(inherit({
             .once('close', function() {
                 logger.error('Request for %s was closed', _t._url.href);
 
+                // FIXME: shouldn't we `stream.destroy()`?
                 promise.reject(new HttpError(500, 'connection closed'));
             });
     },
@@ -224,7 +225,7 @@ provide(inherit({
 
         curReq
             .once('error', function(e) {
-                logger.error('Request for %s was failed', _t._url.href, e, curReq);
+                logger.error('Request for %s was failed', _t._url.href, e);
                 promise.reject(e);
             })
             .once('timeout', function() {

@@ -41,7 +41,7 @@ registry.decl(ExamplerNodeName, nodes.NodeName, {
         var defer = Q.defer(),
             worker = CP.fork(PATH.join(__dirname, 'workers', 'make-examples.js'), {
                 cwd : this.libRoot,
-                env : { __root_level_dir : '' }
+                env : { YENV : process.env.YENV, __root_level_dir : '' }
             });
 
         worker.once('message', function(m) {
