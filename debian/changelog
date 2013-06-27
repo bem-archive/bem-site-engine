@@ -1,3 +1,9 @@
+yandex-legoa-www (1.1.1) stable; urgency=low
+
+  * Пакет в тестинг
+
+ -- Vladimir Varankin <varankinv@yandex-team.ru>  Thu, 27 Jun 2013 21:05:22 +0400
+
 yandex-legoa-www (1.1.0) stable; urgency=low
 
   * LEGO-9856 - legoa: Собрать пакеты с версткой и данными
