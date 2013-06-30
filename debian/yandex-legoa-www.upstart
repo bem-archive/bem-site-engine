@@ -69,7 +69,7 @@ pre-start script
     fi
 
     # пишем в лог приложения сообщения системы, в формате `new Date().toUTCString()`
-    echo "[`LC_ALL=en_US date -u] SYSTEM Starting $DAEMON" >> $DAEMON_LOG
+    #echo "[`LC_ALL=en_US date -u`] SYSTEM Starting $DAEMON" >> $DAEMON_LOG
 
     # обновляем ulimit если есть конфиг
     if [ -f "$DAEMON_ULIMIT" ]; then
@@ -104,7 +104,7 @@ pre-start script
 end script
 
 pre-stop script
-    echo "[`LC_ALL=en_US date -u] SYSTEM Stoping" >> $DAEMON_LOG
+    #echo "[`LC_ALL=en_US date -u`] SYSTEM Stoping" >> $DAEMON_LOG
 
     # закрываем фаервол и ждём 5 секунд, если DAEMON_PORT переменная установлена
     if [ -n "$DAEMON_PORT" ]; then

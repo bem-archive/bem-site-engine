@@ -25,7 +25,7 @@ Depends:
 Architecture: all
 Description: Front-end for legoa
 
-Package: yandex-legoa-www-static-1-1-1
+Package: yandex-legoa-www-static-1-2-1
 Section: yandex
 Priority: optional
 Pre-Depends: yandex-ycssjs-freeze-keeper
@@ -35,7 +35,7 @@ Description: Static for WWW for legoa
 Package: yandex-legoa-www-static
 Section: yandex
 Priority: optional
-Depends: yandex-legoa-www-static-1-1-1 (>= 1.1.1)
+Depends: yandex-legoa-www-static-1-2-1 (>= 1.2.1)
 Architecture: all
 Description: Depends on latest yandex-legoa-www-static-*
 
