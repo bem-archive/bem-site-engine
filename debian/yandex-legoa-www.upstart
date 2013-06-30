@@ -8,12 +8,13 @@ env YENV_FILE=/etc/yandex/environment.type
 env DAEMON=node
 env DAEMON_OWN=www-data
 env DAEMON_DEFAULTS=/etc/default/yandex-legoa-www
+env DAEMON_ULIMIT=/etc/yandex/legoa/ulimit.conf
 env DAEMON_PID=/var/run/yandex/legoa/legoa.pid
 env DAEMON_LOG=/var/log/yandex/legoa/nodejs-upstart.log
-env DAEMON_PORT=""  #example: "12345", если указать порт, то при стопе будет сначала закрывать его в фаерволе;
+env DAEMON_PORT=""  #example: "12345", если указать порт, то при стопе нужно будет сначала закрывать его в фаерволе;
 
 env APP_ROOT=/usr/lib/yandex/legoa
-env APP_FILE=""
+env APP_FILE=boot.js
 
 start on filesystem or runlevel [2345]
 stop on runlevel [06]
@@ -33,7 +34,7 @@ stop on runlevel [06]
 #  expect daemon #- upstart ждёт 2 fork_ов от приложения и второй pid считает главным.
 
 script
-    # обновляем переменные окружения DAEMON, APP_ROOT, APP_FILE, и тд
+    # обновляем переменные окружения DAEMON, APP_ROOT, APP_FILE и т.д.
     if [ -f "$DAEMON_DEFAULTS" ]; then
         . $DAEMON_DEFAULTS
     fi
@@ -57,28 +58,30 @@ script
         DAEMON="/usr/bin/env NODE_ENV=$YENV $DAEMON"
 
     exec start-stop-daemon --start \
-        --make-pidfile --pidfile $DAEMON_PID --chuid $DAEMON_OWN --chdir $APP_ROOT \
+        --make-pidfile --pidfile $DAEMON_PID \
+        --chuid $DAEMON_OWN --chdir $APP_ROOT \
         --exec $DAEMON -- $appfile >> $DAEMON_LOG 2>&1
 end script
 
 pre-start script
+    if [ -f "$DAEMON_DEFAULTS" ]; then
+        . $DAEMON_DEFAULTS
+    fi
+
+    # пишем в лог приложения сообщения системы, в формате `new Date().toUTCString()`
+    echo "[`LC_ALL=en_US date -u] SYSTEM Starting $DAEMON" >> $DAEMON_LOG
+
+    # обновляем ulimit если есть конфиг
+    if [ -f "$DAEMON_ULIMIT" ]; then
+        . $DAEMON_ULIMIT
+    fi
+
     log_dir=`dirname $DAEMON_LOG`
     pid_dir=`dirname $DAEMON_PID`
 
     if [ ! -d "$log_dir" ]; then
         mkdir -p $log_dir
         chown -R $DAEMON_OWN $log_dir
-    fi
-
-    # пишем в лог приложения сообщения системы, в формате `new Date().toString()`
-    echo "[`LC_ALL=en_US date \"+%a %b %d %Y %T GMT%z (%Z)\"`] SYSTEM Starting" >> $DAEMON_LOG
-
-    if [ -f "$DAEMON_DEFAULTS" ]; then
-        . $DAEMON_DEFAULTS
-    fi
-
-    if [ -f /etc/yandex/legoa/ulimit.conf ]; then
-        . /etc/yandex/legoa/ulimit.conf
     fi
 
     mkdir -p $pid_dir
@@ -95,16 +98,16 @@ pre-start script
     fi
 
     # открыаем фаервол, если DAEMON_PORT переменная установлена
-    if [ ! -z "$DAEMON_PORT" ]; then
+    if [ -n "$DAEMON_PORT" ]; then
         /usr/sbin/iptruler $DAEMON_PORT up
     fi
 end script
 
 pre-stop script
-    echo "[`LC_ALL=en_US date \"+%a %b %d %Y %T GMT%z (%Z)\"`] SYSTEM Stoping" >> $DAEMON_LOG
+    echo "[`LC_ALL=en_US date -u] SYSTEM Stoping" >> $DAEMON_LOG
 
     # закрываем фаервол и ждём 5 секунд, если DAEMON_PORT переменная установлена
-    if [ ! -z "$DAEMON_PORT" ]; then
+    if [ -n "$DAEMON_PORT" ]; then
         /usr/sbin/iptruler $DAEMON_PORT down
         sleep 5
     fi
