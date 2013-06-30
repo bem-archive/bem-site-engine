@@ -2,7 +2,7 @@
 
 PIDFILE=/var/run/yandex/legoa/legoa.pid
 
-if [ ! -x "$PIDFILE" ]; then
+if [ ! -f "$PIDFILE" ]; then
     exit 1
 fi
 
@@ -11,7 +11,7 @@ rss=`ps h -o pid,rss -p $pid --ppid $pid \
     | awk '{ name = FNR==1? "master" : "worker_"FNR-1; print name ":" $2 }' \
     | paste -sd " "`
 
-echo "{[nodejs_rss_legoa=$rss}]"
+echo "{[nodejs_rss_legoa=$rss]}"
 
 exit 0
 
