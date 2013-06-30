@@ -1,7 +1,7 @@
 Source: yandex-legoa-data
 Section: yandex
 Priority: optional
-Build-Depends: debhelper (>= 8)
+Build-Depends: debhelper (>= 7)
 Maintainer: Vladimir Varankin <varankinv@yandex-team.ru>
 
 Package: yandex-legoa-data
