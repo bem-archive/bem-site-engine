@@ -1,7 +1,0 @@
-module = Ubic::Service::SimpleDaemon
-[options]
-bin = node /usr/lib/yandex/legoa/desktop.bundles/common/_common.js
-stdout = /var/log/nodeubic/legoa/stdout.log
-stderr = /var/log/nodeubic/legoa/stderr.log
-user = www-data
-
