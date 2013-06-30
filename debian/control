@@ -7,6 +7,8 @@ Build-Depends:
  conductor-utils,
  git-core
 Maintainer: Vladimir Varankin <varankinv@yandex-team.ru>
+Vsc-Git: git://github.yandex-team.ru/lego/legoa-www.git
+Vsc-Browse: http://github.yandex-team.ru/lego/legoa-www
 
 Package: yandex-legoa-www
 Section: yandex
@@ -14,11 +16,12 @@ Priority: optional
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- yandex-legoa-data,
- yandex-environment,
- nodejs-0.10 | nodejs (>= 0.8.23-yandex1),
  nginx,
- config-tools-nginx-vhost (>= 1-4-200)
+ config-tools-nginx-vhost (>= 1-4-200),
+ yandex-environment,
+ yandex-vertis-nodejs0.10 | nodejs-0.10 | nodejs (>= 0.8.23-yandex1),
+ yandex-legoa-data,
+ yandex-legoa-tools
 Architecture: all
 Description: Front-end for legoa
 
