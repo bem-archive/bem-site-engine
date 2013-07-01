@@ -74,7 +74,7 @@ TODO:
 
 ```
 › npm install
-› bem make vendor
+› bem make libs
 ```
 
 #### 3. Собираем, запускаем
