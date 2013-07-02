@@ -19,13 +19,13 @@ Depends:
  nginx,
  config-tools-nginx-vhost (>= 1-4-200),
  yandex-environment,
- yandex-vertis-nodejs0.10 | nodejs-0.10 | nodejs (>= 0.8.23-yandex1),
+ yandex-vertis-nodejs0.10,
  yandex-legoa-data,
  yandex-legoa-tools
 Architecture: all
 Description: Front-end for legoa
 
-Package: yandex-legoa-www-static-1-2-1
+Package: yandex-legoa-www-static-1-2-2
 Section: yandex
 Priority: optional
 Pre-Depends: yandex-ycssjs-freeze-keeper
@@ -35,7 +35,7 @@ Description: Static for WWW for legoa
 Package: yandex-legoa-www-static
 Section: yandex
 Priority: optional
-Depends: yandex-legoa-www-static-1-2-1 (>= 1.2.1)
+Depends: yandex-legoa-www-static-1-2-2 (>= 1.2.2)
 Architecture: all
 Description: Depends on latest yandex-legoa-www-static-*
 
