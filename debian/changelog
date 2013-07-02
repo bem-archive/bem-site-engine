@@ -1,3 +1,9 @@
+yandex-legoa-www (1.2.2) stable; urgency=low
+
+  * Исправил зависимости пакета
+
+ -- Vladimir Varankin <varankinv@yandex-team.ru>  Mon, 01 Jul 2013 16:07:44 +0400
+
 yandex-legoa-www (1.2.1) stable; urgency=low
 
   * финальный пакет в тестинг
