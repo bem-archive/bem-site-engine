@@ -116,7 +116,10 @@ provide({
 
         logger.debug('yaAuth: Running "%s" \\w params: %j', params.method, opts);
 
-        return httpProvider.create(opts).run();
+        return httpProvider.create(opts).run()
+            .then(function(res) {
+                return res.data;
+            });
     },
 
     /**
