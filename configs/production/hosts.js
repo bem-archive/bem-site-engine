@@ -10,7 +10,7 @@ module.exports = {
         host : 'http://center.yandex-team.ru'
     },
     static : {
-        host : '/www/{{DEBIAN_VERSION}}'
+        host : '/web/{{DEBIAN_VERSION}}'
     },
     datasrc : {
         host : '/datasrc',
