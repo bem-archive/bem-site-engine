@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ycssjs-freeze-keeper /usr/local/www/static.yandex.net/legoa/{{DEBIAN_VERSION}}/freeze/ /usr/local/www/static.yandex.net/legoa/_/
+ycssjs-freeze-keeper /var/lib/yandex/legoa/www/{{DEBIAN_VERSION}}/freeze/ /var/lib/yandex/legoa/www/_/
