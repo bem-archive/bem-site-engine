@@ -10,7 +10,7 @@ module.exports = {
         host : 'http://center.yandex-team.ru'
     },
     static : {
-        host : '//st.coal.dev.yandex.net/legoa/{{DEBIAN_VERSION}}'
+        host : '/web/{{DEBIAN_VERSION}}'
     },
     datasrc : {
         host : '/datasrc',

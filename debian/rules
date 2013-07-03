@@ -10,6 +10,8 @@ YENV?=production
 
 include /usr/share/cdbs/1/class/verstka-with-static.mk
 
+STATIC_PACKAGE_DESTDIR=debian/$(STATIC_PACKAGE)/var/lib/yandex/$(PRJDIR)www/$(STATIC_PACKAGE_POSTFIX)/
+
 make::debian/build-timestamp
 
 debian/build-timestamp::

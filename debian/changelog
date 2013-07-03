@@ -1,3 +1,9 @@
+yandex-legoa-www (1.3.0-test1) UNRELEASED; urgency=low
+
+  * Тестовый пакет с исправленными путями до статики
+
+ -- Vladimir Varankin <varankinv@yandex-team.ru>  Wed, 03 Jul 2013 12:48:52 +0400
+
 yandex-legoa-www (1.2.2) stable; urgency=low
 
   * Исправил зависимости пакета
