@@ -159,7 +159,15 @@ provide(inherit({
             headers = res.headers,
             charsetEncoding = this.params.encoding,
             zdecoder = getDecoderFromHeaders(headers),
-            resStream = zdecoder? res.pipe(new zdecoder()) : res;
+            resStream = zdecoder? res.pipe(new zdecoder()) : res,
+            statusCode = res.statusCode,
+            resp = {
+                headers : res.headers,
+                statusCode : statusCode,
+                reason : HTTP.STATUS_CODES[statusCode],
+                data : null,
+                type : ''
+            };
 
         resStream
             .on('data', function(chunk) {
@@ -168,7 +176,11 @@ provide(inherit({
             .once('end', function() {
                 try {
                     var dtype = _t._dataType || getDataTypeFromHeaders(headers);
-                    promise.fulfill(processResponse(buf, dtype));
+
+                    resp.type = dtype;
+                    resp.data = processResponse(buf, dtype);
+
+                    promise.fulfill(resp);
                 }
                 catch(e) {
                     logger.error('Request for %s finished with error', _t._url.href, e);
