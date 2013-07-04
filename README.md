@@ -135,8 +135,8 @@ index 258681f..3eeb315 100644
 
 [...]
 
-[Thu, 04 Jul 2013 10:56:52 GMT] INFO Server started on port "3014"
-[Thu, 04 Jul 2013 10:56:52 GMT] DEBUG Worker connected to 0.0.0.0:3014
+[Thu, 04 Jul 2013 10:56:52 GMT] INFO Server started on port "3042"
+[Thu, 04 Jul 2013 10:56:52 GMT] DEBUG Worker connected to 0.0.0.0:3042
 ```
 
 Проверяем http://127.0.0.1:3042
