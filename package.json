@@ -22,7 +22,7 @@
     "dom-js": "0.0.9"
   },
   "devDependencies": {
-    "bem": "~0.5.30",
+    "bem": "~0.6.6",
     "nodemon": "~0.7.6"
   },
   "scripts": {
