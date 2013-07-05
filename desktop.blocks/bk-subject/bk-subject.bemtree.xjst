@@ -1,6 +1,8 @@
 block bk-subject, (!this.elem || ['elem', 'mod', 'mod-val'].indexOf(this.elem) !== -1) {
 
     default, (this.elem && this._wrapped !== this.elem) || !this._wrapped: {
+        this._usedExamples = [];
+
         var title = apply('title', this.ctx = this.ctx.title),
             description = apply('description', this.ctx = this.ctx.description),
             examples = apply('examples', this.ctx = this.ctx.examples);
@@ -44,15 +46,35 @@ block bk-subject, (!this.elem || ['elem', 'mod', 'mod-val'].indexOf(this.elem) !
     }
 
     description: {
-        var buf = [],
-            content;
+        var buf = [];
         this.ctx.forEach(function(item) {
             if(item.content) {
-                content = applyCtx(item.content);
-                buf.push({ elem : 'level', name : item.level, content : content });
+                buf.push({ elem : 'level', name : item.level,
+                    content : apply('markedDescription', this.ctx = item.content) });
             }
         }, this);
         return buf;
+    }
+
+    markedDescription {
+        true: {
+            var buf = [],
+                arr = this.ctx.split('%_%');
+
+            for(var i = 0, l = arr.length; i < l; i++) {
+                buf.push(i%2 == 0 ? arr[i] : apply('example', this.ctx = { url: arr[i] }));
+            }
+
+            return buf;
+        }
+
+        !this._.isSimple(this.ctx): {
+            return this.ctx;
+        }
+
+        !this.ctx: {
+            return '';
+        }
     }
 
     examples: {
@@ -71,12 +93,18 @@ block bk-subject, (!this.elem || ['elem', 'mod', 'mod-val'].indexOf(this.elem) !
             var title = apply('title', this.ctx = this.ctx.title),
                 prefix = this.ctx.url;
 
+            this._usedExamples.push(this.ctx.url);
+
             return {
                 block : 'bk-example',
                 url   : prefix + '.html',
                 source : prefix + '.bemjson.js',
                 title : title
             };
+        }
+
+        this._usedExamples && this._usedExamples.indexOf(this.ctx.url) !== -1: {
+            return '';
         }
 
         this._.isArray(this.ctx): {
