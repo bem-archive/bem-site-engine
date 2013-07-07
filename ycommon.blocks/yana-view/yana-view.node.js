@@ -3,8 +3,7 @@ modules.define(
     ['yana-template', 'yana-config', 'yana-logger', 'yana-util'],
     function(provide, template, config, logger, util, View) {
 
-var URL = require('url'),
-    JsonStringify = require('json-stringify-safe');
+var JsonStringify = require('json-stringify-safe');
 
 View.decl('yana-view', {
 
