@@ -23,8 +23,8 @@ MAKE.decl('Arch', {
         'bem-pr @ 0.0.5',
         'bem-gen-doc @ 0.4.0',
         // FIXME: LEGO-9684
-        'bem-core @ 6974c09e1d04f122878ec4ce1b9215c0e6040c80',
         'bem-yana',
+        'bem-core @ origin/v1',
         // FIXME: romochka#feature/bem-core
         'romochka @ feature/bem-core',
         'bem-controls @ dev',
@@ -51,7 +51,7 @@ MAKE.decl('BundleNode', {
             'i18n',
             'i18n.keys.js',
             'bemhtml',
-            'bemtree.xjst',
+            'bemtree',
             'browser.js',
             'node.js'
         ];

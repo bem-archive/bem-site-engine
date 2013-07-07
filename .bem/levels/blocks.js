@@ -20,7 +20,7 @@ exports.getTechs = function() {
         'ie9.css'       : 'ie9.css'
     };
 
-    ['html', 'bemhtml', 'bemtree.xjst', 'vanilla.js', 'browser.js', 'node.js'].forEach(function(name) {
+    ['html', 'bemhtml', 'bemtree', 'vanilla.js', 'browser.js', 'node.js'].forEach(function(name) {
         techs[name] = join(BEMCORE_TECHS, [name, 'js'].join('.'));
     });
 
@@ -31,4 +31,4 @@ exports.getTechs = function() {
     return techs;
 };
 
-exports.defaultTechs = ['css', 'vanilla.js', 'deps.js', 'bemhtml', 'bemtree.xjst'];
+exports.defaultTechs = ['css', 'vanilla.js', 'deps.js', 'bemhtml', 'bemtree'];
