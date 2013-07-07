@@ -24,7 +24,7 @@ MAKE.decl('Arch', {
         'bem-gen-doc @ 0.4.0',
         // FIXME: LEGO-9684
         'bem-core @ 6974c09e1d04f122878ec4ce1b9215c0e6040c80',
-        'bem-yana @ origin/unstable',
+        'bem-yana',
         // FIXME: romochka#feature/bem-core
         'romochka @ feature/bem-core',
         'bem-controls @ dev',
