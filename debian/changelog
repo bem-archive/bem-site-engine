@@ -1,3 +1,15 @@
+yandex-legoa-www (1.4.2) experimental; urgency=low
+
+  * Исправил сборку пакета в соответствии с bem-core#v1
+
+ -- Vladimir Varankin <varankinv@yandex-team.ru>  Mon, 08 Jul 2013 02:31:55 +0400
+
+yandex-legoa-www (1.4.1) experimental; urgency=low
+
+  * Тестовый пакет с переходом на bem-core#v1 для пострелять
+
+ -- Vladimir Varankin <varankinv@yandex-team.ru>  Mon, 08 Jul 2013 02:21:30 +0400
+
 yandex-legoa-www (1.4.0) experimental; urgency=low
 
   * Тестовый пакет с рефакторингом в bem-yana#arch-review/http-request для

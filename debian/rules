@@ -36,7 +36,7 @@ install/$(DEB_SOURCE_PACKAGE)::make
 	# Удаляем ненужное
 	find $(DEB_PRJWWW_DESTDIR)desktop.bundles \
 		-type f \
-		-not \( -path "*.i18n/*" -o -name "*.node.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
+		-not \( -path "*.i18n/*" -o -name "*.node.js" -o -name "*.bemtree.js" -o -name "*.bemhtml.js" \) \
 		-delete
 
 	# Чистим VCS-остатки (на всякий случай)
@@ -78,7 +78,7 @@ binary-strip/$(STATIC_PACKAGE)::
 
 	find $(STATIC_PACKAGE_DESTDIR) \
 		-type f \
-		\( -name "*.node.js" -o -name "*.priv.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
+		\( -name "*.node.js" -o -name "*.priv.js" -o -name "*.bemtree.js" -o -name "*.bemhtml.js" \) \
 		-delete
 
 clean::
