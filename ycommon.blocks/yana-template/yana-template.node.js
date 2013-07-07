@@ -36,7 +36,7 @@ provide(util.extend(template, {
         var ctx = this.createContext(),
             i18n = this.getPath(name, 'i18n/all.keys.js'),
             bemhtml = this.getPath(name, 'bemhtml.js'),
-            bemtree = this.getPath(name, 'bemtree.xjst.js'),
+            bemtree = this.getPath(name, 'bemtree.js'),
             cache = this._cache;
 
         return Vow.when(ctx)
