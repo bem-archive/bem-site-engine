@@ -23,10 +23,12 @@
   },
   "devDependencies": {
     "bem": "~0.6.6",
-    "nodemon": "~0.7.6"
+    "nodemon": "~0.7.6",
+    "jshint": "~2.1.4"
   },
   "scripts": {
-    "start": "nodemon -w desktop.bundles/ -e node.js,bemtree.xjst.js,bemhtml.js -d 1 ./desktop.bundles/common/_common.node.js"
+    "start": "nodemon -w desktop.bundles/ -e node.js,bemtree.xjst.js,bemhtml.js -d 1 ./desktop.bundles/common/_common.node.js",
+    "test": "jshint ."
   },
   "author": "lego-team@yandex-team.ru",
   "readmeFilename": "README.md",
