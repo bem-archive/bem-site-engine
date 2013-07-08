@@ -21,7 +21,7 @@ http://planner.yandex-team.ru/project/10690
 % bem make libs
 ```
 
-#### 3. Собираем 
+#### 3. Собираем
 
 ```
 % bem make desktop.bundles
@@ -34,31 +34,12 @@ http://planner.yandex-team.ru/project/10690
 
 Вся необходимая инфраструктура для разработки уже настроена на dev-сервере `coal.dev.yandex.net`: на сервере
 крутится Nginx, слушающий запросы вида `<project>.<user>.coal.dev.yandex-team.ru`. Для каждого такого запроса, сервер
-ожидает что, корень проекта (`root`) будет находиться в `/home/$user/web/$project` и попытается проксировать запросы 
-в nodejs сокет по пути: `http://unix:/tmp/$user-$project-www.sock`.
+ожидает что, корень проекта (`root`) будет находиться в `/home/$user/web/$project` и попытается проксировать запросы
+в сокет по пути: `http://unix:/tmp/$user-$project-www.sock`.
 
 *По вопросам связанными с `coal.dev` обращаться к @varankinv*
 
-**TODO** Эту часть нужно сделать более универсальной!
-
-Все, что нужно изменить разработчику, это имя сокета, который поднимает Node.js: в конфиге 
-`configs/current/node.js` изменяем часть про $user в переменной `socketPath`:
-
-```diff
-diff --git a/configs/development/node.js b/configs/development/node.js
-index f4a6c9c..6439c46 100644
---- a/configs/development/node.js
-+++ b/configs/development/node.js
-@@ -2,7 +2,7 @@ var OS = require('os'),
-     PATH = require('path'),
-     appRoot = PATH.resolve(__dirname, '../../'),
-     socketPath = PATH.join(
--        OS.tmpDir(), ''.concat('username-', PATH.basename(appRoot), '-www.sock'));
-+        OS.tmpDir(), ''.concat('varankinv-', PATH.basename(appRoot), '-www.sock'));
-
-```
-
-После этого запускаем Node.js-приложение:
+Запускаем Node.js-приложение:
 
 ```shell
 % npm start
@@ -84,24 +65,12 @@ Proof it!
 
 ##### 4.1 Запускаем локально
 
-Если хочется разрабатываться локально, необходимо запускать приложение TCP-порте вместо сокета. Для этого в конфиге 
-`configs/current/node.js` заменить параметр `app.socket`, на `app.port`:
+Если хочется разрабатываться локально, необходимо запускать приложение TCP-порте, вместо сокета. Для этого случая
+необходимо использовать набор конфигов `local`, которые обеспечивают старт приложения на порту `process.env.PORT`
+(по умолчанию 3014):
 
-```diff
-diff --git a/configs/development/node.js b/configs/development/node.js
-index f4a6c9c..4c6c6ab 100644
---- a/configs/development/node.js
-+++ b/configs/development/node.js
-@@ -7,8 +7,8 @@ var OS = require('os'),
- module.exports = {
-     debug : true,
-     app : {
--        //port : 3014,
--        socket : socketPath,
-+        port : 3042,
-+        //socket : socketPath,
-         workers : 1
-     },
+```
+% ln -snf configs/local current
 ```
 
 Так же необходимо позаботится о раздаче статики (JS/CSS). Например, для этих целей, можно использовать bem-server.
@@ -118,35 +87,44 @@ index 258681f..3eeb315 100644
      },
      static : {
 -        host : ''
-+        host : 'http://127.0.0.1:8000'
++        host : 'http://127.0.0.1:8001'
      },
 ```
 
-Запускам bem-server на порту 8000, и отправляем его «по тихому в фон»:
+Запускам bem-server на порту 8001, и отправляем его «по тихому в фон»:
 
 ```
-% bem server -p 8000 -v warn &
+% bem server -p 8001 -v warn &
 ```
 
 Стартуем приложение:
 
 ```
-% npm start
+% PORT=5001 npm start
 
 [...]
 
-[Thu, 04 Jul 2013 10:56:52 GMT] INFO Server started on port "3042"
-[Thu, 04 Jul 2013 10:56:52 GMT] DEBUG Worker connected to 0.0.0.0:3042
+[Thu, 04 Jul 2013 10:56:52 GMT] INFO Server started on port "5001"
+[Thu, 04 Jul 2013 10:56:52 GMT] DEBUG Worker connected to 0.0.0.0:5001
 ```
 
-Проверяем http://127.0.0.1:3042
+Проверяем http://127.0.0.1:5001
 
-P.S. В качестве сервера статики можно также (попробовать ;) использовать `SimpleHTTPServer` из Python:
+P.S. В качестве сервера статики можно также (попробовать ;) использовать `SimpleHTTPServer` из Python, чтобы
+статика не пересобиралась на каждый запрос:
 
 ```
-% python -m SimpleHTTPServer &
+% python -m SimpleHTTPServer 8001 &
 
-  › Serving HTTP on 0.0.0.0 port 8000 ...
+  › Serving HTTP on 0.0.0.0 port 8001 ...
+```
+
+#### 5. Собираем данные
+
+TODO: подробнее описать, как собрать `datasrc` с данными islands-библиотек
+
+```
+% make -C datasrc
 ```
 
 ### Эксплуатация ###
@@ -171,13 +149,14 @@ P.S. В качестве сервера статики можно также (п
 
 * [yandex-legoa-www](http://c.yandex-team.ru/packages/yandex-legoa-www/) — код приложения, конфиги, верстка
 * [yandex-legoa-www-static](http://c.yandex-team.ru/packages/yandex-legoa-www-static/) — статика
-* [yandex-legoa-tools](http://c.yandex-team.ru/packages/yandex-legoa-tools) — всякие утилиты (конфиги 
+* [yandex-legoa-tools](http://c.yandex-team.ru/packages/yandex-legoa-tools) — всякие утилиты (конфиги
   для monrun, graphite-client, и пр.)
-* [yandex-legoa-data](http://c.yandex-team.ru/packages/yandex-legoa-data/) — данные
+* [yandex-legoa-data](http://c.yandex-team.ru/packages/yandex-legoa-data/) — данные.
 
 #### Тестинг
 
-http://lego01ht.cs-minitools01ht.yandex.ru/
+* http://legoa.test.yandex-team.ru/
+* http://lego01ht.cs-minitools01ht.yandex.ru/ (*если вдруг надо будет тестировать `*.yandex.ru`-куки*).
 
 ### Заметки ###
 
@@ -226,11 +205,11 @@ http://lego01ht.cs-minitools01ht.yandex.ru/
 
 **3) В `examples` собираем примеры библиотеки.**
 
-Сборка примеров запускается в отдельном child-процессе, на основе make.js-файла библиотеки 
+Сборка примеров запускается в отдельном child-процессе, на основе make.js-файла библиотеки
 (с доопределением нужных узлов).
 
-Для запуска сборки реализуем [мини-bem-make](datasrc/lib/make.js), который умеет возвращать 
-архитектуру сборки по умолчанию (`DefaultArch`) для библиотеки. Но с возможностью програмно 
+Для запуска сборки реализуем [мини-bem-make](datasrc/lib/make.js), который умеет возвращать
+архитектуру сборки по умолчанию (`DefaultArch`) для библиотеки. Но с возможностью програмно
 влиять на конечный `Arch` из кода воркера, запускающего процесс сборки.
 
 Остальные заметки: [в WIKI](http://wiki.yandex-team.ru/lego/site/notes)
