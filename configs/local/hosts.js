@@ -3,7 +3,7 @@ var PATH = require('path'),
 
 module.exports = {
     blackbox : {
-        host : '/blackbox',
+        host : '',
         domain : 'yandex-team.ru'
     },
     passport : {
@@ -16,7 +16,7 @@ module.exports = {
         host : 'http://127.0.0.1:8001'
     },
     datasrc : {
-        host : '/datasrc',
+        host : 'http://127.0.0.1:8001/datasrc',
         root : PATH.join(appRoot, 'datasrc')
     }
 };
