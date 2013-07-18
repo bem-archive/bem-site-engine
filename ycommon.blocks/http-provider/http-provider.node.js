@@ -67,15 +67,17 @@ provide(inherit({
 
         this._hasBody = _params.method === 'POST' || _params.method === 'PUT';
         this._dataType = _params.dataType;
-        this._redirCounter = _params.maxRedirects;
 
         this._url = parsedUrl;
+        this._redirCounter = 0;
     },
 
     run : function() {
         var params = this.params,
             hasBody = this._hasBody,
             body = hasBody? QS.stringify(params.data) : '';
+
+        this._redirCounter = params.maxRedirects;
 
         return this._resolveHostname()
             .then(function(ip) {
