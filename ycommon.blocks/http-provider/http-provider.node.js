@@ -56,7 +56,11 @@ function processResponse(data, typ) {
 provide(inherit({
 
     __constructor : function(params) {
-        var _params = this.params = objects.extend(this.getDefaultParams(), params),
+        this.params = objects.extend({}, this.getDefaultParams(), params);
+
+        this.params.method = this.params.method.toUpperCase();
+
+        var _params = this.params,
             url = _params.url,
             parsedUrl = typeof url === 'string'?
                     URL.parse(url, true, true) : url;
@@ -77,7 +81,7 @@ provide(inherit({
             .then(function(ip) {
                 var url = this._url,
                     query = QS.stringify(
-                        hasBody? objects.extend(url.query, params.data) : url.query),
+                        hasBody? url.query : objects.extend(url.query, params.data)),
                     hostname = url.hostname,
                     headers = params.headers || {};
 
