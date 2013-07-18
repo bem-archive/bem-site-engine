@@ -4,7 +4,7 @@ modules.define(
     function(provide, router, View) {
 
 router.addRoute({
-    nane : 'noop',
+    name : 'page-noop',
     rule : '/.*',
     data : {
         action : 'noop'
@@ -12,7 +12,7 @@ router.addRoute({
 });
 
 router.addRoute({
-    name : 'test',
+    name : 'page-index',
     rule : '/',
     data : {
         action : 'page'
