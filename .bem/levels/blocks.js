@@ -9,15 +9,15 @@ var PATH = require('path'),
 
 exports.getTechs = function() {
     var techs = {
-        'bemdecl.js'    : 'bemdecl.js',
-        'deps.js'       : 'deps.js',
-        'js'            : 'js-i',
-        'css'           : 'css',
-        'ie.css'        : 'ie.css',
-        'ie6.css'       : 'ie6.css',
-        'ie7.css'       : 'ie7.css',
-        'ie8.css'       : 'ie8.css',
-        'ie9.css'       : 'ie9.css'
+        'bemdecl.js'    : 'v2/bemdecl.js',
+        'deps.js'       : 'v2/deps.js',
+        'js'            : 'v2/js-i',
+        'css'           : 'v2/css',
+        'ie.css'        : 'v2/ie.css',
+        'ie6.css'       : 'v2/ie6.css',
+        'ie7.css'       : 'v2/ie7.css',
+        'ie8.css'       : 'v2/ie8.css',
+        'ie9.css'       : 'v2/ie9.css'
     };
 
     ['html', 'bemhtml', 'bemtree', 'vanilla.js', 'browser.js', 'node.js'].forEach(function(name) {
