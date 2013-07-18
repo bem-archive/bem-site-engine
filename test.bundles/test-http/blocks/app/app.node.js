@@ -6,7 +6,7 @@ modules.define(
 function run() {
     var app = new Http({ handlers : [ RequestHandler ] });
     app.run();
-};
+}
 
 provide(run);
 
