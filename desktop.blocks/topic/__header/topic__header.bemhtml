@@ -1,0 +1,80 @@
+block topic, elem header {
+
+	mix : { block : 'island' }
+
+	content : {
+		var content = this.ctx.content
+		
+		return [
+			{
+                elem : 'icon',
+                mods : { size : 'library' },
+                content : {
+                    name : content.name,
+                    icon : content.icon
+                }    
+            },
+            {
+                elem : 'data',
+                content : [
+					{
+						elem : 'name',	
+						content : content
+					},
+					{
+						elem : 'field',
+						url : false,
+						name : 'version',
+						content : content
+					},
+					{
+						elem : 'field',
+						url : true,
+						name : 'repository',
+						content : content
+					},
+					{
+						elem : 'field',
+						url : true,
+						name : 'bugs',
+						content : content	
+					},
+					{
+						elem : 'field',
+						url : false,
+						name : 'description',
+						content : content	
+					}
+				]
+			},
+			{
+        		elem : 'readme-switcher'
+        	}		
+		]
+	}
+}
+
+block topic, elem name {
+	content : this.ctx.content.name
+}
+
+block topic, elem field {
+	content : [
+		BEM.I18N('topic', this.ctx.name),
+		': ',					
+		{ 
+			block : 'link',
+			url : this.ctx.url ? this.ctx.content[this.ctx.name] : '',
+			content : this.ctx.content[this.ctx.name]
+		}	
+	]
+}
+
+block topic, elem readme-switcher {
+	content : {
+		block: 'check-button',
+		value: 's',
+		mods: { size: 's' },
+		content: 'README'
+	}	
+}		

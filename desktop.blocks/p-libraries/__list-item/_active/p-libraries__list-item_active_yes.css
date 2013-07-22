@@ -1,0 +1,14 @@
+.p-libraries__list-item_active_yes
+{
+	background: none repeat scroll 0 0 rgb(25, 129, 202) !important;
+}
+
+.p-libraries__list-item_active_yes,
+.p-libraries__list-item_active_yes:hover,
+.p-libraries__list-item_active_yes:link:hover,
+.p-libraries__list-item_active_yes:link:visited:hover,
+.p-libraries__list-item_active_yes .topic
+{
+	color: #ffffff !important;	
+}
+

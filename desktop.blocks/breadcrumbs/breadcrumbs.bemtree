@@ -5,39 +5,70 @@ block breadcrumbs {
     }
 
     content: {
-        var content = [
-                {
-                    elem : 'item',
-                    elemMods : { root : 'yes' },
-                    url : '/',
-                    content : BEM.I18N('breadcrumbs', 'libraries')   // 'Библиотеки'
-                }
-                //{
-                //    elem : 'item',
-                //    url : '/libs',
-                //    content : 'Библиотеки'
-                //}
-            ],
-            page = this.data.page,
-            datasrc = this.data.params;
-
-        datasrc.lib &&
-            content.push({
+        var url = '/',
+        content = [];
+        
+        
+        content = [
+            {
                 elem : 'item',
-                elemMods : (page === 'library'? { active : 'yes' } : ''),
-                url : '/libs/' + datasrc.lib,
+                elemMods : { root : 'yes' },
+                url : url,
+                content : BEM.I18N('breadcrumbs', 'index')  // 'Главная' 
+            }
+        ];
+        
+        var page = this.data.page;
+        var datasrc = this.data.params;
+        
+        content.push(apply('breadcrumb', this.ctx = {
+            cpage : page,
+            tpage : 'libraries',
+            url : url + (datasrc.lib ? 'libs#' + datasrc.lib : 'libs'),
+            content : BEM.I18N('breadcrumbs', 'libraries')
+        }));    
+        
+
+        // страница с описанием конкретной библиотеки
+        /*
+        if(datasrc.lib) {
+
+            url += 'libs/' + datasrc.lib;
+
+            content.push(apply('breadcrumb', this.ctx = {
+                cpage : page,
+                tpage : 'library',
+                url : url,
                 content : datasrc.lib
-            });
+            }));
+        }
+        */
+               
+        // страница с описанием конкретного блока    
+        if(datasrc.block) {
 
-        datasrc.block &&
-            content.push({
-                elem : 'item',
-                elemMods : (page === 'document'? { active : 'yes' } : ''),
-                url : '/libs/' + datasrc.lib + '/blocks/' + datasrc.block,
+            url += 'libs/' + datasrc.lib + '/blocks/' + datasrc.block;
+           
+            content.push(apply('breadcrumb', this.ctx = {
+                cpage : page,
+                tpage : 'block',
+                url : url,
                 content : datasrc.block
-            });
-
+            }));
+        }
+        
         return content;
     }
 
+    
+    breadcrumb : {
+        return {
+            elem : 'item',
+            elemMods : (this.ctx.cpage === this.ctx.tpage ? { active : 'yes' } : ''),
+            url : this.ctx.url,
+            content : this.ctx.content
+        };
+    }
+
+    
 }

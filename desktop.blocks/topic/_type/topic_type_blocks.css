@@ -1,0 +1,19 @@
+.topic_type_blocks .topic__anchor
+{
+	margin-bottom: 20px;
+}
+
+.topic_type_blocks .topic__header {
+	padding: 5px;
+	min-height: 30px;
+	margin-bottom: 10px;
+
+	
+	background: #FD0;
+
+	background-image: -webkit-linear-gradient(top right, #FFDB4C 0, #FC0 100%);
+	background-image: -moz-linear-gradient(top right, #FFDB4C 0, #FC0 100%);
+	background-image: -o-linear-gradient(top right, #FFDB4C 0, #FC0 100%);
+	background-image: linear-gradient(to bottom left, #FFDB4C 0, #FC0 100%);
+
+}

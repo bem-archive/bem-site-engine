@@ -1,0 +1,46 @@
+block p-index {
+
+    mix : { block : 'island' }
+
+    content: [
+        this.ctx.content
+    ]
+
+    elem item {
+
+        content: [
+            {
+                elem : 'title',
+                content : {
+                    block : 'link',
+                    url   : this.ctx.url,
+                    content : this.ctx.title || this.ctx.name
+                }
+            },
+            {
+                elem : 'item-repo',
+                content : {
+                    block : 'link',
+                    mods : { external : 'yes' },
+                    url : this.ctx.repo,
+                    content : this.ctx.repo.replace(/^https?:\/\//, '')
+                }
+            }
+        ]
+
+    }
+
+    elem title {
+
+        tag: ''
+
+        content: {
+            block : 'headline',
+            mods : { level : 3 },
+            mix : { block : this.block, elem : this.elem },
+            content : this.ctx.content
+        }
+
+    }
+
+}

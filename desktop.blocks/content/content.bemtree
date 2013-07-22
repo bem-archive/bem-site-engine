@@ -10,19 +10,23 @@ block content {
     content {
 
         this.data.page === 'error': {
-            block : 'error'
+            block : 'p-error'
         }
 
         this.data.page === 'index': {
-            block : 'showcase'
+            block : 'p-index'
+        }
+
+        this.data.page === 'libraries': {
+            block : 'p-libraries'
         }
 
         this.data.page === 'library': {
-            block : 'catalogue'
+            block : 'p-library'
         }
 
-        this.data.page === 'document': {
-            block : 'document'
+        this.data.page === 'block': {
+            block : 'p-block'
         }
 
     }

@@ -1,0 +1,24 @@
+.p-libraries__list-item_type_libraries,
+.p-libraries__list-item_type_block
+{
+	display: block;
+}
+
+.p-libraries__list-item_type_blocks
+{
+	margin-top: 20px;
+}
+
+.p-libraries__list-item_type_libraries
+{
+	color: #000000;
+}
+
+.p-libraries__list-item_type_block
+{
+	width: 150px;
+	height: 160px;
+	display: inline-table;
+	margin: 0 10px 10px 0;
+	text-decoration: none;
+}

@@ -1,0 +1,27 @@
+.topic__header
+{
+	padding: 10px;
+}
+
+.topic__header .topic__data
+{
+	margin-left: 10px;
+}
+
+.topic__header .topic__name
+{
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.topic__header .topic__field
+{	
+	font-size: 14px;
+	margin-top: 5px;
+}
+
+
+.topic__header .topic__readme-switcher 
+{
+	margin-top: -15px;
+}

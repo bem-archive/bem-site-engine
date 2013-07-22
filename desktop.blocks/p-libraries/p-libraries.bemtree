@@ -1,0 +1,32 @@
+block p-libraries {
+
+    default: {
+        this.ctx.id = this.data.params.lib;
+        return applyNext(this._datasrc = this.data.params);
+    }
+
+    content, (this._datasrc && !this.ctx.content): {
+        var data = this.data;
+        return this.doAsync(
+                leDatasrc.libInfo.bind(leDatasrc, { lib : this._datasrc.lib })
+            )
+            .then(
+                function(result) {
+                    return 
+                        apply(
+                            this._mode = '',
+                            this.data = data,
+                            this.ctx = {
+                                elem : 'list',
+                                content : result
+                            }
+                        );    
+                },
+                function(err) {
+                    return apply('error', this.ctx = err);
+                },
+                this
+            );
+    }
+
+}

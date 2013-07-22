@@ -1,0 +1,31 @@
+block topic, mod type library {
+
+    content : {
+        var content = this.ctx.content;
+
+        return [          
+            {
+                elem : 'icon',
+                mods : { size : 'library' },
+                content : {
+                    name : content.name,
+                    icon : content.icon
+                }    
+            },
+            {
+                elem : 'data',
+                content : [
+                    {
+                        elem : 'name',
+                        content : content
+                    },
+                    {
+                        elem : 'description',
+                        content : content.description
+                    }
+                    
+                ]
+            }
+        ];
+    }
+}
