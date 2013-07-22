@@ -220,8 +220,7 @@ provide(inherit({
 
                         logger.debug('Redirecting from %s to %s', _t._url.href, location);
 
-                        // TODO: testme
-                        return _t._doHttp(params, dataType);
+                        return promise.sync(_t._doHttp(params, dataType));
                     }
                     // handling HTTP-errors
                     else if(statusCode >= 400) {
