@@ -52,7 +52,7 @@ block p-libraries, elem list-item {
             return {
                 elem : this.ctx.elem,
                 name : block.name,
-                title: block.title,
+                description: block.title,
                 icon:  block.icon,
                 url: apply('blockUrl', this._block = block.name),
                 lib: this.ctx.content.lib

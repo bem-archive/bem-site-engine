@@ -1,12 +1,13 @@
-block topic, mod type block {
+block topic {
 
-    content : {
-        var content = this.ctx.content;
+	content : {
+        var content = this.ctx.content,
+        	mods = (this.mods && this.mods.type) ? { size : this.mods.type} : {};
 
         return [
             {
                 elem : 'icon',
-                mods : { size : 'block' },
+                mods : mods,
                 content : {
                     lib : content.lib,
                     name : content.name,
@@ -21,8 +22,8 @@ block topic, mod type block {
                         content : content
                     },
                     {
-                        elem : 'title',
-                        content : content.title
+                        elem : 'description',
+                        content : content.description
                     }
                 ]
             }
