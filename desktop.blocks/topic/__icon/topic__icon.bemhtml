@@ -11,7 +11,7 @@ block topic, elem icon {
 
     url: {
         var Glob = this['i-global'],
-        path = [];
+            path = [];
 
         path.push(Glob['datasrc-host']);
         

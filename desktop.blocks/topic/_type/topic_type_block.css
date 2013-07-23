@@ -7,7 +7,7 @@
 
 .topic_type_block:hover
 {
-	background: none repeat scroll 0 0 rgba(15, 111, 179, 0.08);
+	background-color: rgba(15, 111, 179, 0.08);
 }
 
 .topic_type_block .topic__icon, .topic_type_block .topic__data

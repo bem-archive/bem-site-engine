@@ -1,6 +1,6 @@
 modules.define('i-bem__dom', function(provide, DOM) {
 
-provide(DOM.decl('p-libraries', {
+DOM.decl('p-libraries', {
 
     onSetMod : {
 
@@ -101,16 +101,27 @@ provide(DOM.decl('p-libraries', {
         return this.delMod(this.elem('list-item'), modName);
     },
 
+    /**
+     * Метод для подписки блока на события скроллирования страницы
+     * @return {Object} - экземпляр блока p-libraries
+     */
     _bindToScroll : function() {
-        this.__self.doc.on('scroll', $.proxy(this._onScroll, this));
+        this.__self.doc.on('scroll', this._onScroll.bind(this));
         return this;
     },
 
+    /**
+     * Метод для оnписки блока от события скроллирования страницы
+     * @return {Object} - экземпляр блока p-libraries
+     */
     _unbindFromScroll : function() {
-        this.__self.doc.un('scroll', $.proxy(this._onScroll, this));
+        this.__self.doc.un('scroll', this._onScroll.bind(this));
         return this;
     },
 
+    /**
+     * Метод для выделения активного пункта меню после загрузки страницы
+     */
     _selectLibraryMenuItem : function() {
         var hash = this.__self.win[0].location.hash,
             libraries = this.elem('list', 'position', 'left');
@@ -123,6 +134,8 @@ provide(DOM.decl('p-libraries', {
     FIXED_MARGIN : 20,
     HEADER_HEIGHT : 70, /*Высота блока header*/
     BREADCRUMBS_HEIGHT : 50 /*Высота блока breadcrumbs*/
-}));
+});
+
+provide(DOM);
 
 });

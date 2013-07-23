@@ -1,7 +1,6 @@
 ({
     mustDeps : [
-        { block : 'i-bem', elems : ['html', 'tree', 'dom'] },
-        { block : 'i-bem', elem : 'html', mods : { async : 'yes' } },
+        { block : 'i-bem' },
         { block : 'error' },
         { block : 'i-global' }
     ],
