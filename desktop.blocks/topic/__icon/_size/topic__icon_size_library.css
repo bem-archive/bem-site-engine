@@ -1,8 +1,8 @@
 .topic__icon_size_library
 {
-	width: 80px;
-	height: 80px;
+    width: 80px;
+    height: 80px;
 
-	/*переделать в svg*/
-	background: url(no-image_size_library.png);
+    /*переделать в svg*/
+    background: url(no-image_size_library.png);
 }

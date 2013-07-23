@@ -1,16 +1,16 @@
 .topic_type_library
 {
-	padding: 5px 0 5px 5px;
-	cursor: pointer;
+    padding: 5px 0 5px 5px;
+    cursor: pointer;
 }
 
 .topic_type_library:hover
 {
-	background-color: rgba(15, 111, 179, 0.08);
+    background-color: rgba(15, 111, 179, 0.08);
 }
 
 .topic_type_library .topic__data 
-{	
-	padding-left: 10px;
-	width: 340px;
+{   
+    padding-left: 10px;
+    width: 340px;
 } 

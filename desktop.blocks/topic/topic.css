@@ -8,17 +8,17 @@
 .topic:link:hover,
 .topic:link:visited:hover
 {
-	color: #000000;	
+    color: #000000; 
 }
 
 .topic__icon, .topic__data
 {
-	display: inline-block;
+    display: inline-block;
 }
 
 .topic__data 
-{	
-	vertical-align: top;
+{   
+    vertical-align: top;
 }
 
 .topic__name

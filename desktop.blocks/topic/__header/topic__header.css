@@ -1,28 +1,28 @@
 .topic__header
 {
-	padding: 5px;
-	min-height: 30px;
-	margin-bottom: 10px;
+    padding: 5px;
+    min-height: 30px;
+    margin-bottom: 10px;
 }
 
 .topic__header .topic__data
 {
-	margin-left: 10px;
+    margin-left: 10px;
 }
 
 .topic__header .topic__name
 {
-	font-size: 1.5em;
-	font-weight: bold;
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 .topic__header .topic__field
-{	
-	font-size: 14px;
-	margin-top: 5px;
+{   
+    font-size: 14px;
+    margin-top: 5px;
 }
 
 .topic__header .topic__readme-switcher 
 {
-	margin-top: -15px;
+    margin-top: -15px;
 }
