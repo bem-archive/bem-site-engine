@@ -8,6 +8,6 @@
         { elem : 'header' },
         { elem : 'readme', mods : { visible : 'yes' } },
         { elem : 'icon', mods : { size : ['library', 'block'] }},
-        { mods : { type: ['library', 'blocks', 'block'] }}  
+        { mods : { type: ['library', 'blocks', 'block'], active : 'yes' }}  
     ]
 })

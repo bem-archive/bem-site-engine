@@ -21,10 +21,6 @@ block content {
             block : 'p-libraries'
         }
 
-        this.data.page === 'library': {
-            block : 'p-library'
-        }
-
         this.data.page === 'block': {
             block : 'p-block'
         }

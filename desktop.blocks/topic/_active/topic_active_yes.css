@@ -1,0 +1,22 @@
+.topic_active_yes.topic_type_library
+{
+	background: none repeat scroll 0 0 rgb(25, 129, 202) !important;
+}
+
+.topic_active_yes.topic_type_library,
+.topic_active_yes.topic_type_library:hover,
+.topic_active_yes.topic_type_library:link,
+.topic_active_yes.topic_type_library:link:hover
+{
+	color: #ffffff !important;
+}
+
+.topic_active_yes.topic_type_blocks .topic__header
+{
+	background: #FD0;
+
+	background-image: -webkit-linear-gradient(top right, #FFDB4C 0, #FC0 100%);
+	background-image: -moz-linear-gradient(top right, #FFDB4C 0, #FC0 100%);
+	background-image: -o-linear-gradient(top right, #FFDB4C 0, #FC0 100%);
+	background-image: linear-gradient(to bottom left, #FFDB4C 0, #FC0 100%);
+}

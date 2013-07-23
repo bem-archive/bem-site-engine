@@ -31,6 +31,22 @@ provide(DOM.decl('p-libraries', {
         }
 
     },
+
+    onElemSetMod : {
+
+        'list-item' : {
+            
+            'active' : {
+                'yes' : function(elem) {                     
+                    this.findBlockInside(elem, 'topic').setMod('active', 'yes');
+                },
+
+                '' : function(elem) {                     
+                    this.findBlockInside(elem, 'topic').delMod('active');
+                }
+            }        
+        }
+    },
     
     /**
      * Обработчик события изменения окна браузера
@@ -62,7 +78,7 @@ provide(DOM.decl('p-libraries', {
     _onLibraryItemClick : function(e) {
         this
             ._clearItemsMod('active')
-            .setMod(e.domElem, 'active', 'yes');
+            .setMod(this.elem('list-item', 'item', this.getMod(e.domElem, 'item')), 'active', 'yes');
     },
 
     /**
@@ -73,8 +89,7 @@ provide(DOM.decl('p-libraries', {
     _onBlocksItemMouseEnter : function(e) {
         this
             ._clearItemsMod('active')
-            .setMod(this.elem('list-item', 'item', this.getMod(e.domElem, 'item')), 'active', 'yes')
-            .delMod(e.domElem, 'active', 'yes');
+            .setMod(this.elem('list-item', 'item', this.getMod(e.domElem, 'item')), 'active', 'yes');
     },    
 
     /**

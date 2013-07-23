@@ -27,22 +27,6 @@ block breadcrumbs {
             url : url + (datasrc.lib ? 'libs#' + datasrc.lib : 'libs'),
             content : BEM.I18N('breadcrumbs', 'libraries')
         }));    
-        
-
-        // страница с описанием конкретной библиотеки
-        /*
-        if(datasrc.lib) {
-
-            url += 'libs/' + datasrc.lib;
-
-            content.push(apply('breadcrumb', this.ctx = {
-                cpage : page,
-                tpage : 'library',
-                url : url,
-                content : datasrc.lib
-            }));
-        }
-        */
                
         // страница с описанием конкретного блока    
         if(datasrc.block) {

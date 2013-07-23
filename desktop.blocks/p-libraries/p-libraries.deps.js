@@ -9,6 +9,6 @@
         { block : 'topic' },
         { block : 'link' },
         { elem : 'list', mods : { type: ['libraries', 'blocks'], fixed : 'yes' } },
-        { elem : 'list-item', mods : { type: ['libraries', 'blocks', 'block'],  active : 'yes',  hovered : 'yes'  } } 
+        { elem : 'list-item', mods : { type: ['libraries', 'blocks', 'block'],  active : 'yes' } } 
     ]
 })

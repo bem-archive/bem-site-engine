@@ -1,3 +1,0 @@
-block p-library, elem readme {
-	mix : { block : 'island' }
-}

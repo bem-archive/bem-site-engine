@@ -30,14 +30,4 @@ block topic, mod type blocks {
     }
 
     js : true
-    
-    /*
-    elem name {
-        content : {
-            block : 'link',
-            url : this.ctx.content.url,
-            content : this.ctx.content.name
-        }
-    }
-    */
 }
