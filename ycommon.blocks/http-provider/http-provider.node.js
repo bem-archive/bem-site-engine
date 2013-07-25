@@ -134,7 +134,7 @@ provide(inherit({
 
                 logger.debug('Requesting %s%s (%j)', URL.format(options), options.path, options);
 
-                return this._doHttp(options, params.dataType, body);
+                return this._doHttp(options, body);
             }, this);
     },
 
@@ -207,7 +207,7 @@ provide(inherit({
             });
     },
 
-    _doHttp : function(params, dataType, body) {
+    _doHttp : function(params, body) {
         var _t = this,
             promise = Vow.promise(),
             curReq = this._curReq = (params.protocol === 'https:'? HTTPS : HTTP).request(
@@ -222,11 +222,13 @@ provide(inherit({
                         }
 
                         var location = URL.resolve(_t._url.href, res.headers['location'] || '');
-                        params = URL.parse(location, true, true);
 
                         logger.debug('Redirecting from %s to %s', _t._url.href, location);
 
-                        return promise.sync(_t._doHttp(params, dataType));
+                        promise.sync(
+                            _t._doHttp(objects.extend(params, URL.parse(location, true, true)), body));
+
+                        return;
                     }
                     // handling HTTP-errors
                     else if(statusCode >= 400) {
