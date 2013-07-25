@@ -5,9 +5,20 @@
     margin-bottom: 10px;
 }
 
+.topic__header .topic__icon-wrapper, .topic__header .topic__data
+{
+    display: inline-block;
+}
+
+.topic__header .topic__icon 
+{
+    display: block;
+}
+
 .topic__header .topic__data
 {
     margin-left: 10px;
+    padding-top: 10px;
 }
 
 .topic__header .topic__name
@@ -24,5 +35,6 @@
 
 .topic__header .topic__readme-switcher 
 {
-    margin-top: -15px;
+    margin-top: 5px;
+    padding-left: 2px;
 }

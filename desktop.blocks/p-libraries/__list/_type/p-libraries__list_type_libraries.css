@@ -1,5 +1,12 @@
 .p-libraries__list_type_libraries.p-libraries__list_position_left
 {
     overflow-y: auto; 
-    width: 450px; 
+    width: 450px;
+    margin-top: -1px; 
 }
+
+.p-libraries__list_type_libraries.p-libraries__list_position_left .p-libraries__list-item_type_libraries:first-child
+{
+	margin-top: 1px;
+}
+

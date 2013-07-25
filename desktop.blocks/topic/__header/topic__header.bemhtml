@@ -6,13 +6,21 @@ block topic, elem header {
 		var content = this.ctx.content
 		
 		return [
-			{
-                elem : 'icon',
-                mods : { size : 'library' },
-                content : {
-                    name : content.name,
-                    icon : content.icon
-                }    
+			{ 	
+				elem : 'icon-wrapper',
+				content : [
+					{
+						elem : 'icon',
+	                	mods : { size : 'library' },
+	                	content : {
+	                    	name : content.name,
+	                    	icon : content.icon
+	                	}
+	                },
+	                {
+	                	elem : 'readme-switcher'
+	                }	
+				]                     
             },
             {
                 elem : 'data',
@@ -37,19 +45,18 @@ block topic, elem header {
 						elem : 'field',
 						url : true,
 						name : 'bugs',
+						optional : true,
 						content : content	
 					},
 					{
 						elem : 'field',
 						url : false,
 						name : 'description',
+						optional : true,
 						content : content	
 					}
 				]
-			},
-			{
-        		elem : 'readme-switcher'
-        	}		
+			}		
 		]
 	}
 }
@@ -59,6 +66,11 @@ block topic, elem name {
 }
 
 block topic, elem field {
+	
+	default, (this.ctx.optional && !this.ctx.content[this.ctx.name]): {
+
+	}
+
 	content : [
 		BEM.I18N('topic', this.ctx.name),
 		': ',					
@@ -74,7 +86,7 @@ block topic, elem readme-switcher {
 	content : {
 		block: 'check-button',
 		value: 's',
-		mods: { size: 's' },
+		mods: { size: 's', pseudo: 'yes' },
 		content: 'README'
 	}	
 }		
