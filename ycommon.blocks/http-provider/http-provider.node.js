@@ -60,6 +60,12 @@ provide(inherit({
 
         this.params.method = this.params.method.toUpperCase();
 
+        var headers = this.params.headers;
+        this.params.headers = Object.keys(headers).reduce(function(hdrs, key) {
+            hdrs[key.toLowerCase()] = headers[key];
+            return hdrs;
+        }, {});
+
         var _params = this.params,
             url = _params.url,
             parsedUrl = typeof url === 'string'?
@@ -88,12 +94,12 @@ provide(inherit({
                     headers = params.headers || {};
 
                 if(ip) {
-                    headers['Host'] = hostname;
+                    headers['host'] = hostname;
                     hostname = ip;
                 }
 
                 if(params.allowGzip) {
-                    var enc = headers['Accept-Encoding'];
+                    var enc = headers['accept-encoding'];
 
                     if(!enc) {
                         enc = 'gzip, *';
@@ -101,17 +107,17 @@ provide(inherit({
                         enc = 'gzip, ' + enc;
                     }
 
-                    headers['Accept-Encoding'] = enc;
+                    headers['accept-encoding'] = enc;
                 }
 
                 // See https://github.com/nodejitsu/node-http-proxy/pull/338
                 if(hasBody || params.method === 'DELETE') {
-                    var len = headers['Content-Length'];
+                    var len = headers['content-length'];
                     if(!len) {
                         len = Buffer.byteLength(body) || 0;
                     }
 
-                    headers['Content-Length'] = len;
+                    headers['content-length'] = len;
                 }
 
                 var options = {
@@ -119,7 +125,7 @@ provide(inherit({
                     auth     : params.auth,
                     headers  : objects.extend(
                             headers,
-                            hasBody? { 'Content-Type' : 'application/x-www-form-urlencoded' } : {}),
+                            hasBody? { 'content-type' : 'application/x-www-form-urlencoded' } : {}),
                     protocol : url.protocol,
                     hostname : hostname,
                     port     : url.port,
@@ -260,6 +266,7 @@ provide(inherit({
         return {
             method       : 'GET',
             encoding     : 'utf8',
+            headers      : {},
             maxRedirects : 5,
             timeout      : null,
             'allowGzip'    : true
