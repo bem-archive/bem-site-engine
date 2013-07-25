@@ -123,11 +123,10 @@ DOM.decl('p-libraries', {
      * Метод для выделения активного пункта меню после загрузки страницы
      */
     _selectLibraryMenuItem : function() {
-        var hash = this.__self.win[0].location.hash,
-            libraries = this.elem('list', 'position', 'left');
+        var hash = this.__self.win[0].location.hash;
 
         hash && this._clearItemsMod('active')
-                    .setMod(this.findElem(libraries, 'list-item', 'item', hash.substring(1)), 'active', 'yes');
+                    .setMod(this.elem('list-item', 'item', hash.substring(1)), 'active', 'yes');
     }
 
 },{
