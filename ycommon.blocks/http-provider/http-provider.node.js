@@ -229,6 +229,9 @@ provide(inherit({
 
                     // handling redirects
                     if(statusCode === 301 || statusCode === 302) {
+                        // FIXME: do we really need this?
+                        _t._curReq = null;
+
                         if(!--_t._redirCounter) {
                             return promise.reject(new HttpError(500, 'too many redirects'));
                         }
