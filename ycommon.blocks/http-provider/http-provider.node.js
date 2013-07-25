@@ -139,7 +139,11 @@ provide(inherit({
     },
 
     abort : function() {
-        this._curReq && this._curReq.abort();
+        this._aborted = true;
+
+        if(this._curReq) {
+            this._curReq.abort();
+        }
     },
 
     _resolveHostname : function() {
@@ -186,6 +190,14 @@ provide(inherit({
                 buf += chunk.toString(charsetEncoding);
             })
             .once('end', function() {
+                if(_t._aborted) {
+                    // TODO: testme
+                    logger.debug('Request for %s was aborted before it\'s end',
+                        _t._url.href);
+                    promise.reject(new Error('Aborted'));
+                    return;
+                }
+
                 try {
                     var dtype = _t._dataType || getDataTypeFromHeaders(headers);
 
@@ -253,6 +265,11 @@ provide(inherit({
 
         curReq
             .once('error', function(e) {
+                if(_t._aborted) {
+                    logger.debug('Request for %s was aborted before', _t._url.href);
+                    return;
+                }
+
                 logger.error('Request for %s was failed', _t._url.href, e);
                 promise.reject(e);
             })
