@@ -132,7 +132,7 @@ provide(inherit({
                     path     : url.pathname + (query? '?' + query : '')
                 };
 
-                logger.debug('Requesting %s%s', URL.format(options), options.path);
+                logger.debug('Requesting %s%s (%j)', URL.format(options), options.path, options);
 
                 return this._doHttp(options, params.dataType, body);
             }, this);
@@ -231,7 +231,10 @@ provide(inherit({
                     // handling HTTP-errors
                     else if(statusCode >= 400) {
                         logger.error('Request for %s responded with error code %d', _t._url.href, statusCode);
-                        return promise.reject(new HttpError(res.statusCode));
+
+                        promise.reject(new HttpError(res.statusCode));
+
+                        return;
                     }
 
                     // common response handler
@@ -269,7 +272,7 @@ provide(inherit({
             headers      : {},
             maxRedirects : 5,
             timeout      : null,
-            'allowGzip'    : true
+            allowGzip    : true
         };
     }
 
