@@ -12,7 +12,7 @@ include /usr/share/cdbs/1/class/verstka-with-static.mk
 
 STATIC_PACKAGE_DESTDIR=debian/$(STATIC_PACKAGE)/var/lib/yandex/$(PRJDIR)www/$(STATIC_PACKAGE_POSTFIX)/
 
-make::debian/build-timestamp
+make:: debian/build-timestamp
 
 debian/build-timestamp::
 	ln -sfn $(YENV) configs/current
@@ -22,7 +22,7 @@ debian/build-timestamp::
 	YENV=$(YENV) $(NPM_BIN)/bem make desktop.bundles
 	touch $(@)
 
-install/$(DEB_SOURCE_PACKAGE)::make
+install/$(DEB_SOURCE_PACKAGE):: make
 	# копируем только то, что нужно
 	cp -r \
 		configs \
@@ -47,7 +47,7 @@ install/$(DEB_SOURCE_PACKAGE)::make
 
 	dh_environment -p$(DEB_SOURCE_PACKAGE) --fail-missing
 
-install/$(STATIC_PACKAGE)::make
+install/$(STATIC_PACKAGE):: make
 	# NOTE: костыль из-за того что в пакете возможно нет картинок
 	mkdir -p freeze $(STATIC_PACKAGE_DESTDIR)libs
 
