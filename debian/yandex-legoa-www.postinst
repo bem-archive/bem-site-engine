@@ -9,12 +9,6 @@ if [ -e /etc/yandex/environment.type ]; then
     yandex_environment=$(cat /etc/yandex/environment.type)
 fi
 
-NAME=legoa
-
-# Setting rights and owners
-chown -R www-data:www-data /var/run/yandex/legoa
-chown -R www-data:www-data /var/log/yandex/legoa
-
 #DEBHELPER#
 
 nginx-enable-mod yandex-tools-lego

@@ -46,7 +46,6 @@ install/$(DEB_SOURCE_PACKAGE)::make
 	dh_versions $(DEB_PRJWWW_DESTDIR){configs/*/*,desktop.bundles/*/*}
 
 	dh_environment -p$(DEB_SOURCE_PACKAGE) --fail-missing
-	dh_installinit -p$(DEB_SOURCE_PACKAGE) --upstart-only
 
 install/$(STATIC_PACKAGE)::make
 	# NOTE: костыль из-за того что в пакете возможно нет картинок
