@@ -11,7 +11,7 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  yabs-graphite-client,
- yandex-vertis-nodejs-init
+ yandex-vertis-nodejs-init (>= 2.0.1)
 Architecture: all
 Description: Tools package for legoa
 
