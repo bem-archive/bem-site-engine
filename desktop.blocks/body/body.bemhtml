@@ -3,7 +3,6 @@ block body {
     mix {
 
         true: [
-            { block : 'island' },
             {
                 block : 'layout',
                 mods : { section : '100' }

@@ -1,0 +1,5 @@
+block p-block {
+
+    mix: { block : 'island' }
+
+}

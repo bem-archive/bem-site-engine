@@ -59,7 +59,7 @@ block bk-subject, (!this.elem || ['elem', 'mod', 'mod-val'].indexOf(this.elem) !
     markedDescription {
         true: {
             var buf = [],
-                arr = this.ctx.split('%_%');
+                arr = this.ctx.split('%%');
 
             for(var i = 0, l = arr.length; i < l; i++) {
                 buf.push(i%2 == 0 ? arr[i] : apply('example', this.ctx = { url: arr[i] }));

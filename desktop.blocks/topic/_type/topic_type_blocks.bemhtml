@@ -1,0 +1,33 @@
+block topic, mod type blocks {
+
+    content : {
+        var content = this.ctx.content;
+
+        return [
+            {
+                elem : 'anchor',
+                content : {
+                    tag : 'a',
+                    attrs : { name : content.name},
+                    content : ''
+                }
+            },
+            {
+                elem : 'header',
+                content : content
+            },
+            {
+                elem : 'readme',
+                content : content.readme
+            },
+            {
+                block : 'p-libraries',
+                elem : 'list',
+                elemMods : { type : 'blocks' },
+                content : content.blocks                  
+            }
+        ];
+    }
+
+    js : true
+}

@@ -42,3 +42,19 @@
     width: 100%;
 }
 
+.layout_section_p-libraries > .layout__col
+{
+    display: block;
+}
+
+.layout_section_p-libraries > .layout__col_size_libraries
+{
+    float: left;
+    width: 450px;
+}
+
+.layout_section_p-libraries > .layout__col_size_blocks
+{
+    margin-left: 470px;
+}
+

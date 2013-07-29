@@ -7,24 +7,12 @@ block content {
         ]);
     }
 
-    content {
+    content: {
+        return apply('pager', this.ctx = this.data.page)
+    }
 
-        this.data.page === 'error': {
-            block : 'error'
-        }
-
-        this.data.page === 'index': {
-            block : 'showcase'
-        }
-
-        this.data.page === 'library': {
-            block : 'catalogue'
-        }
-
-        this.data.page === 'document': {
-            block : 'document'
-        }
-
+    pager: {
+        return { block : 'p-' + this.ctx };
     }
 
 }

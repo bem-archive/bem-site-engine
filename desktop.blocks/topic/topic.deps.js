@@ -1,8 +1,13 @@
 ({
     mustDeps : [
-        { block : 'i-bem', elems : ['html', 'tree'] }
+        { block : 'i-bem' }
     ],
     shouldDeps : [
-        { block : 'link' }
+        { block : 'link' },
+        { block : 'check-button' },
+        { elem : 'header' },
+        { elem : 'readme', mods : { visible : 'yes' } },
+        { elem : 'icon', mods : { size : ['library', 'block'] }},
+        { mods : { type: ['library', 'blocks', 'block'], active : 'yes' }}  
     ]
 })

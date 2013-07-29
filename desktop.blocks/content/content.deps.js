@@ -4,10 +4,11 @@
     ],
     shouldDeps : [
         { block : 'body' },
-        { block : 'error' },
         { block : 'breadcrumbs' },
-        { block : 'showcase' },
-        { block : 'catalogue' },
-        { block : 'document' }
+        { block : 'p-error' },
+        { block : 'p-index' },
+        { block : 'p-libraries' },
+        { block : 'p-library' },
+        { block : 'p-block' }
     ]
 })

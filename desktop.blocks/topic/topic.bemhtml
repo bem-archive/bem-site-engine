@@ -1,20 +1,32 @@
 block topic {
 
-    default: {
-        applyNext(this._url = this.ctx.url);
+	content : {
+        var content = this.ctx.content,
+        	mods = (this.mods && this.mods.type) ? { size : this.mods.type} : {};
+
+        return [
+            {
+                elem : 'icon',
+                mods : mods,
+                content : {
+                    lib : content.lib,
+                    name : content.name,
+                    icon : content.icon
+                }    
+            },
+            {
+                elem : 'data',
+                content : [
+                    {
+                        elem : 'name',
+                        content : content
+                    },
+                    {
+                        elem : 'description',
+                        content : content.description
+                    }
+                ]
+            }
+        ];
     }
-
-    elem name {
-
-        default: {
-            applyCtx({
-                block : 'link',
-                url : this._url,
-                mix : { block : this.block, elem : this.elem },
-                content : this.ctx.content
-            });
-        }
-
-    }
-
 }
