@@ -7,7 +7,7 @@
     sharedscripts
     copytruncate
     postrotate
-        [ -f /var/run/yandex/legoa/legoa.pid ] && kill -USR2 `cat /var/run/yandex/legoa/legoa.pid`
+        [ -f /var/run/yandex/legoa/master.pid ] && kill -USR2 `cat /var/run/yandex/legoa/master.pid`
     endscript
 }
 

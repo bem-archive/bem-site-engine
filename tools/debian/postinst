@@ -1,0 +1,13 @@
+#!/bin/sh
+# postinst script for yandex-legoa-tools
+#
+# see: dh_installdeb(1)
+
+# Setting rights and owners
+chown -R www-data:www-data /var/run/yandex/legoa
+chown -R www-data:www-data /var/log/yandex/legoa
+
+#DEBHELPER#
+
+exit 0
+

@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-PIDFILE=/var/run/yandex/legoa/legoa.pid
+PIDFILE=/var/run/yandex/legoa/master.pid
 
 if [ ! -f "$PIDFILE" ]; then
     exit 1
