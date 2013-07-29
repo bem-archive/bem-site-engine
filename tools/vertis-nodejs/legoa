@@ -1,20 +1,25 @@
-# Дириктория с PID'ами процесса
-PID_DIR=/var/run/yandex/legoa
+# Директория с PID'ами процесса
+PIDS_DIR=/var/run/yandex/legoa
+PIDFILE=$PIDS_DIR/master.pid
 
 # Директория куда пишем логи
-LOG_DIR=/var/log/yandex/legoa
+LOGS_DIR=/var/log/yandex/legoa
 
 # Пользователь от имени которого запускаем приложение
 #NODE_USER=www-data
+
 # Порт
 #NODE_PORT=1337
+
+# Путь до приложения
+APPROOT=/usr/lib/yandex/legoa
+APPFILE=desktop.bundles/common/_common.node.js
+
+APP_ARGS=--none
 
 #DAEMON=/opt/nodejs/0.10/bin/node
 DAEMON=/usr/local/nodejs-0.10/bin/node
 
-# Опции (не исопльзуются)
-DAEMON_ARGS="--none"
-
-# Путь до приложения
-APPFILE=desktop.bundles/common/_common.node.js
+# Опции start-stop-daemon'а
+DAEMON_ARGS="--make-pidfile --chdir $APPROOT"
 
