@@ -1,7 +1,7 @@
 ({
     shouldDeps : [
         { block : 'util' },
-        { block : 'http-provider' },
+        { block : 'http-request' },
         { block : 'file-provider' },
         { block : 'ya-auth' },
         { block : 'le-datasrc' },
