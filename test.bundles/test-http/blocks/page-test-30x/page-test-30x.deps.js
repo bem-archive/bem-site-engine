@@ -4,6 +4,6 @@
     ],
     shouldDeps : [
         'yana-router',
-        'http-provider'
+        'http-request'
     ]
 })

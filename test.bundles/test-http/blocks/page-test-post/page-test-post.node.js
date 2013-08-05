@@ -1,7 +1,7 @@
 modules.define(
     'yana-view',
-    ['yana-router', 'http-provider'],
-    function(provide, router, httpProvider, View) {
+    ['yana-router', 'http-request'],
+    function(provide, router, httpRequest, View) {
 
 router.addRoute({
     name : 'page-get-send',
@@ -43,7 +43,7 @@ View.decl('test-methods', {
             }
         };
 
-        return httpProvider.create(opts)
+        return httpRequest.create(opts)
             .run()
             .always(function() {
                 var ret = [].slice.call(arguments, 0);
