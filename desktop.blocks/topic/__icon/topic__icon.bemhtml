@@ -1,12 +1,21 @@
 block topic, elem icon {
 
-    this.ctx.content && this.ctx.content.icon {
+    this.ctx.content.icon.length {
         tag: 'img'
 
         attrs: {
             src : apply('url', this.ctx = this.ctx.content),
             alt : this.ctx.content.name
         }
+    }
+
+    !this.ctx.content.icon.length, default: {
+        applyNext(
+            this.ctx.mods = this._.extend(
+                { 'no-image': this.ctx.mods['size'] },
+                this.ctx.mods
+            )
+        )
     }
 
     url: {
