@@ -16,12 +16,9 @@ try {
 MAKE.decl('Arch', {
 
     blocksLevelsRegexp : /^.+?\.blocks$/,
-
     bundlesLevelsRegexp : /^.+?\.bundles$/,
 
     libraries : [
-        'bem-pr @ 0.0.5',
-        'bem-gen-doc @ 0.4.0',
         'bem-yana',
         'bem-core @ 84cd0f2',
         // FIXME: romochka#feature/bem-core

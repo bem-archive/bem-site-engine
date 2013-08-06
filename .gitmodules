@@ -1,0 +1,3 @@
+[submodule "datasrc"]
+	path = datasrc
+	url = git://github.yandex-team.ru/lego/legoa-data
