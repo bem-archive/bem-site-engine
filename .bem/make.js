@@ -1,10 +1,10 @@
 /* global MAKE */
 
-require('./nodes');
-
 var PATH = require('path'),
     LOGGER = require('bem/lib/logger'),
-    environ = require('./environ');
+    environ = require('bem-environ')(__dirname);
+
+environ.extendMake(MAKE);
 
 try {
     require(environ.getLibPath('bem-core', '.bem/nodes/bundle.js'));
