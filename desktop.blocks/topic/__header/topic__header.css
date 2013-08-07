@@ -1,6 +1,7 @@
 .topic__header
 {
     padding: 5px;
+    padding-bottom: 20px;
     min-height: 30px;
     margin-bottom: 10px;
 }
