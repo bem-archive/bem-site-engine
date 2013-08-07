@@ -1,25 +1,19 @@
 block topic, elem header {
 
-    mix : { block : 'island' }
+    mix: { block : 'island' }
 
-    content : {
+    content: {
         var content = this.ctx.content;
-
         return [
         {
             elem : 'icon-wrapper',
             content : [
-            {
-                elem : 'icon',
-                mods : { size : 'library' },
-                content : {
-                    name : content.name,
-                    icon : content.icon
+                {
+                    elem : 'icon',
+                    mods : { size : 'library' },
+                    content : { name : content.name, icon : content.icon }
                 }
-            //},
-            //{
-            //	elem : 'readme-switcher'
-            }
+                //{ elem : 'readme-switcher' }
             ]
         },
         {
@@ -27,6 +21,12 @@ block topic, elem header {
             content : [
             {
                 elem : 'name',
+                content : content
+            },
+            {
+                elem : 'field',
+                name : 'description',
+                optional : true,
                 content : content
             },
             {
@@ -47,13 +47,6 @@ block topic, elem header {
                 name : 'bugs',
                 optional : true,
                 content : content
-            },
-            {
-                elem : 'field',
-                url : false,
-                name : 'description',
-                optional : true,
-                content : content
             }
             ]
         }
@@ -67,19 +60,39 @@ block topic, elem name {
 
 block topic, elem field {
 
-    default, (this.ctx.optional && !this.ctx.content[this.ctx.name]): {
+    default, (this.ctx.optional && !this.ctx.content[this.ctx.name]): false
+
+    field-url {
+
+        true: {
+            return this.ctx.url? this.ctx.content[this.ctx.name] : '';
+        }
+
+        this.ctx.name === 'repository': {
+            var url = applyNext();
+            return url.replace(/^git:\/\//, 'http://').replace(/\.git$/, '');
+        }
 
     }
 
-    content : [
-        BEM.I18N('topic', this.ctx.name),
-        ': ',
-        {
-            block : 'link',
-            url : this.ctx.url ? this.ctx.content[this.ctx.name] : '',
-            content : this.ctx.content[this.ctx.name]
-        }
-    ]
+    content: {
+        var url = apply('field-url');
+
+        return [
+            BEM.I18N('topic', this.ctx.name),
+            ': ',
+            {
+                block : 'link',
+                url : url,
+                content : this.ctx.content[this.ctx.name]
+            }
+        ]
+    }
+
+    this.ctx.name === 'description', content: {
+        block : 'para',
+        content : this.ctx.content[this.ctx.name]
+    }
 }
 
 block topic, elem readme-switcher {
