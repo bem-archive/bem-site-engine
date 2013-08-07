@@ -1,21 +1,23 @@
 block topic, elem icon {
 
-    this.ctx.content.icon.length {
-        tag: 'img'
+    this.ctx.content {
+        this.ctx.content.icon {
+            tag: 'img'
 
-        attrs: {
-            src : apply('url', this.ctx = this.ctx.content),
-            alt : this.ctx.content.name
+            attrs: {
+                src : apply('url', this.ctx = this.ctx.content),
+                alt : this.ctx.content.name
+            }
         }
-    }
 
-    !this.ctx.content.icon.length, default: {
-        applyNext(
-            this.ctx.mods = this._.extend(
-                { 'no-image': this.ctx.mods['size'] },
-                this.ctx.mods
+        !this.ctx.content.icon, default: {
+            applyNext(
+                this.ctx.mods = this._.extend(
+                    { 'no-image': this.ctx.mods['size'] },
+                    this.ctx.mods
+                )
             )
-        )
+        }
     }
 
     url: {
@@ -23,14 +25,14 @@ block topic, elem icon {
             path = [];
 
         path.push(Glob['datasrc-host']);
-        
-        if(this.ctx.lib) { 
+
+        if(this.ctx.lib) {
             path.push('_' + this.ctx.lib);
             path.push('blocks');
         }else {
             path.push('_' + this.ctx.name);
         }
-            
+
         path.push(this.ctx.icon);
 
         return path.join('/');
