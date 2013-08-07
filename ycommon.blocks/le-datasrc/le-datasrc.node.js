@@ -17,7 +17,7 @@ provide({
     _buildPath : function(params) {
         var path = params.lib ? 
             [datasrc.root, '_' + params.lib, 'blocks'] :
-            [datasrc.root, '_libraries', 'libraries'];
+            [datasrc.root, '_libs'];
 
         params.block && path.push(params.block);
 
