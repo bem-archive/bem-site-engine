@@ -16,15 +16,15 @@ block topic, mod type blocks {
                 elem : 'header',
                 content : content
             },
-            {
-                elem : 'readme',
-                content : content.readme
-            },
+            //{
+            //    elem : 'readme',
+            //    content : content.readme
+            //},
             {
                 block : 'p-libraries',
                 elem : 'list',
                 elemMods : { type : 'blocks' },
-                content : content.blocks                  
+                content : content.blocks
             }
         ];
     }
