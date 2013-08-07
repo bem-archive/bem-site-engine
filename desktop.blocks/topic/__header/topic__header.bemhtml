@@ -1,92 +1,93 @@
 block topic, elem header {
 
-	mix : { block : 'island' }
+    mix : { block : 'island' }
 
-	content : {
-		var content = this.ctx.content
-		
-		return [
-			{ 	
-				elem : 'icon-wrapper',
-				content : [
-					{
-						elem : 'icon',
-	                	mods : { size : 'library' },
-	                	content : {
-	                    	name : content.name,
-	                    	icon : content.icon
-	                	}
-	                },
-	                {
-	                	elem : 'readme-switcher'
-	                }	
-				]                     
+    content : {
+        var content = this.ctx.content;
+
+        return [
+        {
+            elem : 'icon-wrapper',
+            content : [
+            {
+                elem : 'icon',
+                mods : { size : 'library' },
+                content : {
+                    name : content.name,
+                    icon : content.icon
+                }
+            //},
+            //{
+            //	elem : 'readme-switcher'
+            }
+            ]
+        },
+        {
+            elem : 'data',
+            content : [
+            {
+                elem : 'name',
+                content : content
             },
             {
-                elem : 'data',
-                content : [
-					{
-						elem : 'name',	
-						content : content
-					},
-					{
-						elem : 'field',
-						url : false,
-						name : 'version',
-						content : content
-					},
-					{
-						elem : 'field',
-						url : true,
-						name : 'repository',
-						content : content
-					},
-					{
-						elem : 'field',
-						url : true,
-						name : 'bugs',
-						optional : true,
-						content : content	
-					},
-					{
-						elem : 'field',
-						url : false,
-						name : 'description',
-						optional : true,
-						content : content	
-					}
-				]
-			}		
-		]
-	}
+                elem : 'field',
+                url : false,
+                name : 'version',
+                content : content
+            },
+            {
+                elem : 'field',
+                url : true,
+                name : 'repository',
+                content : content
+            },
+            {
+                elem : 'field',
+                url : true,
+                name : 'bugs',
+                optional : true,
+                content : content
+            },
+            {
+                elem : 'field',
+                url : false,
+                name : 'description',
+                optional : true,
+                content : content
+            }
+            ]
+        }
+        ]
+    }
 }
 
 block topic, elem name {
-	content : this.ctx.content.name
+    content : this.ctx.content.name
 }
 
 block topic, elem field {
-	
-	default, (this.ctx.optional && !this.ctx.content[this.ctx.name]): {
 
-	}
+    default, (this.ctx.optional && !this.ctx.content[this.ctx.name]): {
 
-	content : [
-		BEM.I18N('topic', this.ctx.name),
-		': ',					
-		{ 
-			block : 'link',
-			url : this.ctx.url ? this.ctx.content[this.ctx.name] : '',
-			content : this.ctx.content[this.ctx.name]
-		}	
-	]
+    }
+
+    content : [
+        BEM.I18N('topic', this.ctx.name),
+        ': ',
+        {
+            block : 'link',
+            url : this.ctx.url ? this.ctx.content[this.ctx.name] : '',
+            content : this.ctx.content[this.ctx.name]
+        }
+    ]
 }
 
 block topic, elem readme-switcher {
-	content : {
-		block: 'check-button',
-		value: 's',
-		mods: { size: 's', pseudo: 'yes' },
-		content: 'README'
-	}	
-}		
+    content: {
+        block : 'check-button',
+        value : 's',
+        mods : { size: 's', pseudo: 'yes' },
+        content : 'README'
+    }
+}
+
