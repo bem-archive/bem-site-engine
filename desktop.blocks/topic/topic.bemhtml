@@ -1,8 +1,9 @@
 block topic {
 
-	content : {
+	content: {
         var content = this.ctx.content,
-        	mods = (this.mods && this.mods.type) ? { size : this.mods.type} : {};
+        	mods = (this.mods && this.mods.type)?
+        	    { size : this.mods.type } : {};
 
         return [
             {
@@ -12,19 +13,13 @@ block topic {
                     lib : content.lib,
                     name : content.name,
                     icon : content.icon
-                }    
+                }
             },
             {
                 elem : 'data',
                 content : [
-                    {
-                        elem : 'name',
-                        content : content
-                    },
-                    {
-                        elem : 'description',
-                        content : content.description
-                    }
+                    { elem : 'name', content : content },
+                    { elem : 'description', content : content.description }
                 ]
             }
         ];

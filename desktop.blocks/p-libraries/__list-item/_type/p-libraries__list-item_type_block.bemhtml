@@ -1,9 +1,9 @@
 block p-libraries, elem list-item, elemMod type block {
-	
+
     tag: 'a'
 
     attrs: { href : this.ctx.url }
-    
+
     mix : { block: 'island' }
 
 	content: {
@@ -11,4 +11,4 @@ block p-libraries, elem list-item, elemMod type block {
         mods : { type : 'block'},
         content : this.ctx
     }
-}	
+}

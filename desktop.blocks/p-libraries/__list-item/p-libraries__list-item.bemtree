@@ -1,43 +1,42 @@
 block p-libraries, elem list-item {
 
         default: {
-
             this._libUrl = apply('url');
 
             return applyCtx({
                 elem : this.elem,
                 name : this.ctx.name,
-                url : this._libUrl,                
-                repository: this.ctx.repository,
-                icon: this.ctx.icon,
-                version: this.ctx.version,
-                bugs: this.ctx.bugs,
-                description: this.ctx.description,
-                readme: this.ctx.readme,
-                blocks: apply('blocks', this.ctx = {
+                url : this._libUrl,
+                repository : this.ctx.repository,
+                icon : this.ctx.icon,
+                version : this.ctx.version,
+                bugs : this.ctx.bugs,
+                description : this.ctx.description,
+                readme : this.ctx.readme,
+                blocks : apply('blocks', this.ctx = {
                     lib : this.ctx.name,
                     blocks : this.ctx.blocks
                 })
             });
         }
-       
+
         url: {
             return '/libs/' + this.ctx.name;
         }
 
         blockUrl: {
             return this._libUrl + '/blocks/' + this._block;
-        } 
+        }
 
         blocks {
             this.ctx && this.ctx.blocks && this._.isArray(this.ctx.blocks): {
                 var buf = [];
                 this.ctx.blocks.forEach(function(item) {
-                    buf.push(apply('block', this.ctx = 
-                        {   elem : 'list-item', 
+                    buf.push(apply('block', this.ctx =
+                        {   elem : 'list-item',
                             content : {
                                 block : item,
-                                lib : this.ctx.lib 
+                                lib : this.ctx.lib
                             }
                         }
                     ))
@@ -52,10 +51,10 @@ block p-libraries, elem list-item {
             return {
                 elem : this.ctx.elem,
                 name : block.name,
-                description: block.title,
-                icon:  block.icon,
-                url: apply('blockUrl', this._block = block.name),
-                lib: this.ctx.content.lib
+                description : block.title,
+                icon :  block.icon,
+                url : apply('blockUrl', this._block = block.name),
+                lib : this.ctx.content.lib
             }
         }
 
