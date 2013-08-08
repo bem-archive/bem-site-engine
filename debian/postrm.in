@@ -1,3 +1,0 @@
-#!/bin/bash
-
-ycssjs-freeze-keeper --purge '/var/lib/yandex/legoa/www/*/freeze/' /var/lib/yandex/legoa/www/_/

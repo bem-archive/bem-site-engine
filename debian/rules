@@ -1,72 +1,52 @@
 #!/usr/bin/make -f
 
-NPM=npm
-NPM_BIN=$(shell $(NPM) bin)
+YENV ?= production
+NPM ?= npm --registry=http://npm.yandex-team.ru
+BEM := $(shell $(NPM) bin)/bem
 
-WWWDIR=usr/lib/yandex/
-PRJDIR=legoa/
+TMP_DESTDIR := $(CURDIR)/debian/tmp
+WWW_DESTDIR := debian/yandex-legoa-www/usr/local/www5/legoa
+STATIC_DESTDIR := debian/yandex-legoa-www/usr/local/www5/legoa-static
 
-YENV?=production
+%:
+	dh $@ --with=environment --no-restart
 
-include /usr/share/cdbs/1/class/verstka-with-static.mk
+override_dh_auto_test override_dh_usrlocal:
 
-STATIC_PACKAGE_DESTDIR=debian/$(STATIC_PACKAGE)/var/lib/yandex/$(PRJDIR)www/$(STATIC_PACKAGE_POSTFIX)/
-
-make:: debian/build-timestamp
-
-debian/build-timestamp::
+override_dh_auto_configure:
 	ln -sfn $(YENV) configs/current
 	ln -sfn configs/current/borschik .borschik
-	$(NPM) install --registry=http://npm.yandex-team.ru
-	YENV=$(YENV) $(NPM_BIN)/bem make libs
-	YENV=$(YENV) $(NPM_BIN)/bem make desktop.bundles
-	touch $(@)
 
-install/$(DEB_SOURCE_PACKAGE):: make
-	# копируем только то, что нужно
-	cp -r \
-		configs \
-		desktop.bundles \
-		node_modules \
-		$(DEB_PRJWWW_DESTDIR)
+override_dh_auto_build:
+	$(NPM) install
+	YENV=$(YENV) $(BEM) make libs
+	YENV=$(YENV) $(BEM) make desktop.bundles
 
-	# Удаляем dev-зависимости npm
-	rm -r $(DEB_PRJWWW_DESTDIR)node_modules/{$(shell node -pe "Object.keys(require('./package.json').devDependencies).join(',')")}
+override_dh_auto_install:
+	mkdir -p $(TMP_DESTDIR)
+	$(NPM) install --global --production --prefix=$(TMP_DESTDIR)
+	cp -r $(TMP_DESTDIR)/lib/node_modules/legoa-www/node_modules $(WWW_DESTDIR)
 
-	# Удаляем ненужное
-	find $(DEB_PRJWWW_DESTDIR)desktop.bundles \
-		-type f \
-		-not \( -path "*.i18n/*" -o -name "*.node.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
-		-delete
-
-	# Чистим VCS-остатки (на всякий случай)
-	dh_clearvcs -p$(DEB_SOURCE_PACKAGE)
-
-	# Проставляем версии
-	dh_versions $(DEB_PRJWWW_DESTDIR){configs/*/*,desktop.bundles/*/*}
-
-	dh_environment -p$(DEB_SOURCE_PACKAGE) --fail-missing
-
-install/$(STATIC_PACKAGE):: make
-	# NOTE: костыль из-за того что в пакете возможно нет картинок
-	mkdir -p freeze $(STATIC_PACKAGE_DESTDIR)libs
-
-	cp -r \
-		desktop.bundles \
+override_dh_auto_clean:
+	rm -rf node_modules \
+		libs \
 		freeze \
-		$(STATIC_PACKAGE_DESTDIR)
+		.borschik \
+		$(TMP_DESTDIR)
+	git checkout -- configs/current node_modules
 
-	find libs/* \
-		-maxdepth 0 -type d \
-		-not \( -name "romochka" -o -name "bem-gen-doc" -o -name "bem-pr" \) | \
-			xargs -I {} cp -r "{}" $(STATIC_PACKAGE_DESTDIR)libs
-
-	mkdir -p $(STATIC_PACKAGE_DESTDIR)../_/
-
-binary-strip/$(STATIC_PACKAGE)::
-	find $(STATIC_PACKAGE_DESTDIR) -depth -type d \( -name "node_modules" -o -name "*.examples*" \) | xargs rm -rf
+override_dh_install:
+	dh_install
+	dh_clearvcs
+	dh_strip
 	
-	find $(STATIC_PACKAGE_DESTDIR) \
+	# Удаляем статику, которая есть на yandex.st
+	find $(STATIC_DESTDIR)/libs/ \
+			-maxdepth 1 \
+			-type d \( -name "romochka" -o -name "bem-gen-doc" -o -name "bem-pr" \) \
+		| xargs rm -rf
+	
+	find $(STATIC_DESTDIR) \
 		-not \( -name "*.js" -o -name "*.deps.js" \
 			-o -name "*.css" \
 			-o -name "*.gif" -o -name "*.png" -o -name "*.jp*g" \
@@ -74,17 +54,14 @@ binary-strip/$(STATIC_PACKAGE)::
 			-o -name "*.eot" -o -name "*.ttf" -o -name "*.otf" -o -name "*.woff" \) \
 		-a -not -type d \
 		-delete
-
-	find $(STATIC_PACKAGE_DESTDIR) \
+	
+	find $(STATIC_DESTDIR) \
 		-type f \
-		\( -name "*.node.js" -o -name "*.priv.js" -o -name "*.bemtree.xjst.js" -o -name "*.bemhtml.js" \) \
+		\( -name "*.node.js" -o -name "*.priv.js" -o -name "*.bemtree.js" -o -name "*.bemhtml.js" \) \
 		-delete
-
-clean::
-	rm -f .borschik
-	rm -f configs/current
-	rm -rf libs
-	rm -rf freeze
-	ln -sfn development configs/current
-	rm -f debian/build-timestamp
+	
+	find $(WWW_DESTDIR)/desktop.bundles/ \
+		-not -type d \
+		-a -not \( -path "*.i18n/*" -o -name "*.node.js" -o -name "*.bemtree.js" -o -name "*.bemhtml.js" \) \
+		-delete
 
