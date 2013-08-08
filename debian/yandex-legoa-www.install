@@ -1,2 +1,9 @@
-humans.txt /var/lib/yandex/legoa
-robots.txt /var/lib/yandex/legoa
+configs usr/local/www5/legoa
+desktop.bundles usr/local/www5/legoa
+lib/node_modules/legoa-www/node_modules usr/local/www5/legoa
+node_modules/legoa-conf usr/local/www5/legoa/node_modules
+freeze/* usr/local/www5/legoa-static/_
+desktop.bundles usr/local/www5/legoa-static
+humans.txt usr/local/www5/legoa-static
+robots.txt usr/local/www5/legoa-static
+
