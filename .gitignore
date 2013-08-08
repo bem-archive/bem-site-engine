@@ -5,7 +5,8 @@
 
 .bem/cache
 .bem/snapshots
-
+.gitignore
+freeze
 node_modules
 libs
 

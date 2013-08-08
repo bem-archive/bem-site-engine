@@ -4,6 +4,8 @@ block breadcrumbs {
 
     tag: 'ul'
 
+    js : true
+
     elem item {
 
         tag: 'li'

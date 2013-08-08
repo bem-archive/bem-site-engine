@@ -1,0 +1,4 @@
+etc/logrotate.d
+var/log/yandex/legoa
+var/run/yandex/legoa
+

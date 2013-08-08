@@ -1,0 +1,16 @@
+block p-index {
+
+    content: [
+        {
+            block : 'headline',
+            content : BEM.I18N('p-index', 'title') // Библиотеки и компоненты
+        },
+        {
+            elem : 'item',
+            name : 'islands',
+            url  : '/libs',
+            repo : 'http://github.yandex-team.ru/lego'
+        }
+    ]
+
+}

@@ -1,0 +1,28 @@
+.p-index
+{
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.p-index__item
+{
+    padding: 16px 0;
+}
+
+.p-index__title
+{
+    font-size: 16px;
+    line-height: 18px;
+
+    margin: 0 0 4px;
+}
+
+.p-index__item-repo .link_external_yes
+{
+    color: #070;
+}
+
+.p-index .headline_level_1
+{
+    margin-top: 0;
+}

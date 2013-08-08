@@ -14,6 +14,7 @@
   "trailing"  : true,
   "maxlen"    : 120,
 
+  "boss"      : true,
   "eqnull"    : true,
   "expr"      : true,
   "lastsemic" : true,

@@ -6,7 +6,7 @@ module.exports = {
     debug : false,
     app : {
         environment : 'production',
-        socket : '/var/run/yandex/legoa/nodejs.sock',
+        socket : '/tmp/legoa-nodejs.sock',
         workers : nworkers < 1? 1 : nworkers
     },
     logger : {

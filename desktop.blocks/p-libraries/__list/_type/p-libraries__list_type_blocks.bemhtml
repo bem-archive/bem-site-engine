@@ -1,0 +1,21 @@
+block p-libraries, elem list, elemMod type blocks {
+
+	this._.isArray(this.ctx.content), content: {
+        var content = this.ctx.content,
+            len = content.length,
+            elem = this.elem,
+            buf = [],
+            item;    
+            
+        for(var i = 0; i < len; i++) {
+           
+            item = content[i];
+            item.block = this.block;
+            item.elemMods = { type : 'block' };
+
+            buf.push(item);
+        }
+
+        return applyCtx(buf);
+    }
+}	

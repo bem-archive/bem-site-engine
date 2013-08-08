@@ -1,10 +1,10 @@
 /* global MAKE */
 
-require('./nodes');
-
 var PATH = require('path'),
     LOGGER = require('bem/lib/logger'),
-    environ = require('./environ');
+    environ = require('bem-environ')(__dirname);
+
+environ.extendMake(MAKE);
 
 try {
     require(environ.getLibPath('bem-core', '.bem/nodes/bundle.js'));
@@ -16,15 +16,11 @@ try {
 MAKE.decl('Arch', {
 
     blocksLevelsRegexp : /^.+?\.blocks$/,
-
     bundlesLevelsRegexp : /^.+?\.bundles$/,
 
     libraries : [
-        'bem-pr @ 0.0.5',
-        'bem-gen-doc @ 0.4.0',
-        // FIXME: LEGO-9684
         'bem-yana',
-        'bem-core @ origin/v1',
+        'bem-core @ 84cd0f2',
         // FIXME: romochka#feature/bem-core
         'romochka @ feature/bem-core',
         'bem-controls @ dev',

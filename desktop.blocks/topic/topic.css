@@ -1,6 +1,24 @@
 .topic
 {
-    padding: 0 0 25px;
+    text-decoration: none;
+}
+
+.topic,
+.topic:hover,
+.topic:link:hover,
+.topic:link:visited:hover
+{
+    color: #000000; 
+}
+
+.topic__icon, .topic__data
+{
+    display: inline-block;
+}
+
+.topic__data 
+{   
+    vertical-align: top;
 }
 
 .topic__name
@@ -11,6 +29,3 @@
     margin-bottom: 4px;
 }
 
-.topic__title
-{
-}

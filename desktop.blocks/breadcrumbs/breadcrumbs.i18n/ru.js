@@ -1,5 +1,6 @@
 module.exports = {
     "breadcrumbs": {
-        "libraries": "Библиотеки"
+    	"index": "Главная",
+    	"libraries": "Библиотеки"
     }
 };

@@ -1,6 +1,6 @@
 modules.define('i-bem__dom', function(provide, DOM) {
 
-provide(DOM.decl('bk-example', {
+DOM.decl('bk-example', {
 
     onSetMod : {
 
@@ -33,6 +33,8 @@ provide(DOM.decl('bk-example', {
         }
     }
 
-}));
+});
+
+provide(DOM);
 
 });

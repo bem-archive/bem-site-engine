@@ -1,5 +1,3 @@
-etc/logrotate.d
-usr/lib/yandex/legoa
-var/lib/yandex/legoa
+usr/local/www5/legoa
 var/log/yandex/legoa
 var/run/yandex/legoa

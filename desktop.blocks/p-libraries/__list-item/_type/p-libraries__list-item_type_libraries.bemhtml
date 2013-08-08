@@ -1,0 +1,15 @@
+block p-libraries, elem list-item, elemMod type libraries {
+
+    tag: 'a'
+
+    attrs: { href : '#' + this.ctx.name }
+
+    mix : { block : 'island' }
+
+    content: { 
+        block : 'topic',
+        mods : { type : 'library' },
+        content : this.ctx
+    }
+    
+}

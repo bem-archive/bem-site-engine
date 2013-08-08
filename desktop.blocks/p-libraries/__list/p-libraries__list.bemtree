@@ -1,0 +1,30 @@
+block p-libraries, elem list {
+
+    default {
+
+        this.ctx.name: {
+            return apply(
+                this._mode = '',
+                this.ctx.elem = 'list-item'
+            );
+        }
+
+        this._.isArray(this.ctx.content): {
+            var i = 0,
+                buf = [],
+                item;
+
+            while(item = this.ctx.content[i]) {
+                buf[i++] = apply(this.ctx = item);
+            }
+
+            buf.sort(function(a, b) {
+                return a.name.localeCompare(b.name, { caseFirst : 'upper' });
+            });
+
+            return buf;
+        }
+
+    }
+
+}

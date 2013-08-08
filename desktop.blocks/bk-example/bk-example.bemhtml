@@ -32,7 +32,6 @@ block bk-example {
             Glob['datasrc-host'],
             '_' + Glob.lib,
             'examples',
-            Glob.block,
             this.ctx
         ].join('/');
     }

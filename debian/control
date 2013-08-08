@@ -2,20 +2,18 @@ Source: yandex-legoa-www
 Section: yandex
 Priority: optional
 Build-Depends:
- yandex-verstka-cdbs (>= 1.0.9),
- yandex-debhelper-all (>= 1.3.5),
  conductor-utils,
+ debhelper (>= 7),
+ yandex-debhelper-all (>= 1.3.5),
  git-core
 Maintainer: Vladimir Varankin <varankinv@yandex-team.ru>
-Vsc-Git: git://github.yandex-team.ru/lego/legoa-www.git
-Vsc-Browse: http://github.yandex-team.ru/lego/legoa-www
+Vcs-Git: git://github.yandex-team.ru/lego/legoa-www.git
+Vcs-Browser: http://github.yandex-team.ru/lego/legoa-www
 
 Package: yandex-legoa-www
 Section: yandex
 Priority: optional
 Depends:
- ${shlibs:Depends},
- ${misc:Depends},
  nginx,
  config-tools-nginx-vhost (>= 1-4-200),
  yandex-environment,
@@ -24,18 +22,4 @@ Depends:
  yandex-legoa-tools
 Architecture: all
 Description: Front-end for legoa
-
-Package: yandex-legoa-www-static-1-4-2
-Section: yandex
-Priority: optional
-Pre-Depends: yandex-ycssjs-freeze-keeper
-Architecture: all
-Description: Static for WWW for legoa
-
-Package: yandex-legoa-www-static
-Section: yandex
-Priority: optional
-Depends: yandex-legoa-www-static-1-4-2 (>= 1.4.2)
-Architecture: all
-Description: Depends on latest yandex-legoa-www-static-*
 

@@ -56,16 +56,26 @@ function processResponse(data, typ) {
 provide(inherit({
 
     __constructor : function(params) {
-        var _params = this.params = objects.extend(this.getDefaultParams(), params),
+        this.params = objects.extend({}, this.getDefaultParams(), params);
+
+        this.params.method = this.params.method.toUpperCase();
+
+        var headers = this.params.headers;
+        this.params.headers = Object.keys(headers).reduce(function(hdrs, key) {
+            hdrs[key.toLowerCase()] = headers[key];
+            return hdrs;
+        }, {});
+
+        var _params = this.params,
             url = _params.url,
             parsedUrl = typeof url === 'string'?
                     URL.parse(url, true, true) : url;
 
         this._hasBody = _params.method === 'POST' || _params.method === 'PUT';
         this._dataType = _params.dataType;
-        this._redirCounter = _params.maxRedirects;
 
         this._url = parsedUrl;
+        this._redirCounter = 0;
     },
 
     run : function() {
@@ -73,21 +83,23 @@ provide(inherit({
             hasBody = this._hasBody,
             body = hasBody? QS.stringify(params.data) : '';
 
+        this._redirCounter = params.maxRedirects;
+
         return this._resolveHostname()
             .then(function(ip) {
                 var url = this._url,
                     query = QS.stringify(
-                        hasBody? objects.extend(url.query, params.data) : url.query),
+                        hasBody? url.query : objects.extend(url.query, params.data)),
                     hostname = url.hostname,
                     headers = params.headers || {};
 
                 if(ip) {
-                    headers['Host'] = hostname;
+                    headers['host'] = hostname;
                     hostname = ip;
                 }
 
                 if(params.allowGzip) {
-                    var enc = headers['Accept-Encoding'];
+                    var enc = headers['accept-encoding'];
 
                     if(!enc) {
                         enc = 'gzip, *';
@@ -95,17 +107,17 @@ provide(inherit({
                         enc = 'gzip, ' + enc;
                     }
 
-                    headers['Accept-Encoding'] = enc;
+                    headers['accept-encoding'] = enc;
                 }
 
                 // See https://github.com/nodejitsu/node-http-proxy/pull/338
                 if(hasBody || params.method === 'DELETE') {
-                    var len = headers['Content-Length'];
+                    var len = headers['content-length'];
                     if(!len) {
                         len = Buffer.byteLength(body) || 0;
                     }
 
-                    headers['Content-Length'] = len;
+                    headers['content-length'] = len;
                 }
 
                 var options = {
@@ -113,21 +125,25 @@ provide(inherit({
                     auth     : params.auth,
                     headers  : objects.extend(
                             headers,
-                            hasBody? { 'Content-Type' : 'application/x-www-form-urlencoded' } : {}),
+                            hasBody? { 'content-type' : 'application/x-www-form-urlencoded' } : {}),
                     protocol : url.protocol,
                     hostname : hostname,
                     port     : url.port,
                     path     : url.pathname + (query? '?' + query : '')
                 };
 
-                logger.debug('Requesting %s%s', URL.format(options), options.path);
+                logger.debug('Requesting %s%s (%j)', URL.format(options), options.path, options);
 
-                return this._doHttp(options, params.dataType, body);
+                return this._doHttp(options, body);
             }, this);
     },
 
     abort : function() {
-        this._curReq && this._curReq.abort();
+        this._aborted = true;
+
+        if(this._curReq) {
+            this._curReq.abort();
+        }
     },
 
     _resolveHostname : function() {
@@ -174,6 +190,14 @@ provide(inherit({
                 buf += chunk.toString(charsetEncoding);
             })
             .once('end', function() {
+                if(_t._aborted) {
+                    // TODO: testme
+                    logger.debug('Request for %s was aborted before it\'s end',
+                        _t._url.href);
+                    promise.reject(new Error('Aborted'));
+                    return;
+                }
+
                 try {
                     var dtype = _t._dataType || getDataTypeFromHeaders(headers);
 
@@ -195,7 +219,7 @@ provide(inherit({
             });
     },
 
-    _doHttp : function(params, dataType, body) {
+    _doHttp : function(params, body) {
         var _t = this,
             promise = Vow.promise(),
             curReq = this._curReq = (params.protocol === 'https:'? HTTPS : HTTP).request(
@@ -205,22 +229,29 @@ provide(inherit({
 
                     // handling redirects
                     if(statusCode === 301 || statusCode === 302) {
+                        // FIXME: do we really need this?
+                        _t._curReq = null;
+
                         if(!--_t._redirCounter) {
                             return promise.reject(new HttpError(500, 'too many redirects'));
                         }
 
                         var location = URL.resolve(_t._url.href, res.headers['location'] || '');
-                        params = URL.parse(location, true, true);
 
                         logger.debug('Redirecting from %s to %s', _t._url.href, location);
 
-                        // TODO: testme
-                        return _t._doHttp(params, dataType);
+                        promise.sync(
+                            _t._doHttp(objects.extend(params, URL.parse(location, true, true)), body));
+
+                        return;
                     }
                     // handling HTTP-errors
                     else if(statusCode >= 400) {
                         logger.error('Request for %s responded with error code %d', _t._url.href, statusCode);
-                        return promise.reject(new HttpError(res.statusCode));
+
+                        promise.reject(new HttpError(res.statusCode));
+
+                        return;
                     }
 
                     // common response handler
@@ -237,6 +268,11 @@ provide(inherit({
 
         curReq
             .once('error', function(e) {
+                if(_t._aborted) {
+                    logger.debug('Request for %s was aborted before', _t._url.href);
+                    return;
+                }
+
                 logger.error('Request for %s was failed', _t._url.href, e);
                 promise.reject(e);
             })
@@ -255,9 +291,10 @@ provide(inherit({
         return {
             method       : 'GET',
             encoding     : 'utf8',
+            headers      : {},
             maxRedirects : 5,
             timeout      : null,
-            'allowGzip'    : true
+            allowGzip    : true
         };
     }
 

@@ -15,8 +15,9 @@ var datasrc = config.hosts.datasrc;
 provide({
 
     _buildPath : function(params) {
-        var lib = params.lib,
-            path = [datasrc.root, '_' + lib, 'blocks'];
+        var path = params.lib ? 
+            [datasrc.root, '_' + params.lib, 'blocks'] :
+            [datasrc.root, '_libs'];
 
         params.block && path.push(params.block);
 
