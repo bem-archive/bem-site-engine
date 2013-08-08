@@ -12,7 +12,7 @@ LOGS_DIR=/var/log/yandex/legoa
 #NODE_PORT=1337
 
 # Путь до приложения
-APPROOT=/usr/lib/yandex/legoa
+APPROOT=/usr/local/www5/legoa
 APPFILE=desktop.bundles/common/_common.node.js
 
 APP_ARGS=--none
