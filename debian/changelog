@@ -1,3 +1,9 @@
+yandex-legoa-www (1.5.0) experimental; urgency=low
+
+  * LEGO-53 — legoa: Выложить версию v1.1 в тестинг
+
+ -- Vladimir Varankin <varankinv@yandex-team.ru>  Fri, 09 Aug 2013 00:42:17 +0400
+
 yandex-legoa-www (1.4.2) experimental; urgency=low
 
   * Исправил сборку пакета в соответствии с bem-core#v1
