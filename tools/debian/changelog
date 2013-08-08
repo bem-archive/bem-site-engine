@@ -1,3 +1,9 @@
+yandex-legoa-tools (1.2) stable; urgency=low
+
+  * LEGO-53 — legoa: Выложить версию v1.1 в тестинг
+
+ -- Vladimir Varankin <varankinv@yandex-team.ru>  Fri, 09 Aug 2013 00:40:23 +0400
+
 yandex-legoa-tools (1.1) stable; urgency=low
 
   * Исправил опечатку в check-скриптах
