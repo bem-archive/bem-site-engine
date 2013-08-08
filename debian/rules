@@ -25,7 +25,6 @@ override_dh_auto_build:
 override_dh_auto_install:
 	mkdir -p $(TMP_DESTDIR)
 	$(NPM) install --global --production --prefix=$(TMP_DESTDIR)
-	cp -r $(TMP_DESTDIR)/lib/node_modules/legoa-www/node_modules $(WWW_DESTDIR)
 
 override_dh_auto_clean:
 	rm -rf node_modules \
