@@ -17,9 +17,7 @@ DOM.decl('p-libraries', {
                     .bindTo(this.elem('list-item', 'type', 'blocks'), 'mouseenter', function(e) {
                         this._onBlocksItemMouseEnter(e);
                     })
-                    .bindToWin('resize', function(e) {
-                        this._onWindowResize(e);
-                    })
+                    .bindToWin('resize', this._onWindowResize.bind(this))
                     ._bindToScroll()
                     ._onScroll()
                     ._selectLibraryMenuItem();        

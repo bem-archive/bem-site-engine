@@ -7,7 +7,7 @@ DOM.decl({ block : 'topic', modName : 'type', modVal : 'blocks' }, {
         js : {
 
             inited : function() {
-                this._bindReadmeSwitcher();                                
+                //this._bindReadmeSwitcher();
             },
 
             '' : function() {
@@ -17,6 +17,7 @@ DOM.decl({ block : 'topic', modName : 'type', modVal : 'blocks' }, {
 
     },
 
+    /*
     _bindReadmeSwitcher : function() {
         
         var switcher = this.findBlockInside('readme-switcher', 'check-button');
@@ -25,7 +26,8 @@ DOM.decl({ block : 'topic', modName : 'type', modVal : 'blocks' }, {
             this.toggleMod(this.elem('readme'), 'visible', 'yes', '', switcher.isChecked());
         }, this);
         
-    } 
+    }
+    */
 });
 
 provide(DOM);
