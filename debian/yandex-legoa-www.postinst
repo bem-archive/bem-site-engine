@@ -9,7 +9,7 @@ if [ -e /etc/yandex/environment.type ]; then
     yandex_environment=$(cat /etc/yandex/environment.type)
 fi
 
-if [ -e "/etc/vertis-nodejs/conf-available/legoa" ]; then
+if [ -f "/etc/vertis-nodejs/conf-available/legoa" ]; then
     ln -sfn /etc/vertis-nodejs/conf-available/legoa /etc/vertis-nodejs/conf-enabled/legoa
 fi
 
