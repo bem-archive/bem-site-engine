@@ -1,0 +1,24 @@
+# Путь до бинарника с Node.js
+DAEMON=/usr/local/nodejs-0.10/bin/node
+
+# Пользователь от имени которого запускаем
+# приложение
+#NODE_USER=www-data
+# Порт
+#NODE_PORT=1337
+
+# Директория с PID'ами процесса
+PIDS_DIR=/var/run/yandex/legoa
+
+# Директория куда пишем логи
+LOGS_DIR=/var/log/yandex/legoa
+
+# Путь до корня приложения
+APP_ROOT=/usr/local/www5/legoa
+
+# Исполняемый файл приложения
+APPFILE=desktop.bundles/common/_common.node.js
+
+# Опции старта приложения для start-stop-daemon'а
+START_ARGS="--make-pidfile --chdir $APP_ROOT"
+

@@ -1,3 +1,4 @@
+etc/vertis-nodejs/conf-available etc/vertis-nodejs
 configs usr/local/www5/legoa
 desktop.bundles usr/local/www5/legoa
 lib/node_modules/legoa-www/node_modules usr/local/www5/legoa
