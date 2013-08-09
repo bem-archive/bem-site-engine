@@ -18,8 +18,8 @@ Depends:
  config-tools-nginx-vhost (>= 1-4-200),
  yandex-environment,
  yandex-vertis-nodejs0.10,
- yandex-legoa-data (>= 1.2),
- yandex-legoa-tools (>= 1.2)
+ yandex-vertis-nodejs-init (>= 2.1.0),
+ yandex-legoa-data (>= 1.2)
 Architecture: all
 Description: Front-end for legoa
 
