@@ -1,3 +1,12 @@
+yandex-legoa-www (1.6.0) experimental; urgency=low
+
+  * Переехать на vertis-nodejs-init (>= 2.1.0)
+  * Все части yandex-legoa-tools перенес 
+    в yandex-legoa-www + vertis-nodejs-init (>=2.1.0)
+  * Исправил postinst/postrm
+
+ -- Vladimir Varankin <varankinv@yandex-team.ru>  Fri, 09 Aug 2013 17:01:17 +0400
+
 yandex-legoa-www (1.5.1) experimental; urgency=low
 
   * LEGO-53 — legoa: Выложить версию v1.1 в тестинг
