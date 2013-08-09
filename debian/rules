@@ -49,8 +49,9 @@ override_dh_install:
 		| xargs rm -rf
 	
 	find $(STATIC_DESTDIR) \
-		-not \( -name "*.js" -o -name "*.deps.js" \
+		-not \( -name "robots.txt" -o -name "humans.txt" \
 			-o -name "*.css" \
+			-o -name "*.js" -o -name "*.deps.js" \
 			-o -name "*.gif" -o -name "*.png" -o -name "*.jp*g" \
 			-o -name "*.swf" -o -name "*.ico" -o -name "*.svg" \
 			-o -name "*.eot" -o -name "*.ttf" -o -name "*.otf" -o -name "*.woff" \) \
