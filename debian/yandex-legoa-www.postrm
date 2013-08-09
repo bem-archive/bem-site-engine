@@ -1,0 +1,11 @@
+#!/bin/sh
+# postrm script for yandex-legoa-www
+#
+# see: dh_installdeb(1)
+
+if [ -f "/etc/vertis-nodejs/conf-enabled/legoa" ]; then
+    rm /etc/vertis-nodejs/conf-enabled/legoa
+fi
+
+#DEBHELPER#
+

@@ -4,9 +4,10 @@ YENV ?= production
 NPM ?= npm --registry=http://npm.yandex-team.ru
 BEM := $(shell $(NPM) bin)/bem
 
-TMP_DESTDIR := $(CURDIR)/debian/tmp
 WWW_DESTDIR := debian/yandex-legoa-www/usr/local/www5/legoa
 STATIC_DESTDIR := debian/yandex-legoa-www/usr/local/www5/legoa-static
+TMP_PREFIX := $(CURDIR)/debian/tmp
+NODEJS_INIT_PREFIX := etc/vertis-nodejs/conf-available
 
 %:
 	dh $@ --with=environment --no-restart
@@ -23,15 +24,17 @@ override_dh_auto_build:
 	YENV=$(YENV) $(BEM) make desktop.bundles
 
 override_dh_auto_install:
-	mkdir -p $(TMP_DESTDIR)
-	$(NPM) install --global --production --prefix=$(TMP_DESTDIR)
+	mkdir -p $(TMP_PREFIX)/$(NODEJS_INIT_PREFIX)
+	# `dh_vertis-nodejs-init` для бедных
+	cp debian/yandex-legoa-www.legoa.vertis-nodejs $(TMP_PREFIX)/$(NODEJS_INIT_PREFIX)/legoa
+	$(NPM) install --global --production --prefix=$(TMP_PREFIX)
 
 override_dh_auto_clean:
 	rm -rf node_modules \
 		libs \
 		freeze \
 		.borschik \
-		$(TMP_DESTDIR)
+		$(TMP_PREFIX)
 	git checkout -- configs/current node_modules
 
 override_dh_install:
