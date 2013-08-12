@@ -120,15 +120,17 @@ provide(inherit({
 
         // serialize query
         if(!hasBody) {
-            if(data != null && typeOfData === 'object') {
+            if(typeOfData === 'objects') {
                 query = QS.stringify(objects.extend(query, data));
             }
-            else if(typeOfData === 'string') {
+            else {
                 query = QS.stringify(query);
-                if(query) {
-                    query += '&';
+                if(typeOfData === 'string') {
+                    if(query) {
+                        query += '&';
+                    }
+                    query += encodeURIComponent(data);
                 }
-                query += encodeURIComponent(data);
             }
         }
         else {
@@ -282,7 +284,6 @@ provide(inherit({
         }
 
         req.on('response', function(res) {
-            console.log('Response');
             var statusCode = res.statusCode;
 
             // handling HTTP-errors
