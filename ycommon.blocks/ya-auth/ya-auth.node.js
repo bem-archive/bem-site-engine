@@ -3,8 +3,8 @@
 
 modules.define(
     'ya-auth',
-    ['objects', 'yana-config', 'yana-logger', 'http-provider'],
-    function(provide, objects, config, logger, httpProvider) {
+    ['objects', 'yana-config', 'yana-logger', 'http-request'],
+    function(provide, objects, config, logger, httpRequest) {
 
 var QS = require('querystring'),
     UTIL = require('util'),
@@ -116,7 +116,7 @@ provide({
 
         logger.debug('yaAuth: Running "%s" \\w params: %j', params.method, opts);
 
-        return httpProvider.create(opts).run()
+        return httpRequest.create(opts).run()
             .then(function(res) {
                 return res.data;
             });

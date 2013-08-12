@@ -1,7 +1,7 @@
 modules.define(
     'yana-view',
-    ['yana-router', 'http-provider', 'vow'],
-    function(provide, router, httpProvider, Vow, View) {
+    ['yana-router', 'http-request', 'vow'],
+    function(provide, router, httpRequest, Vow, View) {
 
 router.addRoute({
     name : 'page-redirect-single',
@@ -47,7 +47,7 @@ View.decl('test-30x', {
             opts.timeout = 500;
         }
 
-        return httpProvider.create(opts)
+        return httpRequest.create(opts)
             .run()
             .always(function() {
                 var ret = [].slice.call(arguments, 0);
