@@ -71,7 +71,7 @@ Proof it!
 (по умолчанию 3014):
 
 ```
-% ln -snf configs/local current
+% ln -snf local configs/current
 ```
 
 Так же необходимо позаботится о раздаче статики (JS/CSS). Например, для этих целей, можно использовать bem-server.
@@ -160,13 +160,15 @@ TODO: подробнее описать, как собрать `datasrc` с да
 % bem make _islands-icons/blocks
 ```
 
-* только примеры библиотеки
+* (TODO) только примеры библиотеки
 
 ```
 % bem make _islands-icons/examples
 ```
 
 ## Эксплуатация ##
+
+[wiki/lego/site/maintenance](http://wiki.yandex-team.ru/lego/site/maintenance)
 
 ### Контакты
 
@@ -187,10 +189,10 @@ TODO: подробнее описать, как собрать `datasrc` с да
 Проект состоит из набора пакетов в репозитории `verstka`:
 
 * [yandex-legoa-www](http://c.yandex-team.ru/packages/yandex-legoa-www/) — код приложения, конфиги, верстка
-* [yandex-legoa-www-static](http://c.yandex-team.ru/packages/yandex-legoa-www-static/) — статика
-* [yandex-legoa-tools](http://c.yandex-team.ru/packages/yandex-legoa-tools) — всякие утилиты (конфиги
-  для monrun, graphite-client, и пр.)
-* [yandex-legoa-data](http://c.yandex-team.ru/packages/yandex-legoa-data/) — данные.
+* [yandex-legoa-data](http://c.yandex-team.ru/packages/yandex-legoa-data/) — данные
+* <del>[yandex-legoa-www-static](http://c.yandex-team.ru/packages/yandex-legoa-www-static/) — статика</del>
+* <del>[yandex-legoa-tools](http://c.yandex-team.ru/packages/yandex-legoa-tools) — всякие утилиты (конфиги
+  для monrun, graphite-client, и пр.)</del>
 
 ### Тестинг
 
@@ -199,63 +201,11 @@ TODO: подробнее описать, как собрать `datasrc` с да
 
 ## Бюрократия ##
 
-### Проект в Планере 
+### Проект в Планере
 
 * http://planner.yandex-team.ru/project/10690
 
 ## Заметки ###
 
-### Фаловая структура
-
-    # Хранилище
-
-    datasrc/
-      .bem/
-        cache/
-          # каждую библиотеку (и ее депенды) сливаем в кеш плоским списком (1)
-          025b3385f5538eca3f2fffed4d375aef9cc4d329/
-          345a0e972d28d19623a2f0ee1910857b806f5434/
-          3717c40df3d5afa17ca728774d2c32dbceb61030/
-          ...
-        make.js
-
-      # документацию к библиотеки (из данных кеша) собираем в директории `_{{имя-библиотеки}}` (2)
-
-      _islands-popups/
-        blocks/
-          popup.data.json
-          dropdown.json.js
-          ...
-        examples/
-          popup.examples/
-            .bem/level.js   # baseLevelPath ➝ путь/до/библиотеки/в/кэше/.bem/levels/bundles.js (FIXME: hardcode)
-            10-simple/
-              10-simple.bemjson.js
-          ...
-
-##### Примечания
-
-**1) Ключ в кеше должен быть хеш-суммой от данных библиотеки (url+treeish), чтобы депенды одной
-библиотеки не аффектили других**
-
-Внутренние депенды библиотек (`islands-controls➝bem-controls`) заменяем на `type=symlink`
-с относительным путем в кеш. Это должно сократить общее время на сборку всего. Плюс, независимо
-от того как устроенна библиотека, интроспекция по библеотеке будет продолжать работать: ссылки
-на уровни, технологии и пр.
-
-**2) В `blocks` складываем собранную по-уровням документацию каждого блока библиотеки
-в JSON-формате.**
-
-Полученный JSON загружается в рантайме и через `bemtree.xjst` + `bemhtml` генерируется страница.
-
-**3) В `examples` собираем примеры библиотеки.**
-
-Сборка примеров запускается в отдельном child-процессе, на основе make.js-файла библиотеки
-(с доопределением нужных узлов).
-
-Для запуска сборки реализуем [мини-bem-make](datasrc/lib/make.js), который умеет возвращать
-архитектуру сборки по умолчанию (`DefaultArch`) для библиотеки. Но с возможностью програмно
-влиять на конечный `Arch` из кода воркера, запускающего процесс сборки.
-
-Остальные заметки: [в WIKI](http://wiki.yandex-team.ru/lego/site/notes)
+[в wiki/lego/site/notes](http://wiki.yandex-team.ru/lego/site/notes)
 
