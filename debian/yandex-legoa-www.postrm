@@ -3,9 +3,11 @@
 #
 # see: dh_installdeb(1)
 
-if [ -f "/etc/vertis-nodejs/conf-enabled/legoa" ]; then
+if [ -f /etc/vertis-nodejs/conf-enabled/legoa ]; then
     rm /etc/vertis-nodejs/conf-enabled/legoa
 fi
 
 #DEBHELPER#
+
+exit 0
 

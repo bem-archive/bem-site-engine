@@ -33,8 +33,7 @@ override_dh_auto_clean:
 	rm -rf node_modules \
 		libs \
 		freeze \
-		.borschik \
-		$(TMP_PREFIX)
+		.borschik
 	git checkout -- configs/current node_modules
 
 override_dh_install:
@@ -65,6 +64,6 @@ override_dh_install:
 	
 	find $(WWW_DESTDIR)/desktop.bundles/ \
 		-not -type d \
-		-a -not \( -path "*.i18n/*" -o -name "*.node.js" -o -name "*.bemtree.js" -o -name "*.bemhtml.js" \) \
+		-a -not \( -path "*.i18n/*" -o -name "*.priv.js" -o -name "*.node.js" -o -name "*.bemtree.js" -o -name "*.bemhtml.js" \) \
 		-delete
 
