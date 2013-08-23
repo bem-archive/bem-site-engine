@@ -1,6 +1,6 @@
 {
   "name": "legoa-www",
-  "description": "",
+  "description": "Front-end for beta-lego.yandex-team.ru",
   "version": "0.0.0",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
     "vow-fs": "~0.1.10",
     "ym": "~0.0.1",
     "cookie": "~0.0.6",
-    "legoa-repodb": "~0.5.0",
+    "legoa-repodb": "~0.6.0",
     "log": "~1.4.0",
     "log4node": "~0.1.2",
     "json-stringify-safe": "~4.0.0",
