@@ -17,6 +17,6 @@ module.exports = {
     },
     datasrc : {
         host : '/datasrc',
-        root : PATH.join(appRoot, 'datasrc')
+        root : '/var/lib/yandex/legoa/datasrc'
     }
 };
