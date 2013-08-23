@@ -3,6 +3,8 @@
 #
 # see: dh_installdeb(1)
 
+nginx-disable-mod yandex-tools-lego
+
 if [ -f /etc/vertis-nodejs/conf-enabled/legoa ]; then
     rm /etc/vertis-nodejs/conf-enabled/legoa
 fi
