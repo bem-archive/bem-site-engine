@@ -5,7 +5,7 @@
             elem : 'error',
             mods : { type : 'not-found' }
         },
-        { block : 'page' }
+        { block : 'le-page' }
     ],
     shouldDeps : [
         { block : 'yana-logger' }
