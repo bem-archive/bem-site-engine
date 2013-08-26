@@ -21,6 +21,7 @@ MAKE.decl('Arch', {
     libraries : [
         'bem-yana',
         'bem-core @ 84cd0f2',
+        'bem-ycommon @ v2',
         // FIXME: romochka#feature/bem-core
         'romochka @ feature/bem-core',
         'bem-controls @ dev',
@@ -69,6 +70,9 @@ MAKE.decl('BundleNode', {
             // bem-yana
             'bem-yana/common.blocks',
             'bem-yana/app.blocks',
+            // bem-ycommon
+            'bem-ycommon/ycommon.blocks',
+            'bem-ycommon/common.blocks',
             // bem-controls
             'bem-controls/common.blocks',
             'bem-controls/desktop.blocks',
@@ -94,7 +98,6 @@ MAKE.decl('BundleNode', {
         ]
         .map(function(path) { return PATH.resolve(environ.LIB_ROOT, path) })
         .concat([
-            'ycommon.blocks',
             'islands.blocks',
             'common.blocks',
             'desktop.blocks'

@@ -1,21 +1,18 @@
 /* jshint node:true */
 /* global modules:false */
 
-(function() {
-
-var PATH = require('path');
-
 modules.define(
     'le-datasrc',
     ['file-provider', 'yana-config', 'yana-error_type_http'],
     function(provide, fileProvider, config, HttpError) {
 
-var datasrc = config.hosts.datasrc;
+var PATH = require('path'),
+    datasrc = config.hosts.datasrc;
 
 provide({
 
     _buildPath : function(params) {
-        var path = params.lib ? 
+        var path = params.lib?
             [datasrc.root, '_' + params.lib, 'blocks'] :
             [datasrc.root, '_libs'];
 
@@ -45,5 +42,3 @@ provide({
 });
 
 });
-
-}());

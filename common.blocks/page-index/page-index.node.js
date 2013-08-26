@@ -7,7 +7,7 @@ router.addRoute({
     name : 'index',
     rule : '/',
     data : {
-        action : 'page'
+        action : 'le-page'
     }
 });
 

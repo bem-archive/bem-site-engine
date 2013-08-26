@@ -1,7 +1,7 @@
 ({
     mustDeps : [
-        { block : 'page' },
-        { block : 'yana-view' }
+        { block : 'yana-view' },
+        { block : 'le-page' }
     ],
     shouldDeps : [
         { block : 'yana-router' }

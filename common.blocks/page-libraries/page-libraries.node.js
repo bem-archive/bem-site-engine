@@ -7,7 +7,7 @@ router.addRoute({
     name : 'libraries',
     rule : '/libs',
     data : {
-        action : 'page'
+        action : 'le-page'
     }
 });
 

@@ -7,7 +7,7 @@ router.addRoute({
     name : 'block',
     rule : '/libs/{lib}/blocks/{block}',
     data : {
-        action : 'page'
+        action : 'le-page'
     }
 });
 
