@@ -7,6 +7,7 @@ var OS = require('os'),
 module.exports = {
     debug : true,
     app : {
+        environment : 'development',
         //port : 3014,
         socket : PATH.join(OS.tmpdir(), socket),
         workers : 1
