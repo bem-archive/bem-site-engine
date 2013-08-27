@@ -15,7 +15,7 @@
     "vow-fs": "~0.1.10",
     "ym": "~0.0.1",
     "cookie": "~0.0.6",
-    "legoa-repodb": "~0.6.0",
+    "legoa-repodb": "git://github.yandex-team.ru/varankinv/legoa-repodb.git",
     "log": "~1.4.0",
     "log4node": "~0.1.2",
     "json-stringify-safe": "~4.0.0",
