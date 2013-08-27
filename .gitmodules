@@ -1,3 +1,4 @@
+
 [submodule "datasrc"]
 	path = datasrc
-	url = git://github.yandex-team.ru/lego/legoa-data
+	url = git@github.com:tormozz48/bem-info-source.git
