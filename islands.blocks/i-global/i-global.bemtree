@@ -45,6 +45,7 @@ block i-global {
                 'static-host'  : hosts.static.host
             });
 
+        /*
         return this.doAsync(function() {
                 return yaAuth.auth(req);
             })
@@ -75,6 +76,7 @@ block i-global {
                 );
             },
             this);
+        */
     }
 
 }
