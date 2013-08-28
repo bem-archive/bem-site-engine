@@ -20,7 +20,8 @@
     "log4node": "~0.1.2",
     "json-stringify-safe": "~4.0.0",
     "dom-js": "0.0.9",
-    "bem-environ": "~1.2.0"
+    "bem-environ": "~1.2.0",
+    "jspath": "~0.2.10"
   },
   "devDependencies": {
     "bem": "~0.6.6",

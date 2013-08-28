@@ -44,16 +44,17 @@ provide({
      * @param  {Object} params object
      * @return {JSON} json file content
      */
-    articleInfo : function(params) {
+    loadData : function(params) {
         var path = PATH.join.apply(null, [datasrc.root, 'data']) + '.json';
-        //logger.debug('ARTICLE_INFO ' + path);
 
-        return fileProvider.create({ path : path, dataType : 'json' })
+        this._data = this._data || fileProvider.create({ path : path, dataType : 'json' })
             .run()
             .fail(function(err) {
                 var message = 'Data for bem-info not found';
                 throw new HttpError(404, message);
             });
+
+        return this._data;
     }
 
 });

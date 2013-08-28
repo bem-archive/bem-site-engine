@@ -1,0 +1,37 @@
+block posts {
+
+    default: {
+        return applyNext(
+            this._type = this.ctx.type,
+            this._datasrc = this.data.params);
+    }
+
+    content: {
+        var params = this.data;
+        return this.doAsync(
+                leDatasrc.loadData.bind(leDatasrc, {})
+            )
+            .then(
+                function(result) {
+                    return
+                        apply('processData',
+                            this.ctx = {
+                                params : params,
+                                content : result
+                            }
+                        );
+                },
+                function(err) {
+                    return apply('error', this.ctx = err);
+                },
+                this
+            );
+    }
+
+    processData: {
+        var c = this.ctx.content,
+            selector = '.' + this.ctx.params.lang + '{.type === "article"}';
+
+        return leJspath.filter(selector, c);
+    }
+}
