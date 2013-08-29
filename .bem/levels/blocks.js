@@ -16,7 +16,7 @@ exports.getTechs = function() {
     var techs = {
         'bemdecl.js' : 'v2/bemdecl.js',
         'deps.js' : 'v2/deps.js',
-        'js' : 'js-i',
+        'js' : 'v2/js-i',
         'css' : 'v2/css',
         'ie.css'  : 'v2/ie.css',
         'ie6.css' : 'v2/ie6.css',
