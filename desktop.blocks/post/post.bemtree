@@ -1,0 +1,57 @@
+block post {
+    content: {
+        var content = this.ctx.content;
+        return [
+            {
+                elem: 'title',
+                content: content.title
+            },
+            {
+                elem: 'author',
+                content: content.author
+            },
+            {
+                elem: 'date',
+                elemMod: 'create',
+                content: content.createDate
+            },
+            {
+                elem: 'date',
+                elemMod: 'edit',
+                content: content.editDate
+            },
+            {
+                elem: 'sumamry',
+                content: content.summary
+            },
+            {
+                elem: 'thumbnail',
+                content: content.thumbnail
+            },
+            {
+                elem: 'tags',
+                content: content.tags
+            },
+            {
+                elem: 'categories',
+                content: content.category
+            },
+            {
+                elem: 'translator',
+                content: content.translator
+            },
+            {
+                elem: 'type',
+                content: content.type
+            },
+            {
+                elem: 'id',
+                content: content.id
+            },
+            {
+                elem: 'content',
+                content: content.content
+            }
+        ];
+    }
+}

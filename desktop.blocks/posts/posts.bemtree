@@ -29,9 +29,17 @@ block posts {
     }
 
     processData: {
+        //TODO create functionality for
+        //build selector from request params
         var c = this.ctx.content,
             selector = '.' + this.ctx.params.lang + '{.type === "article"}';
 
-        return leJspath.filter(selector, c);
+        return apply(
+            this._mode = '',
+            this.ctx = {
+                elem : 'list',
+                content : leJspath.filter(selector, c)
+            }
+        );
     }
 }

@@ -1,6 +1,6 @@
 block p-index {
 
-    mix : { block : 'island' }
+    //mix : { block : 'island' }
 
     content: [
         this.ctx.content

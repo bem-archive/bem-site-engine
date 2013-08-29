@@ -1,4 +1,8 @@
 ({
     mustDeps: [],
-    shouldDeps: []
+    shouldDeps: [
+        { elem: 'filter' },
+        { elem: 'list' },
+        { elem: 'pager' }
+    ]
 })
