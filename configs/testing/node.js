@@ -5,7 +5,7 @@ var OS = require('os'),
 module.exports = {
     debug : false,
     app : {
-        environment : 'production',
+        env : 'testing',
         socket : '/tmp/legoa-nodejs.sock',
         workers : nworkers < 1? 1 : nworkers
     },
