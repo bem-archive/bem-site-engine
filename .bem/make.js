@@ -20,7 +20,7 @@ MAKE.decl('Arch', {
 
     libraries : [
         'bem-yana',
-        'bem-core @ 84cd0f2',
+        'bem-core @ 8981332a71',
         'bem-ycommon @ v2',
         // FIXME: romochka#feature/bem-core
         'romochka @ feature/bem-core',
