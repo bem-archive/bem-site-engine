@@ -1,4 +1,0 @@
-({
-    mustDeps: [],
-    shouldDeps: []
-})

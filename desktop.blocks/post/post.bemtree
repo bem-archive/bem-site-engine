@@ -11,18 +11,18 @@ block post {
                 content: content.author
             },
             {
+                elem: 'translator',
+                content: content.translator
+            },
+            {
                 elem: 'date',
-                elemMod: 'create',
+                elemMods: {'type': 'create'},
                 content: content.createDate
             },
             {
                 elem: 'date',
-                elemMod: 'edit',
+                elemMods: {'type': 'edit'},
                 content: content.editDate
-            },
-            {
-                elem: 'sumamry',
-                content: content.summary
             },
             {
                 elem: 'thumbnail',
@@ -37,16 +37,16 @@ block post {
                 content: content.category
             },
             {
-                elem: 'translator',
-                content: content.translator
-            },
-            {
                 elem: 'type',
                 content: content.type
             },
             {
                 elem: 'id',
                 content: content.id
+            },
+            {
+                elem: 'summary',
+                content: content.summary
             },
             {
                 elem: 'content',

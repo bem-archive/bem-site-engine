@@ -1,0 +1,32 @@
+block post, elem date {
+
+    default, (this.ctx && this.ctx.content): {
+        applyNext();
+    }
+
+    content : [
+        ': ',
+        {
+            tag: 'strong',
+            content: this.ctx.content
+        }
+        //TODO make date as url to other page
+    ]
+}
+
+
+block post, elem date, elemMod type create {
+
+    content : [
+        BEM.I18N('post', 'createDate'),
+        applyNext()
+    ]
+}
+
+block post, elem date, elemMod type edit {
+
+    content : [
+        BEM.I18N('post', 'editDate'),
+        applyNext()
+    ]
+}

@@ -1,0 +1,16 @@
+block post, elem translator {
+
+    default, (this.ctx && this.ctx.content): {
+        applyNext();
+    }
+
+    content : [
+        BEM.I18N('post', this.elem),
+        ': ',
+        {
+            tag: 'strong',
+            content: this.ctx.content
+        }
+        //TODO make translator name as url to other page
+    ]
+}

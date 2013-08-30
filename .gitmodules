@@ -1,4 +1,0 @@
-
-[submodule "datasrc"]
-	path = datasrc
-	url = git@github.com:tormozz48/bem-info-source.git

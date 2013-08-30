@@ -1,5 +1,7 @@
 ({
-    mustDeps: [],
+    mustDeps : [
+        { block : 'i-bem', elems : ['i18n'] }
+    ],
     shouldDeps: [
         { elem : 'title' },
         { elem : 'date' },
