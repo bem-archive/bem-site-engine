@@ -1,0 +1,19 @@
+block posts-item, elem tags {
+
+    default, (this.ctx && this.ctx.content): {
+        applyNext();
+    }
+
+    content: [
+        BEM.I18N('posts-item', this.elem),
+        ': ',
+        {
+            tag: 'strong',
+            content: apply('contentTransformation')
+        }
+    ]
+
+    contentTransformation, this._.isArray(this.ctx.content): {
+        return this.ctx.content.join(', ');
+    }
+}

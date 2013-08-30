@@ -1,11 +1,11 @@
 block content {
 
-    default: {
-        return applyCtx([
-            { block : 'breadcrumbs' },
-            this.ctx
-        ]);
-    }
+    // default: {
+    //     return applyCtx([
+    //         { block : 'breadcrumbs' },
+    //         this.ctx
+    //     ]);
+    // }
 
     content: {
         return apply('pager', this.ctx = this.data.page)

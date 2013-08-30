@@ -6,6 +6,7 @@ exports.blocks = [
     { block : 'page-not-found' },
     { block : 'page-internal-error' },
     { block : 'page-ping' },
+    { block : 'page-post' },
     { block : 'error' },
     { block : 'i-global' },
     { block : 'b-page' }

@@ -1,6 +1,6 @@
 ({
     mustDeps: [],
     shouldDeps: [
-        { block : 'post' }
+        { block : 'posts-item' }
     ]
 })

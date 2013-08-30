@@ -1,3 +1,0 @@
-block post, elem title {
-    tag: 'h3'
-}

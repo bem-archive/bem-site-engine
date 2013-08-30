@@ -1,0 +1,15 @@
+block posts-item, elem summary {
+
+    default, (this.ctx && this.ctx.content): {
+        applyNext();
+    }
+
+    content : [
+        BEM.I18N('posts-item', this.elem),
+        ': ',
+        {
+            tag: 'strong',
+            content: this.ctx.content
+        }
+    ]
+}
