@@ -1,7 +1,0 @@
-block ulist {
-    
-    tag: 'ul'
-        
-    elem li, tag: 'li'
-    
-}

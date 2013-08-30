@@ -1,7 +1,0 @@
-block olist {
-    
-    tag: 'ol'
-        
-    elem li, tag: 'li'
-    
-}

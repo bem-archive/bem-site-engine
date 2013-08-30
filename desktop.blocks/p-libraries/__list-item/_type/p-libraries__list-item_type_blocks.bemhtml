@@ -1,8 +1,0 @@
-block p-libraries, elem list-item, elemMod type blocks {
-
-    content: {
-        block : 'topic',
-        mods : { type : 'blocks' },
-        content : this.ctx
-    }
-}

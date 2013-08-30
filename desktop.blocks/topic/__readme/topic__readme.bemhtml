@@ -1,3 +1,0 @@
-block topic, elem readme {
-	mix : { block : 'island' }
-}

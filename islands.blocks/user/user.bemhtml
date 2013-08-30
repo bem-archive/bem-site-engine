@@ -1,6 +1,0 @@
-block user {
-
-    // TODO: BEMHTML + js для `domik_type_popup`
-    js: false
-
-}
