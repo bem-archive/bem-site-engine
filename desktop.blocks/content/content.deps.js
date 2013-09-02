@@ -7,8 +7,6 @@
         { block : 'breadcrumbs' },
         { block : 'p-error' },
         { block : 'p-index' },
-        { block : 'p-libraries' },
-        { block : 'p-library' },
-        { block : 'p-block' }
+        { block : 'p-post' }
     ]
 })

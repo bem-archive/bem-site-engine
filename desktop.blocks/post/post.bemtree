@@ -1,0 +1,95 @@
+block post {
+
+    default: {
+        return applyNext(this._datasrc = this.data.params);
+    }
+
+    content: {
+        var data = this.data;
+
+        return this.doAsync(
+                leDatasrc.loadData.bind(leDatasrc, {})
+            )
+            .then(
+                function(result) {
+                    return
+                        apply('processData',
+                            this.ctx = {
+                                data : data,
+                                content : result
+                            }
+                        );
+                },
+                function(err) {
+                    return apply('error', this.ctx = err);
+                },
+                this
+            );
+    }
+
+    processData: {
+        var content = this.ctx.content,
+            data = this.ctx.data,
+            params = data.params,
+            result = leJspath.filter('.' + params.lang + '{.id === $id}', content, { id : params.id });
+
+        if(!result || result.length == 0)
+            return [];
+
+        result = result[0];
+
+        return [
+            {
+                block: 'posts-item',
+                elem: 'author',
+                content: result.author
+            },
+            {
+                block: 'posts-item',
+                elem: 'translator',
+                content: result.translator
+            },
+            {
+                block: 'posts-item',
+                elem: 'date',
+                elemMods: {'type': 'create'},
+                content: result.createDate
+            },
+            {
+                block: 'posts-item',
+                elem: 'date',
+                elemMods: {'type': 'edit'},
+                content: result.editDate
+            },
+            {
+                block: 'posts-item',
+                elem: 'thumbnail',
+                content: result.thumbnail
+            },
+            {
+                block: 'posts-item',
+                elem: 'tags',
+                content: result.tags
+            },
+            {
+                block: 'posts-item',
+                elem: 'categories',
+                content: result.category
+            },
+            {
+                block: 'posts-item',
+                elem: 'type',
+                content: result.type
+            },
+            {
+                block: 'posts-item',
+                elem: 'summary',
+                content: result.summary
+            },
+            {
+                elem: 'content',
+                content: result.content
+            }
+        ]
+    }
+}

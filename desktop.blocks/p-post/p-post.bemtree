@@ -1,0 +1,10 @@
+block p-post {
+
+    content: [
+        {
+            block: 'post',
+            params: this.data.params
+        }
+    ]
+
+}

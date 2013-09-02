@@ -8,6 +8,9 @@
 
     content: {
         var params = this.data;
+
+        leJspath.stringify(this.data);
+
         return this.doAsync(
                 leDatasrc.loadData.bind(leDatasrc, {})
             )
