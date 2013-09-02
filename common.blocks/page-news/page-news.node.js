@@ -4,8 +4,8 @@ modules.define(
     function(provide, router, View) {
 
 router.addRoute({
-    name : 'post',
-    rule : '/{lang}/{type}/{id}',
+    name : 'news',
+    rule : '/{lang}/news',
     data : {
         action : 'le-page'
     }

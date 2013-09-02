@@ -1,0 +1,7 @@
+block p-docs {
+
+    content: [
+        this.ctx.content
+    ]
+
+}

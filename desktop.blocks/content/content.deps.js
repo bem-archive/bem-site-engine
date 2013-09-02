@@ -7,6 +7,9 @@
         { block : 'breadcrumbs' },
         { block : 'p-error' },
         { block : 'p-index' },
-        { block : 'p-post' }
+        { block : 'p-post' },
+        { block : 'p-articles' },
+        { block : 'p-news' },
+        { block : 'p-docs' }
     ]
 })

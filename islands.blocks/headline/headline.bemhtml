@@ -1,0 +1,10 @@
+block headline {
+
+    tag: 'h' + this.mods.level
+
+    !this.mods.level {
+        tag: 'h1'
+        mix: { mods: { level: 1 } }
+    }
+
+}

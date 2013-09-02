@@ -1,5 +1,7 @@
 module.exports = {
     "p-index": {
-        "title": "Libraries and Components"
+        "articles": "Articles",
+        "docs": "Documentation",
+        "news": "News"
     }
 };

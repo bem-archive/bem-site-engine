@@ -2,9 +2,19 @@ block p-index {
 
     content: [
         {
-            block: 'posts',
-            type: 'article',
-            params: this.data.params
+            elem : 'item',
+            url: '/' + this.data.params.lang + '/articles/',
+            name : 'articles'
+        },
+        {
+            elem : 'item',
+            url: '/' + this.data.params.lang + '/docs/',
+            name : 'docs'
+        },
+        {
+            elem : 'item',
+            url: '/' + this.data.params.lang + '/news/',
+            name: 'news'
         }
     ]
 
