@@ -1,0 +1,10 @@
+block p-news {
+
+    content: [
+        {
+            block: 'posts',
+            params: this.data.params
+        }
+    ]
+
+}

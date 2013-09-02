@@ -1,0 +1,10 @@
+block p-docs {
+
+    content: [
+        {
+            block: 'posts',
+            params: this.data.params
+        }
+    ]
+
+}

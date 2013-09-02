@@ -1,0 +1,7 @@
+block p-articles {
+
+    content: [
+        this.ctx.content
+    ]
+
+}

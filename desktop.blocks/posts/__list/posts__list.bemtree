@@ -10,6 +10,7 @@ block posts, elem list {
             while(item = this.ctx.content[i]) {
                 buf[i++] = {
                     block: 'posts-item',
+                    params: this.ctx.params,
                     content: item
                 }
             }

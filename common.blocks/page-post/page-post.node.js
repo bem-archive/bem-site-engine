@@ -5,7 +5,7 @@ modules.define(
 
 router.addRoute({
     name : 'post',
-    rule : '/{lang}/{article}/{id}',
+    rule : '/{lang}/{type}/{id}',
     data : {
         action : 'le-page'
     }

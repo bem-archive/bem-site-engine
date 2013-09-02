@@ -2,14 +2,11 @@
 
     default: {
         return applyNext(
-            this._type = this.ctx.type,
             this._datasrc = this.data.params);
     }
 
     content: {
-        var params = this.data;
-
-        leJspath.stringify(this.data);
+        var data = this.data;
 
         return this.doAsync(
                 leDatasrc.loadData.bind(leDatasrc, {})
@@ -19,7 +16,7 @@
                     return
                         apply('processData',
                             this.ctx = {
-                                params : params,
+                                data : data,
                                 content : result
                             }
                         );
@@ -32,16 +29,21 @@
     }
 
     processData: {
-        //TODO create functionality for
-        //build selector from request params
-        var c = this.ctx.content,
-            selector = '.' + this.ctx.params.lang + '{.type === "article"}';
+        var content = this.ctx.content,
+            data = this.ctx.data,
+            params = data.params,
+            lang = params.lang || 'en';
+            type = params.type || data.page;
 
         return apply(
             this._mode = '',
             this.ctx = {
                 elem : 'list',
-                content : leJspath.filter(selector, c)
+                params: {
+                    lang : lang,
+                    type : type
+                },
+                content : leJspath.filter('.' + lang + '{.type === $type}', content,  { type : type })
             }
         );
     }

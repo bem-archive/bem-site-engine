@@ -1,0 +1,10 @@
+block p-articles {
+
+    content: [
+        {
+            block: 'posts',
+            params: this.data.params
+        }
+    ]
+
+}
