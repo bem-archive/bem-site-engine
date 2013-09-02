@@ -1,6 +1,17 @@
-/*global modules:false */
+modules.define(
+    'yana-view',
+    ['yana-router'],
+    function(provide, router, View) {
 
-modules.define('page-articles', function(provide) {
+router.addRoute({
+    name : 'articles',
+    rule : '/{lang}/articles',
+    data : {
+        action : 'le-page'
+    }
+});
+
+provide(View);
 
 });
 
