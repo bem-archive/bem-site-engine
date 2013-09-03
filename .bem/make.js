@@ -1,17 +1,17 @@
 /* global MAKE */
 
 var PATH = require('path'),
-    LOGGER = require('bem/lib/logger'),
+    LOGGER = require('bem/lib/logger')
     environ = require('bem-environ')(__dirname);
 
 environ.extendMake(MAKE);
 
-try {
-    require(environ.getLibPath('bem-core', '.bem/nodes/bundle.js'));
-} catch(e) {
-    // TODO: handle exception
-    LOGGER.error(e);
-}
+// try {
+//     require(environ.getLibPath('bem-core', '.bem/nodes/bundle.js'));
+// } catch(e) {
+//     // TODO: handle exception
+//     LOGGER.error(e);
+// }
 
 MAKE.decl('Arch', {
 
@@ -22,16 +22,15 @@ MAKE.decl('Arch', {
         'bem-yana',
         'bem-core @ 8981332a71',
         'bem-ycommon @ v2',
-        // FIXME: romochka#feature/bem-core
-        'romochka @ feature/bem-core',
-        'bem-controls @ dev',
-        'islands-controls @ dev',
+        'bem-components @ v2',
+
+        'islands-components @ v2',
         'islands-media @ v1.0.0',
-        // FIXME: islands-page#feature/bem-core
         'islands-page @ feature/bem-core',
         'islands-services @ v1.0.0',
-        // FIXME: islands-user#feature/bem-core
-        'islands-user @ feature/bem-core'
+        'islands-user @ feature/bem-core',
+
+        'romochka @ feature/bem-core'
     ]
 
 });
@@ -67,29 +66,38 @@ MAKE.decl('BundleNode', {
         return [
             // bem-core
             'bem-core/common.blocks',
+
             // bem-yana
             'bem-yana/common.blocks',
             'bem-yana/app.blocks',
+
             // bem-ycommon
             'bem-ycommon/ycommon.blocks',
             'bem-ycommon/common.blocks',
-            // bem-controls
-            'bem-controls/common.blocks',
-            'bem-controls/desktop.blocks',
-            // islands-controls
-            'islands-controls/common.blocks',
-            'islands-controls/desktop.blocks',
+
+            // bem-components
+            'bem-components/common.blocks',
+            'bem-components/desktop.blocks',
+
+            // islands-components
+            'islands-components/common.blocks',
+            'islands-components/desktop.blocks',
+
             // islands-media
             'islands-media/common.blocks',
+
             // islands-page
             'islands-page/common.blocks',
             'islands-page/desktop.blocks',
+
             // islands-user
             'islands-user/common.blocks',
             'islands-user/desktop.blocks',
+
             // islands-services
             'islands-services/common.blocks',
             'islands-services/desktop.blocks',
+
             // bem-bl + romochka
             'romochka/bem-bl/blocks-desktop',
             'romochka/blocks-common',
