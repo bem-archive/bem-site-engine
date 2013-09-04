@@ -54,41 +54,36 @@
         var array = this.ctx.content,
             data = this.ctx.data,
             query = data.req.query,
-            config = query.sort;
+            sort = query.sort,
+            config = [];
 
-        if(!config || config.length == 0)
+        if(!sort || sort.length == 0)
             return array;
 
-        // config = config.substring(1, config.length - 1).split(', ');
-        // var c = null;
-        // for(var i =0; i < config.length; i++){
-        //     var condition = config[i].split(' ');
-        //     console.debug('LOG ' + condition[0] + ' ' + condition[1] ? condition[1] : 'asc');
-        //     c.push({field : condition[0], direction : condition[1] ? condition[1] : 'asc' })
-        // }
+        sort = sort.substring(1, sort.length - 1).split(', ');
 
-        // leJspath.stringify(c);
-        //
+        for(var i = 0; i < sort.length; i++) {
+            var condition = sort[i].split(' ');
+            config.push({field : condition[0], direction : (condition[1] || 'asc') })
+        }
 
-        config = [
-            {field : 'author', direction : 'asc'},
-            {field : 'title', direction : 'desc'}
-        ];
+        // config = [
+        //     {field : 'author', direction : 'asc'},
+        //     {field : 'title', direction : 'desc'}
+        // ];
 
         function compare(a, b, config, index) {
             index = index || 0;
             if(!config[index])
                return 0;
 
-            var field = config[index]['field'];
-            var direction = config[index]['direction'];
-
-            console.debug('LOG field ' + field + ' direction ' + direction);
+            var field = config[index]['field'],
+                desc = config[index]['direction'] === 'desc';
 
             if(a[field] > b[field]) {
-                return direction === 'desc' ? -1 : +1;
+                return desc ? -1 : 1;
             } else if(a[field] < b[field]) {
-                return direction === 'desc' ? 1 : -1;
+                return desc ? 1 : -1;
             } else {
                 return compare(a, b, config, ++index);
             }

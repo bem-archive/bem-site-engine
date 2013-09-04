@@ -57,66 +57,6 @@ provide({
         return jspath.apply(selector, content, substitution);
     },
 
-
-    /**
-     * Returns sorted data from filtered array of data object
-     * @param  {Array} array - target array
-     * @param  {String} config - sql like syntax configuration
-     * @return {Array} sorted array
-     */
-    // sort: function(array, request) {
-
-    //     config = config.split(/\s*,\s*/).map(function(prop) {
-    //         prop = prop.match(/^([^\s]+)(\s*desc)?/i);
-    //         if( prop[2] && prop[2].toLowerCase() === 'desc' ) {
-    //             return [prop[1] , -1];
-    //         } else {
-    //             return [prop[1] , 1];
-    //         }
-    //     });
-
-    //     function valueCmp(x, y) {
-    //         return x > y ? 1 : x < y ? -1 : 0;
-    //     }
-
-    //     function arrayCmp(a, b) {
-    //         var arr1 = [], arr2 = [];
-    //         config.forEach(function(prop) {
-    //             var aValue = a[prop[0]],
-    //                 bValue = b[prop[0]];
-
-    //             arr1.push( prop[1] * valueCmp(aValue, bValue) );
-    //             arr2.push( prop[1] * valueCmp(bValue, aValue) );
-    //         });
-    //         return arr1 < arr2 ? -1 : 1;
-    //     }
-
-    //     array.sort(function(a, b) {
-    //         return arrayCmp(a, b);
-    //     });
-    // },
-
-    paginate: function(array, request) {
-
-    },
-
-    do: function(content, request, config){
-        logger.debug('LOG do');
-
-        config = config || {};
-
-        //filter
-        content = this.select(content, request);
-
-        //sort
-        content = config.sort ? this.sort(content, request) : content;
-
-        //paginate
-        content = config.paginate ? this.paginate(content, request) : content;
-
-        return content;
-    },
-
     /**
      * Utility method for development, stringify
      * object and place it into console log
