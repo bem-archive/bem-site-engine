@@ -19,6 +19,7 @@ block posts-item {
             {
                 elem: 'date',
                 elemMods: {'type': 'create'},
+                params: params,
                 content: content.createDate
             },
             {

@@ -1,7 +1,7 @@
 block posts-item, elem translator {
 
-    default, (this.ctx && this.ctx.content): {
-        applyNext();
+    default, !(this.ctx && this.ctx.content): {
+        return false;
     }
 
     content : [

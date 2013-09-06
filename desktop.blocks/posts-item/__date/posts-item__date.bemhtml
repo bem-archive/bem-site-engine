@@ -1,19 +1,33 @@
 block posts-item, elem date {
 
-    default, (this.ctx && this.ctx.content): {
-        applyNext();
+    default, !(this.ctx && this.ctx.content): {
+        return false;
     }
 
-    content : [
+    content, /\d{13}/.test(this.ctx.content) : [
         ': ',
         {
             tag: 'strong',
-            content: this.ctx.content
+            content: apply('format')
         }
         //TODO make date as url to other page
     ]
-}
 
+    format: {
+        var pad = function(val, len) {
+                 val = String(val);
+                 len = len || 2;
+                 while (val.length < len) val = "0" + val;
+                 return val;
+             },
+             date = new Date(this.ctx.content),
+             d = date.getDate(),
+             D = pad(date.getDay()),
+             m = pad(date.getMonth() + 1),
+             y = date.getFullYear();
+        return D + '-' + m + '-' + y;
+    }
+}
 
 block posts-item, elem date, elemMod type create {
 
