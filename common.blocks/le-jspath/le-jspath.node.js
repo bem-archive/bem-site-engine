@@ -55,7 +55,7 @@ provide({
         console.log('LOG ' + selector);
 
         return jspath.apply(selector, content, substitution);
-    },`
+    },
 
     /**
      * Utility method for development, stringify
