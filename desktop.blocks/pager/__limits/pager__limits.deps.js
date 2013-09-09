@@ -1,6 +1,6 @@
 ({
     mustDeps: [],
     shouldDeps: [
-        { elem: 'limit-item' }
+        { elem: 'limit-item', mods: { active: 'yes' } }
     ]
 })

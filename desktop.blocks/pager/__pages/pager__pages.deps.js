@@ -1,6 +1,6 @@
 ({
     mustDeps: [],
     shouldDeps: [
-        { elem: 'page-item' }
+        { elem: 'page-item', mods: { active: 'yes' } }
     ]
 })

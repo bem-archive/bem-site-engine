@@ -25,6 +25,9 @@ block pager, elem pages {
                     this._mode = '',
                     this.ctx = {
                         elem : 'page-item',
+                        elemMods: {
+                            active:  i == page ? 'yes' : ''
+                        },
                         params : {
                             index: i,
                             page: page,

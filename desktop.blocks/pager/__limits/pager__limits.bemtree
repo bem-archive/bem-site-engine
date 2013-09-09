@@ -21,6 +21,9 @@ block pager, elem limits {
                     this._mode = '',
                     this.ctx = {
                         elem : 'limit-item',
+                        elemMods: {
+                            active:  LIMITS[i] == limit ? 'yes' : ''
+                        },
                         params : {
                             index: LIMITS[i],
                             page: page,
