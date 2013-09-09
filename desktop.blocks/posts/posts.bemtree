@@ -29,25 +29,55 @@
     }
 
     processData: {
+        var DEFAULT_LIMIT = 10;
+
         var content = this.ctx.content,
             data = this.ctx.data,
             lang = data.params.lang || 'en',
             type = data.params.type || data.page;
 
-        content = leJspath.filter('.' + lang + '{.type === $type}', content,  { type : type });
-        content = apply('sort', this.ctx = { content : content, data : data });
+        leJspath.stringify(data);
 
-        return apply(
-            this._mode = '',
-            this.ctx = {
-                elem : 'list',
-                params: {
-                    lang : lang,
-                    type : type
-                },
-                content : content
-            }
-        );
+        content = leJspath.filter('.' + lang + '{.type === $type}', content,  { type : type });
+
+        content = apply('sort', this.ctx = {
+            content : content,
+            data : data
+        });
+
+        var total = content.length;
+
+        content = apply('paginate', this.ctx = {
+            content : content,
+            data : data,
+            defaultLimit : DEFAULT_LIMIT
+        });
+
+        return [
+            apply(
+                this._mode = '',
+                this.ctx = {
+                    elem : 'list',
+                    params: {
+                        lang : lang,
+                        type : type
+                    },
+                    content : content
+                }
+            ),
+            apply(
+                this._mode = '',
+                this.ctx = {
+                    elem : 'footer',
+                    params : {
+                        total : total,
+                        path  : data.req.path,
+                        query : data.req.query,
+                        defaultLimit : DEFAULT_LIMIT
+                    }
+                }
+            )
+        ];
     }
 
     sort: {
@@ -66,11 +96,6 @@
             var condition = sort[i].split(' ');
             config.push({field : condition[0], direction : (condition[1] || 'asc') })
         }
-
-        // config = [
-        //     {field : 'author', direction : 'asc'},
-        //     {field : 'title', direction : 'desc'}
-        // ];
 
         function compare(a, b, config, index) {
             index = index || 0;
@@ -92,5 +117,20 @@
         return array.sort(function(a, b) {
             return compare(a, b, config);
         });
+    }
+
+    paginate: {
+        var array = this.ctx.content,
+            data = this.ctx.data,
+            query = data.req.query,
+            page = query.page,
+            limit = query.limit;
+
+        page = (page && !isNaN(parseFloat(page)) && isFinite(page)) ? page : 1;
+        limit = (limit && !isNaN(parseFloat(limit)) && isFinite(limit)) ? limit : this.ctx.defaultLimit;
+
+        return page * limit  <= array.length ?
+                array.slice((page - 1) * limit, page * limit) :
+                array.slice((page - 1) * limit);
     }
 }

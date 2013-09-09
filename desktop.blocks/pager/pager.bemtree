@@ -1,0 +1,19 @@
+block pager {
+
+    content: [
+        apply(
+            this._mode = '',
+            this.ctx = {
+                elem : 'pages',
+                params : this.ctx.params
+            }
+        ),
+        apply(
+            this._mode = '',
+            this.ctx = {
+                elem : 'limits',
+                params : this.ctx.params
+            }
+        )
+    ]
+}

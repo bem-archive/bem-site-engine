@@ -1,0 +1,10 @@
+block pager, elem pages {
+
+    tag: 'ul'
+
+    content: [
+        BEM.I18N('pager', this.elem),
+        ': ',
+        this.ctx.content
+    ]
+}

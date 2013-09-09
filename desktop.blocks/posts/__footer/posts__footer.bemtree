@@ -1,0 +1,13 @@
+block posts, elem footer {
+
+    content: [
+        apply(
+            this._mode = '',
+            this.ctx = {
+                block : 'pager',
+                params : this.ctx.params
+            }
+        )
+    ]
+
+}
