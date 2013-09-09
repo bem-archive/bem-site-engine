@@ -1,19 +1,38 @@
 block pager {
 
-    content: [
-        apply(
-            this._mode = '',
-            this.ctx = {
-                elem : 'pages',
-                params : this.ctx.params
-            }
-        ),
-        apply(
-            this._mode = '',
-            this.ctx = {
-                elem : 'limits',
-                params : this.ctx.params
-            }
-        )
-    ]
+    content: {
+
+        var params = this.ctx.params,
+            page  = params.query.page, //текущая страница
+            limit = params.query.limit; //число записей на странице
+
+        //если текущая страница не передана или имеет неверный формат, то присваиваем ей 1
+        page = (page && !isNaN(parseFloat(page)) && isFinite(page)) ? page : 1;
+
+        //если число записей на странице не определено то присваиваем значение по умолчанию
+        limit = (limit && !isNaN(parseFloat(limit)) && isFinite(limit)) ? limit : params.defaultLimit;
+
+        return [
+            apply(
+                this._mode = '',
+                this.ctx = {
+                    elem : 'pages',
+                    params : this._.extend(this.ctx.params, {
+                        page: page,
+                        limit: limit
+                    })
+                }
+            ),
+            apply(
+                this._mode = '',
+                this.ctx = {
+                    elem : 'limits',
+                    params : this._.extend(this.ctx.params, {
+                        page: page,
+                        limit: limit
+                    })
+                }
+            )
+        ]
+    }
 }

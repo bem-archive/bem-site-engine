@@ -3,41 +3,60 @@ block pager, elem pages {
     content: {
 
         var params = this.ctx.params,
-            page  = params.query.page, //текущая страница
-            limit = params.query.limit, //число записей на странице
+            page  = params.page, //текущая страница
+            limit = params.limit, //число записей на странице
             total = params.total, //общее число записей
             totalPages = 0, //число страниц
-            content = []; //содержимое элемента блока
+            content = [], //содержимое элемента блока
 
-        //если текущая страница не передана или имеет неверный формат, то присваиваем ей 1
-        page = (page && !isNaN(parseFloat(page)) && isFinite(page)) ? page : 1;
-
-        //если число записей на странице не определено то присваиваем значение по умолчанию
-        limit = (limit && !isNaN(parseFloat(limit)) && isFinite(limit)) ? limit : params.defaultLimit;
+            MAX_DISPLAYED_PAGES = 10,
+            delimeterPlaced = false;
 
         //определяем число страниц как отношение общего числа записей
         //к кол-ву записей на одну страницу с учетом возможности наличия не полностью заполненной страницы
         totalPages = total%limit > 0 ? Math.floor(total/limit) + 1 : Math.floor(total/limit);
 
         for(var i = 1; i <= totalPages; i++) {
-            content.push(
-                apply(
-                    this._mode = '',
-                    this.ctx = {
-                        elem : 'page-item',
-                        elemMods: {
-                            active:  i == page ? 'yes' : ''
-                        },
-                        params : {
-                            index: i,
-                            page: page,
-                            limit: limit,
-                            path: params.path,
-                            query: params.query
+
+            //эта штука предназначена для случая когда страниц много
+            //т.е. больше чем MAX_DISPLAYED_PAGES
+            //В этом случае показываются первые страницы пагинатора, несколько последних
+            //а между ними располагается троеточие в качестве разделителя
+            if(totalPages > MAX_DISPLAYED_PAGES &&
+                    i > MAX_DISPLAYED_PAGES - 4 && i < totalPages - 2) {
+
+                if(!delimeterPlaced) {
+                    delimeterPlaced = true;
+                    content.push(
+                        apply(
+                            this._mode = '',
+                            this.ctx = {
+                                elem: 'page-item',
+                                elemMods: { delimeter: 'yes' }
+                            }
+                        )
+                    );
+                }
+            }else {
+                content.push(
+                    apply(
+                        this._mode = '',
+                        this.ctx = {
+                            elem: 'page-item',
+                            elemMods:  {
+                                active:  i == page ? 'yes' : ''
+                            },
+                            params: {
+                                index: i,
+                                page: page,
+                                limit: limit,
+                                path: params.path,
+                                query: params.query
+                            }
                         }
-                    }
-                )
-            );
+                    )
+                );
+            }
         }
 
         return content;
