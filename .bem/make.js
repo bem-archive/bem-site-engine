@@ -6,17 +6,21 @@ var PATH = require('path'),
 
 environ.extendMake(MAKE);
 
-// try {
-//     require(environ.getLibPath('bem-core', '.bem/nodes/bundle.js'));
-// } catch(e) {
-//     // TODO: handle exception
-//     LOGGER.error(e);
-// }
+try {
+    require(environ.getLibPath('bem-core', '.bem/nodes/bundle.js'));
+} catch(e) {
+    // TODO: handle exception
+    LOGGER.error(e);
+}
 
 MAKE.decl('Arch', {
 
     blocksLevelsRegexp : /^.+?\.blocks$/,
     bundlesLevelsRegexp : /^.+?\.bundles$/,
+
+    // getLibraries : function() {
+    //     return this.__base();
+    // }
 
     libraries : [
         'bem-yana',
