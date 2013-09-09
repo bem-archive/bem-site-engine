@@ -3,6 +3,6 @@
     shouldDeps: [
         { elem: 'filter' },
         { elem: 'list' },
-        { elem: 'pager' }
+        { elem: 'footer' }
     ]
 })

@@ -22,40 +22,40 @@ provide({
          return jspath.apply(selector, json, substitution);
     },
 
-    select: function(content, request) {
-        //console.log('LOG filter');
+    // select: function(content, request) {
+    //     //console.log('LOG filter');
 
-        if(!content || !request)
-            return [];
+    //     if(!content || !request)
+    //         return [];
 
-        var params = request.params,
-            lang = params.lang || 'en',
-            type = params.type || request.page,
-            id = params.id,
-            query = request.req.query;
+    //     var params = request.params,
+    //         lang = params.lang || 'en',
+    //         type = params.type || request.page,
+    //         id = params.id,
+    //         query = request.req.query;
 
-        var selector = '.' + lang + '{'
+    //     var selector = '.' + lang + '{'
 
-        if(!query || !query.filter || query.filter instanceof Array == false {
-            if(id) {
-                selector += '.id == "' + id + '"';
-            }else if(type) {
-                selector += '.type == "' + type + '"'
-            }
-        }else {
-            var filter = query.filter;
+    //     if(!query || !query.filter || query.filter instanceof Array == false {
+    //         if(id) {
+    //             selector += '.id == "' + id + '"';
+    //         }else if(type) {
+    //             selector += '.type == "' + type + '"'
+    //         }
+    //     }else {
+    //         var filter = query.filter;
 
-            for(var i=0; i < filter.length; i++) {
-                selector += i > 0 ? ' && .' : '.';
-                selector += filter[i];
-            }
-        }
-        selector += '}';
+    //         for(var i=0; i < filter.length; i++) {
+    //             selector += i > 0 ? ' && .' : '.';
+    //             selector += filter[i];
+    //         }
+    //     }
+    //     selector += '}';
 
-        console.log('LOG ' + selector);
+    //     console.log('LOG ' + selector);
 
-        return jspath.apply(selector, content, substitution);
-    },
+    //     return jspath.apply(selector, content, substitution);
+    // },
 
     /**
      * Utility method for development, stringify

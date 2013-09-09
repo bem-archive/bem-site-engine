@@ -1,0 +1,6 @@
+.pager__page-item
+{
+    list-style: none;
+    display: inline;
+    margin-right: 10px;
+}

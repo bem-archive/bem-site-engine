@@ -1,0 +1,4 @@
+block pager, elem page-item {
+
+    tag: 'li'
+}

@@ -1,0 +1,36 @@
+block pager, elem limits {
+
+    content: {
+        var params = this.ctx.params,
+            page  = params.page, //текущая страница
+            limit = params.limit, //число записей на странице
+            content = []; //содержимое элемента блока
+
+        //возможные значения для числа записей на одной странице
+        var LIMITS = [5, 10, 20, 50];
+
+        for(var i = 0; i < LIMITS.length; i++) {
+            content.push(
+                apply(
+                    this._mode = '',
+                    this.ctx = {
+                        elem : 'limit-item',
+                        elemMods: {
+                            active:  LIMITS[i] == limit ? 'yes' : ''
+                        },
+                        params : {
+                            index: LIMITS[i],
+                            page: page,
+                            limit: limit,
+                            path: params.path,
+                            query: params.query
+                        }
+                    }
+                )
+            );
+        }
+
+        return content;
+    }
+
+}
