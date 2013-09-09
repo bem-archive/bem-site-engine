@@ -21,7 +21,7 @@ block pager, elem page-item {
                 url += key + '=' + this.ctx.query[key] + '&';
         }
 
-        url += 'page=' + this.ctx.index + '&' + 'limit=' + this.ctx.query.limit;
+        url += 'page=' + this.ctx.index + '&' + 'limit=' + this.ctx.limit;
 
         return url;
     }
