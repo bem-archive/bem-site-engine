@@ -22,40 +22,79 @@ provide({
          return jspath.apply(selector, json, substitution);
     },
 
-    // select: function(content, request) {
-    //     //console.log('LOG filter');
+    /**
+     * Sort method for result set
+     * @param  {Object} ctx - object with unordered result set and sorting parameters
+     * @return {Array} sorted array of records
+     */
+    sort: function(ctx) {
+        var array = ctx.content,
+            data = ctx.data,
+            query = data.req.query,
+            sort = query.sort,
+            config = [];
 
-    //     if(!content || !request)
-    //         return [];
+        //если параметры сортировки не заданы, то возвращаем исходный набор данных
+        //TODO сделать сортировку по дате в обратном порядке как сортироку по умолчанию
+        if(!sort || sort.length == 0)
+            return array;
 
-    //     var params = request.params,
-    //         lang = params.lang || 'en',
-    //         type = params.type || request.page,
-    //         id = params.id,
-    //         query = request.req.query;
+        //парсим строку с параметрами поиска и формируем массив хэшей типа
+        //{field "field", direction: "direction"} коорый полсностью описывает характеристики сортировки
+        sort = sort.substring(1, sort.length - 1).split(', ');
 
-    //     var selector = '.' + lang + '{'
+        for(var i = 0; i < sort.length; i++) {
+            var condition = sort[i].split(' ');
+            config.push({field : condition[0], direction : (condition[1] || 'asc') })
+        }
 
-    //     if(!query || !query.filter || query.filter instanceof Array == false {
-    //         if(id) {
-    //             selector += '.id == "' + id + '"';
-    //         }else if(type) {
-    //             selector += '.type == "' + type + '"'
-    //         }
-    //     }else {
-    //         var filter = query.filter;
+        //метод стравнения элементов a и b
+        //в случае, когда a = b, то рекурсивно запускается метод сортировки для следующего поля
+        //это позволяет реализовать сортировку по нескольким полям
+        function compare(a, b, config, index) {
+            index = index || 0;
+            if(!config[index])
+               return 0;
 
-    //         for(var i=0; i < filter.length; i++) {
-    //             selector += i > 0 ? ' && .' : '.';
-    //             selector += filter[i];
-    //         }
-    //     }
-    //     selector += '}';
+            var field = config[index]['field'], //поле, по которому производится сортировка
+                desc = config[index]['direction'] === 'desc'; //направление сортировки
 
-    //     console.log('LOG ' + selector);
+            if(a[field] > b[field]) {
+                return desc ? -1 : 1;
+            } else if(a[field] < b[field]) {
+                return desc ? 1 : -1;
+            } else {
+                return compare(a, b, config, ++index); //рекурсивный запуск этой же функции
+            }
+        }
 
-    //     return jspath.apply(selector, content, substitution);
-    // },
+        return array.sort(function(a, b) {
+            return compare(a, b, config);
+        });
+    },
+
+    /**
+     * Pagination method for result set
+     * @param  {Object} ctx - object with full result set and pagination parameters
+     * @return {Array} array of records for current page and limits per page
+     */
+    paginate: function(ctx) {
+        var array = ctx.content, //исходный массив с данными
+            data = ctx.data, //контекст view
+            query = data.req.query, //хэш параметров запроса
+            page = query.page, //текущая страница
+            limit = query.limit; //число записей на странице
+
+        //проверка page и limit. Если не заданы или имеют неверный формат, то page = 1
+        //limit = defaultLimit (10)
+        page = (page && !isNaN(parseFloat(page)) && isFinite(page)) ? page : 1;
+        limit = (limit && !isNaN(parseFloat(limit)) && isFinite(limit)) ? limit : ctx.defaultLimit;
+
+        //вырезаем нужный набор записей из исходного массива
+        return page * limit  <= array.length ?
+                array.slice((page - 1) * limit, page * limit) :
+                array.slice((page - 1) * limit);
+    },
 
     /**
      * Utility method for development, stringify
