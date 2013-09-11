@@ -31,7 +31,7 @@ block post {
         var content = this.ctx.content,
             data = this.ctx.data,
             params = data.params,
-            result = leJspath.filter('.' + params.lang + '{.id === $id}', content, { id : params.id });
+            result = leJspath.find('.' + params.lang + '{.id === $id}', content, { id : params.id });
 
         if(!result || result.length == 0)
             return [];

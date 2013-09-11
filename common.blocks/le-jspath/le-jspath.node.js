@@ -11,15 +11,60 @@ var JsonStringify = require('json-stringify-safe');
 provide({
 
     /**
-     * Returns filtered data from json by selector with substitutions
+     * Returns founded data from json by selector with substitutions
      * @param  {String} selector - query selector
      * @param  {JSON} json - target json
      * @param  {Object} substitution - key-value substitution hash
      * @return Object - filter result
      */
-
-    filter: function(selector, json, substitution) {
+    find: function(selector, json, substitution) {
          return jspath.apply(selector, json, substitution);
+    },
+
+    /**
+     * Filter method for result set
+     * @param  {Object} ctx - object with full data set and filter parameters
+     * @return {Array} filtered array of records
+     */
+    filter: function(ctx) {
+        var content = ctx.content,
+            data = ctx.data,
+            lang = data.params.lang || 'en', //язык локализации
+            type = data.params.type || data.page, //тип данных
+            query = data.req.query, //хэш с параметрами запроса
+            filter = query.filter, //строка, содержащая все параметры фильтрации
+            config = [],
+            predicate = '', //предикат фильтрации
+            substitution = {}; //хэш подстановок
+
+        config.push({ field: 'type', operand: '===', value: type });
+
+        //при наличии параметров фильтрации мы парсим строку
+        //с этими параметрами и заполняем хэш с ключами
+        //названия поля, операнда сравлнения и значения
+        if(filter && filter.length > 0) {
+            filter = filter.substring(1, filter.length - 1).split(', ');
+
+            for(var i = 0; i < filter.length; i++) {
+                var condition = filter[i].split(' ');
+                config.push({
+                    field : condition[0],
+                    operand : condition[1],
+                    value : condition[2]
+                });
+            }
+        }
+
+        //выстраиваем предикат фильтрации и объект подстановок по хэшу config
+        predicate += '.' + lang;
+
+        for(var i = 0; i < config.length; i++) {
+            predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + ' $' + config[i]['field'] + '}';
+            substitution[config[i]['field']] = config[i]['value'];
+        }
+
+        //фильтруем данные по предикату и объекту подстановок
+        return jspath.apply(predicate, content, substitution);
     },
 
     /**
