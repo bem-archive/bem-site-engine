@@ -43,7 +43,7 @@ provide({
         //с этими параметрами и заполняем хэш с ключами
         //названия поля, операнда сравлнения и значения
         if(filter && filter.length > 0) {
-            filter = filter.substring(1, filter.length - 1).split(', ');
+            filter = filter.split(',');
 
             for(var i = 0; i < filter.length; i++) {
                 var condition = filter[i].split(' ');
@@ -86,7 +86,7 @@ provide({
 
         //парсим строку с параметрами поиска и формируем массив хэшей типа
         //{field "field", direction: "direction"} коорый полсностью описывает характеристики сортировки
-        sort = sort.substring(1, sort.length - 1).split(', ');
+        sort = sort.split(',');
 
         for(var i = 0; i < sort.length; i++) {
             var condition = sort[i].split(' ');
