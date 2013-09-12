@@ -3,17 +3,17 @@ block p-index {
     content: [
         {
             elem : 'item',
-            url: '/' + this.data.params.lang + '/articles/',
+            url: '/articles/',
             name : 'articles'
         },
         {
             elem : 'item',
-            url: '/' + this.data.params.lang + '/docs/',
+            url: '/docs/',
             name : 'docs'
         },
         {
             elem : 'item',
-            url: '/' + this.data.params.lang + '/news/',
+            url: '/news/',
             name: 'news'
         }
     ]

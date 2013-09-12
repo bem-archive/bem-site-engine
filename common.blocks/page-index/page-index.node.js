@@ -5,7 +5,7 @@ modules.define(
 
 router.addRoute({
     name : 'index',
-    rule : '/{lang}',
+    rule : '/',
     data : {
         action : 'le-page'
     }
