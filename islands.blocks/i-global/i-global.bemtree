@@ -17,7 +17,7 @@ this._mode === '', !this.data {
     }
 
     BEM && BEM.I18N: {
-        var lang = this.ctx.lang = 'ru';
+        var lang = this.ctx.lang;
 
         BEM.I18N.lang(lang);
         console.debug('Language is exposed to "%s"', lang);
@@ -44,39 +44,6 @@ block i-global {
                 'datasrc-host' : hosts.datasrc.host,
                 'static-host'  : hosts.static.host
             });
-
-        /*
-        return this.doAsync(function() {
-                return yaAuth.auth(req);
-            })
-            .then(
-                function(result) {
-                    var status = result.status;
-                    console.debug('yaAuth received %j', status)
-
-                    if(!status || status.id !== 0)
-                        return params;
-
-                    params.login = result.login;
-                    params.displayName = result['display_name']
-
-                    return params;
-                },
-                function(err) {
-                    console.error(err.message, err.stack);
-                    return params;
-                },
-                this
-            )
-            .then(function(params) {
-                return applyNext(
-                    this._mode = '',
-                    this.data = data,
-                    this.ctx = { block : this.block, params : params }
-                );
-            },
-            this);
-        */
     }
 
 }

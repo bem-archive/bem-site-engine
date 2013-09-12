@@ -11,7 +11,6 @@ block posts, elem list {
                 //item.content = null;
                 buf[i++] = {
                     block: 'posts-item',
-                    params: this.ctx.params,
                     content: item
                 }
             }
