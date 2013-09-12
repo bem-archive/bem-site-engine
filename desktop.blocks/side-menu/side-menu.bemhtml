@@ -1,0 +1,7 @@
+block side-menu {
+
+    mix: [
+        { block : 'island' },
+        { block : 'layout', elem : 'col', mods: {type: 'menu'} }
+    ]
+}

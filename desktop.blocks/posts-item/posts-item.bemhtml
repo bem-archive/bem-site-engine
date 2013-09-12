@@ -1,6 +1,6 @@
-block posts-item {
-    mix : { block : 'island' }
-}
+//block posts-item {
+    //mix : { block : 'island' }
+//}
 
 block posts-item, elem id, default: {
     return false;

@@ -1,0 +1,62 @@
+block side-menu {
+
+    default: {
+        return applyNext(
+            this._datasrc = this.data.params);
+    }
+
+    content: {
+        var data = this.data;
+
+        return this.doAsync(
+                leDatasrc.loadData.bind(leDatasrc, {})
+            )
+            .then(
+                function(result) {
+                    return
+                        apply('processData',
+                            this.ctx = {
+                                data : data,
+                                content : result
+                            }
+                        );
+                },
+                function(err) {
+                    return apply('error', this.ctx = err);
+                },
+                this
+            );
+    }
+
+    processData: {
+        var content = this.ctx.content, //содержимое модели (файл data.json)
+            data = this.ctx.data, //объект, хранящий всю информацию о request, response и.т.д.
+
+        //находим все тэги для пстов текущей локали
+        //возможно этот блок стоит сделать более универсальным
+        content = leJspath.find('.' + data.lang + '.tags', content, {});
+
+        //убираем дубликаты
+        content = content.filter(function(elem, pos, self) {
+            return self.indexOf(elem) == pos;
+        });
+
+        //сортируем
+        content = content.sort();
+
+        if(this._.isArray(content)) {
+            var i = 0,
+                buf = [],
+                item;
+
+            while(item = content[i]) {
+                buf[i++] = {
+                    elem: 'item',
+                    content: item.toLowerCase()
+                }
+            }
+
+            return buf;
+        }
+    }
+}
