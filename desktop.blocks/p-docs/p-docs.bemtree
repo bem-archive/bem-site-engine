@@ -3,7 +3,11 @@ block p-docs {
     content: [
         {
             block: 'posts',
-            params: this.data.params
+            config: {
+                filter: leJspath.parseQuery(this.data, 'filter'),
+                sort: leJspath.parseQuery(this.data, 'sort'),
+                page: leJspath.parseQuery(this.data, 'page')
+            }
         }
     ]
 
