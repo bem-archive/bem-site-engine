@@ -5,7 +5,7 @@ modules.define(
 
 router.addRoute({
     name : 'articles',
-    rule : '/{lang}/articles',
+    rule : '/articles',
     data : {
         action : 'le-page'
     }

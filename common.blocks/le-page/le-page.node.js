@@ -16,8 +16,19 @@ View.decl('le-page', {
             page : route.data.name,
             bundleName : config.common_bundle_name,
             staticUrl  : ''.concat(hosts.static.host, config.common_bundle_path),
-            yaApiHosts : hosts
+            yaApiHosts : hosts,
+            lang: this._lang(this.req)
         };
+    },
+
+    _lang: function(req) {
+        var LANGS = ['en', 'ru', 'ja'],
+            DEFAULT_LANG = 'en';
+
+        var headers = req.headers,
+            host = headers.host,
+            lang = host ? host.split('.')[0] : DEFAULT_LANG;
+        return LANGS.indexOf(lang) > -1 ? lang : DEFAULT_LANG;
     }
 
 });

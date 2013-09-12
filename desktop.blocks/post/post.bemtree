@@ -30,8 +30,11 @@ block post {
     processData: {
         var content = this.ctx.content,
             data = this.ctx.data,
-            params = data.params,
-            result = leJspath.find('.' + params.lang + '{.id === $id}', content, { id : params.id });
+            result = leJspath.filter(content, [{
+                field: 'id',
+                operand: '===',
+                value: data.params.id
+            }], data.lang);
 
         if(!result || result.length == 0)
             return [];

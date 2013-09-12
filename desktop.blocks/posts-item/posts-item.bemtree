@@ -5,7 +5,6 @@ block posts-item {
         return [
             {
                 elem: 'title',
-                params:  params,
                 content: content
             },
             {
@@ -19,7 +18,6 @@ block posts-item {
             {
                 elem: 'date',
                 elemMods: {'type': 'create'},
-                params: params,
                 content: content.createDate
             },
             {

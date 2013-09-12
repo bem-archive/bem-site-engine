@@ -35,14 +35,12 @@
 
         var content = this.ctx.content, //содержимое модели (файл data.json)
             data = this.ctx.data, //объект, хранящий всю информацию о request, response и.т.д.
-            config = this.ctx.config,
-            lang = data.params.lang || 'en', //локализация
-            type = data.params.type || data.page; //тип загружаемых ресурсов
+            config = this.ctx.config;
 
         //leJspath.stringify(data);
 
         //фильтрация данных
-        content = leJspath.filter(content, config['filter'], lang);
+        content = leJspath.filter(content, config['filter'], data.lang);
 
         //сортировка данных
         content = config['sort'] ?
@@ -61,10 +59,6 @@
                 this._mode = '',
                 this.ctx = {
                     elem : 'list',
-                    params: {
-                        lang : lang,
-                        type : type
-                    },
                     content : content
                 }
             ),
