@@ -11,6 +11,15 @@ router.addRoute({
     }
 });
 
+router.addRoute({
+    name : 'tags',
+    rule : '/tags/{tag}',
+    data : {
+        action : 'le-page'
+    }
+});
+
+
 provide(View);
 
 });

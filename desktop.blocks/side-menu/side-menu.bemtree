@@ -52,6 +52,7 @@ block side-menu {
             while(item = content[i]) {
                 buf[i++] = {
                     elem: 'item',
+                    elemMods: {source : 'tags'},
                     content: item.toLowerCase()
                 }
             }
