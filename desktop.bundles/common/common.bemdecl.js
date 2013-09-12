@@ -13,6 +13,7 @@ exports.blocks = [
     { block : 'page-news' },
     { block : 'page-filter' },
     { block : 'page-post' },
+    { block : 'page-tags' },
 
     //common blocks
     { block : 'error' },
