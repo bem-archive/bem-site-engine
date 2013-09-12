@@ -7,6 +7,7 @@
 
     content: {
         var data = this.data;
+        var config = this.ctx.config;
 
         return this.doAsync(
                 leDatasrc.loadData.bind(leDatasrc, {})
@@ -17,7 +18,8 @@
                         apply('processData',
                             this.ctx = {
                                 data : data,
-                                content : result
+                                content : result,
+                                config : config
                             }
                         );
                 },
@@ -33,33 +35,26 @@
 
         var content = this.ctx.content, //содержимое модели (файл data.json)
             data = this.ctx.data, //объект, хранящий всю информацию о request, response и.т.д.
+            config = this.ctx.config,
             lang = data.params.lang || 'en', //локализация
             type = data.params.type || data.page; //тип загружаемых ресурсов
 
         //leJspath.stringify(data);
 
         //фильтрация данных
-        content = leJspath.filter({
-            content : content,
-            data : data
-        });
+        content = leJspath.filter(content, config['filter'], lang);
 
         //сортировка данных
-        content = leJspath.sort({
-            content : content,
-            data : data
-        });
+        content = config['sort'] ?
+            leJspath.sort(content, config['sort']) : content;
 
         //общее число записей, необходимо знать перед процедурой пагинации
         //для передачи в блок pager для правильной отрисовки набора ссылок на страницы
         var total = content.length;
 
         //постраничное разбиение набора записей
-        content = leJspath.paginate({
-            content : content,
-            data : data,
-            defaultLimit : DEFAULT_LIMIT
-        });
+        content = config['page'] ?
+            leJspath.paginate(content, config['page'], DEFAULT_LIMIT) : content;
 
         return [
             apply(

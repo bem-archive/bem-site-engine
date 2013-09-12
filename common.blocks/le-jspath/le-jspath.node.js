@@ -21,46 +21,76 @@ provide({
          return jspath.apply(selector, json, substitution);
     },
 
-    /**
-     * Filter method for result set
-     * @param  {Object} ctx - object with full data set and filter parameters
-     * @return {Array} filtered array of records
-     */
-    filter: function(ctx) {
-        var content = ctx.content,
-            data = ctx.data,
-            lang = data.params.lang || 'en', //язык локализации
-            type = data.params.type || data.page, //тип данных
-            query = data.req.query, //хэш с параметрами запроса
-            filter = query.filter, //строка, содержащая все параметры фильтрации
-            config = [],
-            predicate = '', //предикат фильтрации
-            substitution = {}; //хэш подстановок
+    parseQuery: function(data, key) {
+        var type = data.params.type || data.page, //тип данных
+            query = data.req.query[key], //хэш с параметрами запросa
+            config = [];
 
-        config.push({ field: 'type', operand: '===', value: type });
+        if(key === 'filter') {
+            config.push({ field: 'type', operand: '===', value: type });
 
-        //при наличии параметров фильтрации мы парсим строку
-        //с этими параметрами и заполняем хэш с ключами
-        //названия поля, операнда сравлнения и значения
-        if(filter && filter.length > 0) {
-            filter = filter.split(',');
+            //при наличии параметров фильтрации мы парсим строку
+            //с этими параметрами и заполняем хэш с ключами
+            //названия поля, операнда сравлнения и значения
+            if(query && query.length > 0) {
+                query = query.split(',');
 
-            for(var i = 0; i < filter.length; i++) {
-                var condition = filter[i].split(' ');
-                config.push({
-                    field : condition[0],
-                    operand : condition[1],
-                    value : condition[2]
-                });
+                for(var i = 0; i < query.length; i++) {
+                    var condition = query[i].split(' ');
+                    config.push({
+                        field : condition[0],
+                        operand : condition[1],
+                        value : condition[2]
+                    });
+                }
             }
         }
+
+        if(key === 'sort') {
+            if(query && query.length > 0) {
+
+                //парсим строку с параметрами поиска и формируем массив хэшей типа
+                //{field "field", direction: "direction"} коорый полсностью описывает характеристики сортировки
+                query = query.split(',');
+
+                for(var i = 0; i < query.length; i++) {
+                    var condition = query[i].split(' ');
+                    config.push({field : condition[0], direction : (condition[1] || 'asc') })
+                }
+            }
+        }
+
+        if(key === 'page') {
+            var page = query;
+            var limit = data.req.query['limit'];
+
+            config.push({ page : page, limit: limit });
+        }
+
+        return config;
+    },
+
+    /**
+     * Filter method for result set
+     * @param  {JSON} content
+     * @param  {Object} config - object with filter configuration parameters
+     * @param  {String} lang - localization
+     * @return {Array} filtered content
+     */
+    filter: function(content, config, lang) {
+        var lang = lang || 'en', //язык локализации
+            predicate = '', //предикат фильтрации
+            substitution = {}; //хэш подстановок
 
         //выстраиваем предикат фильтрации и объект подстановок по хэшу config
         predicate += '.' + lang;
 
-        for(var i = 0; i < config.length; i++) {
-            predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + ' $' + config[i]['field'] + '}';
-            substitution[config[i]['field']] = config[i]['value'];
+
+        if(config) {
+            for(var i = 0; i < config.length; i++) {
+                predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + ' $' + config[i]['field'] + '}';
+                substitution[config[i]['field']] = config[i]['value'];
+            }
         }
 
         //фильтруем данные по предикату и объекту подстановок
@@ -68,30 +98,12 @@ provide({
     },
 
     /**
-     * Sort method for result set
-     * @param  {Object} ctx - object with unordered result set and sorting parameters
-     * @return {Array} sorted array of records
+     * Sorting method for content
+     * @param  {Array} content - unsorted content
+     * @param  {Array} config - object with sorting configuration parameters
+     * @return {Array} ordered array
      */
-    sort: function(ctx) {
-        var array = ctx.content,
-            data = ctx.data,
-            query = data.req.query,
-            sort = query.sort,
-            config = [];
-
-        //если параметры сортировки не заданы, то возвращаем исходный набор данных
-        //TODO сделать сортировку по дате в обратном порядке как сортироку по умолчанию
-        if(!sort || sort.length == 0)
-            return array;
-
-        //парсим строку с параметрами поиска и формируем массив хэшей типа
-        //{field "field", direction: "direction"} коорый полсностью описывает характеристики сортировки
-        sort = sort.split(',');
-
-        for(var i = 0; i < sort.length; i++) {
-            var condition = sort[i].split(' ');
-            config.push({field : condition[0], direction : (condition[1] || 'asc') })
-        }
+    sort: function(content, config) {
 
         //метод сравнения элементов a и b
         //в случае, когда a = b, то рекурсивно запускается метод сортировки для следующего поля
@@ -113,32 +125,35 @@ provide({
             }
         }
 
-        return array.sort(function(a, b) {
+        return (config && config.length > 0) ? content.sort(function(a, b) {
             return compare(a, b, config);
-        });
+        }) : content;
     },
 
     /**
      * Pagination method for result set
-     * @param  {Object} ctx - object with full result set and pagination parameters
-     * @return {Array} array of records for current page and limits per page
+     * @param  {Array} content - full result set
+     * @param  {Array} config - object with pagination configuration parameters
+     * @param  {Number} defaultLimit - default number of records per page
+     * @return {Array} - sliced array according to pagnation parameters
      */
-    paginate: function(ctx) {
-        var array = ctx.content, //исходный массив с данными
-            data = ctx.data, //контекст view
-            query = data.req.query, //хэш параметров запроса
-            page = query.page, //текущая страница
-            limit = query.limit; //число записей на странице
+    paginate: function(content, config, defaultLimit) {
+
+        if(!config) {
+            return content;
+        }
+
+        config = config[0];
 
         //проверка page и limit. Если не заданы или имеют неверный формат, то page = 1
         //limit = defaultLimit (10)
-        page = (page && !isNaN(parseFloat(page)) && isFinite(page)) ? page : 1;
-        limit = (limit && !isNaN(parseFloat(limit)) && isFinite(limit)) ? limit : ctx.defaultLimit;
+        var page = (config.page && !isNaN(parseFloat(config.page)) && isFinite(config.page)) ? config.page : 1,
+            limit = (config.limit && !isNaN(parseFloat(config.limit)) && isFinite(config.limit)) ? config.limit : defaultLimit;
 
         //вырезаем нужный набор записей из исходного массива
-        return page * limit  <= array.length ?
-                array.slice((page - 1) * limit, page * limit) :
-                array.slice((page - 1) * limit);
+        return page * limit  <= content.length ?
+                content.slice((page - 1) * limit, page * limit) :
+                content.slice((page - 1) * limit);
     },
 
     /**
