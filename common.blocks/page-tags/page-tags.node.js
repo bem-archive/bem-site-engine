@@ -5,7 +5,7 @@ modules.define(
 
 router.addRoute({
     name : 'tags',
-    rule : '/{lang}/tags',
+    rule : '/tags',
     data : {
         action : 'le-page'
     }
