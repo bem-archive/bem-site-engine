@@ -4,8 +4,8 @@ modules.define(
     function(provide, router, View) {
 
 router.addRoute({
-    name : 'docs',
-    rule : '/docs',
+    name : 'tools',
+    rule : '/tools',
     data : {
         action : 'le-page'
     }

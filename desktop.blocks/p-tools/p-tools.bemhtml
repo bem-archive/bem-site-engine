@@ -1,4 +1,4 @@
-block p-docs {
+block p-tools {
 
     content: [
         this.ctx.content

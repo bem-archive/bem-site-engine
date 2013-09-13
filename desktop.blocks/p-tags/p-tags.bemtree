@@ -26,9 +26,9 @@ block p-tags {
                     {
                         block: 'posts',
                         config: {
-                            title: BEM.I18N('p-tags', 'docs'),
+                            title: BEM.I18N('p-tags', 'tools'),
                             filter: [
-                                { field: 'type', operand: '===', value: 'docs' },
+                                { field: 'type', operand: '===', value: 'tools' },
                                 { field: 'tags', operand: '===', value: tag }
                             ],
                             sort: [{field: 'title', direction: 'asc'}]

@@ -31,9 +31,9 @@ block p-authors {
                     {
                         block: 'posts',
                         config: {
-                            title: BEM.I18N('p-authors', 'docs'),
+                            title: BEM.I18N('p-authors', 'tools'),
                             filter: [
-                                { field: 'type', operand: '===', value: 'docs' },
+                                { field: 'type', operand: '===', value: 'tools' },
                                 { field: 'authors', operand: '===', value: author }
                             ],
                             sort: [{field: 'title', direction: 'asc'}]

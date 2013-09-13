@@ -10,7 +10,7 @@
         { block : 'p-post' },
         { block : 'p-articles' },
         { block : 'p-news' },
-        { block : 'p-docs' },
+        { block : 'p-tools' },
         { block : 'p-tags' },
         { block : 'p-authors' },
     ]

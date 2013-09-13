@@ -9,7 +9,7 @@ exports.blocks = [
     //user pages
     { block : 'page-index' },
     { block : 'page-articles' },
-    { block : 'page-docs' },
+    { block : 'page-tools' },
     { block : 'page-news' },
     { block : 'page-filter' },
     { block : 'page-post' },

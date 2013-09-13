@@ -8,13 +8,23 @@ block p-index {
         },
         {
             elem : 'item',
-            url: '/docs/',
-            name : 'docs'
+            url: '/tools/',
+            name : 'tools'
         },
         {
             elem : 'item',
             url: '/news/',
             name: 'news'
+        },
+        {
+            elem : 'item',
+            url: '/authors/',
+            name: 'authors'
+        },
+        {
+            elem : 'item',
+            url: '/tags/',
+            name: 'tags'
         }
     ]
 

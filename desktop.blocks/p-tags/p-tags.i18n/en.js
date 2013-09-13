@@ -1,7 +1,7 @@
 module.exports = {
     "p-tags": {
         "articles": "Articles",
-        "docs": "Documentation",
+        "tools": "Tools",
         "news": "News"
     }
 };
