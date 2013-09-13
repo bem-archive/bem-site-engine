@@ -14,6 +14,7 @@ exports.blocks = [
     { block : 'page-filter' },
     { block : 'page-post' },
     { block : 'page-tags' },
+    { block : 'page-authors' },
 
     //common blocks
     { block : 'error' },

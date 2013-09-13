@@ -1,0 +1,4 @@
+block p-authors {
+
+    mix: { block: 'layout', mods: {section: 'p-menu'} }
+}

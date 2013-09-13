@@ -52,11 +52,22 @@ block side-menu {
                 item;
 
             while(item = content[i]) {
-                buf[i++] = {
-                    elem: 'item',
-                    elemMods: { source : source, active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
-                    content: item
-                }
+                // buf[i++] = {
+                //     elem: 'item',
+                //     elemMods: { source : source, active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
+                //     content: item
+                // }
+
+                buf[i++] = apply(
+                    this._mode = '',
+                    this.ctx = {
+                        elem: 'item',
+                        elemMods: {
+                            source : source,
+                            active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
+                        content: item
+                    }
+                );
             }
 
             return buf;

@@ -11,6 +11,7 @@
         { block : 'p-articles' },
         { block : 'p-news' },
         { block : 'p-docs' },
-        { block : 'p-tags' }
+        { block : 'p-tags' },
+        { block : 'p-authors' },
     ]
 })

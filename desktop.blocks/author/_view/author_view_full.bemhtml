@@ -1,0 +1,53 @@
+block author, mod view full {
+
+    (this.ctx.content && this.ctx.content._res), default: {
+        apply(this.ctx.content = this.ctx.content._res)
+    }
+
+    mix: { block: 'island' }
+
+    content: [
+        {
+            elem: 'avatar-wrapper',
+            content: [
+                {
+                    block: 'author',
+                    elem: 'avatar',
+                    content: this.ctx.content
+                }
+            ]
+        },
+        {
+            elem: 'data-wrapper',
+            content: [
+                {
+                    block: 'author',
+                    elem: 'name',
+                    content: this.ctx.content
+                },
+                {
+                    block: 'author',
+                    elem: 'email',
+                    content: this.ctx.content.email
+                },
+                {
+                    block: 'author',
+                    elem: 'github',
+                    content: this.ctx.content.github
+                },
+                {
+                    block: 'author',
+                    elem: 'twitter',
+                    content: this.ctx.content.twitter
+                },
+                {
+                    block: 'author',
+                    elem: 'info',
+                    content: this.ctx.content.info
+                }
+            ]
+        }
+    ]
+
+    this._.isSimple(this.ctx.content), content: this.ctx.content
+}

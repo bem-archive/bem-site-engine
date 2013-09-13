@@ -1,0 +1,45 @@
+block author {
+    default: {
+        return applyNext(
+            this._datasrc = this.data.params);
+    }
+
+    content: {
+        var data = this.data,
+            id = this.ctx.id;
+
+        return this.doAsync(
+                leDatasrc.loadData.bind(leDatasrc, {})
+            )
+            .then(
+                function(result) {
+                    return
+                        apply('processData',
+                            this.ctx = {
+                                data : data,
+                                id : id,
+                                content : result
+                            }
+                        );
+                },
+                function(err) {
+                    return apply('error', this.ctx = err);
+                },
+                this
+            );
+    }
+
+    processData: {
+        var content = this.ctx.content, //содержимое модели (файл data.json)
+            data = this.ctx.data, //объект, хранящий всю информацию о request, response и.т.д.
+            id = this.ctx.id; //уникальный id автора
+
+        //находим все тэги для постов в текущей локали
+        content = leJspath.filter(content, [
+            { field: 'type', operand: '===', value: 'authors' },
+            { field: 'id', operand: '===', value: id }
+        ], data.lang);
+
+        return content.length > 0 ? content[0] : id;
+    }
+}

@@ -1,0 +1,9 @@
+/*
+block author {
+
+    content: [
+        this.ctx.content.firstName,
+        this.ctx.content.lastName
+    ]
+}
+*/

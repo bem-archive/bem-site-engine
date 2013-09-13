@@ -1,0 +1,22 @@
+block author, elem github {
+
+    default, !(this.ctx && this.ctx.content): {
+        return false;
+    }
+
+    content: [
+        BEM.I18N('author', this.elem),
+        ': ',
+        {
+            block: 'link',
+            url: apply('url'),
+            content: this.ctx.content
+        }
+    ]
+
+    url: {
+        var GITHUB_URL = 'https://github.com/';
+        return this.ctx.content.indexOf(GITHUB_URL) > -1 ?
+            this.ctx.content : GITHUB_URL + this.ctx.content;
+    }
+}

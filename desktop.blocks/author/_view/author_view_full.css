@@ -1,0 +1,33 @@
+.author_view_full
+{
+
+}
+
+.author__avatar-wrapper,
+.author__data-wrapper
+{
+    display: inline-block;
+}
+
+.author__avatar-wrapper
+{
+
+}
+
+.author__data-wrapper
+{
+    padding-top: 3px;
+    padding-left: 20px;
+    vertical-align: top;
+}
+
+.author_view_full .author__name
+{
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.author_view_full .author__avatar
+{
+    padding: 5px 5px 2px;
+}

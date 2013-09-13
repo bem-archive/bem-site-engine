@@ -1,0 +1,15 @@
+block author, elem info {
+
+    default, !(this.ctx && this.ctx.content): {
+        return false;
+    }
+
+    content: [
+        BEM.I18N('author', this.elem),
+        ': ',
+        {
+            tag: 'strong',
+            content: this.ctx.content
+        }
+    ]
+}
