@@ -1,0 +1,12 @@
+block posts {
+
+    mix: { block: 'island' }
+
+    content, this.ctx.config && this.ctx.config.title: [
+        {
+            elem: 'title',
+            content: this.ctx.config.title
+        },
+        this.ctx.content
+    ]
+}

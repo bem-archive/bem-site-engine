@@ -1,0 +1,6 @@
+block posts, elem title {
+
+    tag: 'h2'
+
+    content: this.ctx.content
+}

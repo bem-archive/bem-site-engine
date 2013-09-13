@@ -1,5 +1,6 @@
 .posts-item
 {
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     padding: 1px 10px 5px 10px;
+    border-bottom: 1px solid #ddd;
 }

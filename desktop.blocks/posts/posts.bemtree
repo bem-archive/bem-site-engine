@@ -67,6 +67,7 @@
                 this.ctx = {
                     elem : 'footer',
                     params : {
+                        pager : config['page'],
                         total : total,
                         path  : data.req.path,
                         query : data.req.query,
