@@ -1,0 +1,15 @@
+block side-menu {
+
+    mix: [
+        { block : 'island' },
+        { block : 'layout', elem : 'col', mods: {type: 'menu'} }
+    ]
+
+    content, this.ctx && this.ctx.source: [
+        {
+            elem: 'title',
+            content: BEM.I18N('side-menu', this.ctx.source)
+        },
+        this.ctx.content
+    ]
+}

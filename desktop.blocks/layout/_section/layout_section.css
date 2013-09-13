@@ -42,19 +42,19 @@
     width: 100%;
 }
 
-.layout_section_p-libraries > .layout__col
+.layout_section_p-menu > .layout__col
 {
     display: block;
 }
 
-.layout_section_p-libraries > .layout__col_size_libraries
+.layout_section_p-menu > .layout__col_type_menu
 {
     float: left;
-    width: 450px;
+    width: 250px;
 }
 
-.layout_section_p-libraries > .layout__col_size_blocks
+.layout_section_p-menu > .layout__col_type_content
 {
-    margin-left: 470px;
+    margin-left: 270px;
 }
 
