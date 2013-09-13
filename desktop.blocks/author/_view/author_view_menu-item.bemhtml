@@ -1,0 +1,22 @@
+block author, mod view menu-item {
+
+    (this.ctx.content && this.ctx.content._res), default: {
+        apply(this.ctx.content = this.ctx.content._res)
+    }
+
+    tag: 'a'
+
+    attrs: { href : '/authors/' + this.ctx.id }
+
+    content: {
+        var c = this.ctx.content;
+
+        return [
+            c.lastName,
+            ' ',
+            c.firstName
+        ]
+    }
+
+    this._.isSimple(this.ctx.content), content: this.ctx.content
+}
