@@ -43,8 +43,6 @@ block side-menu {
             return self.indexOf(elem) == pos;
         });
 
-        //leJspath.stringify(data);
-
         //сортируем
         content = content.sort();
 
@@ -57,7 +55,7 @@ block side-menu {
                 buf[i++] = {
                     elem: 'item',
                     elemMods: { source : source, active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
-                    content: item.toLowerCase()
+                    content: item
                 }
             }
 
@@ -66,15 +64,14 @@ block side-menu {
     }
 
     active: {
+        //подумать как убрать эту упячку
+        //текущая абстракция
         var param = {
              'tags' : 'tag',
              'authors' : 'author'
         }[this.ctx.source],
         id = this.ctx.data.params[param];
 
-        console.debug('DEBUG param= ' + param + ' id= ' + id + ' item= ' + this.ctx.item.toLowerCase());
-
-        return (id && id === this.ctx.item.toLowerCase()) ? 'yes' : '';
-        //return '';
+        return (id && id === this.ctx.item) ? 'yes' : '';
     }
 }

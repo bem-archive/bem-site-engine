@@ -1,7 +1,7 @@
 block p-tags {
 
     content: {
-        var tag = 'css';
+        var tag = this.data.params ? this.data.params['tag'] : '';
 
         return [
             {
