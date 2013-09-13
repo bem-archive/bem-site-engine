@@ -1,7 +1,7 @@
 module.exports = {
     "p-index": {
         "articles": "Articles",
-        "docs": "Documentation",
+        "tools": "Tools",
         "news": "News",
         "authors": "Authors",
         "tags": "Tags"

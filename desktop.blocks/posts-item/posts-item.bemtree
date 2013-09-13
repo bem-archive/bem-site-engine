@@ -9,11 +9,11 @@ block posts-item {
             },
             {
                 elem: 'author',
-                content: content.author
+                content: content.authors
             },
             {
                 elem: 'translator',
-                content: content.translator
+                content: content.translators
             },
             {
                 elem: 'date',
