@@ -6,7 +6,8 @@ block side-menu {
     }
 
     content: {
-        var data = this.data;
+        var data = this.data,
+            source = this.ctx.source;
 
         return this.doAsync(
                 leDatasrc.loadData.bind(leDatasrc, {})
@@ -17,6 +18,7 @@ block side-menu {
                         apply('processData',
                             this.ctx = {
                                 data : data,
+                                source : source,
                                 content : result
                             }
                         );
@@ -31,15 +33,17 @@ block side-menu {
     processData: {
         var content = this.ctx.content, //содержимое модели (файл data.json)
             data = this.ctx.data, //объект, хранящий всю информацию о request, response и.т.д.
+            source = this.ctx.source; //поле в мета информации, уникальный и отсортированный список значений которого будет отображаться
 
-        //находим все тэги для пстов текущей локали
-        //возможно этот блок стоит сделать более универсальным
-        content = leJspath.find('.' + data.lang + '.tags', content, {});
+        //находим все тэги для постов в текущей локали
+        content = leJspath.find('.' + data.lang + '.' + source, content, {});
 
         //убираем дубликаты
         content = content.filter(function(elem, pos, self) {
             return self.indexOf(elem) == pos;
         });
+
+        //leJspath.stringify(data);
 
         //сортируем
         content = content.sort();
@@ -52,12 +56,25 @@ block side-menu {
             while(item = content[i]) {
                 buf[i++] = {
                     elem: 'item',
-                    elemMods: {source : 'tags'},
+                    elemMods: { source : source, active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
                     content: item.toLowerCase()
                 }
             }
 
             return buf;
         }
+    }
+
+    active: {
+        var param = {
+             'tags' : 'tag',
+             'authors' : 'author'
+        }[this.ctx.source],
+        id = this.ctx.data.params[param];
+
+        console.debug('DEBUG param= ' + param + ' id= ' + id + ' item= ' + this.ctx.item.toLowerCase());
+
+        return (id && id === this.ctx.item.toLowerCase()) ? 'yes' : '';
+        //return '';
     }
 }
