@@ -1,0 +1,16 @@
+block author, elem twitter {
+
+    default, !(this.ctx && this.ctx.content): {
+        return false;
+    }
+
+    content: [
+        BEM.I18N('author', this.elem),
+        ': ',
+        {
+            block: 'link',
+            url: 'https://twitter.com/' + this.ctx.content,
+            content: '@' + this.ctx.content
+        }
+    ]
+}

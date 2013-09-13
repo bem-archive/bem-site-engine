@@ -13,6 +13,11 @@ block p-authors {
                 mix: { block : 'layout', elem : 'col', mods: {type: 'content'} },
                 content: [
                     {
+                        block: 'author',
+                        mods: { view: 'full' },
+                        id: author
+                    },
+                    {
                         block: 'posts',
                         config: {
                             title: BEM.I18N('p-authors', 'articles'),
