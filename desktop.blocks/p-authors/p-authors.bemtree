@@ -1,0 +1,53 @@
+block p-authors {
+
+    content: {
+        var author = this.data.params ? this.data.params['author'] : '';
+
+        return [
+            {
+                block: 'side-menu',
+                source: 'authors'
+            },
+            {
+                block: 'posts-groups',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'content'} },
+                content: [
+                    {
+                        block: 'posts',
+                        config: {
+                            title: BEM.I18N('p-authors', 'articles'),
+                            filter: [
+                                { field: 'type', operand: '===', value: 'articles' },
+                                { field: 'authors', operand: '===', value: author }
+                            ],
+                            sort: [{field: 'title', direction: 'asc'}]
+                        }
+                    },
+                    {
+                        block: 'posts',
+                        config: {
+                            title: BEM.I18N('p-authors', 'docs'),
+                            filter: [
+                                { field: 'type', operand: '===', value: 'docs' },
+                                { field: 'authors', operand: '===', value: author }
+                            ],
+                            sort: [{field: 'title', direction: 'asc'}]
+                        }
+                    },
+                    {
+                        block: 'posts',
+                        config: {
+                            title: BEM.I18N('p-authors', 'news'),
+                            filter: [
+                                { field: 'type', operand: '===', value: 'news' },
+                                { field: 'authors', operand: '===', value: author }
+                            ],
+                            sort: [{field: 'title', direction: 'asc'}]
+                        }
+                    }
+                ]
+            }
+        ];
+    }
+
+}
