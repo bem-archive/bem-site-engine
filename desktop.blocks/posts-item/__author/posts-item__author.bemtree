@@ -1,0 +1,24 @@
+block posts-item, elem author {
+
+    content {
+
+        this._.isArray(this.ctx.content): {
+            var i = 0,
+                buf = [],
+                item;
+
+            while(item = this.ctx.content[i]) {
+                buf[i++] = apply(
+                    this._mode = '',
+                    this.ctx = {
+                        block: 'author',
+                        mods: { view: 'simple' },
+                        id: this.ctx.content
+                    }
+                );
+            }
+
+            return buf;
+        }
+    }
+}

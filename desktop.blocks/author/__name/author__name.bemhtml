@@ -4,6 +4,8 @@ block author, elem name {
         return false;
     }
 
+    tag: 'span'
+
     content: {
         var c = this.ctx.content;
 

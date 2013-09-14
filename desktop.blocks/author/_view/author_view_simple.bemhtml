@@ -1,0 +1,19 @@
+block author, mod view simple {
+
+    (this.ctx.content && this.ctx.content._res), default: {
+        apply(this.ctx.content = this.ctx.content._res)
+    }
+
+    tag: 'a'
+
+    attrs: { href : '/authors/' + this.ctx.id }
+
+    content: [
+        {
+            elem: 'name',
+            content: this.ctx.content
+        }
+    ]
+
+    this._.isSimple(this.ctx.content), content: this.ctx.content
+}
