@@ -1,6 +1,8 @@
 block posts, elem title {
 
+    mix: { block: 'island' }
+
     tag: 'h2'
 
-    content: this.ctx.content
+    //content: this.ctx.content
 }
