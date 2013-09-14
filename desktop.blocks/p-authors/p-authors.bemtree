@@ -1,7 +1,7 @@
 block p-authors {
 
     content: {
-        var author = this.data.params ? this.data.params['author'] : '';
+        var author = this.data.params ? this.data.params['authors'] : '';
 
         return [
             {

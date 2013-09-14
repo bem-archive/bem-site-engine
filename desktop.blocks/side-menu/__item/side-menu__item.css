@@ -1,6 +1,7 @@
 .side-menu__item
 {
     padding: 5px 0 5px 10px;
+    display: block;
 }
 
 .side-menu__item:hover

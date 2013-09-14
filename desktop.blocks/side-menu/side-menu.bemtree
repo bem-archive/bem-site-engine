@@ -43,7 +43,7 @@ block side-menu {
             return self.indexOf(elem) == pos;
         });
 
-        //сортируем
+        //сортируем в алфавитном порядке
         content = content.sort();
 
         if(this._.isArray(content)) {
@@ -51,13 +51,11 @@ block side-menu {
                 buf = [],
                 item;
 
+            //цикличеки применяем шаблоны к элементу item текущего блока
+            //с модификатором соотвествующим полю мета-информации
+            //значения которого отображаются в меню и идентификацией
+            //текущего значения для выделения активного пункта меню
             while(item = content[i]) {
-                // buf[i++] = {
-                //     elem: 'item',
-                //     elemMods: { source : source, active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
-                //     content: item
-                // }
-
                 buf[i++] = apply(
                     this._mode = '',
                     this.ctx = {
@@ -74,15 +72,9 @@ block side-menu {
         }
     }
 
+    //определение активного пункта меню и установка значения модификатора active
     active: {
-        //подумать как убрать эту упячку
-        //текущая абстракция
-        var param = {
-             'tags' : 'tag',
-             'authors' : 'author'
-        }[this.ctx.source],
-        id = this.ctx.data.params[param];
-
+        var id = this.ctx.data.params[this.ctx.source];
         return (id && id === this.ctx.item) ? 'yes' : '';
     }
 }

@@ -13,7 +13,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'authors',
-    rule : '/authors/{author}',
+    rule : '/authors/{authors}',
     data : {
         action : 'le-page'
     }

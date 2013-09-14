@@ -13,7 +13,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'tags',
-    rule : '/tags/{tag}',
+    rule : '/tags/{tags}',
     data : {
         action : 'le-page'
     }

@@ -4,8 +4,6 @@ block side-menu, elem item, elemMod source tags {
 
     attrs: { href : '/tags/' + this.ctx.content }
 
-    content: {
-        return this.ctx.content
-    }
+    content: this.ctx.content.toLowerCase()
 }
 
