@@ -11,10 +11,10 @@ exports.blocks = [
     { block : 'page-articles' },
     { block : 'page-tools' },
     { block : 'page-news' },
-    { block : 'page-filter' },
-    { block : 'page-post' },
     { block : 'page-tags' },
     { block : 'page-authors' },
+    { block : 'page-filter' },
+    { block : 'page-post' },
 
     //common blocks
     { block : 'error' },

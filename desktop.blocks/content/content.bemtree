@@ -7,12 +7,64 @@ block content {
     //     ]);
     // }
 
-    content: {
-        return apply('pager', this.ctx = this.data.page)
+    default: {
+        return applyNext(
+            this._datasrc = this.data.params);
     }
 
-    pager: {
-        return { block : 'p-' + this.ctx };
+    content: {
+        return this.doAsync(
+                leDatasrc.loadData.bind(leDatasrc, {})
+            )
+            .then(
+                function(result) {
+                    return
+                        apply('processData',
+                            this.ctx = {
+                                content : result
+                            }
+                        );
+                },
+                function(err) {
+                    return apply('error', this.ctx = err);
+                },
+                this
+            );
+    }
+
+
+    processData: {
+        //leJspath.stringify(this.ctx.content);
+        //console.debug(this.data.page);
+
+        return this.data.page !== 'filter' ?
+            apply(this._mode = '', this.ctx = { block : 'p-' + this.data.page }) :
+            apply('parse-url');
+    }
+
+    parse-url: {
+        console.debug('parse url');
+        var content = this.ctx.content;
+            data = this.data,
+            type = data.params.type,
+            url = data.req.url,
+            isId = null,
+            page = null;
+
+        url = url.split('/').slice(1);
+
+        console.debug('DEBUG type= ' + type + ' url= ' + url + ' id= ' + url[1]);
+
+        isId = leJspath.filter(content, [
+                { field: 'type', operand:  '===', value: type },
+                { field: 'id', operand:  '===', value: url[1] }
+            ], data.lang).length > 0;
+
+        console.debug('IS_ID ' + isId);
+
+        page = isId ? 'post' : type;
+
+        return apply(this._mode = '', this.ctx = { block : 'p-' + page });
     }
 
 }
