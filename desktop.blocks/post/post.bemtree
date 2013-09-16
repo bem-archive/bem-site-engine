@@ -42,16 +42,22 @@ block post {
         result = result[0];
 
         return [
-            {
-                block: 'posts-item',
-                elem: 'author',
-                content: result.author
-            },
-            {
-                block: 'posts-item',
-                elem: 'translator',
-                content: result.translator
-            },
+            apply(
+                this._mode = '',
+                this.ctx = {
+                    block: 'posts-item',
+                    elem: 'author',
+                    content: result.authors
+                }
+            ),
+            apply(
+                this._mode = '',
+                this.ctx = {
+                    block: 'posts-item',
+                    elem: 'translator',
+                    content: result.translators
+                }
+            ),
             {
                 block: 'posts-item',
                 elem: 'date',
@@ -77,7 +83,7 @@ block post {
             {
                 block: 'posts-item',
                 elem: 'categories',
-                content: result.category
+                content: result.categories
             },
             {
                 block: 'posts-item',

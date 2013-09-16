@@ -1,16 +1,12 @@
 block posts-item, elem translator {
 
-    default, !(this.ctx && this.ctx.content): {
+    default, !(this.ctx && this.ctx.content && this.ctx.content.length > 0): {
         return false;
     }
 
-    content : [
+    content: [
         BEM.I18N('posts-item', this.elem),
         ': ',
-        {
-            tag: 'strong',
-            content: this.ctx.content
-        }
-        //TODO make translator name as url to other page
+        applyNext()
     ]
 }

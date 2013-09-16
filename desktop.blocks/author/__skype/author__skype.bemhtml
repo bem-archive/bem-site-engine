@@ -7,6 +7,6 @@ block author, elem skype {
     content: [
         BEM.I18N('author', this.elem),
         ': ',
-        this.ctx.content
+        applyNext()
     ]
 }

@@ -21,7 +21,7 @@ block posts-item, elem tags {
             item;
 
         while(item = this.ctx.content[i]) {
-            i > 0 &&
+            i++ > 0 &&
                 buf.push({
                     tag: 'span',
                     content: ', '
@@ -32,8 +32,6 @@ block posts-item, elem tags {
                 url: '/tags/' + item,
                 content: item
             });
-
-            i++;
         }
 
         return buf;

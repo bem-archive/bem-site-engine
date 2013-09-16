@@ -1,7 +1,6 @@
-block posts-item, elem author {
+block posts-item, elem translator {
 
     content {
-
         this._.isArray(this.ctx.content): {
             var i = 0,
                 buf = [],
@@ -25,18 +24,6 @@ block posts-item, elem author {
             }
 
             return buf;
-        }
-
-        !this._.isArray(this.ctx.content): {
-
-           return apply(
-                this._mode = '',
-                this.ctx = {
-                    block: 'author',
-                    mods: { view: 'simple' },
-                    id: this.ctx.content
-                }
-            );
         }
     }
 }

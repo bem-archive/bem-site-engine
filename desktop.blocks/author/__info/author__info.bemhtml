@@ -9,7 +9,7 @@ block author, elem info {
         ': ',
         {
             tag: 'strong',
-            content: this.ctx.content
+            content: applyNext()
         }
     ]
 }

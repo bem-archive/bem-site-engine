@@ -35,7 +35,7 @@ block posts-item {
             },
             {
                 elem: 'categories',
-                content: content.category
+                content: content.categories
             },
             {
                 elem: 'type',
