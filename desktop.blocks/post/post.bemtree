@@ -30,11 +30,11 @@ block post {
     processData: {
         var content = this.ctx.content,
             data = this.ctx.data,
-            url = data.req.url.split('/').slice(1),
+            url = data.req.url.split('/').slice(2),
             result = leJspath.filter(content, [{
                 field: 'id',
                 operand: '===',
-                value: url[1]
+                value: url[0]
             }], data.lang);
 
         if(!result || result.length == 0)
