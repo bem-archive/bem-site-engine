@@ -88,13 +88,18 @@ provide({
 
         if(config) {
             for(var i = 0; i < config.length; i++) {
-                predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + ' $' + config[i]['field'] + '}';
-                substitution[config[i]['field']] = config[i]['value'];
+                // predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + ' $' + config[i]['field'] + '}';
+                // substitution[config[i]['field']] = config[i]['value'];
+
+                predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + '"' + config[i].value + '"}';
             }
         }
 
+        logger.debug(predicate);
+
         //фильтруем данные по предикату и объекту подстановок
-        return jspath.apply(predicate, content, substitution);
+        //return jspath.apply(predicate, content, substitution);
+        return jspath.apply(predicate, content);
     },
 
     /**

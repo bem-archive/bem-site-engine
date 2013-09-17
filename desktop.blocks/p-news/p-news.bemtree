@@ -16,12 +16,24 @@ block p-news {
     filter: {
         var content = this.ctx.content,
             data = this.data,
-            type = data.params.type, //параметр типа
-            url = data.req.url; //строка запроса
+            type = data.params.type || data.page, //параметр типа
+            url = data.req.url, //строка запроса
 
-            apply('date-filter', this.ctx = url);
+            filterConfig = [{ field: 'type', operand: '===', value: type }],
+            filterDate = apply('date-filter', this.ctx = url);
 
-            url = url.split('/').slice(2); //отрезаем /{type}/
+        if(filterDate.dateFrom && filterDate.dateTo) {
+            filterConfig.push(
+                { field: 'createDate', operand: '>=', value: filterDate.dateFrom },
+                { field: 'createDate', operand: '<', value: filterDate.dateTo }
+            );
+        }
+
+        url = filterDate.url.split('/').slice(2); //отрезаем /{type}/
+
+        console.debug('URL= ' + url);
+
+        return filterConfig;
     }
 
     date-filter: {
@@ -35,26 +47,7 @@ block p-news {
             dateFrom = null,
             dateTo = null;
 
-        match = YEAR_REGEXP.exec(url);
-        if(match) {
-            year = match[0];
-
-            dateFrom = (new Date(year, 0, 1)).getTime();
-            dateTo = (new Date(+year + 1, 0, 1)).getTime();
-
-            url.replace(YEAR_REGEXP, '');
-        }
-
-        match = MONTH_REGEXP.exec(url);
-        if(match) {
-            date = match[0].split('/');
-
-            dateFrom = (new Date(date[0], date[1] - 1, 1)).getTime();
-            dateTo = date[1] < 12 ? (new Date(date[0], date[1], 1)).getTime() : (new Date(+date[0] + 1, 0, 1)).getTime();
-
-            url.replace(MONTH_REGEXP, '');
-        }
-
+        //находим число, месяц и день
         match = DAY_REGEXP.exec(url);
         if(match) {
             date = match[0].split('/');
@@ -62,7 +55,29 @@ block p-news {
             dateFrom = (new Date(date[0], date[1] - 1, date[2])).getTime();
             dateTo = dateFrom + 86400000;
 
-            url.replace(DAY_REGEXP, '');
+            url = url.replace(DAY_REGEXP, '');
+        }
+
+        //находим число и месяц
+        match = MONTH_REGEXP.exec(url);
+        if(match) {
+            date = match[0].split('/');
+
+            dateFrom = (new Date(date[0], date[1] - 1, 1)).getTime();
+            dateTo = date[1] < 12 ? (new Date(date[0], date[1], 1)).getTime() : (new Date(+date[0] + 1, 0, 1)).getTime();
+
+            url = url.replace(MONTH_REGEXP, '');
+        }
+
+        //находим год
+        match = YEAR_REGEXP.exec(url);
+        if(match) {
+            year = match[0];
+
+            dateFrom = (new Date(year, 0, 1)).getTime();
+            dateTo = (new Date(+year + 1, 0, 1)).getTime();
+
+            url = url.replace(YEAR_REGEXP, '');
         }
 
         return { dateFrom: dateFrom, dateTo: dateTo, url: url };
