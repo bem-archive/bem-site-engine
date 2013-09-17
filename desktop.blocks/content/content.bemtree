@@ -37,7 +37,6 @@ block content {
     }
 
     parse-url: {
-        console.debug('parse url');
         var content = this.ctx.content; //содержимое файла data.json
             data = this.data, //объект хранящий request, response и.т.д
             type = data.params.type, //параметр типа
@@ -58,7 +57,7 @@ block content {
         //возвращаем либо блок p-post либо p-{type} для дальнейшего разбора
         page = isId ? 'post' : type;
 
-        return apply(this._mode = '', this.ctx = { block : 'p-' + page });
+        return apply(this._mode = '', this.ctx = { block : 'p-' + page, content: content });
     }
 
 }

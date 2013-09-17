@@ -1,14 +1,70 @@
 block p-news {
 
-    content: [
-        {
-            block: 'posts',
-            config: {
-                filter: leJspath.parseQuery(this.data, 'filter'),
-                sort: leJspath.parseQuery(this.data, 'sort'),
-                page: leJspath.parseQuery(this.data, 'page')
+    content: {
+        return [
+            {
+                block: 'posts',
+                config: {
+                    filter: apply('filter'),
+                    sort: leJspath.parseQuery(this.data, 'sort'),
+                    page: leJspath.parseQuery(this.data, 'page')
+                }
             }
-        }
-    ]
+        ]
+    }
 
+    filter: {
+        var content = this.ctx.content,
+            data = this.data,
+            type = data.params.type, //параметр типа
+            url = data.req.url; //строка запроса
+
+            apply('date-filter', this.ctx = url);
+
+            url = url.split('/').slice(2); //отрезаем /{type}/
+    }
+
+    date-filter: {
+        var YEAR_REGEXP = /[2][0-9]{3}/;
+            MONTH_REGEXP = /([2][0-9]{3})\/([0][1-9]|[1][0-2])/;
+            DAY_REGEXP = /([2][0-9]{3})\/([0][1-9]|[1][0-2])\/([0][0-9]|[1-2][0-9]|[3][0-1])/;
+
+        var url = this.ctx,
+            date = null,
+            match = null,
+            dateFrom = null,
+            dateTo = null;
+
+        match = YEAR_REGEXP.exec(url);
+        if(match) {
+            year = match[0];
+
+            dateFrom = (new Date(year, 0, 1)).getTime();
+            dateTo = (new Date(+year + 1, 0, 1)).getTime();
+
+            url.replace(YEAR_REGEXP, '');
+        }
+
+        match = MONTH_REGEXP.exec(url);
+        if(match) {
+            date = match[0].split('/');
+
+            dateFrom = (new Date(date[0], date[1] - 1, 1)).getTime();
+            dateTo = date[1] < 12 ? (new Date(date[0], date[1], 1)).getTime() : (new Date(+date[0] + 1, 0, 1)).getTime();
+
+            url.replace(MONTH_REGEXP, '');
+        }
+
+        match = DAY_REGEXP.exec(url);
+        if(match) {
+            date = match[0].split('/');
+
+            dateFrom = (new Date(date[0], date[1] - 1, date[2])).getTime();
+            dateTo = dateFrom + 86400000;
+
+            url.replace(DAY_REGEXP, '');
+        }
+
+        return { dateFrom: dateFrom, dateTo: dateTo, url: url };
+    }
 }
