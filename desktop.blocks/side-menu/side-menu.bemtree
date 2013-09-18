@@ -1,52 +1,24 @@
 block side-menu {
 
-    default: {
-        return applyNext(
-            this._datasrc = this.data.params);
-    }
-
     content: {
-        var data = this.data,
-            source = this.ctx.source;
-
-        return this.doAsync(
-                leDatasrc.loadData.bind(leDatasrc, {})
-            )
-            .then(
-                function(result) {
-                    return
-                        apply('processData',
-                            this.ctx = {
-                                data : data,
-                                source : source,
-                                content : result
-                            }
-                        );
-                },
-                function(err) {
-                    return apply('error', this.ctx = err);
-                },
-                this
-            );
-    }
-
-    processData: {
-        var content = this.ctx.content, //содержимое модели (файл data.json)
-            data = this.ctx.data, //объект, хранящий всю информацию о request, response и.т.д.
-            source = this.ctx.source; //поле в мета информации, уникальный и отсортированный список значений которого будет отображаться
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            source = data.source, //содержимое модели (файл data.json)
+            type = this.ctx.type; //поле в мета информации, уникальный и отсортированный список значений которого будет отображаться
 
         //находим все тэги для постов в текущей локали
-        content = leJspath.find('.' + data.lang + '.' + source, content, {});
+        source = leJspath.find('.' + data.lang + '.' + type, source, {});
 
         //убираем дубликаты
-        content = content.filter(function(elem, pos, self) {
+        source = source.filter(function(elem, pos, self) {
             return self.indexOf(elem) == pos;
         });
 
         //сортируем в алфавитном порядке
-        content = content.sort();
+        source = source.sort();
 
-        if(this._.isArray(content)) {
+        leJspath.stringify(source);
+
+        if(this._.isArray(source)) {
             var i = 0,
                 buf = [],
                 item;
@@ -55,15 +27,16 @@ block side-menu {
             //с модификатором соотвествующим полю мета-информации
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
-            while(item = content[i]) {
+            while(item = source[i]) {
+                console.debug(item);
                 buf[i++] = apply(
                     this._mode = '',
                     this.ctx = {
                         elem: 'item',
                         elemMods: {
-                            source : source,
+                            type : type,
                             active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
-                        content: item
+                        id: item
                     }
                 );
             }
@@ -74,7 +47,6 @@ block side-menu {
 
     //определение активного пункта меню и установка значения модификатора active
     active: {
-        var id = this.ctx.data.params[this.ctx.source];
-        return (id && id === this.ctx.item) ? 'yes' : '';
+        return (this.ctx.id && this.ctx.id === this.ctx.item) ? 'yes' : '';
     }
 }

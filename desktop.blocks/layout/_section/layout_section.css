@@ -47,13 +47,19 @@
     display: block;
 }
 
-.layout_section_p-menu > .layout__col_type_menu
+.layout_section_p-menu > .layout__col_type_left
 {
     float: left;
     width: 250px;
 }
 
-.layout_section_p-menu > .layout__col_type_content
+.layout_section_p-menu > .layout__col_type_right
+{
+    float: right;
+    width: 250px;
+}
+
+.layout_section_p-menu > .layout__col_type_center
 {
     margin-left: 270px;
 }

@@ -2,12 +2,10 @@ block posts-item, elem title {
     tag: 'h3'
 
     content: {
-        var content = this.ctx.content;
-
         return {
             block: 'link',
-            url: '/' + content.type + '/' + content.id,
-            content: content.title
+            url: '/' + this.ctx.type + '/' + this.ctx.id,
+            content: this.ctx.title
         }
 
     }

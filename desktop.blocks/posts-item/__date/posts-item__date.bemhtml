@@ -19,13 +19,17 @@ block posts-item, elem date {
                  len = len || 2;
                  while (val.length < len) val = "0" + val;
                  return val;
-             },
-             date = new Date(this.ctx.content),
-             d = date.getDate(),
-             D = pad(date.getDay()),
+            },
+            date = new Date();
+
+        date.setTime(this.ctx.content)
+
+        var  d = date.getDate(),
+             D = pad(date.getDate()),
              m = pad(date.getMonth() + 1),
              y = date.getFullYear();
         return D + '-' + m + '-' + y;
+        //return this.ctx.content;
     }
 }
 

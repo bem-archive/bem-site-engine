@@ -1,49 +1,43 @@
 block p-tags {
 
     content: {
-        var tag = this.data.params ? this.data.params['tags'] : '';
+        var tag = this.ctx.id || '',
+            content = [];
+
+        //leJspath.stringify(data);
+
+        ['articles', 'tools', 'news'].forEach(function(item) {
+            content.push({
+                block: 'posts',
+                config: {
+                    title: BEM.I18N('p-tags', item),
+                    filter: [
+                        { field: 'type', operand: '===', value: item },
+                        { field: 'tags', operand: '===', value: tag }
+                    ],
+                    sort: [{field: 'title', direction: 'asc'}]
+                }
+            })
+        });
 
         return [
             {
-                block: 'side-menu',
-                source: 'tags'
-            },
-            {
-                block: 'posts-groups',
-                mix: { block : 'layout', elem : 'col', mods: {type: 'content'} },
+                block: 'left',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'left'} },
                 content: [
                     {
-                        block: 'posts',
-                        config: {
-                            title: BEM.I18N('p-tags', 'articles'),
-                            filter: [
-                                { field: 'type', operand: '===', value: 'articles' },
-                                { field: 'tags', operand: '===', value: tag }
-                            ],
-                            sort: [{field: 'title', direction: 'asc'}]
-                        }
-                    },
+                        block: 'side-menu',
+                        type: 'tags'
+                    }
+                ]
+            },
+            {
+                block: 'center',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                content: [
                     {
-                        block: 'posts',
-                        config: {
-                            title: BEM.I18N('p-tags', 'tools'),
-                            filter: [
-                                { field: 'type', operand: '===', value: 'tools' },
-                                { field: 'tags', operand: '===', value: tag }
-                            ],
-                            sort: [{field: 'title', direction: 'asc'}]
-                        }
-                    },
-                    {
-                        block: 'posts',
-                        config: {
-                            title: BEM.I18N('p-tags', 'news'),
-                            filter: [
-                                { field: 'type', operand: '===', value: 'news' },
-                                { field: 'tags', operand: '===', value: tag }
-                            ],
-                            sort: [{field: 'title', direction: 'asc'}]
-                        }
+                        block: 'posts-groups',
+                        content: content
                     }
                 ]
             }

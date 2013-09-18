@@ -1,45 +1,19 @@
 block post {
 
-    default: {
-        return applyNext(this._datasrc = this.data.params);
-    }
-
     content: {
-        var data = this.data;
-
-        return this.doAsync(
-                leDatasrc.loadData.bind(leDatasrc, {})
-            )
-            .then(
-                function(result) {
-                    return
-                        apply('processData',
-                            this.ctx = {
-                                data : data,
-                                content : result
-                            }
-                        );
-                },
-                function(err) {
-                    return apply('error', this.ctx = err);
-                },
-                this
-            );
-    }
-
-    processData: {
-        var content = this.ctx.content,
-            data = this.ctx.data,
-            result = leJspath.filter(content, [{
+        var id = this.ctx.id,
+            data = this.data,
+            source = data.source,
+            source = leJspath.filter(source, [{
                 field: 'id',
                 operand: '===',
-                value: data.params.id
+                value: id
             }], data.lang);
 
-        if(!result || result.length == 0)
+        if(!source || source.length == 0)
             return [];
 
-        result = result[0];
+        source = source.shift();
 
         return [
             apply(
@@ -47,7 +21,7 @@ block post {
                 this.ctx = {
                     block: 'posts-item',
                     elem: 'author',
-                    content: result.authors
+                    content: source.authors
                 }
             ),
             apply(
@@ -55,50 +29,52 @@ block post {
                 this.ctx = {
                     block: 'posts-item',
                     elem: 'translator',
-                    content: result.translators
+                    content: source.translators
                 }
             ),
             {
                 block: 'posts-item',
                 elem: 'date',
                 elemMods: {'type': 'create'},
-                content: result.createDate
+                content: source.createDate
             },
             {
                 block: 'posts-item',
                 elem: 'date',
                 elemMods: {'type': 'edit'},
-                content: result.editDate
+                content: source.editDate
             },
             {
                 block: 'posts-item',
                 elem: 'thumbnail',
-                content: result.thumbnail
+                content: source.thumbnail
             },
             {
                 block: 'posts-item',
                 elem: 'tags',
-                content: result.tags
+                content: source.tags
             },
             {
                 block: 'posts-item',
                 elem: 'categories',
-                content: result.categories
+                content: source.categories
             },
             {
                 block: 'posts-item',
                 elem: 'type',
-                content: result.type
+                content: source.type
             },
             {
                 block: 'posts-item',
                 elem: 'summary',
-                content: result.summary
+                content: source.summary
             },
             {
                 elem: 'content',
-                content: result.content
+                content: source.content
             }
         ]
     }
+
+
 }

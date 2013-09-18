@@ -3,7 +3,7 @@ block content {
     default: {
         applyCtx({
             block : 'body',
-            content : this.ctx
+            content : this.ctx.content._res
         })
     }
 

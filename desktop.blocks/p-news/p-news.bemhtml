@@ -1,7 +1,4 @@
 block p-news {
 
-    content: [
-        this.ctx.content
-    ]
-
+    mix: { block: 'layout', mods: {section: 'p-menu'} }
 }

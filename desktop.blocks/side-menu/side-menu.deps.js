@@ -1,7 +1,7 @@
 ({
     mustDeps: [],
     shouldDeps: [
-        { elem: 'item', mods : { source: ['tags', 'authors'], active: 'yes' } },
+        { elem: 'item', mods : { type: ['tags', 'authors'], active: 'yes' } },
         { elem: 'title'}
     ]
 })

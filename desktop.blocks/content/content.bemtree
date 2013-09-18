@@ -1,18 +1,83 @@
 block content {
 
-    // default: {
-    //     return applyCtx([
-    //         { block : 'breadcrumbs' },
-    //         this.ctx
-    //     ]);
-    // }
+    default: {
+        return applyNext(
+            this._datasrc = this.data.params);
+    }
 
     content: {
-        return apply('pager', this.ctx = this.data.page)
+        return this.doAsync(
+                leDatasrc.loadData.bind(leDatasrc, {})
+            )
+            .then(
+                function(result) {
+                    return
+                        apply('processData',
+                            this.ctx = {
+                                source : result
+                            }
+                        );
+                },
+                function(err) {
+                    return apply('error', this.ctx = err);
+                },
+                this
+            );
     }
 
-    pager: {
-        return { block : 'p-' + this.ctx };
+    processData: {
+        var source = this.ctx.source; //содержимое файла data.json
+            data = this.data, //объект хранящий request, response и.т.д
+            type = data.params.type, //параметр типа
+            url = data.req.url,
+            id = url.split('?').shift().split('/').slice(2).shift(),
+            ctx = { source: source, type: type, id: id },
+            block = null;
+
+        this.data.source = source;
+
+        switch(type) {
+                case 'articles':
+                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'articles';
+                    break;
+
+                case 'tools':
+                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'tools';
+                    break;
+
+                case 'news':
+                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'news';
+                    break;
+
+                case 'authors':
+                    block = 'authors';
+                    break;
+
+                case 'tags':
+                    block = 'tags';
+                    break;
+
+                default:
+                    block = 'index';
+                    break;
+            }
+
+        //console.debug('id = ' + id);
+        //console.debug('block = ' + block);
+
+        return apply(this._mode = '', this.ctx = {
+                block : 'p-' + block,
+                id: id
+            });
     }
 
+    //определяем факт того, что был запрошен единичный пост
+    //по попытке поиска поста по типу из url, куску строки запроса
+    //идущей после /{type}/ и текущей локали
+    find-by-id: {
+        return leJspath.filter(this.ctx.source, [
+                { field: 'type', operand:  '===', value: this.ctx.type },
+                { field: 'id', operand:  '===', value: this.ctx.id }
+            ], this.data.lang).length > 0;
+    }
 }
