@@ -1,11 +1,12 @@
 block posts-item {
     content: {
-        var content = this.ctx.content;
-        var params = this.ctx.params;
+        var content = this.ctx.source;
         return [
             {
                 elem: 'title',
-                content: content
+                id: content.id,
+                type: content.type,
+                title: content.title
             },
             {
                 elem: 'author',

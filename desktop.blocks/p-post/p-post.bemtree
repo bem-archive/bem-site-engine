@@ -3,7 +3,7 @@ block p-post {
     content: [
         {
             block: 'post',
-            params: this.data.params
+            id: this.ctx.id
         }
     ]
 

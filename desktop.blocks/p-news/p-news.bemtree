@@ -27,8 +27,8 @@ block p-news {
     }
 
     filter: {
-        var content = this.ctx.content,
-            data = this.data,
+        var data = this.data,
+            source = data.source,
             type = data.params.type ? data.params.type : data.page, //параметр типа
             url = data.req.url, //строка запроса
 

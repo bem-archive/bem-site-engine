@@ -14,7 +14,7 @@ block content {
                     return
                         apply('processData',
                             this.ctx = {
-                                content : result
+                                source : result
                             }
                         );
                 },
@@ -26,12 +26,15 @@ block content {
     }
 
     processData: {
-        var content = this.ctx.content; //содержимое файла data.json
+        var source = this.ctx.source; //содержимое файла data.json
             data = this.data, //объект хранящий request, response и.т.д
             type = data.params.type, //параметр типа
-            id = data.req.url.split('/').slice(2).shift(),
-            ctx = { content: content, type: type, id: id },
+            url = data.req.url,
+            id = url.split('?').shift().split('/').slice(2).shift(),
+            ctx = { source: source, type: type, id: id },
             block = null;
+
+        this.data.source = source;
 
         switch(type) {
                 case 'articles':
@@ -59,9 +62,11 @@ block content {
                     break;
             }
 
+        //console.debug('id = ' + id);
+        //console.debug('block = ' + block);
+
         return apply(this._mode = '', this.ctx = {
                 block : 'p-' + block,
-                content: content,
                 id: id
             });
     }
@@ -70,7 +75,7 @@ block content {
     //по попытке поиска поста по типу из url, куску строки запроса
     //идущей после /{type}/ и текущей локали
     find-by-id: {
-        return leJspath.filter(this.ctx.content, [
+        return leJspath.filter(this.ctx.source, [
                 { field: 'type', operand:  '===', value: this.ctx.type },
                 { field: 'id', operand:  '===', value: this.ctx.id }
             ], this.data.lang).length > 0;

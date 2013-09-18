@@ -31,7 +31,8 @@ block p-authors {
                 content: [
                     {
                         block: 'side-menu',
-                        source: 'authors'
+                        id: author,
+                        type: 'authors'
                     }
                 ]
             },

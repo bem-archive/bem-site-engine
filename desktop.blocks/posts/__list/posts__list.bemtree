@@ -2,17 +2,16 @@ block posts, elem list {
 
     content {
 
-        this._.isArray(this.ctx.content): {
+        this._.isArray(this.ctx.source): {
             var i = 0,
                 buf = [],
                 item;
 
-            while(item = this.ctx.content[i]) {
-                //item.content = null;
-                buf[i++] = {
+            while(item = this.ctx.source[i]) {
+                buf[i++] = apply(this._mode = '', this.ctx = {
                     block: 'posts-item',
-                    content: item
-                }
+                    source: item
+                });
             }
 
             return buf;

@@ -27,7 +27,7 @@ block p-tags {
                 content: [
                     {
                         block: 'side-menu',
-                        source: 'tags'
+                        type: 'tags'
                     }
                 ]
             },

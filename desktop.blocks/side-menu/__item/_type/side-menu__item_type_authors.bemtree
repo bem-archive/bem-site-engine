@@ -1,0 +1,13 @@
+block side-menu, elem item, elemMod type authors {
+
+    content: {
+
+        return [
+            {
+                block: 'author',
+                mods: {view: 'menu-item'},
+                id: this.ctx.id
+            }
+        ]
+    }
+}

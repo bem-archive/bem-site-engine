@@ -1,8 +1,8 @@
 block author, mod view full {
 
-    (this.ctx.content && this.ctx.content._res), default: {
-        apply(this.ctx.content = this.ctx.content._res)
-    }
+    //(this.ctx.content && this.ctx.content._res), default: {
+    //    apply(this.ctx.content = this.ctx.content._res)
+    //}
 
     mix: { block: 'island' }
 

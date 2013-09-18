@@ -95,7 +95,7 @@ provide({
             }
         }
 
-        logger.debug(predicate);
+        //logger.debug(predicate);
 
         //фильтруем данные по предикату и объекту подстановок
         //return jspath.apply(predicate, content, substitution);

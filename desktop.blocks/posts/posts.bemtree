@@ -1,65 +1,33 @@
  block posts {
 
-    default: {
-        return applyNext(
-            this._datasrc = this.data.params);
-    }
-
     content: {
-        var data = this.data;
-        var config = this.ctx.config;
+        DEFAULT_LIMIT = 10; //число записей на странице по умолчанию
 
-        return this.doAsync(
-                leDatasrc.loadData.bind(leDatasrc, {})
-            )
-            .then(
-                function(result) {
-                    return
-                        apply('processData',
-                            this.ctx = {
-                                data : data,
-                                content : result,
-                                config : config
-                            }
-                        );
-                },
-                function(err) {
-                    return apply('error', this.ctx = err);
-                },
-                this
-            );
-    }
-
-    processData: {
-        var DEFAULT_LIMIT = 10; //число записей на странице по умолчанию
-
-        var content = this.ctx.content, //содержимое модели (файл data.json)
-            data = this.ctx.data, //объект, хранящий всю информацию о request, response и.т.д.
-            config = this.ctx.config;
-
-            //leJspath.stringify(data);
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            config = this.ctx.config, //конфиг для фильтрации, сортировки и пагинации
+            source = data.source; //содержимое модели (файл data.json)
 
         //фильтрация данных
-        content = leJspath.filter(content, config['filter'], data.lang);
+        source = leJspath.filter(source, config['filter'], data.lang);
 
         //сортировка данных
-        content = config['sort'] ?
-            leJspath.sort(content, config['sort']) : content;
+        source = config['sort'] ?
+            leJspath.sort(source, config['sort']) : source;
 
         //общее число записей, необходимо знать перед процедурой пагинации
         //для передачи в блок pager для правильной отрисовки набора ссылок на страницы
-        var total = content.length;
+        var total = source.length;
 
         //постраничное разбиение набора записей
-        content = config['page'] ?
-            leJspath.paginate(content, config['page'], DEFAULT_LIMIT) : content;
+        source = config['page'] ?
+            leJspath.paginate(source, config['page'], DEFAULT_LIMIT) : source;
 
         return [
             apply(
                 this._mode = '',
                 this.ctx = {
                     elem : 'list',
-                    content : content
+                    source : source
                 }
             ),
             apply(
