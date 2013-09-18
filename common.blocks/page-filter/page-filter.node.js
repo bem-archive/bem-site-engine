@@ -5,7 +5,23 @@ modules.define(
 
 router.addRoute({
     name : 'filter',
-    rule : '/{type}/.*',
+    rule : '/articles/.*',
+    data : {
+        action : 'le-page'
+    }
+});
+
+router.addRoute({
+    name : 'filter',
+    rule : '/tools/.*',
+    data : {
+        action : 'le-page'
+    }
+});
+
+router.addRoute({
+    name : 'filter',
+    rule : '/news/.*',
     data : {
         action : 'le-page'
     }

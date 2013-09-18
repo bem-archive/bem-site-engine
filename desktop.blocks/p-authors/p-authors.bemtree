@@ -1,54 +1,47 @@
 block p-authors {
 
     content: {
-        var author = this.data.params ? this.data.params['authors'] : '';
+        var author = this.data.params ? this.data.params['authors'] : '',
+            content = [];
+
+        content.push({
+            block: 'author',
+            mods: { view: 'full' },
+            id: author
+        });
+
+        ['articles', 'tools', 'news'].forEach(function(item) {
+            content.push({
+                block: 'posts',
+                config: {
+                    title: BEM.I18N('p-authors', item),
+                    filter: [
+                        { field: 'type', operand: '===', value: item },
+                        { field: 'authors', operand: '===', value: author }
+                    ],
+                    sort: [{field: 'title', direction: 'asc'}]
+                }
+            })
+        });
 
         return [
             {
-                block: 'side-menu',
-                source: 'authors'
-            },
-            {
-                block: 'posts-groups',
-                mix: { block : 'layout', elem : 'col', mods: {type: 'content'} },
+                block: 'left',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'left'} },
                 content: [
                     {
-                        block: 'author',
-                        mods: { view: 'full' },
-                        id: author
-                    },
+                        block: 'side-menu',
+                        source: 'authors'
+                    }
+                ]
+            },
+            {
+                block: 'center',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                content: [
                     {
-                        block: 'posts',
-                        config: {
-                            title: BEM.I18N('p-authors', 'articles'),
-                            filter: [
-                                { field: 'type', operand: '===', value: 'articles' },
-                                { field: 'authors', operand: '===', value: author }
-                            ],
-                            sort: [{field: 'title', direction: 'asc'}]
-                        }
-                    },
-                    {
-                        block: 'posts',
-                        config: {
-                            title: BEM.I18N('p-authors', 'tools'),
-                            filter: [
-                                { field: 'type', operand: '===', value: 'tools' },
-                                { field: 'authors', operand: '===', value: author }
-                            ],
-                            sort: [{field: 'title', direction: 'asc'}]
-                        }
-                    },
-                    {
-                        block: 'posts',
-                        config: {
-                            title: BEM.I18N('p-authors', 'news'),
-                            filter: [
-                                { field: 'type', operand: '===', value: 'news' },
-                                { field: 'authors', operand: '===', value: author }
-                            ],
-                            sort: [{field: 'title', direction: 'asc'}]
-                        }
+                        block: 'posts-groups',
+                        content: content
                     }
                 ]
             }

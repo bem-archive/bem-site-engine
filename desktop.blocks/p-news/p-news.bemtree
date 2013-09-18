@@ -3,12 +3,25 @@ block p-news {
     content: {
         return [
             {
-                block: 'posts',
-                config: {
-                    filter: apply('filter'),
-                    sort: leJspath.parseQuery(this.data, 'sort'),
-                    page: leJspath.parseQuery(this.data, 'page')
-                }
+                block: 'left',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'left'} },
+                content: [
+                    { block: 'archive' }
+                ]
+            },
+            {
+                block: 'center',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                content: [
+                    {
+                        block: 'posts',
+                        config: {
+                            filter: apply('filter'),
+                            sort: leJspath.parseQuery(this.data, 'sort'),
+                            page: leJspath.parseQuery(this.data, 'page')
+                        }
+                    }
+                ]
             }
         ]
     }

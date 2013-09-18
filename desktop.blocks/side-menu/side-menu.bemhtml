@@ -1,8 +1,8 @@
 block side-menu {
 
     mix: [
-        { block : 'island' },
-        { block : 'layout', elem : 'col', mods: {type: 'menu'} }
+        { block : 'island' }//,
+        //{ block : 'layout', elem : 'col', mods: {type: 'left'} }
     ]
 
     content, (this.ctx && this.ctx.source): [
