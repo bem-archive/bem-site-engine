@@ -8,13 +8,14 @@ exports.blocks = [
 
     //user pages
     { block : 'page-index' },
-    { block : 'page-articles' },
-    { block : 'page-tools' },
-    { block : 'page-news' },
-    { block : 'page-tags' },
-    { block : 'page-authors' },
-    { block : 'page-filter' },
-    { block : 'page-post' },
+    { block : 'routes' },
+    //{ block : 'page-articles' },
+    //{ block : 'page-tools' },
+    //{ block : 'page-news' },
+    //{ block : 'page-tags' },
+    //{ block : 'page-authors' },
+    //{ block : 'page-filter' },
+    //{ block : 'page-post' },
 
     //common blocks
     { block : 'error' },

@@ -1,7 +1,7 @@
 block p-authors {
 
     content: {
-        var author = this.data.params ? this.data.params['authors'] : '',
+        var author = this.ctx.id || '',
             content = [];
 
         content.push({

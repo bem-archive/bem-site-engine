@@ -25,39 +25,54 @@ block content {
             );
     }
 
-
-    /**
-     * Если не сработал общий роутинг то возвращаем блок p-{type},
-     * в противном случае требуется дополнительное исследование
-     */
     processData: {
-        return this.data.page !== 'filter' ?
-            apply(this._mode = '', this.ctx = { block : 'p-' + this.data.page }) :
-            apply('parse-url');
-    }
-
-    parse-url: {
         var content = this.ctx.content; //содержимое файла data.json
             data = this.data, //объект хранящий request, response и.т.д
             type = data.params.type, //параметр типа
-            url = data.req.url, //строка запроса
-            isId = null, //флаг идентификации того, что был запрошен единичный пост
-            page = null;
+            id = data.req.url.split('/').slice(2).shift(),
+            ctx = { content: content, type: type, id: id },
+            block = null;
 
-        url = url.split('/').slice(2); //отрезаем /{type}/
+        switch(type) {
+                case 'articles':
+                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'articles';
+                    break;
 
-        //определяем факт того, что был запрошен единичный пост
-        //по попытке поиска поста по типу из url, куску строки запроса
-        //идущей после /{type}/ и текущей локали
-        isId = leJspath.filter(content, [
-                { field: 'type', operand:  '===', value: type },
-                { field: 'id', operand:  '===', value: url[0] }
-            ], data.lang).length > 0;
+                case 'tools':
+                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'tools';
+                    break;
 
-        //возвращаем либо блок p-post либо p-{type} для дальнейшего разбора
-        page = isId ? 'post' : type;
+                case 'news':
+                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'news';
+                    break;
 
-        return apply(this._mode = '', this.ctx = { block : 'p-' + page, content: content });
+                case 'authors':
+                    block = 'authors';
+                    break;
+
+                case 'tags':
+                    block = 'tags';
+                    break;
+
+                default:
+                    block = 'index';
+                    break;
+            }
+
+        return apply(this._mode = '', this.ctx = {
+                block : 'p-' + block,
+                content: content,
+                id: id
+            });
     }
 
+    //определяем факт того, что был запрошен единичный пост
+    //по попытке поиска поста по типу из url, куску строки запроса
+    //идущей после /{type}/ и текущей локали
+    find-by-id: {
+        return leJspath.filter(this.ctx.content, [
+                { field: 'type', operand:  '===', value: this.ctx.type },
+                { field: 'id', operand:  '===', value: this.ctx.id }
+            ], this.data.lang).length > 0;
+    }
 }

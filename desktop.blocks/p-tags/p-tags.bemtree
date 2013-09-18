@@ -1,7 +1,7 @@
 block p-tags {
 
     content: {
-        var tag = this.data.params ? this.data.params['tags'] : '',
+        var tag = this.ctx.id || '',
             content = [];
 
         //leJspath.stringify(data);

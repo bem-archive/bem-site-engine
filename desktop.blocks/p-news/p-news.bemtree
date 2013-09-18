@@ -29,7 +29,7 @@ block p-news {
     filter: {
         var content = this.ctx.content,
             data = this.data,
-            type = data.params.type || data.page, //параметр типа
+            type = data.params.type ? data.params.type : data.page, //параметр типа
             url = data.req.url, //строка запроса
 
             filterConfig = [{ field: 'type', operand: '===', value: type }],
