@@ -1,0 +1,45 @@
+block main-menu {
+
+    content: [
+        {
+            elem : 'item',
+            url: '/#',
+            name : 'general'
+        },
+        {
+            elem : 'item',
+            url: '/#',
+            name : 'methodology'
+        },
+        {
+            elem : 'item',
+            url: '/tools/',
+            name : 'tools'
+        },
+        {
+            elem : 'item',
+            url: '/#',
+            name : 'libraries'
+        },
+        {
+            elem : 'item',
+            url: '/articles/',
+            name : 'articles'
+        },
+        {
+            elem : 'item',
+            url: '/news/',
+            name: 'news'
+        },
+        {
+            elem : 'item',
+            url: '/authors/',
+            name: 'authors'
+        },
+        {
+            elem : 'item',
+            url: '/tags/',
+            name: 'tags'
+        }
+    ]
+}

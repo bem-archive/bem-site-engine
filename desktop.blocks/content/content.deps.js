@@ -5,6 +5,7 @@
     shouldDeps : [
         { block : 'body' },
         { block : 'breadcrumbs' },
+        { block : 'main-menu' },
         { block : 'p-error' },
         { block : 'p-index' },
         { block : 'p-post' },

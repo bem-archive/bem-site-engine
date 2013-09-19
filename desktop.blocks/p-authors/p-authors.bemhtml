@@ -1,4 +1,4 @@
-block p-authors {
+//block p-authors {
 
-    mix: { block: 'layout', mods: {section: 'p-menu'} }
-}
+//    mix: { block: 'layout', mods: {section: 'p-menu'} }
+//}
