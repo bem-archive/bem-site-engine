@@ -1,9 +1,4 @@
-.main-menu__item
-{
-    font-size: 1.3em;
-    padding: 10px 0 10px 20px;
-}
-
+.main-menu__item,
 .main-menu__item .link
 {
     color: #FFFFFF;

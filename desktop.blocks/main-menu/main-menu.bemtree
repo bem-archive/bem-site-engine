@@ -1,45 +1,84 @@
 block main-menu {
 
-    content: [
-        {
-            elem : 'item',
-            url: '/#',
-            name : 'general'
-        },
-        {
-            elem : 'item',
-            url: '/#',
-            name : 'methodology'
-        },
-        {
-            elem : 'item',
-            url: '/tools/',
-            name : 'tools'
-        },
-        {
-            elem : 'item',
-            url: '/#',
-            name : 'libraries'
-        },
-        {
-            elem : 'item',
-            url: '/articles/',
-            name : 'articles'
-        },
-        {
-            elem : 'item',
-            url: '/news/',
-            name: 'news'
-        },
-        {
-            elem : 'item',
-            url: '/authors/',
-            name: 'authors'
-        },
-        {
-            elem : 'item',
-            url: '/tags/',
-            name: 'tags'
-        }
-    ]
+    content: {
+        var FACEBOOK_URL = 'http://facebook.com',
+            YARU_URL = 'http://ya.ru';
+
+        var lang = this.data.lang == 'en' ? 'ru' : 'en',
+            host = this.data.req.headers.host,
+            url = 'http://' + lang + host.slice(host.indexOf('.'));
+
+        return [
+            {
+                elem: 'item',
+                elemMods: {size: 'normal'},
+                url: '/#',
+                name: 'general'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal'},
+                url: '/#',
+                name: 'methodology'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal'},
+                url: '/tools/',
+                name: 'tools'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal'},
+                url: '/#',
+                name: 'libraries'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal'},
+                url: '/articles/',
+                name: 'articles'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal'},
+                url: '/news/',
+                name: 'news'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal'},
+                url: '/authors/',
+                name: 'authors'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal'},
+                url: '/tags/',
+                name: 'tags'
+            },
+            {
+                elem: 'item',
+                elemMods: {type: 'delimeter'}
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'small'},
+                url: FACEBOOK_URL,
+                name: 'facebook'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'small'},
+                url: YARU_URL,
+                name: 'yaru'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'small', type: 'lang-switch'},
+                url: url,
+                name: 'lang'
+            }
+        ]
+    }
 }

@@ -1,6 +1,6 @@
 ({
     mustDeps: [],
     shouldDeps: [
-        { elem: 'item' }
+        { elem: 'item', mods: { size: ['small', 'normal'], type: 'delimeter' } }
     ]
 })

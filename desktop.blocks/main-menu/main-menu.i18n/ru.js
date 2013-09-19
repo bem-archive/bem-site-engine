@@ -7,6 +7,9 @@ module.exports = {
         "articles": "Статьи",
         "news": "Блог",
         "authors": "Команда",
-        "tags": "Тэги"
+        "tags": "Тэги",
+        "facebook": "Facebook",
+        "yaru": "БЭМ на Я.ру",
+        "lang": "In English"
     }
 };
