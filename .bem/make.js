@@ -28,11 +28,11 @@ MAKE.decl('Arch', {
         'bem-ycommon @ v2',
         'bem-components @ v2',
 
-        'islands-components @ v2',
-        'islands-media @ v1.0.0',
+        //'islands-components @ v2',
+        //'islands-media @ v1.0.0',
         'islands-page @ feature/bem-core',
-        'islands-services @ v1.0.0',
-        'islands-user @ feature/bem-core',
+        //'islands-services @ v1.0.0',
+        //'islands-user @ feature/bem-core',
 
         'romochka @ feature/bem-core'
     ]
@@ -83,30 +83,15 @@ MAKE.decl('BundleNode', {
             'bem-components/common.blocks',
             'bem-components/desktop.blocks',
 
-            // islands-components
-            'islands-components/common.blocks',
-            'islands-components/desktop.blocks',
-
-            // islands-media
-            'islands-media/common.blocks',
-
             // islands-page
             'islands-page/common.blocks',
             'islands-page/desktop.blocks',
 
-            // islands-user
-            'islands-user/common.blocks',
-            'islands-user/desktop.blocks',
-
-            // islands-services
-            'islands-services/common.blocks',
-            'islands-services/desktop.blocks',
-
             // bem-bl + romochka
             'romochka/bem-bl/blocks-desktop',
-            'romochka/blocks-common',
-            'romochka/blocks-desktop',
-            'romochka/intranet/blocks-desktop'
+            //'romochka/blocks-common',
+            //'romochka/blocks-desktop',
+            //'romochka/intranet/blocks-desktop'
         ]
         .map(function(path) { return PATH.resolve(environ.LIB_ROOT, path) })
         .concat([

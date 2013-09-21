@@ -1,9 +1,0 @@
-block header {
-
-    content: [
-        { elem : 'main' },
-        { elem : 'under' },
-        { block : 'notification' }
-    ]
-
-}

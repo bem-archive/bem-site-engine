@@ -1,9 +1,0 @@
-block header, elem main {
-
-    content: [
-        { elem : 'logo' },
-        { elem : 'service' },
-        { elem : 'nav' }
-    ]
-
-}
