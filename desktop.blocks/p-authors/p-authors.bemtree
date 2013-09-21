@@ -26,23 +26,29 @@ block p-authors {
 
         return [
             {
-                block: 'left',
-                mix: { block : 'layout', elem : 'col', mods: {type: 'left'} },
+                block: 'layout',
+                mods: {section: 'p-menu'},
                 content: [
                     {
-                        block: 'side-menu',
-                        id: author,
-                        type: 'authors'
-                    }
-                ]
-            },
-            {
-                block: 'center',
-                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-                content: [
+                        block: 'left',
+                        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+                        content: [
+                            {
+                                block: 'side-menu',
+                                id: author,
+                                type: 'authors'
+                            }
+                        ]
+                    },
                     {
-                        block: 'posts-groups',
-                        content: content
+                        block: 'center',
+                        mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                        content: [
+                            {
+                                block: 'posts-groups',
+                                content: content
+                            }
+                        ]
                     }
                 ]
             }

@@ -1,0 +1,4 @@
+block side-menu, elem item {
+
+    tag: 'li'
+}
