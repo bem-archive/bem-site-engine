@@ -1,9 +1,5 @@
 block author, mod view menu-item {
 
-    //(this.ctx.content && this.ctx.content._res), default: {
-    //    apply(this.ctx.content = this.ctx.content._res)
-    //}
-
     tag: 'a'
 
     attrs: { href : '/authors/' + this.ctx.id }

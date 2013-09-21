@@ -1,5 +1,5 @@
 module.exports = {
-    "side-menu": {
+    "menu": {
         "tags": "Тэги",
         "authors": "АВТОРЫ"
     }

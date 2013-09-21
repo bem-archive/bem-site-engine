@@ -1,4 +1,4 @@
-block side-menu, elem item, elemMod type authors {
+block menu, elem item, elemMod type authors {
 
     content: {
 

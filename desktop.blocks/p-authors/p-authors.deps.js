@@ -1,6 +1,6 @@
 ({
     mustDeps: [],
     shouldDeps: [
-        { block : 'side-menu' }
+        { block : 'menu' }
     ]
 })

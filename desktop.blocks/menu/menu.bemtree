@@ -1,4 +1,4 @@
-block side-menu {
+block menu {
 
     content: {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.

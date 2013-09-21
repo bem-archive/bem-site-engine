@@ -1,4 +1,4 @@
-block side-menu, elem item, elemMod type tags {
+block menu, elem item, elemMod type tags {
 
     tag: 'a'
 

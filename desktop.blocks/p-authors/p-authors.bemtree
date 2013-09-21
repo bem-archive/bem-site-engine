@@ -34,7 +34,7 @@ block p-authors {
                         mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
                         content: [
                             {
-                                block: 'side-menu',
+                                block: 'menu',
                                 id: author,
                                 type: 'authors'
                             }
