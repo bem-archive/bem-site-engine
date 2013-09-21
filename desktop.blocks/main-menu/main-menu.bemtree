@@ -15,49 +15,49 @@ block main-menu {
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal'},
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'general')},
                 url: '/#',
                 name: 'general'
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal'},
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'methodology')},
                 url: '/#',
                 name: 'methodology'
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal'},
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'tools')},
                 url: '/tools/',
                 name: 'tools'
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal'},
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'libraries')},
                 url: '/#',
                 name: 'libraries'
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal'},
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'articles')},
                 url: '/articles/',
                 name: 'articles'
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal'},
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'news')},
                 url: '/news/',
                 name: 'news'
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal'},
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'authors')},
                 url: '/authors/',
                 name: 'authors'
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal'},
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'tags')},
                 url: '/tags/',
                 name: 'tags'
             },
@@ -84,5 +84,9 @@ block main-menu {
                 name: 'lang'
             }
         ]
+    }
+
+    active: {
+        return this.data.params['type'] === this.ctx ? 'yes' : '';
     }
 }
