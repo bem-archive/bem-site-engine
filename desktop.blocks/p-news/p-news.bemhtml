@@ -1,4 +1,4 @@
-block p-news {
+//block p-news {
 
-    mix: { block: 'layout', mods: {section: 'p-menu'} }
-}
+    //mix: { block: 'layout', mods: {section: 'p-menu'} }
+//}

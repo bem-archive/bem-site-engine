@@ -3,10 +3,9 @@ block content {
     default: {
         applyCtx({
             block : 'body',
+            mix: { block: 'layout', mods: {section: 'p-menu'} },
             content : this.ctx.content._res
         })
     }
-
-    mix: { block : 'layout', elem : 'col' }
 
 }

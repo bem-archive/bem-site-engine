@@ -65,10 +65,16 @@ block content {
         //console.debug('id = ' + id);
         //console.debug('block = ' + block);
 
-        return apply(this._mode = '', this.ctx = {
+        return [
+            apply(this._mode = '', this.ctx = {
+                    block: 'main-menu'
+            }),
+            apply(this._mode = '', this.ctx = {
                 block : 'p-' + block,
+                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
                 id: id
-            });
+            })
+        ]
     }
 
     //определяем факт того, что был запрошен единичный пост

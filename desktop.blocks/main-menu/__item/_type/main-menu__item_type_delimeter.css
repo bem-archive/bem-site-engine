@@ -1,0 +1,8 @@
+.main-menu__item_type_delimeter
+{
+    height: 1px;
+    margin: 10px 20px;
+    background-color: #FFFFFF;
+
+    /*padding: 10px 20px 10px 20px;*/
+}
