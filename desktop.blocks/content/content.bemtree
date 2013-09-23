@@ -37,6 +37,18 @@ block content {
         this.data.source = source;
 
         switch(type) {
+                case 'general':
+                    block = 'general';
+                    break;
+
+                case 'method':
+                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'method';
+                    break;
+
+                case 'libraries':
+                    block = 'libraries';
+                    break;
+
                 case 'articles':
                     block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'articles';
                     break;

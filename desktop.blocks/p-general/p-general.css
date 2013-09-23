@@ -1,10 +1,8 @@
-.p-index
+.p-general
 {
-    /*padding: 10px;*/
-    /*margin-top: 10px;*/
 }
 
-.p-index > .cap
+.p-general > .cap
 {
     width: 400px;
     height: 315px;
