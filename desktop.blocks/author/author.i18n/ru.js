@@ -1,7 +1,8 @@
 module.exports = {
     "author": {
+        "title": "ИНФОРМАЦИЯ ОБ АВТОРЕ",
         "name": "Имя",
-        "email": "E-mail",
+        "e-mail": "E-mail",
         "github": "GitHub",
         "twitter": "Twitter",
         "skype": "Skype",

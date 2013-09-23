@@ -1,80 +1,56 @@
 block post {
 
     content: {
-        var id = this.ctx.id,
-            data = this.data,
-            source = data.source,
-            source = leJspath.filter(source, [{
-                field: 'id',
-                operand: '===',
-                value: id
-            }], data.lang);
-
-        if(!source || source.length == 0)
-            return [];
-
-        source = source.shift();
-
+        var content = this.ctx.source;
         return [
-            apply(
-                this._mode = '',
-                this.ctx = {
-                    block: 'posts-item',
-                    elem: 'author',
-                    content: source.authors
-                }
-            ),
-            apply(
-                this._mode = '',
-                this.ctx = {
-                    block: 'posts-item',
-                    elem: 'translator',
-                    content: source.translators
-                }
-            ),
             {
-                block: 'posts-item',
+                elem: 'title',
+                id: content.id,
+                type: content.type,
+                title: content.title
+            },
+            {
+                elem: 'author',
+                content: content.authors
+            },
+            {
+                elem: 'translator',
+                content: content.translators
+            },
+            {
                 elem: 'date',
                 elemMods: {'type': 'create'},
-                content: source.createDate
+                content: content.createDate
             },
             {
-                block: 'posts-item',
                 elem: 'date',
                 elemMods: {'type': 'edit'},
-                content: source.editDate
+                content: content.editDate
             },
             {
-                block: 'posts-item',
                 elem: 'thumbnail',
-                content: source.thumbnail
+                content: content.thumbnail
             },
             {
-                block: 'posts-item',
                 elem: 'tags',
-                content: source.tags
+                content: content.tags
             },
             {
-                block: 'posts-item',
                 elem: 'categories',
-                content: source.categories
+                content: content.categories
             },
             {
-                block: 'posts-item',
                 elem: 'type',
-                content: source.type
+                content: content.type
             },
             {
-                block: 'posts-item',
+                elem: 'id',
+                content: content.id
+            },
+            {
                 elem: 'summary',
-                content: source.summary
-            },
-            {
-                elem: 'content',
-                content: source.content
+                content: content.summary
             }
-        ]
+        ];
     }
-
-
 }

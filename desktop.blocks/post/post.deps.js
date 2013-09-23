@@ -1,6 +1,17 @@
 ({
-    mustDeps: [],
+    mustDeps : [
+        { block : 'i-bem', elems : ['i18n'] }
+    ],
     shouldDeps: [
-        { block : 'posts-item' }
+        { block : 'author', mods : { view: ['full', 'menu-item', 'simple'] } },
+        { mods: { view: ['full', 'authors'] } },
+        { elem : 'title' },
+        { elem : 'date' },
+        { elem : 'summary' },
+        { elem : 'tags' },
+        { elem : 'categories' },
+        { elem : 'author' },
+        { elem : 'translator' },
+        { elem : 'type' }
     ]
 })

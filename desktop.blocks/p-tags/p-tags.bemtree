@@ -26,7 +26,7 @@ block p-tags {
                 mix: { block : 'layout', elem : 'col', mods: {type: 'left'} },
                 content: [
                     {
-                        block: 'side-menu',
+                        block: 'menu',
                         type: 'tags'
                     }
                 ]

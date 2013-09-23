@@ -1,8 +1,0 @@
-block header, elem service {
-
-    mix: {
-       block : 'layout',
-       elem : 'col'
-    }
-
-}

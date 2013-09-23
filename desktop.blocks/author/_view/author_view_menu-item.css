@@ -1,3 +1,12 @@
-.author_view_menu-item
+.author_view_menu-item,
+.author_view_menu-item:link:hover,
+.author_view_menu-item:visited:hover
 {
+    font-size: 1.1em;
+
+    display: block;
+    padding: 7px 0 7px 10px;
+
+    text-decoration: none;
+    color: #000000 !important;
 }

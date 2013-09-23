@@ -10,10 +10,23 @@
     display: block;
 }
 
+.layout_section_p-menu > .layout__col_fixed_yes
+{
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    border-right: 1px solid #AAA;
+}
+
 .layout_section_p-menu > .layout__col_type_left
 {
     float: left;
     width: 200px;
+}
+
+.layout_section_p-menu > .layout__col_type_center
+{
+    margin-left: 200px;
 }
 
 .layout_section_p-menu > .layout__col_type_right
@@ -22,8 +35,4 @@
     width: 200px;
 }
 
-.layout_section_p-menu > .layout__col_type_center
-{
-    margin-left: 201px;
-}
 

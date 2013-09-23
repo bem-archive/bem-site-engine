@@ -1,0 +1,17 @@
+block menu {
+
+    content, (this.ctx && this.ctx.type): [
+        {
+            elem: 'title',
+            content: BEM.I18N('menu', this.ctx.type)
+        },
+        {
+            elem: 'list',
+            content: applyNext()
+        }
+    ]
+}
+
+block menu, elem list {
+    tag: 'ul'
+}

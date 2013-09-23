@@ -9,7 +9,8 @@ block posts, elem list {
 
             while(item = this.ctx.source[i]) {
                 buf[i++] = apply(this._mode = '', this.ctx = {
-                    block: 'posts-item',
+                    block: 'post',
+                    mods: this.mods,
                     source: item
                 });
             }

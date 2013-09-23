@@ -1,7 +1,0 @@
-block header, elem search {
-
-    content: {
-        block : 'arrow'
-    }
-
-}

@@ -1,0 +1,10 @@
+.menu__item
+{
+    /*padding: 7px 0 7px 10px;*/
+    /*display: block;*/
+}
+
+.menu__item:hover
+{
+    background: #ddd;
+}

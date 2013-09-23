@@ -1,7 +1,0 @@
-block header, elem service {
-
-    content: {
-        block : 'arrow'
-    }
-
-}

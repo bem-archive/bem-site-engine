@@ -7,6 +7,28 @@ block author, elem e-mail {
     content: [
         BEM.I18N('author', this.elem),
         ': ',
-        applyNext()
+        apply('contentTransformation')
     ]
+
+    contentTransformation, this._.isArray(this.ctx.content): {
+
+        var i = 0,
+            buf = [],
+            item;
+
+        while(item = this.ctx.content[i]) {
+            i++ > 0 &&
+                buf.push({
+                    tag: 'span',
+                    content: ', '
+                });
+
+            buf.push({
+                tag: 'span',
+                content: item
+            });
+        }
+
+        return buf;
+    }
 }

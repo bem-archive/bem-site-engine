@@ -1,7 +1,8 @@
 module.exports = {
     "p-authors": {
-        "articles": "Articles",
-        "tools": "Tools",
-        "news": "News"
+        "title": "AUTHOR INFO",
+        "articles": "ARTICLES",
+        "tools": "TOOLS",
+        "news": "NEWS"
     }
 };

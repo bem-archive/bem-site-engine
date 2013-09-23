@@ -1,0 +1,4 @@
+block post, mod view full {
+
+    mix : { block : 'island' }
+}
