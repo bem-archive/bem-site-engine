@@ -1,12 +1,9 @@
 block author, mod view full {
 
-    //(this.ctx.content && this.ctx.content._res), default: {
-    //    apply(this.ctx.content = this.ctx.content._res)
-    //}
-
     mix: { block: 'island' }
 
     content: [
+
         {
             elem: 'avatar-wrapper',
             content: [
@@ -27,7 +24,7 @@ block author, mod view full {
                 },
                 {
                     block: 'author',
-                    elem: 'email',
+                    elem: 'e-mail',
                     content: this.ctx.content.email
                 },
                 {

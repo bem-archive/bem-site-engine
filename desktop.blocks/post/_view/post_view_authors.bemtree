@@ -1,0 +1,28 @@
+block post, mod view authors {
+
+    content: {
+        var content = this.ctx.source;
+        return [
+            {
+                elem: 'date',
+                elemMods: {'type': 'create'},
+                content: content.createDate
+            },
+            {
+                elem: 'date',
+                elemMods: {'type': 'edit'},
+                content: content.editDate
+            },
+            {
+                elem: 'title',
+                id: content.id,
+                type: content.type,
+                title: content.title
+            },
+            {
+                elem: 'summary',
+                content: content.summary
+            }
+        ];
+    }
+}

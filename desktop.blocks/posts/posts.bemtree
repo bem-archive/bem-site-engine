@@ -26,20 +26,21 @@
             apply(
                 this._mode = '',
                 this.ctx = {
-                    elem : 'list',
-                    source : source
+                    elem: 'list',
+                    mods: this.mods,
+                    source: source
                 }
             ),
             apply(
                 this._mode = '',
                 this.ctx = {
-                    elem : 'footer',
-                    params : {
-                        pager : config['page'],
-                        total : total,
-                        path  : data.req.path,
-                        query : data.req.query,
-                        defaultLimit : DEFAULT_LIMIT
+                    elem: 'footer',
+                    params: {
+                        pager: config['page'],
+                        total: total,
+                        path: data.req.path,
+                        query: data.req.query,
+                        defaultLimit: DEFAULT_LIMIT
                     }
                 }
             )

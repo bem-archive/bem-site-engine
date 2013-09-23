@@ -1,0 +1,10 @@
+block post, elem title {
+
+    content: [
+        {
+            block: 'link',
+            url: '/' + this.ctx.type + '/' + this.ctx.id,
+            content: this.ctx.title
+        }
+    ]
+}

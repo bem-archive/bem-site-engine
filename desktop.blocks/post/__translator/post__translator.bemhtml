@@ -1,0 +1,12 @@
+block post, elem translator {
+
+    default, !(this.ctx && this.ctx.content && this.ctx.content.length > 0): {
+        return false;
+    }
+
+    content: [
+        BEM.I18N('post', this.elem),
+        ': ',
+        applyNext()
+    ]
+}

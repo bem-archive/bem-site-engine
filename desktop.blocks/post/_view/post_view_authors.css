@@ -1,0 +1,11 @@
+.post_view_authors
+{
+    padding-top: 5px;
+}
+
+.post_view_authors > .post__date
+{
+    display: inline-block;
+    font-size: 0.8em;
+    padding-right: 10px;
+}

@@ -5,6 +5,12 @@ block p-authors {
             content = [];
 
         content.push({
+            elem: 'title',
+            mix: { block: 'menu', elem: 'title' },
+            content: BEM.I18N('p-authors', 'title')
+        });
+
+        content.push({
             block: 'author',
             mods: { view: 'full' },
             id: author
@@ -13,6 +19,7 @@ block p-authors {
         ['articles', 'tools', 'news'].forEach(function(item) {
             content.push({
                 block: 'posts',
+                mods: { view: 'authors' },
                 config: {
                     title: BEM.I18N('p-authors', item),
                     filter: [

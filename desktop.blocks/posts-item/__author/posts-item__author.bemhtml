@@ -1,8 +1,0 @@
-block posts-item, elem author {
-
-    content: [
-        BEM.I18N('posts-item', this.elem),
-        ': ',
-        applyNext()
-    ]
-}

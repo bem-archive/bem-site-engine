@@ -1,16 +1,20 @@
-block author, elem e-mail {
+block post, elem tags {
 
-    default, !(this.ctx && this.ctx.content): {
-        return false;
+    default, (this.ctx && this.ctx.content): {
+        applyNext();
     }
 
     content: [
-        BEM.I18N('author', this.elem),
+        BEM.I18N('post', this.elem),
         ': ',
-        apply('contentTransformation')
+        {
+            tag: 'strong',
+            content: apply('contentTransformation')
+        }
     ]
 
     contentTransformation, this._.isArray(this.ctx.content): {
+        //return this.ctx.content.join(', ');
 
         var i = 0,
             buf = [],
@@ -24,11 +28,13 @@ block author, elem e-mail {
                 });
 
             buf.push({
-                tag: 'span',
+                block: 'link',
+                url: '/tags/' + item,
                 content: item
             });
         }
 
         return buf;
+
     }
 }

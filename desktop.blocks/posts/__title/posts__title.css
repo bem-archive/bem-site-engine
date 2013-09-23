@@ -1,6 +1,8 @@
 .posts__title
 {
-    padding: 15px 0 10px 10px;
-    background: #EEE8D5;
-    margin-bottom: 0;
+    margin: 0;
+    padding: 8px 0 7px 10px;
+    background: #EEEEEE;
+    border-top: 1px solid #AAAAAA;
+    border-bottom: 1px solid #AAAAAA;
 }
