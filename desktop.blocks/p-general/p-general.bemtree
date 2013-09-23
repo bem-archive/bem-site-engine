@@ -1,0 +1,8 @@
+block p-general {
+
+    content: [
+        {
+            block: 'cap'
+        }
+    ]
+}

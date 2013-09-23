@@ -1,3 +1,11 @@
 .p-general
 {
 }
+
+.p-general > .cap
+{
+    width: 400px;
+    height: 315px;
+    background: url('temp.png');
+}
+

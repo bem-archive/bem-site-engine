@@ -1,5 +1,13 @@
 .p-index
 {
-    padding: 10px;
+    /*padding: 10px;*/
     /*margin-top: 10px;*/
 }
+
+.p-index > .cap
+{
+    width: 400px;
+    height: 315px;
+    background: url('temp.png');
+}
+

@@ -16,13 +16,13 @@ block main-menu {
             {
                 elem: 'item',
                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'general')},
-                url: '/#',
+                url: '/general',
                 name: 'general'
             },
             {
                 elem: 'item',
                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'methodology')},
-                url: '/#',
+                url: '/method',
                 name: 'methodology'
             },
             {
@@ -34,7 +34,7 @@ block main-menu {
             {
                 elem: 'item',
                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'libraries')},
-                url: '/#',
+                url: '/libraries',
                 name: 'libraries'
             },
             {
