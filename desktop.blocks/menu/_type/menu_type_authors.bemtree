@@ -31,7 +31,7 @@ block menu, mod type authors {
                     this.ctx = {
                         elem: 'item',
                         elemMods: {
-                            type : type,
+                            type : this.mods['type'],
                             active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
                         id: item
                     }
