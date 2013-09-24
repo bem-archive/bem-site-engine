@@ -1,7 +1,14 @@
 .menu__item
 {
-    /*padding: 7px 0 7px 10px;*/
-    /*display: block;*/
+}
+
+.menu__item_type_categories > .link,
+.menu__item_type_tags > .link
+{
+    color: #000000 !important;
+    display: block;
+    padding: 7px 0 7px 10px;
+    text-decoration: none;
 }
 
 .menu__item:hover

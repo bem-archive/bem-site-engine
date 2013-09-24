@@ -1,6 +1,7 @@
 block menu, mod type authors {
 
     content: {
+
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             source = data.source; //содержимое модели (файл data.json)
 
@@ -13,8 +14,6 @@ block menu, mod type authors {
 
         //сортируем в алфавитном порядке
         source = source.sort();
-
-        leJspath.stringify(source);
 
         if(this._.isArray(source)) {
             var i = 0,

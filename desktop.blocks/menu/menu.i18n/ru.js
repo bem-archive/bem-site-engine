@@ -1,7 +1,8 @@
 module.exports = {
     "menu": {
-        "tags": "Тэги",
-        "authors": "АВТОРЫ"
+        "tags": "ТЕГИ",
+        "authors": "АВТОРЫ",
+        "categories": "CATEGORIES"
     }
 };
 

@@ -168,6 +168,39 @@ provide({
      */
     stringify: function(object) {
         console.log('LOG ' + JsonStringify(object, null, 2));
+    },
+
+    /**
+     * Removes dublicate objects from array
+     * @param  {Array} arr - target array
+     * @param  {Function} equals - comparator
+     * @return {Array} - array with unique objects
+     */
+    removeDublicates: function(arr, equals) {
+
+        var originalArr = arr.slice(0),
+            val,
+            arrayContains = function(arr, val, equals) {
+                var i = arr.length;
+                while (i--) {
+                    if ( equals(arr[i], val) ) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+
+        arr.length = 0;
+
+        for (var i = 0; i < originalArr.length; ++i) {
+            val = originalArr[i];
+            if (!arrayContains(arr, val, equals)) {
+                arr.push(val);
+            }
+        }
+
+        return arr
     }
 });
 

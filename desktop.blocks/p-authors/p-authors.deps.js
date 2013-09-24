@@ -1,6 +1,6 @@
 ({
     mustDeps: [],
     shouldDeps: [
-        { block : 'menu' }
+        { block : 'menu', mods: { type: 'authors' } }
     ]
 })
