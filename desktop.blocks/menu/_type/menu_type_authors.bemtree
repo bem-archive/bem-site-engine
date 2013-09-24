@@ -1,0 +1,49 @@
+block menu, mod type authors {
+
+    content: {
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            source = data.source; //содержимое модели (файл data.json)
+
+        source = leJspath.find('.' + data.lang + '{.type ==="' + this.mods['type'] + '"}.id', source);
+
+        //убираем дубликаты
+        source = source.filter(function(elem, pos, self) {
+            return self.indexOf(elem) == pos;
+        });
+
+        //сортируем в алфавитном порядке
+        source = source.sort();
+
+        leJspath.stringify(source);
+
+        if(this._.isArray(source)) {
+            var i = 0,
+                buf = [],
+                item;
+
+            //цикличеки применяем шаблоны к элементу item текущего блока
+            //с модификатором соотвествующим полю мета-информации
+            //значения которого отображаются в меню и идентификацией
+            //текущего значения для выделения активного пункта меню
+            while(item = source[i]) {
+                buf[i++] = apply(
+                    this._mode = '',
+                    this.ctx = {
+                        elem: 'item',
+                        elemMods: {
+                            type : type,
+                            active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
+                        id: item
+                    }
+                );
+            }
+
+            return buf;
+        }
+    }
+
+    //определение активного пункта меню и установка значения модификатора active
+    active: {
+        return (this.ctx.id && this.ctx.id === this.ctx.item) ? 'yes' : '';
+    }
+}

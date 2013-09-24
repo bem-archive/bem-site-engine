@@ -1,13 +1,13 @@
 block menu {
 
-    content, (this.ctx && this.ctx.type): [
+    content, this.mods['type']: [
         {
             elem: 'title',
-            content: BEM.I18N('menu', this.ctx.type)
+            content: BEM.I18N('menu', this.mods['type'])
         },
         {
             elem: 'list',
-            content: applyNext()
+            content: this.ctx.content
         }
     ]
 }
