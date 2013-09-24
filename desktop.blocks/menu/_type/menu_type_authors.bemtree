@@ -20,12 +20,14 @@ block menu, mod type authors {
                 buf = [],
                 item;
 
+            buf.push({elem: 'title'});
+
             //цикличеки применяем шаблоны к элементу item текущего блока
             //с модификатором соотвествующим полю мета-информации
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
-            while(item = source[i]) {
-                buf[i++] = apply(
+            source.forEach(function(item) {
+                buf.push(apply(
                     this._mode = '',
                     this.ctx = {
                         elem: 'item',
@@ -34,8 +36,8 @@ block menu, mod type authors {
                             active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
                         id: item
                     }
-                );
-            }
+                ));
+            });
 
             return buf;
         }

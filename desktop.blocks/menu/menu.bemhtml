@@ -1,13 +1,9 @@
 block menu {
 
-    content, this.mods['type']: [
-        {
-            elem: 'title',
-            content: BEM.I18N('menu', this.mods['type'])
-        },
+    content: [
         {
             elem: 'list',
-            content: this.ctx.content
+            content: applyNext()
         }
     ]
 }

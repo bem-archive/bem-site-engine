@@ -25,7 +25,6 @@ block p-tools {
                         content: [
                             {
                                 block: 'menu',
-                                //id: author,
                                 type: 'tools',
                                 mods: { type: 'categories' }
                             }
