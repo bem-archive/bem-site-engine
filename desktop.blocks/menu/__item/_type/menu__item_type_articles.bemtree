@@ -1,0 +1,13 @@
+block menu, elem item, elemMod type articles {
+
+    content: {
+
+        return [
+            {
+                block: 'post',
+                mods: {view: 'menu-item'},
+                id: this.ctx.id
+            }
+        ]
+    }
+}

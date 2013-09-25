@@ -1,17 +1,5 @@
 block p-tools {
 
-    // content: [
-    //     {
-    //         block: 'posts',
-    //         config: {
-    //             filter: leJspath.parseQuery(this.data, 'filter'),
-    //             sort: leJspath.parseQuery(this.data, 'sort'),
-    //             page: leJspath.parseQuery(this.data, 'page')
-    //         }
-    //     }
-    // ]
-    //
-
     content: {
 
         return [
@@ -26,6 +14,7 @@ block p-tools {
                             {
                                 block: 'menu',
                                 type: 'tools',
+                                id: this.ctx.id,
                                 mods: { type: 'categories' }
                             }
                         ]
@@ -35,12 +24,36 @@ block p-tools {
                         mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
                         content: [
                             {
-                                block: 'posts',
-                                config: {
-                                    filter: leJspath.parseQuery(this.data, 'filter'),
-                                    sort: leJspath.parseQuery(this.data, 'sort'),
-                                    page: leJspath.parseQuery(this.data, 'page')
-                                }
+                               block: 'layout',
+                                mods: {section: 'p-menu'},
+                                content: [
+                                    {
+                                        block: 'left',
+                                        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+                                        content: [
+                                            {
+                                                block: 'menu',
+                                                type: 'tools',
+                                                id: this.ctx.id,
+                                                mods: { type: 'articles' }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        block: 'center',
+                                        mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                                        content: [
+                                            {
+                                                block: 'posts',
+                                                config: {
+                                                    filter: leJspath.parseQuery(this.data, 'filter'),
+                                                    sort: leJspath.parseQuery(this.data, 'sort'),
+                                                    page: leJspath.parseQuery(this.data, 'page')
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     }

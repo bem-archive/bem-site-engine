@@ -3,6 +3,7 @@
 }
 
 .menu__item_type_categories > .link,
+.menu__item_type_articles > .link,
 .menu__item_type_tags > .link
 {
     font-size: 1.1em;

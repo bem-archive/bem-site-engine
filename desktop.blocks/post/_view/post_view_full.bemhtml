@@ -2,11 +2,11 @@ block post, mod view full {
 
     mix : { block : 'island' }
 
-    block posts-item, elem id, default: {
-        return false;
-    }
+    //block posts-item, elem id, default: {
+        //return false;
+    //}
 
-    block posts-item, elem type, default: {
-        return false;
-    }
+    //block posts-item, elem type, default: {
+        //return false;
+    //}
 }

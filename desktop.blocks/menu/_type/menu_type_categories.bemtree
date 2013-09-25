@@ -137,6 +137,6 @@ block menu, mod type categories{
 
     //определение активного пункта меню и установка значения модификатора active
     active: {
-        return (this.ctx.id && this.ctx.id === this.ctx.item) ? 'yes' : '';
+        return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
     }
 }
