@@ -3,6 +3,7 @@ block p-post {
     content: [
         {
             block: 'post',
+            mods: { view: 'full' },
             id: this.ctx.id
         }
     ]
