@@ -1,8 +1,8 @@
 module.exports = {
     "p-tags": {
-        "articles": "Статьи",
-        "tools": "Инструменты",
-        "news": "Новости"
+        "articles": "СТАТЬИ",
+        "tools": "ИНСТРУМЕНТЫ",
+        "news": "НОВОСТИ"
     }
 };
 

@@ -1,9 +1,11 @@
 block menu, elem item, elemMod type tags {
 
-    tag: 'a'
-
-    attrs: { href : '/tags/' + this.ctx.id }
-
-    content: this.ctx.id.toLowerCase()
+    content: [
+        {
+            block: 'link',
+            url: '/tags/' + this.ctx.id,
+            content: this.ctx.id.toLowerCase()
+        }
+    ]
 }
 
