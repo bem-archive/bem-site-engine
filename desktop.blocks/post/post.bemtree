@@ -1,56 +1,56 @@
-block post {
+// block post {
 
-    content: {
-        var content = this.ctx.source;
-        return [
-            {
-                elem: 'title',
-                id: content.id,
-                type: content.type,
-                title: content.title
-            },
-            {
-                elem: 'author',
-                content: content.authors
-            },
-            {
-                elem: 'translator',
-                content: content.translators
-            },
-            {
-                elem: 'date',
-                elemMods: {'type': 'create'},
-                content: content.createDate
-            },
-            {
-                elem: 'date',
-                elemMods: {'type': 'edit'},
-                content: content.editDate
-            },
-            {
-                elem: 'thumbnail',
-                content: content.thumbnail
-            },
-            {
-                elem: 'tags',
-                content: content.tags
-            },
-            {
-                elem: 'categories',
-                content: content.categories
-            },
-            {
-                elem: 'type',
-                content: content.type
-            },
-            {
-                elem: 'id',
-                content: content.id
-            },
-            {
-                elem: 'summary',
-                content: content.summary
-            }
-        ];
-    }
-}
+//     content: {
+//         var content = this.ctx.source;
+//         return [
+//             {
+//                 elem: 'title',
+//                 id: content.id,
+//                 type: content.type,
+//                 title: content.title
+//             },
+//             {
+//                 elem: 'author',
+//                 content: content.authors
+//             },
+//             {
+//                 elem: 'translator',
+//                 content: content.translators
+//             },
+//             {
+//                 elem: 'date',
+//                 elemMods: {'type': 'create'},
+//                 content: content.createDate
+//             },
+//             {
+//                 elem: 'date',
+//                 elemMods: {'type': 'edit'},
+//                 content: content.editDate
+//             },
+//             {
+//                 elem: 'thumbnail',
+//                 content: content.thumbnail
+//             },
+//             {
+//                 elem: 'tags',
+//                 content: content.tags
+//             },
+//             {
+//                 elem: 'categories',
+//                 content: content.categories
+//             },
+//             {
+//                 elem: 'type',
+//                 content: content.type
+//             },
+//             {
+//                 elem: 'id',
+//                 content: content.id
+//             },
+//             {
+//                 elem: 'summary',
+//                 content: content.summary
+//             }
+//         ];
+//     }
+// }

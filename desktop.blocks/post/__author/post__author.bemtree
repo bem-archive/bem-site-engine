@@ -8,6 +8,8 @@ block post, elem author {
                 item;
 
             while(item = this.ctx.content[i]) {
+                //console.debug(item);
+
                 i++ > 0 &&
                     buf.push({
                         tag: 'span',

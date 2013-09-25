@@ -1,6 +1,22 @@
 block p-tools {
 
     content: {
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            type = 'tools',
+            id = this.ctx.id,
+            query = {};
+
+        if(id && id.length > 0) {
+            query = {
+                predicate: '.' + data.lang + '{.type === $type}{.categories === $category || .categories.url === $category}.id',
+                substitution: { type: type, category: id }
+            };
+        }else {
+            query = {
+                predicate: '.' + data.lang + '{.type === $type}.id',
+                substitution: { type: type }
+            };
+        }
 
         return [
             {
@@ -13,8 +29,8 @@ block p-tools {
                         content: [
                             {
                                 block: 'menu',
-                                type: 'tools',
-                                id: this.ctx.id,
+                                type: type,
+                                id: id,
                                 mods: { type: 'categories' }
                             }
                         ]
@@ -33,8 +49,8 @@ block p-tools {
                                         content: [
                                             {
                                                 block: 'menu',
-                                                type: 'tools',
-                                                id: this.ctx.id,
+                                                type: type,
+                                                query: query,
                                                 mods: { type: 'articles' }
                                             }
                                         ]
@@ -45,10 +61,11 @@ block p-tools {
                                         content: [
                                             {
                                                 block: 'posts',
+                                                mods: { view: 'articles' },
                                                 config: {
-                                                    filter: leJspath.parseQuery(this.data, 'filter'),
-                                                    sort: leJspath.parseQuery(this.data, 'sort'),
-                                                    page: leJspath.parseQuery(this.data, 'page')
+                                                    query: query,
+                                                    sort: leJspath.parseQuery(this.data, 'sort')//,
+                                                    //page: leJspath.parseQuery(this.data, 'page')
                                                 }
                                             }
                                         ]

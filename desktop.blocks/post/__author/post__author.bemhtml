@@ -1,5 +1,9 @@
 block post, elem author {
 
+    default, !(this.ctx && this.ctx.content): {
+        return false;
+    }
+
     content: [
         BEM.I18N('post', this.elem),
         ': ',

@@ -4,15 +4,12 @@ block menu, mod type articles {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             source = data.source, //содержимое модели (файл data.json)
             type = this.ctx.type,
+            query = this.ctx.query,
             id = this.ctx.id;
 
-        if(id && id.length > 0) {
-            source = leJspath.find('.' + data.lang + '{.type === $type}{.categories === $category || .categories.url === $category}.id',
-                source, { type: type, category: id });
-        }else {
-            source = leJspath.find('.' + data.lang + '{.type === $type}.id',
-                source, { type: type });
-        }
+        console.log(query);
+
+        source = leJspath.find(query.predicate, source, query.substitution);
 
         //убираем дубликаты
         source = source.filter(function(elem, pos, self) {
@@ -22,7 +19,7 @@ block menu, mod type articles {
         //сортируем в алфавитном порядке
         source = source.sort();
 
-        leJspath.stringify(source);
+        //leJspath.stringify(source);
 
         if(this._.isArray(source)) {
             var i = 0,
@@ -34,7 +31,8 @@ block menu, mod type articles {
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
             while(item = source[i]) {
-                console.debug(item);
+                //console.debug(item);
+
                 buf[i++] = apply(
                     this._mode = '',
                     this.ctx = {

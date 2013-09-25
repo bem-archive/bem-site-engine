@@ -7,8 +7,9 @@
             config = this.ctx.config, //конфиг для фильтрации, сортировки и пагинации
             source = data.source; //содержимое модели (файл data.json)
 
-        //фильтрация данных
-        source = leJspath.filter(source, config['filter'], data.lang);
+            source = config['query'] ?
+                leJspath.find(config['query'].predicate, source, config['query'].substitution) :
+                leJspath.filter(source, config['filter'], data.lang);
 
         //сортировка данных
         source = config['sort'] ?
@@ -18,32 +19,33 @@
         //для передачи в блок pager для правильной отрисовки набора ссылок на страницы
         var total = source.length;
 
+        console.debug('length = ' + source.length);
+
         //постраничное разбиение набора записей
         source = config['page'] ?
             leJspath.paginate(source, config['page'], DEFAULT_LIMIT) : source;
 
         return [
-            apply(
-                this._mode = '',
-                this.ctx = {
-                    elem: 'list',
-                    mods: this.mods,
-                    source: source
-                }
-            ),
-            apply(
-                this._mode = '',
-                this.ctx = {
-                    elem: 'footer',
-                    params: {
-                        pager: config['page'],
-                        total: total,
-                        path: data.req.path,
-                        query: data.req.query,
-                        defaultLimit: DEFAULT_LIMIT
-                    }
-                }
-            )
+            {
+                elem: 'list',
+                mods: this.mods,
+                source: source
+            }
+            //    }
+            //),
+            // apply(
+            //     this._mode = '',
+            //     this.ctx = {
+            //         elem: 'footer',
+            //         params: {
+            //             pager: config['page'],
+            //             total: total,
+            //             path: data.req.path,
+            //             query: data.req.query,
+            //             defaultLimit: DEFAULT_LIMIT
+            //         }
+            //     }
+            // )
         ];
     }
 }

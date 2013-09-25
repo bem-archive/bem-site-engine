@@ -3,17 +3,15 @@ block posts, elem list {
     content {
 
         this._.isArray(this.ctx.source): {
-            var i = 0,
-                buf = [],
-                item;
+            var buf = [];
 
-            while(item = this.ctx.source[i]) {
-                buf[i++] = apply(this._mode = '', this.ctx = {
+            this.ctx.source.forEach(function(item){
+                buf.push(apply(this._mode = '', this.ctx = {
                     block: 'post',
                     mods: this.mods,
                     source: item
-                });
-            }
+                }));
+            });
 
             return buf;
         }
