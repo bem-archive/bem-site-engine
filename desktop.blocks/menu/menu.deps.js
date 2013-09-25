@@ -1,8 +1,9 @@
 ({
     mustDeps: [],
     shouldDeps: [
-        { elem: 'item', mods : { type: ['tags', 'authors'], active: 'yes' } },
+        { elem: 'item', mods : { type: ['tags', 'authors', 'categories', 'articles'], active: 'yes', complex: 'yes' } },
         { elem: 'title'},
-        { elem: 'list'}
+        { elem: 'list'},
+        { mods: { type: ['authors', 'tags', 'categories', 'articles'] } }
     ]
 })

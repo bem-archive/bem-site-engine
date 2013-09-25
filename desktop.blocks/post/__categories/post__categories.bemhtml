@@ -1,7 +1,7 @@
 block post, elem categories {
 
-    default, (this.ctx && this.ctx.content): {
-        applyNext();
+    default, !(this.ctx && this.ctx.content): {
+        return false;
     }
 
     content : [

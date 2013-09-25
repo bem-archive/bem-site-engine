@@ -16,6 +16,7 @@
         { block : 'p-authors' },
         { block : 'p-general' },
         { block : 'p-method' },
-        { block : 'p-libraries' }
+        { block : 'p-libraries' },
+        { block : 'p-post' }
     ]
 })

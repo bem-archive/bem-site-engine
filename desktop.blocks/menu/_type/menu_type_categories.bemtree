@@ -1,0 +1,142 @@
+block menu, mod type categories{
+
+    content: {
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            source = data.source, //содержимое модели (файл data.json)
+            type = this.ctx.type,
+            self = this;
+
+        source = leJspath.find('.' + data.lang + '{.type === "' + type + '"}.categories', source, {});
+
+        //Удаляем дубликаты категорий
+        source = leJspath.removeDublicates(source, function(a, b) {
+            return (!self._.isSimple(a) && !self._.isSimple(b)) ?
+                a.url === b.url && a.name === b.name : a === b;
+        });
+
+        var localizationHash = {},
+            urlArr = [],
+            itemsHash = {},
+            items = [];
+
+        //Для категорий имеющих локализацию, составляем локализационный хэш
+        //Собираем в массив все url для категорий
+        source.forEach(function(item, index) {
+           if(!self._.isSimple(item)) {
+               localizationHash[item['url']] = item['name'];
+               urlArr.push(item['url']);
+           }else {
+               urlArr.push(item);
+           }
+        });
+
+        //Для составных url получаем дополнительную локализацию
+        //для каждой из частей разделенных /
+        var t = {};
+        Object.getOwnPropertyNames(localizationHash).forEach(function(item, index) {
+            var urlParts = item.split('/');
+            var nameParts = localizationHash[item].split('/');
+            urlParts.forEach(function(item, index) {
+                t[item] = nameParts[index];
+            });
+        });
+
+        localizationHash = t;
+
+        //из плоского списка категорий строим их дерево
+        //с локализованными частями для категорий и подкатегорий
+        //вложенность идентифицируется по разделителю вида /
+        urlArr.forEach(function(item, index) {
+            if(item.indexOf('/') > 0) {
+                var urlParts = item.split('/');
+                itemsHash[urlParts[0]] = itemsHash[urlParts[0]] ||
+                {
+                    id: item,
+                    name: localizationHash[urlParts[0]] || urlParts[0],
+                    items: []
+                };
+
+                itemsHash[urlParts[0]]['items'].push({
+                    id: item,
+                    name: localizationHash[urlParts[1]] || urlParts[1]
+                });
+            }else {
+                itemsHash[item] = {
+                    id: item,
+                    name: localizationHash[item] || item
+                };
+            }
+        });
+
+        //Превращаем полученный hash в array
+        Object.getOwnPropertyNames(itemsHash).forEach(function(item, index) {
+            items.push(itemsHash[item]);
+        });
+
+
+        //сортируем массив с элементами меню так, чтобы простые элементы отображались сверху
+        //а имеющие вложенность снизу
+        items.sort(function(a, b){
+            if(a.items && b.items) {
+                return a.items.length > b.items.length;
+            }else if(a.items && !b.items) {
+                return 1;
+            }else if(!a.items && b.items) {
+                return -1;
+            }else {
+                return a.name > b.name
+            }
+        });
+
+        if(this._.isArray(items)) {
+            var i = 0,
+                buf = [],
+                item;
+
+            //цикличеки применяем шаблоны к элементу item текущего блока
+            //с модификатором соотвествующим полю мета-информации
+            //значения которого отображаются в меню и идентификацией
+            //текущего значения для выделения активного пункта меню
+            items.forEach(function(item, index){
+                var isComplex = item.items && item.items.length > 0;
+
+                buf.push(apply(
+                    this._mode = '',
+                    this.ctx = {
+                        elem: 'item',
+                        elemMods: {
+                            type : 'categories',
+                            complex: isComplex ? 'yes' : '',
+                            active : apply('active', this.ctx = this._.extend(this.ctx, { item : item }))
+                        },
+                        url: !isComplex ? '/' + type + '/' + item.id : null,
+                        name: isComplex ? item.name.toUpperCase() : item.name
+                    }
+                ));
+
+                //для составных категорий выводим их подкатегории
+                isComplex && item.items.forEach(function(subitem, index) {
+                    buf.push(apply(
+                        this._mode = '',
+                        this.ctx = {
+                            elem: 'item',
+                            elemMods: {
+                                type : 'categories',
+                                active : apply('active', this.ctx = this._.extend(this.ctx, { item : subitem }))
+                            },
+                            url: '/' + type + '/' + item.id,
+                            name: subitem.name
+                        }
+                    ));
+                });
+            });
+
+            return buf;
+        }
+    }
+
+    //определение активного пункта меню и установка значения модификатора active
+    active: {
+        return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+    }
+}

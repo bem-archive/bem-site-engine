@@ -1,0 +1,55 @@
+block post, mod view articles {
+
+    content: {
+        var id = this.ctx.source,
+            data = this.data,
+            source = data.source,
+            source = leJspath.filter(source, [{
+                field: 'id',
+                operand: '===',
+                value: id
+            }], data.lang);
+
+        if(!source || source.length == 0)
+            return [];
+
+        source = source.shift();
+
+        console.debug(source.authors);
+
+        return [
+           {
+                elem: 'date',
+                elemMods: {'type': 'create'},
+                content: source.createDate
+            },
+            {
+                elem: 'date',
+                elemMods: {'type': 'edit'},
+                content: source.editDate
+            },
+            {
+                elem: 'author',
+                content: source.authors
+            },
+            {
+                elem: 'translator',
+                content: source.translators
+            },
+            {
+                 elem: 'tags',
+                 content: source.tags
+            },
+            {
+                elem: 'title',
+                id: source.id,
+                type: source.type,
+                title: source.title
+            },
+            {
+                elem: 'summary',
+                content: source.summary
+            }
+        ]
+    }
+}

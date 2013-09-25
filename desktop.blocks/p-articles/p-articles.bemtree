@@ -1,14 +1,80 @@
 block p-articles {
 
-    content: [
-        {
-            block: 'posts',
-            config: {
-                filter: leJspath.parseQuery(this.data, 'filter'),
-                sort: leJspath.parseQuery(this.data, 'sort'),
-                page: leJspath.parseQuery(this.data, 'page')
-            }
-        }
-    ]
+    content: {
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            type = 'articles',
+            id = this.ctx.id,
+            query = {};
 
+        if(id && id.length > 0) {
+            query = {
+                predicate: '.' + data.lang + '{.type === $type}{.categories === $category || .categories.url === $category}.id',
+                substitution: { type: type, category: id }
+            };
+        }else {
+            query = {
+                predicate: '.' + data.lang + '{.type === $type}.id',
+                substitution: { type: type }
+            };
+        }
+
+        return [
+            {
+                block: 'layout',
+                mods: {section: 'p-menu'},
+                content: [
+                    {
+                        block: 'left',
+                        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+                        content: [
+                            {
+                                block: 'menu',
+                                type: type,
+                                id: id,
+                                mods: { type: 'categories' }
+                            }
+                        ]
+                    },
+                    {
+                        block: 'center',
+                        mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                        content: [
+                            {
+                               block: 'layout',
+                                mods: {section: 'p-menu'},
+                                content: [
+                                    {
+                                        block: 'left',
+                                        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+                                        content: [
+                                            {
+                                                block: 'menu',
+                                                type: type,
+                                                query: query,
+                                                mods: { type: 'articles' }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        block: 'center',
+                                        mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                                        content: [
+                                            {
+                                                block: 'posts',
+                                                mods: { view: 'articles' },
+                                                config: {
+                                                    query: query,
+                                                    sort: leJspath.parseQuery(this.data, 'sort')
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+    }
 }

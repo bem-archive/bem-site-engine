@@ -43,7 +43,7 @@ block p-authors {
                             {
                                 block: 'menu',
                                 id: author,
-                                type: 'authors'
+                                mods: { type: 'authors' }
                             }
                         ]
                     },

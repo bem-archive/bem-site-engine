@@ -1,21 +1,25 @@
-block menu {
+block menu, mod type articles {
 
     content: {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             source = data.source, //содержимое модели (файл data.json)
-            type = this.ctx.type; //поле в мета информации, уникальный и отсортированный список значений которого будет отображаться
+            type = this.ctx.type,
+            query = this.ctx.query,
+            id = this.ctx.id;
 
-        source = leJspath.find('.' + data.lang + '.' + type, source, {});
+        console.log(query);
+
+        source = leJspath.find(query.predicate, source, query.substitution);
 
         //убираем дубликаты
         source = source.filter(function(elem, pos, self) {
-            return self.indexOf(elem) == pos;
+             return self.indexOf(elem) == pos;
         });
 
         //сортируем в алфавитном порядке
         source = source.sort();
 
-        leJspath.stringify(source);
+        //leJspath.stringify(source);
 
         if(this._.isArray(source)) {
             var i = 0,
@@ -27,19 +31,19 @@ block menu {
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
             while(item = source[i]) {
-                console.debug(item);
+                //console.debug(item);
+
                 buf[i++] = apply(
                     this._mode = '',
                     this.ctx = {
                         elem: 'item',
                         elemMods: {
-                            type : type,
+                            type : 'articles',
                             active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
                         id: item
                     }
                 );
             }
-
             return buf;
         }
     }

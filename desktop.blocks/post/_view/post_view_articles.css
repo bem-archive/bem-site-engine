@@ -1,0 +1,14 @@
+.post_view_articles
+{
+    padding-top: 5px;
+}
+
+.post_view_articles > .post__date,
+.post_view_articles > .post__author,
+.post_view_articles > .post__translator,
+.post_view_articles > .post__tags
+{
+    display: inline-block;
+    font-size: 0.9em;
+    padding-right: 10px;
+}

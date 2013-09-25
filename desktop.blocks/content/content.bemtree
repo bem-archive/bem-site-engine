@@ -30,9 +30,11 @@ block content {
             data = this.data, //объект хранящий request, response и.т.д
             type = data.params.type, //параметр типа
             url = data.req.url,
-            id = url.split('?').shift().split('/').slice(2).shift(),
+            id = url.split('?').shift().split('/').slice(2).join('/'),
             ctx = { source: source, type: type, id: id },
             block = null;
+
+        console.debug('ID = ' + id);
 
         this.data.source = source;
 

@@ -1,7 +1,18 @@
 .menu__item
 {
-    /*padding: 7px 0 7px 10px;*/
-    /*display: block;*/
+}
+
+.menu__item_type_categories > .link,
+.menu__item_type_articles > .link,
+.menu__item_type_tags > .link
+{
+    font-size: 1.1em;
+
+    display: block;
+    padding: 7px 0 7px 10px;
+
+    color: #000000 !important;
+    text-decoration: none;
 }
 
 .menu__item:hover

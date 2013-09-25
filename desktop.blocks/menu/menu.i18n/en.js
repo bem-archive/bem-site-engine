@@ -1,6 +1,7 @@
 module.exports = {
     "menu": {
-        "tags": "Tags",
-        "authors": "AUTHORS"
+        "tags": "TAGS",
+        "authors": "AUTHORS",
+        "categories": "CATEGORIES"
     }
 };

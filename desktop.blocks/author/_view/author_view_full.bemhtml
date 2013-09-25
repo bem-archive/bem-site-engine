@@ -39,6 +39,11 @@ block author, mod view full {
                 },
                 {
                     block: 'author',
+                    elem: 'skype',
+                    content: this.ctx.content.skype
+                },
+                {
+                    block: 'author',
                     elem: 'info',
                     content: this.ctx.content.info
                 }

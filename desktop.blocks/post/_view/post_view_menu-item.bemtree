@@ -1,0 +1,26 @@
+block post, mod view menu-item {
+
+    default: {
+        var id = this.ctx.id,
+            data = this.data,
+            source = data.source,
+            source = leJspath.filter(source, [{
+                field: 'id',
+                operand: '===',
+                value: id
+            }], data.lang);
+
+        if(!source || source.length == 0)
+            return [];
+
+        source = source.shift();
+
+        return [
+            {
+                block: 'link',
+                url: '/' + source.type + '/' + source.id,
+                content: source.title
+            }
+        ]
+    }
+}
