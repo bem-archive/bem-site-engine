@@ -4,17 +4,19 @@ block p-tags {
         var tag = this.ctx.id || '',
             content = [];
 
-        //leJspath.stringify(data);
-
         ['articles', 'tools', 'news'].forEach(function(item) {
             content.push({
                 block: 'posts',
+                mods: { view: 'articles' },
                 config: {
                     title: BEM.I18N('p-tags', item),
-                    filter: [
-                        { field: 'type', operand: '===', value: item },
-                        { field: 'tags', operand: '===', value: tag }
-                    ],
+                    query: (tag && tag.length > 0) ? {
+                        predicate: '.' + data.lang + '{.type === $type}{.tags === $tag}.id',
+                        substitution: { type: item, tag: tag }
+                    } : {
+                        predicate: '.' + data.lang + '{.type === $type}.id',
+                        substitution: { type: item }
+                    },
                     sort: [{field: 'title', direction: 'asc'}]
                 }
             })
@@ -22,22 +24,29 @@ block p-tags {
 
         return [
             {
-                block: 'left',
-                mix: { block : 'layout', elem : 'col', mods: {type: 'left'} },
+                block: 'layout',
+                mods: {section: 'p-menu'},
                 content: [
                     {
-                        block: 'menu',
-                        type: 'tags'
-                    }
-                ]
-            },
-            {
-                block: 'center',
-                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-                content: [
+                        block: 'left',
+                        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+                        content: [
+                            {
+                                block: 'menu',
+                                id: tag,
+                                mods: { type: 'tags' }
+                            }
+                        ]
+                    },
                     {
-                        block: 'posts-groups',
-                        content: content
+                        block: 'center',
+                        mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                        content: [
+                            {
+                                block: 'posts-groups',
+                                content: content
+                            }
+                        ]
                     }
                 ]
             }
