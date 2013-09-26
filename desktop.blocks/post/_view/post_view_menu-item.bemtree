@@ -19,7 +19,9 @@ block post, mod view menu-item {
         return [
             {
                 block: 'link',
-                url: '/' + source.type + '/' + category + '/' + id,
+                url: category ?
+                    '/' + source.type + '/' + category + '/' + id :
+                    '/' + source.type + '/' + id,
                 content: source.title
             }
         ]

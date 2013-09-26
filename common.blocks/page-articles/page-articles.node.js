@@ -13,7 +13,23 @@ router.addRoute({
 
 router.addRoute({
     name : 'articles',
-    rule : '/articles/.*',
+    rule : '/articles/{1}',
+    data : {
+        action : 'le-page'
+    }
+});
+
+router.addRoute({
+    name : 'articles',
+    rule : '/articles/{1}/{2}',
+    data : {
+        action : 'le-page'
+    }
+});
+
+router.addRoute({
+    name : 'articles',
+    rule : '/articles/{1}/{2}/{3}',
     data : {
         action : 'le-page'
     }
