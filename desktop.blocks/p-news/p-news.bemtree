@@ -96,7 +96,7 @@ block p-news {
 
         url = filterDate.url.split('/').slice(2); //отрезаем /{type}/
 
-        console.debug('URL= ' + url);
+        //console.debug('URL= ' + url);
 
         return filterConfig;
     }

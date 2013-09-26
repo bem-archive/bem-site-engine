@@ -1,8 +1,9 @@
 block post, mod view menu-item {
 
     default: {
-        var id = this.ctx.id,
-            data = this.data,
+        var id = this.ctx.id, //уникальный id поста
+            category = this.ctx.category, //категория поста
+            data = this.data, //объект содержащий информацию о request, response и.т.д
             source = data.source,
             source = leJspath.filter(source, [{
                 field: 'id',
@@ -18,7 +19,7 @@ block post, mod view menu-item {
         return [
             {
                 block: 'link',
-                url: '/' + source.type + '/' + source.id,
+                url: '/' + source.type + '/' + category + '/' + id,
                 content: source.title
             }
         ]

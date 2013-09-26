@@ -1,75 +1,116 @@
 block p-tools {
 
     content: {
-        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            type = 'tools',
-            id = this.ctx.id,
-            query = {};
+        var CATEGORY_MAX_DEPTH = 3,
+            TYPE = 'tools';
 
-        if(id && id.length > 0) {
-            query = {
-                predicate: '.' + data.lang + '{.type === $type}{.categories === $category || .categories.url === $category}.id',
-                substitution: { type: type, category: id }
-            };
-        }else {
-            query = {
-                predicate: '.' + data.lang + '{.type === $type}.id',
-                substitution: { type: type }
-            };
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            params = data.params, //хэш с параметрами запроса
+            category = null, //категория поста
+            id = null, //id конкретного поста
+            isIdFounded = false;
+
+        for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
+            if(params[i]) {
+                if(!isIdFounded && apply('find-by-id', this.ctx = { id: params[i], type: TYPE })) {
+                    isIdFounded = true;
+                    id = params[i];
+                }else {
+                    category = category || [];
+                    category.push(params[i]);
+                }
+            }
         }
+
+        category = category && category.reverse().join('/');
+
+        console.debug('id = %s category = %s', id, category);
+
+        var articlesQuery = category ?
+            {
+                predicate: '.' + data.lang + '{.type === $type}{.categories === $category || .categories.url === $category}.id',
+                substitution: { type: TYPE, category: category }
+            } :
+            {    //TODO will be displayed root page
+                 predicate: '.' + data.lang + '{.type === $type}.id',
+                 substitution: { type: TYPE }
+            };
+
+        //блок колонки для меню категорий
+        var categoriesMenu = {
+            block: 'left',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+            content: [
+                {
+                    block: 'menu',
+                    type: TYPE,
+                    id: category,
+                    mods: { type: 'categories' }
+                }
+            ]
+        };
+
+        //блок колонки для меню постов
+        var articlesMenu = {
+            block: 'left',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+            content: [
+                {
+                    block: 'menu',
+                    type: TYPE,
+                    query: articlesQuery,
+                    category: category,
+                    id: id,
+                    mods: { type: 'articles' }
+                }
+            ]
+        };
+
+        //блок для отображения списка постов
+        var posts = {
+            block: 'center',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            content: [
+                {
+                    block: 'posts',
+                    mods: { view: 'articles' },
+                    config: {
+                        query: articlesQuery,
+                        sort: leJspath.parseQuery(this.data, 'sort')
+                    }
+                }
+            ]
+        };
+
+        //блок для отображения поста в развернутом виде
+        var post = {
+            block: 'center',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            content: [
+                {
+                    block: 'post',
+                    mods: { view: 'full' },
+                    id: id
+                }
+            ]
+        };
 
         return [
             {
                 block: 'layout',
                 mods: {section: 'p-menu'},
                 content: [
-                    {
-                        block: 'left',
-                        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-                        content: [
-                            {
-                                block: 'menu',
-                                type: type,
-                                id: id,
-                                mods: { type: 'categories' }
-                            }
-                        ]
-                    },
+                    categoriesMenu,
                     {
                         block: 'center',
-                        mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                        mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
                         content: [
                             {
                                block: 'layout',
-                                mods: {section: 'p-menu'},
+                                mods: { section: 'p-menu' },
                                 content: [
-                                    {
-                                        block: 'left',
-                                        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-                                        content: [
-                                            {
-                                                block: 'menu',
-                                                type: type,
-                                                query: query,
-                                                mods: { type: 'articles' }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        block: 'center',
-                                        mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-                                        content: [
-                                            {
-                                                block: 'posts',
-                                                mods: { view: 'articles' },
-                                                config: {
-                                                    query: query,
-                                                    sort: leJspath.parseQuery(this.data, 'sort')//,
-                                                    //page: leJspath.parseQuery(this.data, 'page')
-                                                }
-                                            }
-                                        ]
-                                    }
+                                    articlesMenu,
+                                    id ? post : posts
                                 ]
                             }
                         ]
@@ -77,6 +118,13 @@ block p-tools {
                 ]
             }
         ];
+    }
+
+    find-by-id: {
+        return leJspath.filter(this.data.source, [
+            { field: 'type', operand:  '===', value: this.ctx.type },
+            { field: 'id', operand:  '===', value: this.ctx.id }
+        ], this.data.lang).length > 0;
     }
 
 }

@@ -15,7 +15,7 @@ block post, mod view articles {
 
         source = source.shift();
 
-        console.debug(source.authors);
+        //console.debug(source.authors);
 
         return [
            {

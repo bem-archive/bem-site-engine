@@ -28,76 +28,110 @@ block content {
     processData: {
         var source = this.ctx.source; //содержимое файла data.json
             data = this.data, //объект хранящий request, response и.т.д
-            type = data.params.type, //параметр типа
-            url = data.req.url,
-            id = url.split('?').shift().split('/').slice(2).join('/'),
-            ctx = { source: source, type: type, id: id },
-            block = null;
+            page = data.page, //страница сайта [method, libraries, tools, articles, news, authors, tags, index]
+            buf = [];
 
-        console.debug('ID = ' + id);
+        console.debug('PAGE = ' + page);
 
         this.data.source = source;
 
-        switch(type) {
-                case 'general':
-                    block = 'general';
-                    break;
+        //отрисовка главного меню сайта
+        buf.push(apply(this._mode = '', this.ctx = { block: 'main-menu' }));
 
-                case 'method':
-                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'method';
-                    break;
+        switch(page) {
+            case 'method':
+                buf.push(apply('method'));
+                break;
+            case 'libraries':
+                buf.push(apply('libraries'));
+                break;
+            case 'articles':
+                buf.push(apply('articles'));
+                break;
+            case 'tools':
+                buf.push(apply('tools'));
+                break;
+            case 'news':
+                buf.push(apply('news'));
+                break;
+            case 'authors':
+                buf.push(apply('authors'));
+                break;
+            case 'tags':
+                buf.push(apply('tags'));
+                break;
+            case 'index':
+                buf.push(apply('index'));
+                break;
+            default :
+                buf.push(apply('index'));
+                break;
+        }
 
-                case 'libraries':
-                    block = 'libraries';
-                    break;
-
-                case 'articles':
-                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'articles';
-                    break;
-
-                case 'tools':
-                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'tools';
-                    break;
-
-                case 'news':
-                    block = apply('find-by-id', this.ctx = ctx) ? 'post' : 'news';
-                    break;
-
-                case 'authors':
-                    block = 'authors';
-                    break;
-
-                case 'tags':
-                    block = 'tags';
-                    break;
-
-                default:
-                    block = 'index';
-                    break;
-            }
-
-        //console.debug('id = ' + id);
-        //console.debug('block = ' + block);
-
-        return [
-            apply(this._mode = '', this.ctx = {
-                    block: 'main-menu'
-            }),
-            apply(this._mode = '', this.ctx = {
-                block : 'p-' + block,
-                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-                id: id
-            })
-        ]
+        return buf;
     }
 
-    //определяем факт того, что был запрошен единичный пост
-    //по попытке поиска поста по типу из url, куску строки запроса
-    //идущей после /{type}/ и текущей локали
-    find-by-id: {
-        return leJspath.filter(this.ctx.source, [
-                { field: 'type', operand:  '===', value: this.ctx.type },
-                { field: 'id', operand:  '===', value: this.ctx.id }
-            ], this.data.lang).length > 0;
+    method: {
+        return apply(this._mode = '', this.ctx = {
+            block: 'p-method',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+        });
+    }
+
+    libraries: {
+        return apply(this._mode = '', this.ctx = {
+            block: 'p-libraries',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+        });
+    }
+
+    //страница для отображения статей /articles
+    articles: {
+        return apply(this._mode = '', this.ctx = {
+            block: 'p-articles',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+        });
+    }
+
+    //страница инструментов /tools
+    tools: {
+        return apply(this._mode = '', this.ctx = {
+            block: 'p-tools',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+        });
+    }
+
+    //страница блога /news
+    news: {
+        return apply(this._mode = '', this.ctx = {
+            block: 'p-news',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+        });
+    }
+
+    //страница авторов /authors
+    authors: {
+        return apply(this._mode = '', this.ctx = {
+            block: 'p-authors',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            id: this.data.params.id
+        });
+    }
+
+    //страница поиска по тегам /tags
+    tags: {
+        return apply(this._mode = '', this.ctx = {
+            block: 'p-tags',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            id: this.data.params.id
+        });
+    }
+
+    //главная страница сайта
+    index: {
+        return apply(this._mode = '', this.ctx = {
+            block: 'p-index',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+        });
     }
 }
