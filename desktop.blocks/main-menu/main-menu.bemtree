@@ -1,8 +1,8 @@
 block main-menu {
 
     content: {
-        var FACEBOOK_URL = 'http://facebook.com',
-            YARU_URL = 'http://ya.ru';
+        var FACEBOOK_URL = 'http://www.facebook.com/#!/groups/209713935765634/',
+            YARU_URL = 'http://clubs.ya.ru/bem/';
 
         var lang = this.data.lang == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,
@@ -15,15 +15,37 @@ block main-menu {
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'general')},
-                url: '/general',
-                name: 'general'
-            },
-            {
-                elem: 'item',
                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'methodology')},
                 url: '/method',
                 name: 'methodology'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'articles')},
+                url: '/articles/',
+                name: 'articles'
+            },
+             {
+                 elem: 'item',
+                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'news')},
+                 url: '/news/',
+                 name: 'news'
+             },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'authors')},
+                url: '/authors/',
+                name: 'authors'
+            },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'tags')},
+                url: '/tags/',
+                name: 'tags'
+            },
+            {
+                elem: 'item',
+                elemMods: {type: 'delimeter'}
             },
             {
                 elem: 'item',
@@ -36,30 +58,6 @@ block main-menu {
                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'libraries')},
                 url: '/libraries',
                 name: 'libraries'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'articles')},
-                url: '/articles/',
-                name: 'articles'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'news')},
-                url: '/news/',
-                name: 'news'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'authors')},
-                url: '/authors/',
-                name: 'authors'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'tags')},
-                url: '/tags/',
-                name: 'tags'
             },
             {
                 elem: 'item',
