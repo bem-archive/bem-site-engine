@@ -34,13 +34,13 @@ block main-menu {
             {
                 elem: 'item',
                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'authors')},
-                url: '/authors/',
+                url: '/authors',
                 name: 'authors'
             },
             {
                 elem: 'item',
                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'tags')},
-                url: '/tags/',
+                url: '/tags',
                 name: 'tags'
             },
             {

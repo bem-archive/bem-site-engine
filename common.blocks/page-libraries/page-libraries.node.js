@@ -4,16 +4,16 @@ modules.define(
     function(provide, router, View) {
 
 router.addRoute({
-    name : 'page',
-    rule : '/{type}',
+    name : 'libraries',
+    rule : '/libraries',
     data : {
         action : 'le-page'
     }
 });
 
 router.addRoute({
-    name : 'page',
-    rule : '/{type}/.*',
+    name : 'libraries',
+    rule : '/libraries/.*',
     data : {
         action : 'le-page'
     }

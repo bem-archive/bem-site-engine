@@ -7,8 +7,6 @@ block menu, mod type articles {
             query = this.ctx.query,
             id = this.ctx.id;
 
-        console.log(query);
-
         source = leJspath.find(query.predicate, source, query.substitution);
 
         //убираем дубликаты
@@ -18,8 +16,6 @@ block menu, mod type articles {
 
         //сортируем в алфавитном порядке
         source = source.sort();
-
-        //leJspath.stringify(source);
 
         if(this._.isArray(source)) {
             var i = 0,
@@ -40,7 +36,8 @@ block menu, mod type articles {
                         elemMods: {
                             type : 'articles',
                             active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
-                        id: item
+                        id: item,
+                        category: this.ctx.category
                     }
                 );
             }
