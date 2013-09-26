@@ -2,7 +2,9 @@ module.exports = {
     "menu": {
         "tags": "ТЕГИ",
         "authors": "АВТОРЫ",
-        "categories": "CATEGORIES"
+        "categories": "КАТЕГОРИИ",
+        "all-articles": "Все статьи",
+        "all-news": "Все новости"
     }
 };
 

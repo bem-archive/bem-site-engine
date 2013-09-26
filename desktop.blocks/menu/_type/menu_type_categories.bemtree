@@ -43,30 +43,22 @@ block menu, mod type categories{
 
         localizationHash = t;
 
+        console.debug('before make item');
+
         //из плоского списка категорий строим их дерево
         //с локализованными частями для категорий и подкатегорий
         //вложенность идентифицируется по разделителю вида /
         urlArr.forEach(function(item, index) {
-            if(item.indexOf('/') > 0) {
-                var urlParts = item.split('/');
-                itemsHash[urlParts[0]] = itemsHash[urlParts[0]] ||
-                {
-                    id: item,
-                    name: localizationHash[urlParts[0]] || urlParts[0],
-                    items: []
-                };
 
-                itemsHash[urlParts[0]]['items'].push({
-                    id: item,
-                    name: localizationHash[urlParts[1]] || urlParts[1]
-                });
-            }else {
-                itemsHash[item] = {
-                    id: item,
-                    name: localizationHash[item] || item
-                };
-            }
+            var parts   = item.split('/'),
+                pointer = itemsHash;
+
+            parts.forEach(function(part) {
+                pointer = (pointer[part] || (pointer[part] = { id: item, name: localizationHash[part] || part }));
+            });
         });
+
+        leJspath.stringify(itemsHash);
 
         //Превращаем полученный hash в array
         Object.getOwnPropertyNames(itemsHash).forEach(function(item, index) {
@@ -90,49 +82,76 @@ block menu, mod type categories{
 
         if(this._.isArray(items)) {
             var i = 0,
-                buf = [],
                 item;
 
-            //цикличеки применяем шаблоны к элементу item текущего блока
+            this.buf = [];
+
+            //при наличии соответсвующего модификатора добавляем
+            //пункт меню при нажатии по которому показываются все посты
+            apply('drawAllItem');
+
+            //рекурсивно строим меню
+            //применяем шаблоны к элементу item текущего блока
             //с модификатором соотвествующим полю мета-информации
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
             items.forEach(function(item, index){
-                var isComplex = item.items && item.items.length > 0;
-
-                buf.push(apply(
-                    this._mode = '',
-                    this.ctx = {
-                        elem: 'item',
-                        elemMods: {
-                            type : 'categories',
-                            complex: isComplex ? 'yes' : '',
-                            active : apply('active', this.ctx = this._.extend(this.ctx, { item : item }))
-                        },
-                        url: !isComplex ? '/' + type + '/' + item.id : null,
-                        name: isComplex ? item.name.toUpperCase() : item.name
-                    }
-                ));
-
-                //для составных категорий выводим их подкатегории
-                isComplex && item.items.forEach(function(subitem, index) {
-                    buf.push(apply(
-                        this._mode = '',
-                        this.ctx = {
-                            elem: 'item',
-                            elemMods: {
-                                type : 'categories',
-                                active : apply('active', this.ctx = this._.extend(this.ctx, { item : subitem }))
-                            },
-                            url: '/' + type + '/' + item.id,
-                            name: subitem.name
-                        }
-                    ));
-                });
+                apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item }));
             });
 
-            return buf;
+            return this.buf;
         }
+    }
+
+    drawAllItem: {
+        if(this.mods['all'] === 'yes') {
+            this.buf.push(apply(
+                this._mode = '',
+                this.ctx = {
+                    elem: 'item',
+                    elemMods: {
+                        type : 'categories',
+                        active : !this.ctx.id ? 'yes' : ''
+                    },
+                    url: '/' + this.ctx.type,
+                    name: BEM.I18N('menu', 'all-' + this.ctx.type)
+                }
+            ));
+        }
+    }
+
+    drawMenuItem: {
+        var item = this.ctx.item,
+            type = this.ctx.type,
+            isComplex = apply('complex');
+
+        this.buf.push(apply(
+            this._mode = '',
+            this.ctx = {
+                elem: 'item',
+                elemMods: {
+                    type : 'categories',
+                    complex: isComplex ? 'yes' : '',
+                    active : apply('active')
+                },
+                url: !isComplex ? '/' + type + '/' + item.id : null,
+                name: isComplex ? item.name.toUpperCase() : item.name
+            }
+        ));
+
+        if(isComplex) {
+            Object.getOwnPropertyNames(item).filter(function(key) {
+                 return key !== 'id' && key !== 'name';
+            }).forEach(function(key) {
+                 apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item[key] }));
+            });
+        }
+    }
+
+    complex: {
+        return Object.getOwnPropertyNames(this.ctx.item).filter(function(item) {
+            return item !== 'id' && item !== 'name'
+        }).length > 0
     }
 
     //определение активного пункта меню и установка значения модификатора active
