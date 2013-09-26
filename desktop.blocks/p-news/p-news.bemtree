@@ -45,7 +45,7 @@ block p-news {
                     block: 'menu',
                     type: TYPE,
                     id: category,
-                    mods: { type: 'categories' }
+                    mods: { type: 'categories', all: 'yes' }
                 }
             ]
         };
