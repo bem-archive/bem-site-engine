@@ -5,7 +5,8 @@
 
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             config = this.ctx.config, //конфиг для фильтрации, сортировки и пагинации
-            source = data.source; //содержимое модели (файл data.json)
+            source = data.source, //содержимое модели (файл data.json)
+            buf = [];
 
             source = config['query'] ?
                 leJspath.find(config['query'].predicate, source, config['query'].substitution) :
@@ -22,30 +23,16 @@
         //console.debug('length = ' + source.length);
 
         //постраничное разбиение набора записей
-        source = config['page'] ?
-            leJspath.paginate(source, config['page'], DEFAULT_LIMIT) : source;
+        //source = config['page'] ?
+        //    leJspath.paginate(source, config['page'], DEFAULT_LIMIT) : source;
 
-        return [
-            {
+        source.length > 0 &&
+            buf.push({
                 elem: 'list',
                 mods: this.mods,
                 source: source
-            }
-            //    }
-            //),
-            // apply(
-            //     this._mode = '',
-            //     this.ctx = {
-            //         elem: 'footer',
-            //         params: {
-            //             pager: config['page'],
-            //             total: total,
-            //             path: data.req.path,
-            //             query: data.req.query,
-            //             defaultLimit: DEFAULT_LIMIT
-            //         }
-            //     }
-            // )
-        ];
+            });
+
+        return buf;
     }
 }
