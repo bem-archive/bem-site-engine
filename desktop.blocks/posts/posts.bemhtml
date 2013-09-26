@@ -1,6 +1,8 @@
 block posts {
 
-    //mix: { block: 'island' }
+    default, (this.ctx.content && this.ctx.content.length == 0): {
+        return false;
+    }
 
     content, (this.ctx.config && this.ctx.config.title): [
         {
