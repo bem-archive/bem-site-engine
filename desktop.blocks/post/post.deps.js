@@ -12,6 +12,7 @@
         { elem : 'categories' },
         { elem : 'author' },
         { elem : 'translator' },
-        { elem : 'type' }
+        { elem : 'type' },
+        { elem : 'content' }
     ]
 })

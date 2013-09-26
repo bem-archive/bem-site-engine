@@ -1,0 +1,96 @@
+.post__content
+{
+    font-size: 16px;
+    line-height: 1.7;
+
+    max-width: 1050px;
+    margin: auto;
+    padding: 20px 19px 24px;
+
+    color: #586e75;
+}
+
+.post__content h1
+{
+    color: #555;
+}
+
+/* highlighting of code snippets */
+
+.post__content  .highlight
+{
+    padding: .5em;
+
+    color: #333;
+    background: #f8f8ff;
+}
+
+.post__content .highlight .string,
+.post__content .highlight .tag .value,
+.post__content .highlight .phpdoc,
+.post__content .highlight .tex .formula
+{
+    color: #d14;
+}
+
+.post__content .highlight .comment,
+.post__content .highlight .template_comment,
+.post__content .highlight .diff .header,
+.post__content .highlight .javadoc
+{
+    font-style: italic;
+
+    color: #998;
+}
+
+.post__content a
+{
+    color: #268bd2;
+}
+
+.post__content a:hover
+{
+    text-decoration: none;
+
+    color: #fff;
+    background-color: #000;
+}
+
+/* Tables */
+
+.post__content table
+{
+    width: 100%;
+    border-spacing: 0;
+}
+
+.post__content th
+{
+    border-bottom: 3px solid #F3F1EE;
+}
+
+.post__content td
+{
+    padding: 5px;
+
+    border-bottom: 1px solid #F3F1EE;
+    border-right: 1px solid #F3F1EE;
+}
+
+.post__content td:first-child
+{
+    border-left: 1px solid #F3F1EE;
+}
+
+.post__content table code
+{
+    padding: 5px;
+
+    background: #f8f8ff;
+}
+
+.post__content pre code
+{
+    display: block;
+    overflow: auto;
+}
