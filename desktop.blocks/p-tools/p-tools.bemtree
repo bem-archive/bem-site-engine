@@ -47,9 +47,12 @@ block p-tools {
                 substitution: { type: TYPE, category: category }
             };
         }else {
-            articlesQuery = {
-                predicate: '.' + data.lang + '{.type === $type}.id',
-                substitution: { type: TYPE }
+            id = apply('findRoot', this.ctx = { type: TYPE });
+            if(!id) {
+                articlesQuery = {
+                    predicate: '.' + data.lang + '{.type === $type}.id',
+                    substitution: { type: TYPE }
+                }
             }
         }
 
@@ -114,26 +117,34 @@ block p-tools {
             ]
         };
 
+        var categories = {
+            block: 'center',
+            mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
+            content: [
+                {
+                   block: 'layout',
+                    mods: { section: 'p-menu' },
+                    content: [
+                        articlesMenu,
+                        id ? post : posts
+                    ]
+                }
+            ]
+        };
+
+        var rootPost = {
+            block: 'center',
+            mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
+            content: post
+        }
+
         return [
             {
                 block: 'layout',
                 mods: {section: 'p-menu'},
                 content: [
                     categoriesMenu,
-                    {
-                        block: 'center',
-                        mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
-                        content: [
-                            {
-                               block: 'layout',
-                                mods: { section: 'p-menu' },
-                                content: [
-                                    articlesMenu,
-                                    id ? post : posts
-                                ]
-                            }
-                        ]
-                    }
+                    category ? categories : (id ? rootPost : categories)
                 ]
             }
         ];
@@ -144,11 +155,18 @@ block p-tools {
     findRoot: {
         var result = leJspath.filter(this.data.source, [
             { field: 'type', operand:  '===', value: this.ctx.type },
-            { field: 'root', operand:  '===', value: true },
-            { field: 'categories', operand:  '==', value: [] }
+            { field: 'root', operand:  '===', value: "true" }
         ], this.data.lang);
 
-        return (result && result.length > 0) ? result.shift().id : null;
+        var rootId = null;
+
+        result.forEach(function(item) {
+            if(item.categories && item.categories.length == 0 ) {
+                rootId = item.id
+            }
+        });
+
+        return rootId;
     }
 
     //метод для нахождения корневого поста для указанной категории category и типа type
