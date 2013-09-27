@@ -10,6 +10,7 @@ block author, mod view full {
                 {
                     block: 'author',
                     elem: 'avatar',
+                    elemMods: { size: 'medium' },
                     content: this.ctx.content
                 }
             ]

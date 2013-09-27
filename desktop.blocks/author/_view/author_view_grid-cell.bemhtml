@@ -1,0 +1,22 @@
+block author, mod view grid-cell {
+
+    mix: { block: 'island' }
+
+    tag: 'a',
+
+    attrs: { href: '/' + this.ctx.content.type + '/' + this.ctx.content.id }
+
+    content: [
+        {
+            block: 'author',
+            elem: 'avatar',
+            elemMods: { size: 'medium' },
+            content: this.ctx.content
+        },
+        {
+            block: 'author',
+            elem: 'name',
+            content: this.ctx.content
+        }
+    ]
+}

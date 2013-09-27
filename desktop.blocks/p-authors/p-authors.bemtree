@@ -39,7 +39,7 @@ block p-authors {
         buf.push({
             elem: 'title',
             mix: { block: 'menu', elem: 'title' },
-            content: BEM.I18N('p-authors', 'title')
+            content: BEM.I18N('p-authors', 'info')
         });
 
         //блок персональной информации об авторе
@@ -74,7 +74,38 @@ block p-authors {
     //т.е. в парамертах запроса отсутствует id автора, то отображаем контактные
     //данные для всей команды и сетку портретов с подписями для каждого члена команды
     authors: {
-        var buf = [];
+        var buf = [], //массив вывода контента
+            self = this,
+            data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            source = data.source; //содержимое модели (файл data.json)
+
+        source = leJspath.find('.' + data.lang + '{.type === "authors"}.id', source);
+
+        //убираем дубликаты
+        source = source.filter(function(elem, pos, self) {
+            return self.indexOf(elem) == pos;
+        });
+
+        //сортируем в алфавитном порядке
+        source = source.sort();
+
+        //заголовок
+        buf.push({
+            elem: 'title',
+            mix: { block: 'menu', elem: 'title' },
+            content: BEM.I18N('p-authors', 'team')
+        });
+
+        buf.push({
+            block: 'authors',
+            content: source.map(function(item) {
+                return {
+                    block: 'author',
+                    mods: { view: 'grid-cell' },
+                    id: item
+                }
+            })
+        });
 
         return buf;
     }

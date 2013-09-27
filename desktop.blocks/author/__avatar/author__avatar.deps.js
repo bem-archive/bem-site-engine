@@ -1,4 +1,6 @@
 ({
     mustDeps: [],
-    shouldDeps: []
+    shouldDeps: [
+        { mods: { size: ['small', 'medium', 'large'] } }
+    ]
 })
