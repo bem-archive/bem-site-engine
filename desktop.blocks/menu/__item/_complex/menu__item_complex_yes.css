@@ -7,3 +7,8 @@
     border-top: 1px solid #AAAAAA;
     border-bottom: 1px solid #AAAAAA;
 }
+
+.menu__item_complex_yes:hover
+{
+    background: #EEEEEE;
+}
