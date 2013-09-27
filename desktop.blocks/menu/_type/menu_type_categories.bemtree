@@ -43,7 +43,7 @@ block menu, mod type categories{
 
         localizationHash = t;
 
-        console.debug('before make item');
+        //console.debug('before make item');
 
         //из плоского списка категорий строим их дерево
         //с локализованными частями для категорий и подкатегорий
@@ -58,7 +58,7 @@ block menu, mod type categories{
             });
         });
 
-        leJspath.stringify(itemsHash);
+        //leJspath.stringify(itemsHash);
 
         //Превращаем полученный hash в array
         Object.getOwnPropertyNames(itemsHash).forEach(function(item, index) {
