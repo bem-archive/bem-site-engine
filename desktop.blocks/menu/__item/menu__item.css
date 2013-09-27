@@ -1,5 +1,10 @@
 .menu__item
 {
+    -webkit-transition: background .4s ease;
+    -moz-transition: background .4s ease;
+    -ms-transition: background .4s ease;
+    -o-transition: background .4s ease;
+    transition: background .4s ease;
 }
 
 .menu__item_type_categories > .link,
@@ -7,15 +12,18 @@
 .menu__item_type_tags > .link
 {
     font-size: 1.1em;
+    line-height: 1.4em;
 
     display: block;
-    padding: 7px 0 7px 10px;
+
+    padding: 7px 5px 7px 12px;
+
+    text-decoration: none;
 
     color: #000000 !important;
-    text-decoration: none;
 }
 
 .menu__item:hover
 {
-    background: #ddd;
+    background: rgba(255,235,160,.35);
 }

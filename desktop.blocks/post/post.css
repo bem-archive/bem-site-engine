@@ -4,3 +4,8 @@
     padding: 10px 10px 5px 10px;
     border-bottom: 1px solid #ddd;
 }
+
+.post:last-child
+{
+    border-bottom: none;
+}

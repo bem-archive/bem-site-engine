@@ -6,7 +6,7 @@ this._mode === '', !this.data {
             this._mode = '',
             this.ctx = [
                 { block : 'i-global' },
-                { block : 'b-page' }
+                { block : 'b-page' , mods : { theme : 'white'} }
             ]
         );
     }

@@ -1,9 +1,12 @@
 .b-page
 {
-    color: #000000;
     font: 0.8em Arial,Helvetica,sans-serif;
-    margin: 0;
-    padding: 0 0 1em;
+
     position: relative;
     z-index: 0;
+
+    margin: 0;
+    padding: 0 0 1em;
+
+    color: #000000;
 }

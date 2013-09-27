@@ -3,6 +3,6 @@
         { block : 'i-bem', elems : ['tree'] }
     ],
     shouldDeps : [
-        { block : 'b-page' }
+        { block : 'b-page', mods : { theme : 'white'} }
     ]
 })

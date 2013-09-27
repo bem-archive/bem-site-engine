@@ -15,7 +15,7 @@ block main-menu {
             },
             {
                 elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'methodology')},
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'method')},
                 url: '/method',
                 name: 'methodology'
             },
@@ -85,6 +85,6 @@ block main-menu {
     }
 
     active: {
-        return this.data.params['type'] === this.ctx ? 'yes' : '';
+        return this.data.page === this.ctx ? 'yes' : '';
     }
 }

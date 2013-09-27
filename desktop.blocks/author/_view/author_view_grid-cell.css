@@ -7,19 +7,26 @@
 
     margin-left: 20px;
     margin-top: 20px;
-
-    padding: 5px;
+    padding: 10px 5px 5px;
 
     vertical-align: top;
     text-align: center;
+
+    background: #fff;
+    color: #555;
+
+    text-decoration: none;
 }
 
 .author_view_grid-cell:hover
 {
-    background: #FFD94D;
+    background: rgba(255,235,160,.35);
 }
 
 
-.author_view_grid-cell > .author__name {
+.author_view_grid-cell > .author__name
+{
     display: block;
+
+    margin-top: 9px;
 }
