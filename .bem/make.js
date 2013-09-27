@@ -18,9 +18,9 @@ MAKE.decl('Arch', {
     blocksLevelsRegexp : /^.+?\.blocks$/,
     bundlesLevelsRegexp : /^.+?\.bundles$/,
 
-    // getLibraries : function() {
-    //     return this.__base();
-    // }
+   // getLibraries : function() {
+   //      return this.__base();
+   // }
 
     libraries : [
         'bem-yana',

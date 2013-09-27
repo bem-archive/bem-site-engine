@@ -1,7 +1,7 @@
 .layout__col
 {
-    -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -13,14 +13,18 @@
 .layout_section_p-menu > .layout__col_fixed_yes
 {
     position: fixed;
-    height: 100%;
+
     overflow: auto;
-    border-right: 1px solid #AAA;
+
+    height: 100%;
+
+    border-right: 1px solid rgba(0,0,0,.2);
 }
 
 .layout_section_p-menu > .layout__col_type_left
 {
     float: left;
+
     width: 200px;
 }
 
@@ -32,6 +36,7 @@
 .layout_section_p-menu > .layout__col_type_right
 {
     float: right;
+
     width: 200px;
 }
 

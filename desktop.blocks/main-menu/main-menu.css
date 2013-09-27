@@ -1,7 +1,10 @@
 .main-menu
 {
     position: fixed;
-    height: 100%;
+    top: 0;
+    bottom: 0;
 
-    background: #000000;
+    overflow: auto;
+
+    background: #000;
 }

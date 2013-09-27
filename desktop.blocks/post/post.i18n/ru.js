@@ -1,6 +1,6 @@
 module.exports = {
     "post": {
-        "author": "Авторы",
+        "author": "Автор(ы)",
         "translator": "Перевод",
         "createDate": "Создан",
         "editDate": "Изменен",

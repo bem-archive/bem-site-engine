@@ -3,7 +3,7 @@
         { block : 'i-bem', elems : ['tree', 'html'] }
     ],
     shouldDeps : [
-        { mods : { theme : 'normal' } },
+        { mods : { theme : 'white' } },
         { mods : { page : 'error' } },
         { block : 'static-text' },
         { block : 'b-text' },

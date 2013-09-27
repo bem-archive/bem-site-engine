@@ -3,9 +3,18 @@
     font-size: 0.9em;
 
     margin: 0;
-    background: #EEEEEE;
-    border-top: 1px solid #AAAAAA;
-    border-bottom: 1px solid #AAAAAA;
+
+    background: #F6F5F3;
+    border-top: 1px solid rgba(0,0,0,.2);
+    border-bottom: 1px solid rgba(0,0,0,.2);
+
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.menu__item_complex_yes:hover
+{
+    background: #F6F5F3;
 }
 
 .menu__item_complex_yes:hover
