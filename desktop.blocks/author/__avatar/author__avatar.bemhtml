@@ -10,6 +10,7 @@ block author, elem avatar {
             }
         }
 
+        /*
         !this.ctx.content.avatar, default: {
             applyNext(
                 this.ctx.mods = this._.extend(
@@ -18,5 +19,6 @@ block author, elem avatar {
                 )
             )
         }
+        */
     }
 }

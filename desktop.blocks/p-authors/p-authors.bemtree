@@ -1,36 +1,6 @@
 block p-authors {
 
     content: {
-        var author = this.ctx.id || '',
-            content = [];
-
-        content.push({
-            elem: 'title',
-            mix: { block: 'menu', elem: 'title' },
-            content: BEM.I18N('p-authors', 'title')
-        });
-
-        content.push({
-            block: 'author',
-            mods: { view: 'full' },
-            id: author
-        });
-
-        ['articles', 'tools', 'news'].forEach(function(item) {
-            content.push({
-                block: 'posts',
-                mods: { view: 'authors' },
-                config: {
-                    title: BEM.I18N('p-authors', item),
-                    filter: [
-                        { field: 'type', operand: '===', value: item },
-                        { field: 'authors', operand: '===', value: author }
-                    ],
-                    sort: [{field: 'title', direction: 'asc'}]
-                }
-            })
-        });
-
         return [
             {
                 block: 'layout',
@@ -41,8 +11,8 @@ block p-authors {
                         mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
                         content: [
                             {
-                                block: 'menu',
-                                id: author,
+                                block: 'menu', //меню со списком авторов
+                                id: this.ctx.id, //id автора, необходим для выделения пункта меню
                                 mods: { type: 'authors' }
                             }
                         ]
@@ -50,16 +20,94 @@ block p-authors {
                     {
                         block: 'center',
                         mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-                        content: [
-                            {
-                                block: 'posts-groups',
-                                content: content
-                            }
-                        ]
+                        content: this.ctx.id ? apply('author') : apply('authors')
                     }
                 ]
             }
         ];
+    }
+
+
+    //В случае когда отображается страница с информацией для конкретного автора,
+    //т.е. в параметрах запроса передан id то отображаем
+    //блок персональной информации и блоки с постами текущего автора всех типов
+    author: {
+        var buf = [],
+            self = this;
+
+        //заголовок
+        buf.push({
+            elem: 'title',
+            mix: { block: 'menu', elem: 'title' },
+            content: BEM.I18N('p-authors', 'info')
+        });
+
+        //блок персональной информации об авторе
+        buf.push({
+            block: 'author',
+            mods: { view: 'full' },
+            id: this.ctx.id
+        });
+
+        //для каждого из типов постов отображаем блоки posts
+        //c постами соответствующего типа для которых автором
+        //или соавтором является текущий выбранный автор
+        ['articles', 'tools', 'news'].forEach(function(item) {
+            buf.push({
+                block: 'posts',
+                mods: { view: 'authors' },
+                config: {
+                    title: BEM.I18N('p-authors', item),
+                    filter: [
+                        { field: 'type', operand: '===', value: item },
+                        { field: 'authors', operand: '===', value: self.ctx.id }
+                    ],
+                    sort: [{field: 'title', direction: 'asc'}]
+                }
+            })
+        });
+
+        return buf;
+    }
+
+    //В случае когда, отображается страница с информацией о всей команде
+    //т.е. в парамертах запроса отсутствует id автора, то отображаем контактные
+    //данные для всей команды и сетку портретов с подписями для каждого члена команды
+    authors: {
+        var buf = [], //массив вывода контента
+            self = this,
+            data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            source = data.source; //содержимое модели (файл data.json)
+
+        source = leJspath.find('.' + data.lang + '{.type === "authors"}.id', source);
+
+        //убираем дубликаты
+        source = source.filter(function(elem, pos, self) {
+            return self.indexOf(elem) == pos;
+        });
+
+        //сортируем в алфавитном порядке
+        source = source.sort();
+
+        //заголовок
+        buf.push({
+            elem: 'title',
+            mix: { block: 'menu', elem: 'title' },
+            content: BEM.I18N('p-authors', 'team')
+        });
+
+        buf.push({
+            block: 'authors',
+            content: source.map(function(item) {
+                return {
+                    block: 'author',
+                    mods: { view: 'grid-cell' },
+                    id: item
+                }
+            })
+        });
+
+        return buf;
     }
 
 }

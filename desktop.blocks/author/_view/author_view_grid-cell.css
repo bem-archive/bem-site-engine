@@ -1,0 +1,25 @@
+.author_view_grid-cell
+{
+    display: inline-block;
+
+    width: 160px;
+    height: 160px;
+
+    margin-left: 20px;
+    margin-top: 20px;
+
+    padding: 5px;
+
+    vertical-align: top;
+    text-align: center;
+}
+
+.author_view_grid-cell:hover
+{
+    background: #FFD94D;
+}
+
+
+.author_view_grid-cell > .author__name {
+    display: block;
+}
