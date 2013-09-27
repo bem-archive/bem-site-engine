@@ -1,19 +1,39 @@
 block post, elem categories {
 
-    default, !(this.ctx && this.ctx.content): {
+    default, !(this.ctx && this.ctx.content && this.ctx.content.length > 0): {
         return false;
     }
 
     content : [
         BEM.I18N('post', this.elem),
         ': ',
-        {
-            tag: 'strong',
-            content: apply('contentTransformation')
-        }
+        apply('contentTransformation')
     ]
 
     contentTransformation, this._.isArray(this.ctx.content): {
-        return this.ctx.content.join(', ');
+        var self = this,
+            buf = [];
+        this.ctx.content.forEach(function(item, index) {
+            index > 0 && buf.push({
+                    block: 'span',
+                    content: ','
+                });
+
+            if(self._.isSimple(item)) {
+                buf.push({
+                    block: 'link',
+                    url: '/' + self.ctx.type + '/' + item,
+                    content: item
+                });
+            } else {
+                buf.push({
+                    block: 'link',
+                    url: '/' + self.ctx.type + '/' + item.url,
+                    content: item.name
+                });
+            }
+
+        });
+        return buf;
     }
 }

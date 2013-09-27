@@ -16,20 +16,14 @@ block post, mod view full {
         source = source.shift();
 
         return [
-            apply(
-                this._mode = '',
-                this.ctx = {
-                    elem: 'author',
-                    content: source.authors
-                }
-            ),
-            apply(
-                this._mode = '',
-                this.ctx = {
-                    elem: 'translator',
-                    content: source.translators
-                }
-            ),
+            {
+                elem: 'author',
+                content: source.authors
+            },
+            {
+                elem: 'translator',
+                content: source.translators
+            },
             {
                 elem: 'date',
                 elemMods: {'type': 'create'},
@@ -50,11 +44,13 @@ block post, mod view full {
             },
             {
                 elem: 'categories',
+                type: source.type,
                 content: source.categories
             },
             {
-                elem: 'type',
-                content: source.type
+                elem: 'title',
+                elemMods: { static: 'yes' },
+                content: source.title
             },
             {
                 elem: 'summary',
