@@ -33,7 +33,7 @@ block p-tools {
         var articlesQuery = null;
 
         if(category) {
-            predicate = null;
+            var predicate = null;
             //пытаемся найти корневую статью для данной категории (библиотеки инструментов)
             if(!id){
                 id = apply('findRootByCategory', this.ctx = { category: category, type: TYPE });
