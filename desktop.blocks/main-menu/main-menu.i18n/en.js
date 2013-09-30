@@ -9,6 +9,7 @@ module.exports = {
         "authors": "Team",
         "tags": "Tags",
         "facebook": "Facebook",
+        "twitter": "Twitter",
         "yaru": "BEM on ya.ru",
         "lang": "In Russian"
     }
