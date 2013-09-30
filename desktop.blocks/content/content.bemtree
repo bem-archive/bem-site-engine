@@ -73,6 +73,7 @@ block content {
         return buf;
     }
 
+    //страница методологии
     method: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-method',
@@ -80,6 +81,7 @@ block content {
         });
     }
 
+    //страница библиотек
     libraries: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-libraries',

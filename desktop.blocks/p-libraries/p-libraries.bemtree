@@ -30,14 +30,14 @@ block p-libraries {
         //и соединяем их по /
         category = category && category.reverse().join('/');
 
-        var articlesQuery = null;
+        var articlesQuery = null,
+            predicate = null;
 
         if(category) {
-            var predicate = null;
             //пытаемся найти корневую статью для данной категории (библиотеки инструментов)
             if(!id){
                 id = apply('findRootByCategory', this.ctx = { category: category, type: TYPE });
-                predicate = '.' + data.lang + '{.type === $type}' + '{.id !== "' + id +'"}' +
+                predicate = '.' + data.lang + '{.type === $type}' +
                     '{.categories === $category || .categories.url === $category}.id';
             }else {
                 predicate = '.' + data.lang + '{.type === $type}' + '{.categories === $category || .categories.url === $category}.id';
@@ -47,13 +47,10 @@ block p-libraries {
                 substitution: { type: TYPE, category: category }
             };
         }else {
-            id = apply('findRoot', this.ctx = { type: TYPE });
-            if(!id) {
-                articlesQuery = {
-                    predicate: '.' + data.lang + '{.type === $type}.id',
-                    substitution: { type: TYPE }
-                }
-            }
+            articlesQuery = {
+                predicate: '.' + data.lang + '{.type === $type}.id',
+                substitution: { type: TYPE }
+            };
         }
 
         console.debug('category = %s id = %s', category, id);
@@ -144,7 +141,7 @@ block p-libraries {
                 mods: {section: 'p-menu'},
                 content: [
                     categoriesMenu,
-                    category ? categories : (id ? rootPost : categories)
+                    categories
                 ]
             }
         ];
