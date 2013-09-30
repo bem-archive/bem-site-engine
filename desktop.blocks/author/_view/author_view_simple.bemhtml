@@ -6,7 +6,7 @@ block author, mod view simple {
 
     tag: 'a'
 
-    mix: {block: 'link', mods: {type :'underline'}}
+    mix: {block: 'link'}
 
     attrs: { href : '/authors/' + this.ctx.id }
 
