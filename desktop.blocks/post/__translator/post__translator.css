@@ -1,3 +1,6 @@
-.post__translator
+.post_view_full .post__translator
 {
+    line-height: 20px;
+
+    margin-left: 20px;
 }

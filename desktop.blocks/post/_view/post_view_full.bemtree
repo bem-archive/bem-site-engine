@@ -34,20 +34,23 @@ block post, mod view full {
                 elemMods: {'type': 'edit'},
                 content: source.editDate
             },
-           /* {
+           /*
+           {
                 elem: 'thumbnail',
                 content: source.thumbnail
-            }, */
+            },
+            */
             {
                 elem: 'tags',
                 content: source.tags
             },
+            /*
             {
                 elem: 'categories',
                 type: source.type,
                 content: source.categories
             },
-         /*   {
+            {
                 elem: 'title',
                 elemMods: { static: 'yes' },
                 content: source.title
@@ -55,7 +58,8 @@ block post, mod view full {
             {
                 elem: 'summary',
                 content: source.summary
-            }, */
+            },
+            */
             {
                 elem: 'content',
                 content: source.content

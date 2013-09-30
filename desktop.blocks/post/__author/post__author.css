@@ -1,3 +1,7 @@
-.post__author
+.post_view_full .post__author
 {
+    line-height: 20px;
+
+    margin-top: 10px;
+    margin-left: 20px;
 }

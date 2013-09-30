@@ -3,6 +3,6 @@
         { block : 'i-bem', elems : ['html'] }
     ],
     shouldDeps : [
-        { mods : {type: 'underline'}}
+        { mods : {type: 'block'}}
     ]
 })

@@ -7,7 +7,7 @@
 
     max-width: 1050px;
     margin: auto;
-    padding: 20px 19px 24px;
+    padding: 5px 19px 24px;
 
     color: #586e75;
 }
@@ -197,4 +197,11 @@
 .post__content .article-author__social-icon[href*="github.com"]:before
 {
     background: url("./git.png") no-repeat top left;
+}
+
+/* post_view_full */
+
+.post_view_full .post__content h1:first-child
+{
+    margin-top: .4em;
 }
