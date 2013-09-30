@@ -5,6 +5,7 @@
 
 .bem/cache
 .bem/snapshots
+.gitmodules
 freeze
 node_modules
 libs
