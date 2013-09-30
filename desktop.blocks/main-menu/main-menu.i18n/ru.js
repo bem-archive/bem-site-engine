@@ -10,6 +10,7 @@ module.exports = {
         "tags": "Тэги",
         "facebook": "Facebook",
         "yaru": "БЭМ на Я.ру",
+        "twitter": "Twitter",
         "lang": "In English"
     }
 };

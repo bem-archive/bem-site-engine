@@ -1,5 +1,8 @@
 .main-menu__item_size_normal
 {
     font-size: 1.3em;
+
     padding: 10px 0 10px 30px;
+
+    letter-spacing: 1px;
 }
