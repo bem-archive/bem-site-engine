@@ -63,7 +63,7 @@ block main-menu {
             {
                 elem: 'item',
                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'libraries')},
-                url: '/libraries',
+                url: '/libs',
                 name: 'libraries'
             },
             {

@@ -5,7 +5,7 @@ modules.define(
 
 router.addRoute({
     name : 'libraries',
-    rule : '/libraries',
+    rule : '/libs',
     data : {
         action : 'le-page'
     }
@@ -13,7 +13,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'libraries',
-    rule : '/libraries/{1}',
+    rule : '/libs/{1}',
     data : {
         action : 'le-page'
     }
@@ -21,7 +21,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'libraries',
-    rule : '/libraries/{1}/{2}',
+    rule : '/libs/{1}/{2}',
     data : {
         action : 'le-page'
     }
@@ -29,7 +29,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'libraries',
-    rule : '/libraries/{1}/{2}/{3}',
+    rule : '/libs/{1}/{2}/{3}',
     data : {
         action : 'le-page'
     }
@@ -37,7 +37,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'libraries',
-    rule : '/libraries/{1}/{2}/{3}/{4}',
+    rule : '/libs/{1}/{2}/{3}/{4}',
     data : {
         action : 'le-page'
     }
