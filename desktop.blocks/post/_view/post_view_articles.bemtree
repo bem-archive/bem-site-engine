@@ -3,12 +3,9 @@ block post, mod view articles {
     content: {
         var id = this.ctx.source,
             data = this.data,
-            source = data.source,
-            source = leJspath.filter(source, [{
-                field: 'id',
-                operand: '===',
-                value: id
-            }], data.lang);
+            source = data.source;
+
+        source = leJspath.filter(source, [{ field: 'id', operand: '===', value: id }], data.lang);
 
         if(!source || source.length == 0)
             return [];
@@ -18,38 +15,68 @@ block post, mod view articles {
         //console.debug(source.authors);
 
         return [
-           {
-                elem: 'date',
-                elemMods: {'type': 'create'},
-                content: source.createDate
-            },
-            {
-                elem: 'date',
-                elemMods: {'type': 'edit'},
-                content: source.editDate
-            },
-            {
-                elem: 'author',
-                content: source.authors
-            },
-            {
-                elem: 'translator',
-                content: source.translators
-            },
-            {
-                 elem: 'tags',
-                 content: source.tags
-            },
+            apply('createDate', this.ctx.content = source.createDate),
+            apply('editDate', this.ctx.content = source.editDate),
+            apply('author', this.ctx.content = source.authors),
+            apply('translator', this.ctx.content = source.translators),
+            apply('tags', this.ctx.content = source.tags),
             {
                 elem: 'title',
                 id: source.id,
                 type: source.type,
                 title: source.title
             },
-            {
-                elem: 'summary',
-                content: source.summary
-            }
+            apply('summary', this.ctx.content = source.summary)
         ]
+    }
+
+    //автор и соавторы поста
+    author: {
+        return {
+            elem: 'author',
+            content: this.ctx.content
+        };
+    }
+
+    //переводчик или группа переводчиков для поста
+    translator: {
+        return {
+            elem: 'translator',
+            content: this.ctx.content
+        };
+    }
+
+    //дата создания поста
+    createDate: {
+        return {
+            elem: 'date',
+            elemMods: {'type': 'create'},
+            content: this.ctx.content
+        };
+    }
+
+    //дата изменения поста
+    editDate: {
+        return {
+            elem: 'date',
+            elemMods: {'type': 'edit'},
+            content: this.ctx.content
+        }
+    }
+
+    //массив тего для поста
+    tags: {
+        return {
+            elem: 'tags',
+            content: this.ctx.content
+        };
+    }
+
+    //краткое содержание (summary) для поста
+    summary: {
+        return {
+            elem: 'summary',
+            content: this.ctx.content
+        }
     }
 }
