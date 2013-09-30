@@ -3,12 +3,10 @@ block post, mod view full {
     content: {
         var id = this.ctx.id,
             data = this.data,
-            source = data.source,
-            source = leJspath.filter(source, [{
-                field: 'id',
-                operand: '===',
-                value: id
-            }], data.lang);
+            source = data.source;
+
+        //находим полную информацию о посте по его id
+        source = leJspath.filter(source, [{ field: 'id', operand: '===', value: id }], data.lang);
 
         if(!source || source.length == 0)
             return [];
@@ -16,54 +14,62 @@ block post, mod view full {
         source = source.shift();
 
         return [
-            {
-                elem: 'author',
-                content: source.authors
-            },
-            {
-                elem: 'translator',
-                content: source.translators
-            },
-            {
-                elem: 'date',
-                elemMods: {'type': 'create'},
-                content: source.createDate
-            },
-            {
-                elem: 'date',
-                elemMods: {'type': 'edit'},
-                content: source.editDate
-            },
-           /*
-           {
-                elem: 'thumbnail',
-                content: source.thumbnail
-            },
-            */
-            {
-                elem: 'tags',
-                content: source.tags
-            },
-            /*
-            {
-                elem: 'categories',
-                type: source.type,
-                content: source.categories
-            },
-            {
-                elem: 'title',
-                elemMods: { static: 'yes' },
-                content: source.title
-            },
-            {
-                elem: 'summary',
-                content: source.summary
-            },
-            */
-            {
-                elem: 'content',
-                content: source.content
-            }
-        ]
+            apply('author', this.ctx.content = source.authors),
+            apply('translator', this.ctx.content = source.translators),
+            apply('createDate', this.ctx.content = source.createDate),
+            apply('editDate', this.ctx.content = source.editDate),
+            apply('tags', this.ctx.content = source.tags),
+            apply('contentFull', this.ctx.content = source.content)
+        ];
+    }
+
+    //автор и соавторы поста
+    author: {
+        return {
+            elem: 'author',
+            content: this.ctx.content
+        };
+    }
+
+    //переводчик или группа переводчиков для поста
+    translator: {
+        return {
+            elem: 'translator',
+            content: this.ctx.content
+        };
+    }
+
+    //дата создания поста
+    createDate: {
+        return {
+            elem: 'date',
+            elemMods: {'type': 'create'},
+            content: this.ctx.content
+        };
+    }
+
+    //дата изменения поста
+    editDate: {
+        return {
+            elem: 'date',
+            elemMods: {'type': 'edit'},
+            content: this.ctx.content
+        }
+    }
+
+    //массив тего для поста
+    tags: {
+        return {
+            elem: 'tags',
+            content: this.ctx.content
+        };
+    }
+
+    //содержимое поста
+    contentFull: {
+        return {
+            elem: 'content',
+            content: this.ctx.content
+        }
     }
 }

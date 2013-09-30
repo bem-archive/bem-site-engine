@@ -5,9 +5,11 @@
 
 .bem/cache
 .bem/snapshots
+.gitmodules
 freeze
 node_modules
 libs
+datasrc
 
 *.bundles/*/*.*
 !*.bundles/*/*.bemdecl.js

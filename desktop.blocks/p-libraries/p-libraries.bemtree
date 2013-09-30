@@ -1,8 +1,188 @@
 block p-libraries {
 
-    content: [
-        {
-            block: 'cap'
+    content: {
+        var CATEGORY_MAX_DEPTH = 3,
+            TYPE = 'libs';
+
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            params = data.params, //хэш с параметрами запроса
+            category = null, //категория поста
+            id = null, //id конкретного поста
+            isIdFounded = false;
+
+        //Итерируемся по параметрам запроса справа в лево
+        //на каждом шаге пытаемся определить что часть отделенная / это
+        //id поста. Если это так, то оставшиеся части образуют категорию поста.
+        //Если нет, то часть отделенная / добавляется в пассив частей из которых складывается категория
+        for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
+            if(params[i]) {
+                if(!isIdFounded && apply('findById', this.ctx = { id: params[i], type: TYPE })) {
+                    isIdFounded = true;
+                    id = params[i];
+                }else {
+                    category = category || [];
+                    category.push(params[i]);
+                }
+            }
         }
-    ]
+
+        //разворачиваем массив частей для категории поста в обратном порядке
+        //и соединяем их по /
+        category = category && category.reverse().join('/');
+
+        var articlesQuery = null,
+            predicate = null;
+
+        if(category) {
+            //пытаемся найти корневую статью для данной категории (библиотеки инструментов)
+            if(!id){
+                id = apply('findRootByCategory', this.ctx = { category: category, type: TYPE });
+                predicate = '.' + data.lang + '{.type === $type}' +
+                    '{.categories === $category || .categories.url === $category}.id';
+            }else {
+                predicate = '.' + data.lang + '{.type === $type}' + '{.categories === $category || .categories.url === $category}.id';
+            }
+            articlesQuery = {
+                predicate: predicate,
+                substitution: { type: TYPE, category: category }
+            };
+        }else {
+            articlesQuery = {
+                predicate: '.' + data.lang + '{.type === $type}.id',
+                substitution: { type: TYPE }
+            };
+        }
+
+        console.debug('category = %s id = %s', category, id);
+
+        //блок колонки для меню категорий
+        var categoriesMenu = {
+            block: 'left',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+            content: [
+                {
+                    block: 'menu',
+                    type: TYPE, //тип постов
+                    id: category, //текущая категория (нужен для правильного выделения активного пункта)
+                    mods: { type: 'categories' }
+                }
+            ]
+        };
+
+        //блок колонки для меню постов
+        var articlesMenu = {
+            block: 'left',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+            content: [
+                {
+                    block: 'menu',
+                    type: TYPE, //тип постов
+                    query: articlesQuery, //параметры для запроса на выборку id постов для текущей категориии
+                    category: category, //текущая категория (нужен для правильного построения ссылки на конкретный пост)
+                    id: id, //текущий id поста (нужен для правильного выделения активного пункта)
+                    mods: { type: 'articles' }
+                }
+            ]
+        };
+
+        //блок для отображения списка постов
+        var posts = {
+            block: 'center',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            content: [
+                {
+                    block: 'posts',
+                    mods: { view: 'articles' },
+                    config: {
+                        query: articlesQuery, //параметры для запроса на выборку id постов для текущей категориии
+                        sort: leJspath.parseQuery(this.data, 'sort')
+                    }
+                }
+            ]
+        };
+
+        //блок для отображения поста в развернутом виде
+        var post = {
+            block: 'center',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            content: [
+                {
+                    block: 'post',
+                    mods: { view: 'full' },
+                    id: id //id текущего поста
+                }
+            ]
+        };
+
+        var categories = {
+            block: 'center',
+            mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
+            content: [
+                {
+                   block: 'layout',
+                    mods: { section: 'p-menu' },
+                    content: [
+                        articlesMenu,
+                        id ? post : posts
+                    ]
+                }
+            ]
+        };
+
+        var rootPost = {
+            block: 'center',
+            mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
+            content: post
+        }
+
+        return [
+            {
+                block: 'layout',
+                mods: {section: 'p-menu'},
+                content: [
+                    categoriesMenu,
+                    categories
+                ]
+            }
+        ];
+    }
+
+    //находит корневой пост общий для данного типа постов type
+    //возвращает id поста, если тот найден или null в случае отсутствия поста
+    findRoot: {
+        var result = leJspath.filter(this.data.source, [
+            { field: 'type', operand:  '===', value: this.ctx.type },
+            { field: 'root', operand:  '===', value: "true" }
+        ], this.data.lang);
+
+        var rootId = null;
+
+        result.forEach(function(item) {
+            if(item.categories && item.categories.length == 0 ) {
+                rootId = item.id
+            }
+        });
+
+        return rootId;
+    }
+
+    //метод для нахождения корневого поста для указанной категории category и типа type
+    //возвращает id поста если тот найден или null в случае если пост отсутствует
+    findRootByCategory: {
+        var predicate = '.' + this.data.lang + '{.type === $type}' + '{.root === "true"}' +
+            '{.categories === $category || .categories.url === $category}.id',
+            substitution = { type: this.ctx.type, category: this.ctx.category },
+            result = leJspath.find(predicate, this.data.source, substitution);
+
+        return (result && result.length > 0) ? result.shift() : null;
+    }
+
+    //метод для проверки существования поста с id для типа type
+    findById: {
+        return leJspath.filter(this.data.source, [
+            { field: 'type', operand:  '===', value: this.ctx.type },
+            { field: 'id', operand:  '===', value: this.ctx.id }
+        ], this.data.lang).length > 0;
+    }
+
 }

@@ -26,6 +26,8 @@ block content {
     }
 
     processData: {
+        this.layout = { block : 'layout', elem : 'col', mods: {type: 'center'} };
+
         var source = this.ctx.source; //содержимое файла data.json
             data = this.data, //объект хранящий request, response и.т.д
             page = data.page, //страница сайта [method, libraries, tools, articles, news, authors, tags, index]
@@ -71,17 +73,19 @@ block content {
         return buf;
     }
 
+    //страница методологии
     method: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-method',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+            mix: this.layout
         });
     }
 
+    //страница библиотек
     libraries: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-libraries',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+            mix: this.layout
         });
     }
 
@@ -89,7 +93,7 @@ block content {
     articles: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-articles',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+            mix: this.layout
         });
     }
 
@@ -97,7 +101,7 @@ block content {
     tools: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-tools',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+            mix: this.layout
         });
     }
 
@@ -105,7 +109,7 @@ block content {
     news: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-news',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+            mix: this.layout
         });
     }
 
@@ -113,7 +117,7 @@ block content {
     authors: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-authors',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            mix: this.layout,
             id: this.data.params.id
         });
     }
@@ -122,7 +126,7 @@ block content {
     tags: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-tags',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            mix: this.layout,
             id: this.data.params.id
         });
     }
@@ -131,7 +135,7 @@ block content {
     index: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-index',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
+            mix: this.layout
         });
     }
 }

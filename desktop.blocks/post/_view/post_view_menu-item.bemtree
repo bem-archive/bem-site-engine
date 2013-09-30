@@ -4,15 +4,13 @@ block post, mod view menu-item {
         var id = this.ctx.id, //уникальный id поста
             category = this.ctx.category, //категория поста
             data = this.data, //объект содержащий информацию о request, response и.т.д
-            source = data.source,
-            source = leJspath.filter(source, [{
-                field: 'id',
-                operand: '===',
-                value: id
-            }], data.lang);
+            source = data.source;
+
+        //находим полную информацию о посте по его id
+        source = leJspath.filter(source, [{ field: 'id', operand: '===', value: id }], data.lang);
 
         if(!source || source.length == 0)
-            return [];
+            return false;
 
         source = source.shift();
 
