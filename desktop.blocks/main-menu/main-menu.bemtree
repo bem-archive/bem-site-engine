@@ -8,12 +8,13 @@ block main-menu {
             host = this.data.req.headers.host,
             url = 'http://' + lang + host.slice(host.indexOf('.')),
             TWITTER_url = 'https://twitter.com/bem_' + this.data.lang,
-            YARU = this.data.lang == 'en' ? null : {
-                                                     elem: 'item',
-                                                     elemMods: {size: 'small'},
-                                                     url: YARU_URL,
-                                                     name: 'yaru'
-                                                 };
+            YARU = this.data.lang == 'ru' ?
+            {
+                elem: 'item',
+                elemMods: {size: 'small'},
+                url: YARU_URL,
+                name: 'yaru'
+            } : null;
 
         return [
             {
@@ -32,12 +33,12 @@ block main-menu {
                 url: '/articles/',
                 name: 'articles'
             },
-             {
-                 elem: 'item',
-                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'news')},
-                 url: '/news/',
-                 name: 'news'
-             },
+            {
+                elem: 'item',
+                elemMods: {size: 'normal', active: apply('active', this.ctx = 'news')},
+                url: '/news/',
+                name: 'news'
+            },
             {
                 elem: 'item',
                 elemMods: {size: 'normal', active: apply('active', this.ctx = 'authors')},
