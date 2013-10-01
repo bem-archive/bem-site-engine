@@ -1,7 +1,5 @@
 block author, mod view grid-cell {
 
-    mix: { block: 'island' }
-
     tag: 'a',
 
     attrs: { href: '/' + this.ctx.content.type + '/' + this.ctx.content.id }

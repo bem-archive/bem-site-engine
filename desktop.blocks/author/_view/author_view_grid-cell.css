@@ -16,11 +16,17 @@
     color: #555;
 
     text-decoration: none;
+
+    -webkit-transition: font-size .15s ease-out;
+    -moz-transition: font-size .15s ease-out;
+    -ms-transition: font-size .15s ease-out;
+    -o-transition: font-size .15s ease-out;
+    transition: font-size .15s ease-out;
 }
 
 .author_view_grid-cell:hover
 {
-    background: rgba(255,235,160,.35);
+    font-size: 1.2em;
 }
 
 
