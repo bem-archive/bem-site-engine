@@ -2,6 +2,7 @@ block p-authors {
 
     content: {
         return [
+            this.ctx.id ?
             {
                 block: 'layout',
                 mods: {section: 'p-menu'},
@@ -20,10 +21,11 @@ block p-authors {
                     {
                         block: 'center',
                         mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-                        content: this.ctx.id ? apply('author') : apply('authors')
+                        content: apply('author')
                     }
                 ]
-            }
+            }:
+            apply('authors')
         ];
     }
 
@@ -90,11 +92,11 @@ block p-authors {
         source = source.sort();
 
         //заголовок
-        buf.push({
-            elem: 'title',
-            mix: { block: 'menu', elem: 'title' },
-            content: BEM.I18N('p-authors', 'team')
-        });
+        // buf.push({
+        //     elem: 'title',
+        //     mix: { block: 'menu', elem: 'title' },
+        //     content: BEM.I18N('p-authors', 'team')
+        // });
 
         buf.push({
             block: 'authors',
