@@ -1,35 +1,16 @@
 block p-index {
 
-    content: [
-        // {
-        //     elem : 'item',
-        //     url: '/articles/',
-        //     name : 'articles'
-        // },
-        // {
-        //     elem : 'item',
-        //     url: '/tools/',
-        //     name : 'tools'
-        // },
-        // {
-        //     elem : 'item',
-        //     url: '/news/',
-        //     name: 'news'
-        // },
-        // {
-        //     elem : 'item',
-        //     url: '/authors/',
-        //     name: 'authors'
-        // },
-        // {
-        //     elem : 'item',
-        //     url: '/tags/',
-        //     name: 'tags'
-        // }
+    content: {
+        var index = Math.round(10 * Math.random()),
+            mod = [ 'batman', 'breaks', 'captain-america',
+                    'generated', 'ironman', 'motion', 'robin',
+                    'scheme', 'spots', 'stripe', 'waves'][index];
 
-        {
-            block: 'cap'
-        }
-    ]
+        console.debug('index = %s mod = %s', index, mod);
 
+        return {
+            elem: 'logo',
+            elemMods: { theme: mod }
+        };
+    }
 }
