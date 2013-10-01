@@ -6,7 +6,7 @@ module.exports = {
         "libraries": "Libraries",
         "articles": "Articles",
         "news": "Blog",
-        "authors": "Team",
+        "authors": "Authors",
         "tags": "Tags",
         "facebook": "Facebook",
         "twitter": "Twitter",

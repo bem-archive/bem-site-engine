@@ -6,7 +6,7 @@ module.exports = {
         "libraries": "Библиотеки",
         "articles": "Статьи",
         "news": "Блог",
-        "authors": "Команда",
+        "authors": "Авторы",
         "tags": "Тэги",
         "facebook": "Facebook",
         "yaru": "БЭМ на Я.ру",
