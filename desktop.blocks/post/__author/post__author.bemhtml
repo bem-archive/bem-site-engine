@@ -5,7 +5,7 @@ block post, elem author {
     }
 
     content: [
-        BEM.I18N('post', this.elem),
+        BEM.I18N('post', this.ctx.content.length > 1 ? 'authors' : 'author'),
         ': ',
         applyNext()
     ]
