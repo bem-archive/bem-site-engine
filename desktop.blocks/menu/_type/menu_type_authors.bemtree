@@ -10,25 +10,7 @@ block menu, mod type authors {
                 [{ field: 'type', operand: '===', value: this.mods['type']}], data.lang);
 
         //сортируем в алфавитном порядке по фамилии и имени
-        var source = source.sort(function(a, b) {
-            var result = null;
-
-            if(a.lastName && b.lastName) {
-                if(a.lastName > b.lastName) {
-                    result = 1;
-                }else if(a.lastName < b.lastName) {
-                    result = -1;
-                }else {
-                    result = 0;
-                }
-            }else {
-                result = a.id - b.id;
-            }
-
-            return result;
-        });
-
-        leJspath.stringify(source);
+        source = leJspath.sort(source, [{ field: 'lastName' }, { field: 'firstName' }]);
 
         if(this._.isArray(source)) {
             var buf = [];

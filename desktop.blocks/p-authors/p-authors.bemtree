@@ -80,23 +80,7 @@ block p-authors {
             [{ field: 'type', operand: '===', value: 'authors' }], data.lang);
 
         //сортируем в алфавитном порядке по фамилии и имени
-        var source = source.sort(function(a, b) {
-            var result = null;
-
-            if(a.lastName && b.lastName) {
-                if(a.lastName > b.lastName) {
-                    result = 1;
-                }else if(a.lastName < b.lastName) {
-                    result = -1;
-                }else{
-                    result = 0;
-                }
-            }else {
-                result = a.id - b.id;
-            }
-
-            return result;
-        });
+        source = leJspath.sort(source, [{ field: 'lastName' }, { field: 'firstName' }]);
 
         //заголовок
         // buf.push({
