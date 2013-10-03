@@ -1,33 +1,6 @@
 block p-authors {
 
-    content: {
-        return [
-            this.ctx.id ?
-            {
-                block: 'layout',
-                mods: {section: 'p-menu'},
-                content: [
-                    {
-                        block: 'left',
-                        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-                        content: [
-                            {
-                                block: 'menu', //меню со списком авторов
-                                id: this.ctx.id, //id автора, необходим для выделения пункта меню
-                                mods: { type: 'authors' }
-                            }
-                        ]
-                    },
-                    {
-                        block: 'center',
-                        mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-                        content: apply('author')
-                    }
-                ]
-            }:
-            apply('authors')
-        ];
-    }
+    content: [ this.ctx.id ? apply('author') : apply('authors') ]
 
 
     //В случае когда отображается страница с информацией для конкретного автора,
@@ -69,7 +42,28 @@ block p-authors {
             })
         });
 
-        return buf;
+        return {
+            block: 'layout',
+            mods: {section: 'p-menu'},
+            content: [
+                {
+                    block: 'left',
+                    mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+                    content: [
+                        {
+                            block: 'menu', //меню со списком авторов
+                            id: this.ctx.id, //id автора, необходим для выделения пункта меню
+                            mods: { type: 'authors' }
+                        }
+                    ]
+                },
+                {
+                    block: 'center',
+                    mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                    content: buf
+                }
+            ]
+        };
     }
 
     //В случае когда, отображается страница с информацией о всей команде
@@ -81,15 +75,28 @@ block p-authors {
             data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             source = data.source; //содержимое модели (файл data.json)
 
-        source = leJspath.find('.' + data.lang + '{.type === "authors"}.id', source);
+        //выбираем все сущности с типом authors для данной локализации
+        source = leJspath.filter(source,
+            [{ field: 'type', operand: '===', value: 'authors' }], data.lang);
 
-        //убираем дубликаты
-        source = source.filter(function(elem, pos, self) {
-            return self.indexOf(elem) == pos;
+        //сортируем в алфавитном порядке по фамилии и имени
+        var source = source.sort(function(a, b) {
+            var result = null;
+
+            if(a.lastName && b.lastName) {
+                if(a.lastName > b.lastName) {
+                    result = 1;
+                }else if(a.lastName < b.lastName) {
+                    result = -1;
+                }else{
+                    result = 0;
+                }
+            }else {
+                result = a.id - b.id;
+            }
+
+            return result;
         });
-
-        //сортируем в алфавитном порядке
-        source = source.sort();
 
         //заголовок
         // buf.push({
@@ -104,7 +111,7 @@ block p-authors {
                 return {
                     block: 'author',
                     mods: { view: 'grid-cell' },
-                    id: item
+                    id: item.id
                 }
             })
         });
