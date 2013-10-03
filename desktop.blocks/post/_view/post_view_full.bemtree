@@ -19,6 +19,7 @@ block post, mod view full {
             apply('createDate', this.ctx.content = source.createDate),
             apply('editDate', this.ctx.content = source.editDate),
             apply('tags', this.ctx.content = source.tags),
+            apply('title', this.ctx.content = source.title),
             apply('contentFull', this.ctx.content = source.content)
         ];
     }
@@ -61,6 +62,14 @@ block post, mod view full {
     tags: {
         return {
             elem: 'tags',
+            content: this.ctx.content
+        };
+    }
+
+    title: {
+        return {
+            elem: 'title',
+            mods: { static: 'yes' },
             content: this.ctx.content
         };
     }
