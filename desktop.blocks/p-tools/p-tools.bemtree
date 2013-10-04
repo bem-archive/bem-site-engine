@@ -91,7 +91,10 @@ block p-tools {
         var rootPost = {
             block: 'center',
             mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
-            content: post
+            content: {
+                block: 'g-post',
+                id: id
+            }
         }
 
         return [
