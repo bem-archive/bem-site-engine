@@ -1,0 +1,13 @@
+block g-posts {
+
+    content: [
+        {
+            block: 'posts',
+            mods: { view: 'articles' },
+            config: {
+                query: this.ctx.query,
+                sort: leJspath.parseQuery(this.data, 'sort')
+            }
+        }
+    ]
+}

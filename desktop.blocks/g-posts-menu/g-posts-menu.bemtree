@@ -1,0 +1,13 @@
+block g-posts-menu {
+
+    content: [
+        {
+            block: 'menu',
+            type: this.ctx.type,
+            query: this.ctx.query,
+            category: this.ctx.category,
+            id: this.ctx.id,
+            mods: { type: 'articles' }
+        }
+    ]
+}
