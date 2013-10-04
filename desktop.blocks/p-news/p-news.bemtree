@@ -12,7 +12,7 @@ block p-news {
 
         for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
             if(params[i]) {
-                if(!isIdFounded && apply('find-by-id', this.ctx = { id: params[i], type: TYPE })) {
+                if(!isIdFounded && leJspath.isExist(data.source, params[i], TYPE, data.lang)) {
                     isIdFounded = true;
                     id = params[i];
                 }else {
@@ -28,79 +28,24 @@ block p-news {
 
         var articlesQuery = category ?
             {
-                predicate: '.' + data.lang + '{.type === $type}{.categories === $category || .categories.url === $category}.id',
+                predicate: '.' + data.lang + '{.type === $type}{.categories === $category || .categories.url === $category}',
                 substitution: { type: TYPE, category: category }
             } :
             {
-                 predicate: '.' + data.lang + '{.type === $type}.id',
+                 predicate: '.' + data.lang + '{.type === $type}',
                  substitution: { type: TYPE }
             };
-
-        //блок колонки для меню категорий
-        var categoriesMenu = {
-            block: 'left',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-            content: [
-                {
-                    block: 'menu',
-                    type: TYPE,
-                    id: category,
-                    mods: { type: 'categories', all: 'yes' }
-                }
-            ]
-        };
-
-        //блок колонки для меню постов
-        var articlesMenu = {
-            block: 'left',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-            content: [
-                {
-                    block: 'menu',
-                    type: TYPE,
-                    query: articlesQuery,
-                    category: category,
-                    id: id,
-                    mods: { type: 'articles' }
-                }
-            ]
-        };
-
-        //блок для отображения списка постов
-        var posts = {
-            block: 'center',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            content: [
-                {
-                    block: 'posts',
-                    mods: { view: 'articles' },
-                    config: {
-                        query: articlesQuery,
-                        sort: leJspath.parseQuery(this.data, 'sort')
-                    }
-                }
-            ]
-        };
-
-        //блок для отображения поста в развернутом виде
-        var post = {
-            block: 'center',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            content: [
-                {
-                    block: 'post',
-                    mods: { view: 'full' },
-                    id: id
-                }
-            ]
-        };
 
         return [
             {
                 block: 'layout',
                 mods: {section: 'p-menu'},
                 content: [
-                    categoriesMenu,
+                    {
+                        block: 'g-categories-menu',
+                        type: TYPE,
+                        category: category
+                    },
                     {
                         block: 'center',
                         mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
@@ -109,8 +54,23 @@ block p-news {
                                block: 'layout',
                                 mods: { section: 'p-menu' },
                                 content: [
-                                    articlesMenu,
-                                    id ? post : posts
+                                    {
+                                        block: 'g-posts-menu',
+                                        type: TYPE,
+                                        query: articlesQuery,
+                                        category: category,
+                                        id: id
+                                    },
+                                    id  ?
+                                            {
+                                                block: 'g-post',
+                                                id: id
+                                            }
+                                        :
+                                            {
+                                                block: 'g-posts',
+                                                query: articlesQuery
+                                            }
                                 ]
                             }
                         ]
@@ -118,13 +78,6 @@ block p-news {
                 ]
             }
         ];
-    }
-
-    find-by-id: {
-        return leJspath.filter(this.data.source, [
-            { field: 'type', operand:  '===', value: this.ctx.type },
-            { field: 'id', operand:  '===', value: this.ctx.id }
-        ], this.data.lang).length > 0;
     }
 
     // filter: {

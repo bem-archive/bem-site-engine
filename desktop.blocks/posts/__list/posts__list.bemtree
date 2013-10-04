@@ -3,17 +3,14 @@ block posts, elem list {
     content {
 
         this._.isArray(this.ctx.source): {
-            var buf = [];
 
-            this.ctx.source.forEach(function(item){
-                buf.push(apply(this._mode = '', this.ctx = {
+            return this.ctx.source.map(function(item){
+                return apply(this._mode = '', this.ctx = {
                     block: 'post',
                     mods: this.mods,
-                    source: item
-                }));
+                    source: item.id
+                });
             });
-
-            return buf;
         }
     }
 }

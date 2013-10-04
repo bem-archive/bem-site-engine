@@ -9,44 +9,33 @@ block menu, mod type articles {
 
         source = leJspath.find(query.predicate, source, query.substitution);
 
-        //убираем дубликаты
-        source = source.filter(function(elem, pos, self) {
-             return self.indexOf(elem) == pos;
-        });
-
         //сортируем в алфавитном порядке
-        source = source.sort();
+        source = leJspath.sort(source, [{ field: 'title' }]);
 
         if(this._.isArray(source)) {
-            var i = 0,
-                buf = [],
-                item;
 
             //цикличеки применяем шаблоны к элементу item текущего блока
             //с модификатором соотвествующим полю мета-информации
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
-            while(item = source[i]) {
-                //console.debug(item);
-
-                buf[i++] = apply(
+            return source.map(function(item) {
+                return apply(
                     this._mode = '',
                     this.ctx = {
                         elem: 'item',
                         elemMods: {
                             type : 'articles',
                             active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
-                        id: item,
+                        id: item.id,
                         category: this.ctx.category
                     }
                 );
-            }
-            return buf;
+            });
         }
     }
 
     //определение активного пункта меню и установка значения модификатора active
     active: {
-        return (this.ctx.id && this.ctx.id === this.ctx.item) ? 'yes' : '';
+        return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
     }
 }

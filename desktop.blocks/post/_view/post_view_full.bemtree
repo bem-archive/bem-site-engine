@@ -66,6 +66,7 @@ block post, mod view full {
         };
     }
 
+    //заголовок поста
     title: {
         return {
             elem: 'title',

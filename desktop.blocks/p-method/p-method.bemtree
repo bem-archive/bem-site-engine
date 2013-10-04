@@ -16,7 +16,7 @@ block p-method {
         //Если нет, то часть отделенная / добавляется в пассив частей из которых складывается категория
         for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
             if(params[i]) {
-                if(!isIdFounded && apply('findById', this.ctx = { id: params[i], type: TYPE })) {
+                if(!isIdFounded && leJspath.isExist(data.source, params[i], TYPE, data.lang)) {
                     isIdFounded = true;
                     id = params[i];
                 }else {
@@ -39,55 +39,8 @@ block p-method {
 
         //в меню статей отображаем все посты кроме корневого
         articlesQuery = {
-            predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}.id',
+            predicate: '.' + data.lang + '{.type === $type}',
             substitution: { type: TYPE, rootId: rootId }
-        };
-
-
-        //блок колонки для меню постов
-        var articlesMenu = {
-            block: 'left',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-            content: [
-                {
-                    block: 'menu',
-                    type: TYPE,
-                    query: articlesQuery,
-                    category: category,
-                    id: id,
-                    mods: { type: 'articles' }
-                }
-            ]
-        };
-
-        //блок для отображения списка постов
-        //(показывается только в том случае, если корневой статьи по методологии не было найдено)
-        var posts = {
-            block: 'center',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            content: [
-                {
-                    block: 'posts',
-                    mods: { view: 'articles' },
-                    config: {
-                        query: articlesQuery,
-                        sort: leJspath.parseQuery(this.data, 'sort')
-                    }
-                }
-            ]
-        };
-
-        //блок для отображения поста в развернутом виде
-        var post = {
-            block: 'center',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            content: [
-                {
-                    block: 'post',
-                    mods: { view: 'full' },
-                    id: id
-                }
-            ]
         };
 
         return [
@@ -95,8 +48,23 @@ block p-method {
                 block: 'layout',
                 mods: { section: 'p-menu' },
                 content: [
-                    articlesMenu,
-                    id ? post : posts
+                    {
+                        block: 'g-posts-menu',
+                        type: TYPE,
+                        query: articlesQuery,
+                        category: category,
+                        id: id
+                    },
+                    id  ?
+                            {
+                                block: 'g-post',
+                                id: id
+                            }
+                        :
+                            {
+                                block: 'g-posts',
+                                query: articlesQuery
+                            }
                 ]
             }
         ];
@@ -119,13 +87,5 @@ block p-method {
         });
 
         return rootId;
-    }
-
-    //Метод для нахождения поста по его id
-    findById: {
-        return leJspath.filter(this.data.source, [
-            { field: 'type', operand:  '===', value: this.ctx.type },
-            { field: 'id', operand:  '===', value: this.ctx.id }
-        ], this.data.lang).length > 0;
     }
 }

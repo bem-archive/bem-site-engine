@@ -18,7 +18,7 @@
 
         //общее число записей, необходимо знать перед процедурой пагинации
         //для передачи в блок pager для правильной отрисовки набора ссылок на страницы
-        var total = source.length;
+        //var total = source.length;
 
         //console.debug('length = ' + source.length);
 

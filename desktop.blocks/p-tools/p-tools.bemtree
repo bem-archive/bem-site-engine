@@ -16,7 +16,7 @@ block p-tools {
         //Если нет, то часть отделенная / добавляется в пассив частей из которых складывается категория
         for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
             if(params[i]) {
-                if(!isIdFounded && apply('findById', this.ctx = { id: params[i], type: TYPE })) {
+                if(!isIdFounded && leJspath.isExist(data.source, params[i], TYPE, data.lang)) {
                     isIdFounded = true;
                     id = params[i];
                 }else {
@@ -38,9 +38,9 @@ block p-tools {
             if(!id){
                 id = apply('findRootByCategory', this.ctx = { category: category, type: TYPE });
                 predicate = '.' + data.lang + '{.type === $type}' + '{.id !== "' + id +'"}' +
-                    '{.categories === $category || .categories.url === $category}.id';
+                    '{.categories === $category || .categories.url === $category}';
             }else {
-                predicate = '.' + data.lang + '{.type === $type}' + '{.categories === $category || .categories.url === $category}.id';
+                predicate = '.' + data.lang + '{.type === $type}' + '{.categories === $category || .categories.url === $category}';
             }
             articlesQuery = {
                 predicate: predicate,
@@ -50,72 +50,13 @@ block p-tools {
             id = apply('findRoot', this.ctx = { type: TYPE });
             if(!id) {
                 articlesQuery = {
-                    predicate: '.' + data.lang + '{.type === $type}.id',
+                    predicate: '.' + data.lang + '{.type === $type}',
                     substitution: { type: TYPE }
                 }
             }
         }
 
         console.debug('category = %s id = %s', category, id);
-
-        //блок колонки для меню категорий
-        var categoriesMenu = {
-            block: 'left',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-            content: [
-                {
-                    block: 'menu',
-                    type: TYPE, //тип постов
-                    id: category, //текущая категория (нужен для правильного выделения активного пункта)
-                    mods: { type: 'categories' }
-                }
-            ]
-        };
-
-        //блок колонки для меню постов
-        var articlesMenu = {
-            block: 'left',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-            content: [
-                {
-                    block: 'menu',
-                    type: TYPE, //тип постов
-                    query: articlesQuery, //параметры для запроса на выборку id постов для текущей категориии
-                    category: category, //текущая категория (нужен для правильного построения ссылки на конкретный пост)
-                    id: id, //текущий id поста (нужен для правильного выделения активного пункта)
-                    mods: { type: 'articles' }
-                }
-            ]
-        };
-
-        //блок для отображения списка постов
-        var posts = {
-            block: 'center',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            content: [
-                {
-                    block: 'posts',
-                    mods: { view: 'articles' },
-                    config: {
-                        query: articlesQuery, //параметры для запроса на выборку id постов для текущей категориии
-                        sort: leJspath.parseQuery(this.data, 'sort')
-                    }
-                }
-            ]
-        };
-
-        //блок для отображения поста в развернутом виде
-        var post = {
-            block: 'center',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            content: [
-                {
-                    block: 'post',
-                    mods: { view: 'full' },
-                    id: id //id текущего поста
-                }
-            ]
-        };
 
         var categories = {
             block: 'center',
@@ -125,8 +66,23 @@ block p-tools {
                    block: 'layout',
                     mods: { section: 'p-menu' },
                     content: [
-                        articlesMenu,
-                        id ? post : posts
+                        {
+                            block: 'g-posts-menu',
+                            type: TYPE,
+                            query: articlesQuery,
+                            category: category,
+                            id: id
+                        },
+                        id  ?
+                                {
+                                    block: 'g-post',
+                                    id: id
+                                }
+                            :
+                                {
+                                    block: 'g-posts',
+                                    query: articlesQuery
+                                }
                     ]
                 }
             ]
@@ -143,7 +99,11 @@ block p-tools {
                 block: 'layout',
                 mods: {section: 'p-menu'},
                 content: [
-                    categoriesMenu,
+                    {
+                        block: 'g-categories-menu',
+                        type: TYPE,
+                        category: category
+                    },
                     category ? categories : (id ? rootPost : categories)
                 ]
             }
@@ -179,13 +139,4 @@ block p-tools {
 
         return (result && result.length > 0) ? result.shift() : null;
     }
-
-    //метод для проверки существования поста с id для типа type
-    findById: {
-        return leJspath.filter(this.data.source, [
-            { field: 'type', operand:  '===', value: this.ctx.type },
-            { field: 'id', operand:  '===', value: this.ctx.id }
-        ], this.data.lang).length > 0;
-    }
-
 }
