@@ -4,17 +4,17 @@ block p-tags {
         var tag = this.ctx.id || '',
             content = [];
 
-        ['articles', 'tools', 'news'].forEach(function(item) {
+        ['method', 'articles', 'tools', 'libs', 'news'].forEach(function(item) {
             content.push({
                 block: 'posts',
                 mods: { view: 'articles' },
                 config: {
                     title: BEM.I18N('p-tags', item),
                     query: (tag && tag.length > 0) ? {
-                        predicate: '.' + data.lang + '{.type === $type}{.tags === $tag}.id',
+                        predicate: '.' + data.lang + '{.type === $type}{.tags === $tag}',
                         substitution: { type: item, tag: tag }
                     } : {
-                        predicate: '.' + data.lang + '{.type === $type}.id',
+                        predicate: '.' + data.lang + '{.type === $type}',
                         substitution: { type: item }
                     },
                     sort: [{field: 'title', direction: 'asc'}]

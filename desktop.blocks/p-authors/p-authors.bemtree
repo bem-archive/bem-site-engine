@@ -27,7 +27,7 @@ block p-authors {
         //для каждого из типов постов отображаем блоки posts
         //c постами соответствующего типа для которых автором
         //или соавтором является текущий выбранный автор
-        ['articles', 'tools', 'news'].forEach(function(item) {
+        ['method', 'articles', 'tools', 'libs', 'news'].forEach(function(item) {
             buf.push({
                 block: 'posts',
                 mods: { view: 'authors' },
@@ -71,7 +71,6 @@ block p-authors {
     //данные для всей команды и сетку портретов с подписями для каждого члена команды
     authors: {
         var buf = [], //массив вывода контента
-            self = this,
             data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             source = data.source; //содержимое модели (файл data.json)
 
@@ -89,6 +88,7 @@ block p-authors {
         //     content: BEM.I18N('p-authors', 'team')
         // });
 
+        //собираем контент из блоков
         buf.push({
             block: 'authors',
             content: source.map(function(item) {

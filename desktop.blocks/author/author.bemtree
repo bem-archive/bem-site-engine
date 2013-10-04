@@ -2,16 +2,8 @@ block author {
 
     content: {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            source = data.source, //содержимое модели (файл data.json)
             id = this.ctx.id; //уникальный id автора
 
-        //находим всех автором по id
-        //в нормальных условиях это должен быть массив с одним элементом
-        source = leJspath.filter(source, [
-            { field: 'type', operand: '===', value: 'authors' },
-            { field: 'id', operand: '===', value: id }
-        ], data.lang);
-
-        return source.length > 0 ? source.shift() : id;
+        return leJspath.findByIdAndType(data.source, id, 'authors', data.lang) || id;
     }
 }

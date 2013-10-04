@@ -5,12 +5,10 @@ block post, mod view articles {
             data = this.data,
             source = data.source;
 
-        source = leJspath.filter(source, [{ field: 'id', operand: '===', value: id }], data.lang);
+        source = leJspath.findByIdAndType(source, id, null, data.lang);
 
-        if(!source || source.length == 0)
+        if(!source)
             return [];
-
-        source = source.shift();
 
         //console.debug(source.authors);
 
@@ -20,12 +18,7 @@ block post, mod view articles {
             apply('author', this.ctx.content = source.authors),
             apply('translator', this.ctx.content = source.translators),
             apply('tags', this.ctx.content = source.tags),
-            {
-                elem: 'title',
-                id: source.id,
-                type: source.type,
-                title: source.title
-            },
+            apply('title', this.ctx.content = source),
             apply('summary', this.ctx.content = source.summary)
         ]
     }
@@ -70,6 +63,16 @@ block post, mod view articles {
             elem: 'tags',
             content: this.ctx.content
         };
+    }
+
+    //заголовок поста
+    title: {
+        return {
+            elem: 'title',
+            id: this.ctx.content.id,
+            type: this.ctx.content.type,
+            title: this.ctx.content.title
+        }
     }
 
     //краткое содержание (summary) для поста

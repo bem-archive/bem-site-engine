@@ -1,28 +1,56 @@
 block post, mod view authors {
 
     content: {
-        var content = this.ctx.source;
+        var id = this.ctx.source,
+            data = this.data,
+            source = data.source;
+
+        source = leJspath.findByIdAndType(source, id, null, data.lang);
+
+        if(!source)
+            return [];
+
         return [
-            {
-                elem: 'date',
-                elemMods: {'type': 'create'},
-                content: content.createDate
-            },
-            {
-                elem: 'date',
-                elemMods: {'type': 'edit'},
-                content: content.editDate
-            },
-            {
-                elem: 'title',
-                id: content.id,
-                type: content.type,
-                title: content.title
-            },
-            {
-                elem: 'summary',
-                content: content.summary
-            }
-        ];
+            apply('createDate', this.ctx.content = source.createDate),
+            apply('editDate', this.ctx.content = source.editDate),
+            apply('title', this.ctx.content = source),
+            apply('summary', this.ctx.content = source.summary)
+        ]
+    }
+
+    //дата создания поста
+    createDate: {
+        return {
+            elem: 'date',
+            elemMods: {'type': 'create'},
+            content: this.ctx.content
+        };
+    }
+
+    //дата изменения поста
+    editDate: {
+        return {
+            elem: 'date',
+            elemMods: {'type': 'edit'},
+            content: this.ctx.content
+        }
+    }
+
+    //заголовок поста
+    title: {
+        return {
+            elem: 'title',
+            id: this.ctx.content.id,
+            type: this.ctx.content.type,
+            title: this.ctx.content.title
+        }
+    }
+
+    //краткое содержание (summary) для поста
+    summary: {
+        return {
+            elem: 'summary',
+            content: this.ctx.content
+        }
     }
 }

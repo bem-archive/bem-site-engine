@@ -6,12 +6,10 @@ block post, mod view full {
             source = data.source;
 
         //находим полную информацию о посте по его id
-        source = leJspath.filter(source, [{ field: 'id', operand: '===', value: id }], data.lang);
+        source = leJspath.findByIdAndType(source, id, null, data.lang);
 
-        if(!source || source.length == 0)
+        if(!source)
             return [];
-
-        source = source.shift();
 
         return [
             apply('author', this.ctx.content = source.authors),

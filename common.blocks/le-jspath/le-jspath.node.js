@@ -202,15 +202,23 @@ provide({
         return arr
     },
 
-    findById: function(source, id, lang) {
+    findByIdAndType: function(source, id, type, lang) {
+        var config = [],
+            result = null;
 
+        id && config.push({ field: 'id', operand: '===', value: id });
+        type && config.push({ field: 'type', operand: '===', value: type });
+
+        result = this.filter(source, config, lang);
+
+        return (result && result.length > 0) ? result.shift() : null;
     },
 
     isExist: function(source, id, type, lang) {
         var config = [];
 
-        id && config.push({ field: 'id', operand:  '===', value: id });
-        type && config.push({ field: 'type', operand:  '===', value: type });
+        id && config.push({ field: 'id', operand: '===', value: id });
+        type && config.push({ field: 'type', operand: '===', value: type });
 
         return this.filter(source, config, lang).length > 0;
     }
