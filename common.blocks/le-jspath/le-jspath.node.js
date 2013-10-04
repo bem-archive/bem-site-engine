@@ -88,10 +88,9 @@ provide({
 
         if(config) {
             for(var i = 0; i < config.length; i++) {
-                // predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + ' $' + config[i]['field'] + '}';
-                // substitution[config[i]['field']] = config[i]['value'];
-
-                predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + '"' + config[i].value + '"}';
+                if(config[i]) {
+                    predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + '"' + config[i].value + '"}';
+                }
             }
         }
 
@@ -201,6 +200,19 @@ provide({
         }
 
         return arr
+    },
+
+    findById: function(source, id, lang) {
+
+    },
+
+    isExist: function(source, id, type, lang) {
+        var config = [];
+
+        id && config.push({ field: 'id', operand:  '===', value: id });
+        type && config.push({ field: 'type', operand:  '===', value: type });
+
+        return this.filter(source, config, lang).length > 0;
     }
 });
 
