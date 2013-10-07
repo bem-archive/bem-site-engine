@@ -221,6 +221,23 @@ provide({
         type && config.push({ field: 'type', operand: '===', value: type });
 
         return this.filter(source, config, lang).length > 0;
+    },
+
+    findRootPostId: function(source, type, lang) {
+        var result = this.filter(source, [
+            { field: 'type', operand:  '===', value: type },
+            { field: 'root', operand:  '===', value: "true" }
+        ], lang);
+
+        var rootId = null;
+
+        result.forEach(function(item) {
+            if(item.categories && item.categories.length == 0 ) {
+                rootId = item.id
+            }
+        });
+
+        return rootId;
     }
 });
 

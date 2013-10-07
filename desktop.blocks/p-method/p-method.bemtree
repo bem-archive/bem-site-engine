@@ -32,7 +32,7 @@ block p-method {
         category = category && category.reverse().join('/');
 
         var articlesQuery = null,
-            rootId = apply('findRoot', this.ctx = { type: TYPE });
+            rootId = leJspath.findRootPostId(data.source, TYPE, data.lang);
 
         //если id статьи методологии не был передан, то пытаемся найти корневую статью
         id = id || rootId;
@@ -68,24 +68,5 @@ block p-method {
                 ]
             }
         ];
-    }
-
-    //находит корневой пост общий для данного типа постов type
-    //возвращает id поста, если тот найден или null в случае отсутствия поста
-    findRoot: {
-        var result = leJspath.filter(this.data.source, [
-            { field: 'type', operand:  '===', value: this.ctx.type },
-            { field: 'root', operand:  '===', value: "true" }
-        ], this.data.lang);
-
-        var rootId = null;
-
-        result.forEach(function(item) {
-            if(item.categories && item.categories.length == 0 ) {
-                rootId = item.id
-            }
-        });
-
-        return rootId;
     }
 }

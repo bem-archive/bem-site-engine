@@ -107,25 +107,6 @@ block p-libraries {
         ];
     }
 
-    //находит корневой пост общий для данного типа постов type
-    //возвращает id поста, если тот найден или null в случае отсутствия поста
-    findRoot: {
-        var result = leJspath.filter(this.data.source, [
-            { field: 'type', operand:  '===', value: this.ctx.type },
-            { field: 'root', operand:  '===', value: "true" }
-        ], this.data.lang);
-
-        var rootId = null;
-
-        result.forEach(function(item) {
-            if(item.categories && item.categories.length == 0 ) {
-                rootId = item.id
-            }
-        });
-
-        return rootId;
-    }
-
     //метод для нахождения корневого поста для указанной категории category и типа type
     //возвращает id поста если тот найден или null в случае если пост отсутствует
     findRootByCategory: {
