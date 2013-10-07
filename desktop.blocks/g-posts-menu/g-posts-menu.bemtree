@@ -7,7 +7,7 @@ block g-posts-menu {
             query: this.ctx.query,
             category: this.ctx.category,
             id: this.ctx.id,
-            mods: { type: 'articles' }
+            mods: this._.extend({ type: 'articles' }, this.mods)
         }
     ]
 }

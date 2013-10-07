@@ -26,55 +26,39 @@ block p-articles {
 
         console.debug('id = %s category = %s', id, category);
 
-        var articlesQuery = category ?
-            {
-                predicate: '.' + data.lang + '{.type === $type}' +
-                    '{.categories === $category || .categories.url === $category}',
-                substitution: { type: TYPE, category: category }
-            } :
-            {
-                 predicate: '.' + data.lang + '{.type === $type}',
-                 substitution: { type: TYPE }
-            };
+        var predicate = '.' + data.lang + '{.type === $type}';
+        var substitution = { type: TYPE };
+        var articlesQuery = {};
+
+        // if(category) {
+        //     predicate += '{.categories === $category || .categories.url === $category}';
+        //     substitution = this._.extend(substitution, { category: category });
+        // }
+
+        articlesQuery = { predicate: predicate, substitution: substitution };
 
         return [
             {
                 block: 'layout',
-                mods: {section: 'p-menu'},
+                mods: { section: 'p-menu' },
                 content: [
                     {
-                        block: 'g-categories-menu',
+                        block: 'g-posts-menu',
+                        mods: { type: 'mixed' },
                         type: TYPE,
-                        category: category
+                        query: articlesQuery,
+                        category: category,
+                        id: id
                     },
-                    {
-                        block: 'center',
-                        mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
-                        content: [
-                            {
-                               block: 'layout',
-                                mods: { section: 'p-menu' },
-                                content: [
-                                    {
-                                        block: 'g-posts-menu',
-                                        type: TYPE,
-                                        query: articlesQuery,
-                                        category: category,
-                                        id: id
-                                    },
-                                    id  ?   {
-                                                block: 'g-post',
-                                                id: id
-                                            }
-                                        :
-                                            {
-                                                block: 'g-posts',
-                                                query: articlesQuery
-                                            }
-                                ]
+                    id  ?   {
+                                block: 'g-post',
+                                id: id
                             }
-                        ]
-                    }
+                        :
+                            {
+                                block: 'g-posts',
+                                query: articlesQuery
+                            }
                 ]
             }
         ];
