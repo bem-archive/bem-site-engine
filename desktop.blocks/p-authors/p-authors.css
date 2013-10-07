@@ -1,9 +1,5 @@
 .p-authors
 {
-    /*padding-top: 20px;*/
-}
-
-.p-authors > .authors {
-
+    margin-top: -1px;
 }
 
