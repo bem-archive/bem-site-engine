@@ -30,6 +30,7 @@ block p-articles {
         var substitution = { type: TYPE };
         var articlesQuery = {};
 
+        // Этот код закомментирован для показа меню в режиме mixed
         // if(category) {
         //     predicate += '{.categories === $category || .categories.url === $category}';
         //     substitution = this._.extend(substitution, { category: category });
@@ -44,7 +45,7 @@ block p-articles {
                 content: [
                     {
                         block: 'g-posts-menu',
-                        mods: { type: 'mixed' },
+                        mods: { type: 'mixed' }, //режим mixed для показа постов с группировкой по категориям
                         type: TYPE,
                         query: articlesQuery,
                         category: category,
