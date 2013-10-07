@@ -36,7 +36,7 @@ block p-tools {
             var predicate = null;
             //пытаемся найти корневую статью для данной категории (библиотеки инструментов)
             if(!id){
-                id = apply('findRootByCategory', this.ctx = { category: category, type: TYPE });
+                id = leJspath.findRootPostIdByCategory(data.source, TYPE, category, data.lang);
                 predicate = '.' + data.lang + '{.type === $type}' + '{.id !== "' + id +'"}' +
                     '{.categories === $category || .categories.url === $category}';
             }else {
@@ -111,16 +111,5 @@ block p-tools {
                 ]
             }
         ];
-    }
-
-    //метод для нахождения корневого поста для указанной категории category и типа type
-    //возвращает id поста если тот найден или null в случае если пост отсутствует
-    findRootByCategory: {
-        var predicate = '.' + this.data.lang + '{.type === $type}' + '{.root === "true"}' +
-            '{.categories === $category || .categories.url === $category}.id',
-            substitution = { type: this.ctx.type, category: this.ctx.category },
-            result = leJspath.find(predicate, this.data.source, substitution);
-
-        return (result && result.length > 0) ? result.shift() : null;
     }
 }

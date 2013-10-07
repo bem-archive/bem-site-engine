@@ -26,9 +26,9 @@ block p-articles {
 
         console.debug('id = %s category = %s', id, category);
 
-        var predicate = '.' + data.lang + '{.type === $type}';
-        var substitution = { type: TYPE };
-        var articlesQuery = {};
+        var predicate = '.' + data.lang + '{.type === $type}',
+            substitution = { type: TYPE },
+            articlesQuery = {};
 
         // Этот код закомментирован для показа меню в режиме mixed
         // if(category) {

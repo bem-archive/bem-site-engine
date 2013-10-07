@@ -238,6 +238,20 @@ provide({
         });
 
         return rootId;
+    },
+
+    findRootPostIdByCategory: function(source, type, category, lang) {
+        var predicate = '.' + lang +
+            '{.type === $type}' +
+            '{.root === "true"}' +
+            '{.categories === $category || .categories.url === $category}.id',
+            substitution = {
+                type: type,
+                category: category
+            },
+            result = this.find(predicate, source, substitution);
+
+        return (result && result.length > 0) ? result.shift() : null;
     }
 });
 
