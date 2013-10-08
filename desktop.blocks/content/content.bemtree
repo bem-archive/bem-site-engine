@@ -35,6 +35,8 @@ block content {
 
         console.debug('PAGE = ' + page);
 
+        //leJspath.stringify(data);
+
         this.data.source = source;
 
         //отрисовка главного меню сайта
