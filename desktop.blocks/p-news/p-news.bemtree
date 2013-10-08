@@ -39,42 +39,25 @@ block p-news {
         return [
             {
                 block: 'layout',
-                mods: {section: 'p-menu'},
+                mods: { section: 'p-menu' },
                 content: [
                     {
-                        block: 'g-categories-menu',
+                        block: 'g-posts-menu',
                         type: TYPE,
-                        category: category
+                        query: articlesQuery,
+                        category: category,
+                        id: id
                     },
-                    {
-                        block: 'center',
-                        mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
-                        content: [
+                    id  ?
                             {
-                               block: 'layout',
-                                mods: { section: 'p-menu' },
-                                content: [
-                                    {
-                                        block: 'g-posts-menu',
-                                        type: TYPE,
-                                        query: articlesQuery,
-                                        category: category,
-                                        id: id
-                                    },
-                                    id  ?
-                                            {
-                                                block: 'g-post',
-                                                id: id
-                                            }
-                                        :
-                                            {
-                                                block: 'g-posts',
-                                                query: articlesQuery
-                                            }
-                                ]
+                                block: 'g-post',
+                                id: id
                             }
-                        ]
-                    }
+                        :
+                            {
+                                block: 'g-posts',
+                                query: articlesQuery
+                            }
                 ]
             }
         ];
