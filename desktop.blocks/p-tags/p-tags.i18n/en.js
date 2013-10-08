@@ -4,6 +4,6 @@ module.exports = {
         "articles": "ARTICLES",
         "tools": "TOOLS",
         "libs": "LIBRARIES",
-        "news": "NEWS"
+        "news": "BLOG"
     }
 };

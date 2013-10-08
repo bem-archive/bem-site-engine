@@ -4,7 +4,7 @@ module.exports = {
         "articles": "СТАТЬИ",
         "tools": "ИНСТРУМЕНТЫ",
         "libs": "БИБЛИОТЕКИ",
-        "news": "НОВОСТИ"
+        "news": "БЛОГ"
     }
 };
 

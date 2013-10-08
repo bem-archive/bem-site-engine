@@ -5,7 +5,7 @@ module.exports = {
         "articles": "ARTICLES",
         "tools": "TOOLS",
         "libs": "LIBRARIES",
-        "news": "NEWS",
+        "news": "BLOG",
         "team": "BEM TEAM"
     }
 };
