@@ -11,11 +11,11 @@ block p-authors {
             self = this;
 
         //заголовок
-        buf.push({
-            elem: 'title',
-            mix: { block: 'menu', elem: 'title' },
-            content: BEM.I18N('p-authors', 'info')
-        });
+        // buf.push({
+        //     elem: 'title',
+        //     mix: { block: 'menu', elem: 'title' },
+        //     content: BEM.I18N('p-authors', 'info')
+        // });
 
         //блок персональной информации об авторе
         buf.push({
