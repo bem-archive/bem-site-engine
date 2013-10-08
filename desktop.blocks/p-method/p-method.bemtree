@@ -40,7 +40,7 @@ block p-method {
         //в меню статей отображаем все посты
         //TODO сделать так чтобы не отображался корневой пост !!!
         articlesQuery = {
-            predicate: '.' + data.lang + '{.type === $type}',
+            predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
             substitution: { type: TYPE, rootId: rootId }
         };
 
