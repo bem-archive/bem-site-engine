@@ -1,3 +1,13 @@
 .p-method
 {
 }
+
+.p-method .post_view_full
+{
+    padding-top: 10px;
+}
+
+.p-method .post__author
+{
+    display: none;
+}
