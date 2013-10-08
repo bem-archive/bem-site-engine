@@ -1,0 +1,14 @@
+block menu, elem item, elemMod type tools {
+
+    content: {
+
+        return [
+            {
+                block: 'post',
+                mods: {view: 'menu-item'},
+                id: this.ctx.id,
+                category: this.ctx.category
+            }
+        ]
+    }
+}

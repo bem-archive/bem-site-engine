@@ -9,6 +9,10 @@
 
 .menu__item_type_categories > .link,
 .menu__item_type_articles > .link,
+.menu__item_type_method > .link,
+.menu__item_type_tools > .link,
+.menu__item_type_libs > .link,
+.menu__item_type_news > .link,
 .menu__item_type_tags > .link
 {
     font-size: 1.1em;

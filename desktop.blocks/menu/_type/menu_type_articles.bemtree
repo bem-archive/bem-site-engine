@@ -22,7 +22,7 @@ block menu, mod type articles {
                     this.ctx = {
                         elem: 'item',
                         elemMods: {
-                            type : 'articles',
+                            type : config.type,
                             active : apply('active', this.ctx = this._.extend(config, { item : item })) },
                         id: item.id,
                         category: config.category

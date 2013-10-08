@@ -1,0 +1,25 @@
+block post, mod view menu-item-with-date {
+
+    default: {
+        var id = this.ctx.id, //уникальный id поста
+            category = this.ctx.category, //категория поста
+            data = this.data, //объект содержащий информацию о request, response и.т.д
+            source = data.source;
+
+        //находим полную информацию о посте по его id
+        source = leJspath.findByIdAndType(source, id, null, data.lang);
+
+        if(!source)
+            return false;
+
+        return [
+            {
+                block: 'link',
+                url: category ?
+                    '/' + source.type + '/' + category + '/' + id :
+                    '/' + source.type + '/' + id,
+                content: [ source.createDate, source.title ]
+            }
+        ]
+    }
+}

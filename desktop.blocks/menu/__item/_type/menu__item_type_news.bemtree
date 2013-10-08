@@ -1,0 +1,14 @@
+block menu, elem item, elemMod type news {
+
+    content: {
+
+        return [
+            {
+                block: 'post',
+                mods: {view: 'menu-item-with-date'},
+                id: this.ctx.id,
+                category: this.ctx.category
+            }
+        ]
+    }
+}
