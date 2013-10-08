@@ -6,7 +6,7 @@ block main-menu {
 
         var lang = this.data.lang == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,
-            url = 'http://' + lang + host.slice(host.indexOf('.')),
+            url = 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path,
             TWITTER_url = 'https://twitter.com/bem_' + this.data.lang,
             YARU = this.data.lang == 'ru' ?
             {
