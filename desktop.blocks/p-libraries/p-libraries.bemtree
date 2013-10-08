@@ -55,11 +55,13 @@ block p-libraries {
                         content: [
                             {
                                 block: 'g-posts-menu',
-                                mods: { type: 'mixed' },
-                                type: TYPE,
-                                query: articlesQuery,
-                                category: category,
-                                id: id
+                                //mods: { type: 'mixed' },
+                                config: {
+                                    type: TYPE,
+                                    query: articlesQuery,
+                                    category: category,
+                                    id: id
+                                }
                             },
                             id  ?
                                     {
@@ -69,7 +71,9 @@ block p-libraries {
                                 :
                                     {
                                         block: 'g-posts',
-                                        query: articlesQuery
+                                        config: {
+                                            query: articlesQuery
+                                        }
                                     }
                         ]
                     }

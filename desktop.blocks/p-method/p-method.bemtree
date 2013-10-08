@@ -37,7 +37,8 @@ block p-method {
         //если id статьи методологии не был передан, то пытаемся найти корневую статью
         id = id || rootId;
 
-        //в меню статей отображаем все посты кроме корневого
+        //в меню статей отображаем все посты
+        //TODO сделать так чтобы не отображался корневой пост !!!
         articlesQuery = {
             predicate: '.' + data.lang + '{.type === $type}',
             substitution: { type: TYPE, rootId: rootId }
@@ -50,10 +51,12 @@ block p-method {
                 content: [
                     {
                         block: 'g-posts-menu',
-                        type: TYPE,
-                        query: articlesQuery,
-                        category: category,
-                        id: id
+                        config: {
+                            type: TYPE,
+                            query: articlesQuery,
+                            category: category,
+                            id: id
+                        }
                     },
                     id  ?
                             {
@@ -63,7 +66,9 @@ block p-method {
                         :
                             {
                                 block: 'g-posts',
-                                query: articlesQuery
+                                config: {
+                                    query: articlesQuery
+                                }
                             }
                 ]
             }

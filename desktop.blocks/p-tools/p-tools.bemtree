@@ -68,10 +68,12 @@ block p-tools {
                     content: [
                         {
                             block: 'g-posts-menu',
-                            type: TYPE,
-                            query: articlesQuery,
-                            category: category,
-                            id: id
+                            config: {
+                                type: TYPE,
+                                query: articlesQuery,
+                                category: category,
+                                id: id
+                            }
                         },
                         id  ?
                                 {

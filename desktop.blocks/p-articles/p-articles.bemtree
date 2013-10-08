@@ -45,11 +45,13 @@ block p-articles {
                 content: [
                     {
                         block: 'g-posts-menu',
-                        mods: { type: 'mixed' }, //режим mixed для показа постов с группировкой по категориям
-                        type: TYPE,
-                        query: articlesQuery,
-                        category: category,
-                        id: id
+                        //mods: { type: 'mixed' }, //режим mixed для показа постов с группировкой по категориям
+                        config: {
+                            type: TYPE,
+                            query: articlesQuery,
+                            category: category,
+                            id: id
+                        }
                     },
                     id  ?   {
                                 block: 'g-post',
@@ -58,7 +60,9 @@ block p-articles {
                         :
                             {
                                 block: 'g-posts',
-                                query: articlesQuery
+                                config: {
+                                    query: articlesQuery
+                                }
                             }
                 ]
             }
