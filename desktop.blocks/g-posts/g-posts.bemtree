@@ -4,10 +4,7 @@ block g-posts {
         {
             block: 'posts',
             mods: { view: 'articles' },
-            config: {
-                query: this.ctx.query,
-                sort: leJspath.parseQuery(this.data, 'sort')
-            }
+            config: this.ctx.config
         }
     ]
 }

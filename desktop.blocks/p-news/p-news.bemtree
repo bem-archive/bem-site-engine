@@ -26,15 +26,10 @@ block p-news {
 
         console.debug('id = %s category = %s', id, category);
 
-        var articlesQuery = category ?
-            {
-                predicate: '.' + data.lang + '{.type === $type}{.categories === $category || .categories.url === $category}',
-                substitution: { type: TYPE, category: category }
-            } :
-            {
-                 predicate: '.' + data.lang + '{.type === $type}',
-                 substitution: { type: TYPE }
-            };
+        var articlesQuery = {
+            predicate: '.' + data.lang + '{.type === $type}',
+            substitution: { type: TYPE }
+        };
 
         return [
             {
@@ -43,10 +38,13 @@ block p-news {
                 content: [
                     {
                         block: 'g-posts-menu',
-                        type: TYPE,
-                        query: articlesQuery,
-                        category: category,
-                        id: id
+                        config: {
+                            type: TYPE,
+                            query: articlesQuery,
+                            sort: [{ field:  'createDate', direction: 'desc' }],
+                            category: category,
+                            id: id
+                        }
                     },
                     id  ?
                             {
@@ -56,7 +54,10 @@ block p-news {
                         :
                             {
                                 block: 'g-posts',
-                                query: articlesQuery
+                                config: {
+                                    query: articlesQuery,
+                                    sort: [{ field:  'createDate', direction: 'desc' }]
+                                }
                             }
                 ]
             }

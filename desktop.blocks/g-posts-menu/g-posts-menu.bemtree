@@ -3,10 +3,7 @@ block g-posts-menu {
     content: [
         {
             block: 'menu',
-            type: this.ctx.type,
-            query: this.ctx.query,
-            category: this.ctx.category,
-            id: this.ctx.id,
+            config: this.ctx.config,
             mods: this._.extend({ type: 'articles' }, this.mods)
         }
     ]

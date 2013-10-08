@@ -3,14 +3,12 @@ block menu, mod type articles {
     content: {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             source = data.source, //содержимое модели (файл data.json)
-            type = this.ctx.type,
-            query = this.ctx.query,
-            id = this.ctx.id;
+            config = this.ctx.config;
 
-        source = leJspath.find(query.predicate, source, query.substitution);
+        source = leJspath.find(config.query.predicate, source, config.query.substitution);
 
         //сортируем в алфавитном порядке
-        source = leJspath.sort(source, [{ field: 'title' }]);
+        source = leJspath.sort(source, config.sort || [{ field: 'title' }]);
 
         if(this._.isArray(source)) {
 
@@ -25,9 +23,9 @@ block menu, mod type articles {
                         elem: 'item',
                         elemMods: {
                             type : 'articles',
-                            active : apply('active', this.ctx = this._.extend(this.ctx, { item : item })) },
+                            active : apply('active', this.ctx = this._.extend(config, { item : item })) },
                         id: item.id,
-                        category: this.ctx.category
+                        category: config.category
                     }
                 );
             });
