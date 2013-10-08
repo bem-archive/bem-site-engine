@@ -54,6 +54,7 @@ block p-method {
                         config: {
                             type: TYPE,
                             query: articlesQuery,
+                            sort: [{ field: 'order' }],
                             category: category,
                             id: id
                         }
@@ -67,7 +68,8 @@ block p-method {
                             {
                                 block: 'g-posts',
                                 config: {
-                                    query: articlesQuery
+                                    query: articlesQuery,
+                                    sort: [{ field: 'order' }]
                                 }
                             }
                 ]
