@@ -17,6 +17,7 @@ block post, mod view full {
             apply('createDate', this.ctx.content = source.createDate),
             apply('editDate', this.ctx.content = source.editDate),
             apply('tags', this.ctx.content = source.tags),
+            apply('translation'),
             apply('title', this.ctx.content = source.title),
             apply('contentFull', this.ctx.content = source.content)
         ];
@@ -78,6 +79,23 @@ block post, mod view full {
         return {
             elem: 'content',
             content: this.ctx.content
+        }
+    },
+
+    translation: {
+        var lang = this.data.lang == 'en' ? 'ru' : 'en',
+            host = this.data.req.headers.host,
+            url = 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
+
+        return {
+            elem: 'translation',
+            content: [
+                {
+                    block: 'link',
+                    url: url,
+                    content: BEM.I18N('post', 'translation')
+                }
+            ]
         }
     }
 }

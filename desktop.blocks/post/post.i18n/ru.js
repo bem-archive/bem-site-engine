@@ -8,7 +8,8 @@ module.exports = {
         "editDate": "Изменен",
         "tags": "Тэги",
         "categories": "Категории",
-        "summary": "Краткое описание"
+        "summary": "Краткое описание",
+        "translation": "Английская версия"
     }
 };
 

@@ -8,6 +8,7 @@ module.exports = {
         "editDate": "Edit Date",
         "tags": "Tags",
         "categories": "Categories",
-        "summary": "Summary"
+        "summary": "Summary",
+        "translation": "Russian version"
     }
 };
