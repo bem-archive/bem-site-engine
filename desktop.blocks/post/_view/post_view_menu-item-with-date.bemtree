@@ -18,7 +18,13 @@ block post, mod view menu-item-with-date {
                 url: category ?
                     '/' + source.type + '/' + category + '/' + id :
                     '/' + source.type + '/' + id,
-                content: [ source.createDate, source.title ]
+                content: [
+                    {
+                        block: 'post',
+                        elem: 'date',
+                        content: source.createDate
+                    },
+                    source.title ]
             }
         ]
     }

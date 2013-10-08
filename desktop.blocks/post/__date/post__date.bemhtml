@@ -5,7 +5,6 @@ block post, elem date {
     }
 
     content, /\d{13}/.test(this.ctx.content) : [
-        ': ',
         apply('format')
         //TODO make date as url to other page
     ]
@@ -34,6 +33,7 @@ block post, elem date, elemMod type create {
 
     content : [
         BEM.I18N('post', 'createDate'),
+        ': ',
         applyNext()
     ]
 }
@@ -42,6 +42,9 @@ block post, elem date, elemMod type edit {
 
     content : [
         BEM.I18N('post', 'editDate'),
+        ': ',
         applyNext()
     ]
 }
+
+

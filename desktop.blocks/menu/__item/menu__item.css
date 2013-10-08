@@ -31,3 +31,10 @@
 {
     background: rgba(255,235,160,.35);
 }
+
+.menu__item_type_news .post__date
+{
+    font-size: 0.7em;
+    color: #AAAAAA;
+    line-height: 11px;
+}
