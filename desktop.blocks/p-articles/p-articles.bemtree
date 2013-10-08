@@ -41,7 +41,7 @@ block p-articles {
         return [
             {
                 block: 'layout',
-                mods: { section: 'p-menu' },
+                mods: { section: 'p-menu', size: 'wide' },
                 content: [
                     {
                         block: 'g-posts-menu',
