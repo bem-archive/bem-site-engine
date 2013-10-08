@@ -1,8 +1,6 @@
 block author, mod view menu-item {
 
-    tag: 'a'
-
-    attrs: { href : '/authors/' + this.ctx.id }
+    tag: 'span'
 
     content: {
         var c = this.ctx.content;
@@ -12,6 +10,13 @@ block author, mod view menu-item {
             ' ',
             c.firstName
         ]
+    }
+
+    this.ctx.active !== 'yes' {
+
+        tag: 'a'
+
+        attrs: { href : '/authors/' + this.ctx.id }
     }
 
     this._.isSimple(this.ctx.content), content: this.ctx.content

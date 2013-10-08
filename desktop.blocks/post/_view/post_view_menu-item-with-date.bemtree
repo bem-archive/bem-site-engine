@@ -3,6 +3,8 @@ block post, mod view menu-item-with-date {
     default: {
         var id = this.ctx.id, //уникальный id поста
             category = this.ctx.category, //категория поста
+            active = this.ctx.active === 'yes' ? true : false,
+
             data = this.data, //объект содержащий информацию о request, response и.т.д
             source = data.source;
 
@@ -15,9 +17,9 @@ block post, mod view menu-item-with-date {
         return [
             {
                 block: 'link',
-                url: category ?
+                url: active ? null : (category ?
                     '/' + source.type + '/' + category + '/' + id :
-                    '/' + source.type + '/' + id,
+                    '/' + source.type + '/' + id),
                 content: [
                     {
                         block: 'post',

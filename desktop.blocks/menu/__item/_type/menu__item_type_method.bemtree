@@ -7,7 +7,8 @@ block menu, elem item, elemMod type method {
                 block: 'post',
                 mods: {view: 'menu-item'},
                 id: this.ctx.id,
-                category: this.ctx.category
+                category: this.ctx.category,
+                active: this.elemMods['active']
             }
         ]
     }

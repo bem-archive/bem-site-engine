@@ -3,7 +3,7 @@ block menu, elem item, elemMod type tags {
     content: [
         {
             block: 'link',
-            url: '/tags/' + this.ctx.id,
+            url: this.elemMods['active'] == 'yes' ? null : ('/tags/' + this.ctx.id),
             content: this.ctx.id.toLowerCase()
         }
     ]

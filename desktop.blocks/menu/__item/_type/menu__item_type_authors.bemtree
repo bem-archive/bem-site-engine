@@ -5,7 +5,8 @@ block menu, elem item, elemMod type authors {
         return [
             {
                 block: 'author',
-                mods: {view: 'menu-item'},
+                mods: { view: 'menu-item' },
+                active: this.elemMods['active'],
                 id: this.ctx.id
             }
         ]
