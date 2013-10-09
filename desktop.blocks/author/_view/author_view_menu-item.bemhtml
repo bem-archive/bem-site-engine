@@ -2,15 +2,13 @@ block author, mod view menu-item {
 
     tag: 'span'
 
-    content: {
-        var c = this.ctx.content;
-
-        return [
-            c.lastName,
-            ' ',
-            c.firstName
-        ]
-    }
+    content: [
+        {
+            block: 'author',
+            elem: 'name',
+            content: this.ctx.content
+        }
+    ]
 
     this.ctx.active !== 'yes' {
 

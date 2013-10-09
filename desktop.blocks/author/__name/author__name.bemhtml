@@ -6,13 +6,18 @@ block author, elem name {
 
     tag: 'span'
 
-    content: {
-        var c = this.ctx.content;
+    content {
 
-        return [
-            c.lastName,
-            ' ',
-            c.firstName
-        ]
+        this.ctx.content.lastName: {
+            return this.ctx.content.lastName
+        }
+
+        (this.ctx.content.firstName && this.ctx.content.lastName): {
+            return [
+                this.ctx.content.firstName,
+                ' ',
+                this.ctx.content.lastName
+            ]
+        }
     }
 }

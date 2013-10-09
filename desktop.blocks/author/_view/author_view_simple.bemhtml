@@ -1,17 +1,14 @@
 block author, mod view simple {
 
-    //(this.ctx.content && this.ctx.content._res), default: {
-    //    apply(this.ctx.content = this.ctx.content._res)
-    //}
-
     tag: 'a'
 
-    mix: {block: 'link'}
+    mix: { block: 'link' }
 
     attrs: { href : '/authors/' + this.ctx.id }
 
     content: [
         {
+            block: 'author',
             elem: 'name',
             content: this.ctx.content
         }
