@@ -13,9 +13,27 @@ block post, mod view authors {
         return [
             apply('createDate', this.ctx.content = source.createDate),
             apply('editDate', this.ctx.content = source.editDate),
+            apply('author', this.ctx.content = source.authors),
+            apply('translator', this.ctx.content = source.translators),
             apply('title', this.ctx.content = source),
             apply('summary', this.ctx.content = source.summary)
         ]
+    }
+
+    //автор и соавторы поста
+    author: {
+        return {
+            elem: 'author',
+            content: this.ctx.content
+        };
+    }
+
+    //переводчик или группа переводчиков для поста
+    translator: {
+        return {
+            elem: 'translator',
+            content: this.ctx.content
+        };
     }
 
     //дата создания поста

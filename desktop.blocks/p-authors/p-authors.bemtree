@@ -33,10 +33,15 @@ block p-authors {
                 mods: { view: 'authors' },
                 config: {
                     title: BEM.I18N('p-authors', item),
-                    filter: [
-                        { field: 'type', operand: '===', value: item },
-                        { field: 'authors', operand: '===', value: self.ctx.id }
-                    ],
+                    // filter: [
+                    //     { field: 'type', operand: '===', value: item },
+                    //     { field: 'authors', operand: '===', value: self.ctx.id }
+                    // ],
+                    query: {
+                        predicate: '.' + this.data.lang +
+                            '{.type === $type}{.authors === $id || .translators === $id}',
+                        substitution: { type: item, id: self.ctx.id }
+                    },
                     sort: [{field: 'title', direction: 'asc'}]
                 }
             })
@@ -54,6 +59,11 @@ block p-authors {
                             block: 'menu', //меню со списком авторов
                             id: this.ctx.id, //id автора, необходим для выделения пункта меню
                             mods: { type: 'authors' }
+                        },
+                        {
+                            block: 'menu', //меню со списком переводчиков
+                            id: this.ctx.id, //id переводчика, необходим для выделения пункта меню
+                            mods: { type: 'translators' }
                         }
                     ]
                 },
