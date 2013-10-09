@@ -6,6 +6,14 @@ block menu, mod type categories{
             type = this.ctx.type,
             self = this;
 
+        var orderHash = {
+            'bem': 0,
+            'languages': 1,
+            'parsers': 2,
+            'builders': 3,
+            'optimizers': 4
+        };
+
         source = leJspath.find('.' + data.lang + '{.type === "' + type + '"}.categories', source, {});
 
         //Удаляем дубликаты категорий
@@ -52,11 +60,11 @@ block menu, mod type categories{
                 pointer = itemsHash;
 
             parts.forEach(function(part) {
-                pointer = (pointer[part] || (pointer[part] = { id: item, name: localizationHash[part] || part }));
+                pointer = (pointer[part] || (pointer[part] = {key: part, id: item, name: localizationHash[part] || part }));
             });
         });
 
-        //leJspath.stringify(itemsHash);
+        leJspath.stringify(itemsHash);
 
         //Превращаем полученный hash в array
         Object.getOwnPropertyNames(itemsHash).forEach(function(item, index) {
@@ -67,14 +75,17 @@ block menu, mod type categories{
         //сортируем массив с элементами меню так, чтобы простые элементы отображались сверху
         //а имеющие вложенность снизу
         items.sort(function(a, b){
-            if(a.items && b.items) {
-                return a.items.length > b.items.length;
-            }else if(a.items && !b.items) {
-                return 1;
-            }else if(!a.items && b.items) {
-                return -1;
+            // if(a.items && b.items) {
+            //     return a.items.length > b.items.length;
+            // }else if(a.items && !b.items) {
+            //     return 1;
+            // }else if(!a.items && b.items) {
+            //     return -1;
+            // }else
+            if(orderHash[a.key] && orderHash[b.key]) {
+                return orderHash[a.key] - orderHash[b.key];
             }else {
-                return a.name.toLowerCase() > b.name.toLowerCase()
+                return a.key > b.key;
             }
         });
 
@@ -146,7 +157,7 @@ block menu, mod type categories{
 
         if(isComplex) {
             Object.getOwnPropertyNames(item).filter(function(key) {
-                 return key !== 'id' && key !== 'name';
+                 return ['id', 'name', 'key'].indexOf(key) < 0;
             }).forEach(function(key) {
                  apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item[key] }));
             });
@@ -155,7 +166,7 @@ block menu, mod type categories{
 
     complex: {
         return Object.getOwnPropertyNames(this.ctx.item).filter(function(item) {
-            return item !== 'id' && item !== 'name'
+            return ['id', 'name', 'key'].indexOf(item) < 0
         }).length > 0
     }
 

@@ -98,7 +98,7 @@ block p-tools {
                 block: 'g-post',
                 id: id
             }
-        }
+        };
 
         return [
             {
