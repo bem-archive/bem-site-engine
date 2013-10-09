@@ -46,7 +46,7 @@ block content {
             case 'method':
                 buf.push(apply('method'));
                 break;
-            case 'libraries':
+            case 'libs':
                 buf.push(apply('libraries'));
                 break;
             case 'articles':

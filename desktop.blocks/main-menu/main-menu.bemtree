@@ -1,96 +1,81 @@
 block main-menu {
 
-    content: {
-        var FACEBOOK_URL = 'http://www.facebook.com/#!/groups/209713935765634/',
-            YARU_URL = 'http://clubs.ya.ru/bem/';
+    content: [
+        apply('logobem'),
+        apply('mainItem', this.ctx.name = 'method'),
+        apply('mainItem', this.ctx.name = 'articles'),
+        apply('mainItem', this.ctx.name = 'news'),
+        apply('mainItem', this.ctx.name = 'authors'),
+        apply('mainItem', this.ctx.name = 'tags'),
+        apply('delimeter'),
+        apply('mainItem', this.ctx.name = 'tools'),
+        apply('mainItem', this.ctx.name = 'libs'),
+        apply('delimeter'),
+        apply('social', this.ctx.name = 'facebook'),
+        this.data.lang == 'ru' ?
+        apply('social', this.ctx.name = 'yaru') : null,
+        apply('social', this.ctx.name = 'twitter'),
+        apply('langSwitcher')
+    ]
 
+    //логотип сайта
+    logobem: {
+        block: 'logobem',
+        url: 'http://' + this.data.req.headers.host
+    }
+
+    //основной пункт меню
+    mainItem: {
+        elem: 'item',
+        elemMods: {
+            size: 'normal',
+            active: apply('active', this.ctx = this.ctx.name)
+        },
+        url: apply('disable', this.ctx.url = '/' + this.ctx.name),
+        name: this.ctx.name
+    }
+
+    //ссылка на социальные ресурсы
+    social: {
+        var urls = {
+            facebook: 'http://www.facebook.com/#!/groups/209713935765634/',
+            twitter: 'https://twitter.com/bem_' + this.data.lang,
+            yaru: 'http://clubs.ya.ru/bem/'
+        };
+
+        return {
+            elem: 'item',
+            elemMods: { size: 'small' },
+            url: urls[this.ctx.name],
+            name: this.ctx.name
+        };
+    }
+
+    //Разделитель
+    delimeter: {
+        elem: 'item',
+        elemMods: {type: 'delimeter'}
+    }
+
+    //переключатель языков
+    langSwitcher: {
         var lang = this.data.lang == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,
-            url = 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path,
-            TWITTER_url = 'https://twitter.com/bem_' + this.data.lang,
-            YARU = this.data.lang == 'ru' ?
-            {
-                elem: 'item',
-                elemMods: {size: 'small'},
-                url: YARU_URL,
-                name: 'yaru'
-            } : null;
+            url = 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
 
-        return [
-            {
-                block: 'logobem',
-                url: 'http://' + host
+        return {
+            elem: 'item',
+            elemMods: {
+                size: 'small',
+                type: 'lang-switch'
             },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'method')},
-                url: '/method',
-                name: 'methodology'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'articles')},
-                url: '/articles/',
-                name: 'articles'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'news')},
-                url: '/news/',
-                name: 'news'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'authors')},
-                url: '/authors',
-                name: 'authors'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'tags')},
-                url: '/tags',
-                name: 'tags'
-            },
-            {
-                elem: 'item',
-                elemMods: {type: 'delimeter'}
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'tools')},
-                url: '/tools/',
-                name: 'tools'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'normal', active: apply('active', this.ctx = 'libraries')},
-                url: '/libs',
-                name: 'libraries'
-            },
-            {
-                elem: 'item',
-                elemMods: {type: 'delimeter'}
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'small'},
-                url: FACEBOOK_URL,
-                name: 'facebook'
-            },
-            YARU,
-            {
-                elem: 'item',
-                elemMods: {size: 'small', type: 'twitter'},
-                url: TWITTER_url,
-                name: 'twitter'
-            },
-            {
-                elem: 'item',
-                elemMods: {size: 'small', type: 'lang-switch'},
-                url: url,
-                name: 'lang'
-            }
-        ]
+            url: url,
+            name: 'lang'
+        };
+    }
+
+    disable: {
+        return this.data.req.path === this.ctx.url ? null : this.ctx.url;
     }
 
     active: {

@@ -1,9 +1,9 @@
 module.exports = {
     "main-menu": {
         "general": "Общие понятия",
-        "methodology": "Методология",
+        "method": "Методология",
         "tools": "Инструменты",
-        "libraries": "Библиотеки",
+        "libs": "Библиотеки",
         "articles": "Статьи",
         "news": "Блог",
         "authors": "Авторы",

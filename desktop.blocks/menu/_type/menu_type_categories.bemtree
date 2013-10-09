@@ -43,8 +43,6 @@ block menu, mod type categories{
 
         localizationHash = t;
 
-        //console.debug('before make item');
-
         //из плоского списка категорий строим их дерево
         //с локализованными частями для категорий и подкатегорий
         //вложенность идентифицируется по разделителю вида /
@@ -76,9 +74,16 @@ block menu, mod type categories{
             }else if(!a.items && b.items) {
                 return -1;
             }else {
-                return a.name > b.name
+                return a.name.toLowerCase() > b.name.toLowerCase()
             }
         });
+
+
+        //leJspath.stringify(items);
+
+        // items.sort(function(a, b) {
+        //     return a.name > b.name;
+        // });
 
         if(this._.isArray(items)) {
             var i = 0,
