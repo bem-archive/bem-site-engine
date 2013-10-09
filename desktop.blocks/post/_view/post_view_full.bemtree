@@ -25,63 +25,57 @@ block post, mod view full {
 
     //автор и соавторы поста
     author: {
-        return {
-            elem: 'author',
-            content: this.ctx.content
-        };
+        elem: 'author',
+        content: this.ctx.content
     }
 
     //переводчик или группа переводчиков для поста
     translator: {
-        return {
-            elem: 'translator',
-            content: this.ctx.content
-        };
+        elem: 'translator',
+        content: this.ctx.content
     }
 
     //дата создания поста
     createDate: {
-        return {
-            elem: 'date',
-            elemMods: {'type': 'create'},
-            content: this.ctx.content
-        };
+        elem: 'date',
+        elemMods: {'type': 'create'},
+        content: this.ctx.content
     }
 
     //дата изменения поста
     editDate: {
-        return {
-            elem: 'date',
-            elemMods: {'type': 'edit'},
-            content: this.ctx.content
-        }
+        elem: 'date',
+        elemMods: {'type': 'edit'},
+        content: this.ctx.content
     }
 
     //массив тего для поста
     tags: {
-        return {
-            elem: 'tags',
-            content: this.ctx.content
-        };
+        elem: 'tags',
+        content: this.ctx.content
     }
 
     //заголовок поста
     title: {
-        return {
-            elem: 'title',
-            mods: { static: 'yes' },
-            content: this.ctx.content
-        };
+        elem: 'title',
+        mods: { static: 'yes' },
+        content: this.ctx.content
     }
 
     //содержимое поста
     contentFull: {
+        var lang = this.data.lang == 'en' ? 'ru' : 'en',
+            host = this.data.req.headers.host,
+            url = 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
+
         return {
             elem: 'content',
+            url: url,
             content: this.ctx.content
         }
     },
 
+    //ссылка на пост в другой локализации
     translation: {
         var lang = this.data.lang == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,

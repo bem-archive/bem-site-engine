@@ -1,0 +1,14 @@
+block post, elem content {
+
+    (!this.ctx.content || this.ctx.content.length == 0), content: {
+        block: 'plug',
+        content: [
+            BEM.I18N('post', 'plug'),
+            {
+                block: 'link',
+                url: this.ctx.url,
+                content: BEM.I18N('post', 'plugLink')
+            }
+        ]
+    }
+}

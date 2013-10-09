@@ -9,6 +9,8 @@ module.exports = {
         "tags": "Tags",
         "categories": "Categories",
         "summary": "Summary",
-        "translation": "Russian version"
+        "translation": "Russian version",
+        "plug": "This post is available only in ",
+        "plugLink": "russian language"
     }
 };
