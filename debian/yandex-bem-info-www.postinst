@@ -1,0 +1,39 @@
+#!/bin/sh
+# postinst script for yandex-bem-info-www
+#
+# see: dh_installdeb(1)
+
+set -e
+
+USER="www-data"
+GROUP="www-data"
+RUN_DIR=/var/run/yandex/bem-info-www
+LOG_DIR=/var/log/yandex/bem-info-www
+
+if [ -e /etc/yandex/environment.type ]; then
+    yandex_environment=$(cat /etc/yandex/environment.type)
+fi
+
+case "$1" in
+    configure)
+
+        for DIR in $LOG_DIR $RUN_DIR; do
+            chown -R $USER:$GROUP $DIR
+        done
+
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+nginx-enable-mod yandex-tools-lego
+
+exit 0
