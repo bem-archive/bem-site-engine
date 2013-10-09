@@ -3,7 +3,9 @@ block post, elem title {
     content: [
         {
             block: 'link',
-            url: '/' + this.ctx.type + '/' + this.ctx.id,
+            url: this.ctx.category ?
+            '/' + this.ctx.type + '/' + this.ctx.category + '/' + this.ctx.id :
+            '/' + this.ctx.type + '/' + this.ctx.id,
             content: this.ctx.title
         }
     ]

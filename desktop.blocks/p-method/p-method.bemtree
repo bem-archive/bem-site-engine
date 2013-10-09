@@ -69,7 +69,8 @@ block p-method {
                                 block: 'g-posts',
                                 config: {
                                     query: articlesQuery,
-                                    sort: [{ field: 'order' }]
+                                    sort: [{ field: 'order' }],
+                                    category: category
                                 }
                             }
                 ]

@@ -8,7 +8,8 @@ block posts, elem list {
                 return apply(this._mode = '', this.ctx = {
                     block: 'post',
                     mods: this.mods,
-                    source: item.id
+                    source: item.id,
+                    category: this.ctx.category
                 });
             });
         }

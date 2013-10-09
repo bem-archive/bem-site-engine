@@ -61,7 +61,8 @@ block p-articles {
                             {
                                 block: 'g-posts',
                                 config: {
-                                    query: articlesQuery
+                                    query: articlesQuery,
+                                    category: category
                                 }
                             }
                 ]

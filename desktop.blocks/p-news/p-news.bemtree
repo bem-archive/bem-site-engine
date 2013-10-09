@@ -56,7 +56,8 @@ block p-news {
                                 block: 'g-posts',
                                 config: {
                                     query: articlesQuery,
-                                    sort: [{ field:  'createDate', direction: 'desc' }]
+                                    sort: [{ field:  'createDate', direction: 'desc' }],
+                                    category: category
                                 }
                             }
                 ]

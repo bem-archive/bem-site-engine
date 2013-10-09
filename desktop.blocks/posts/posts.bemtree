@@ -30,7 +30,8 @@
             buf.push({
                 elem: 'list',
                 mods: this.mods,
-                source: source
+                source: source,
+                category: config.category
             });
 
         return buf;

@@ -83,7 +83,8 @@ block p-tools {
                                 {
                                     block: 'g-posts',
                                     config: {
-                                        query: articlesQuery
+                                        query: articlesQuery,
+                                        category: category
                                     }
                                 }
                     ]

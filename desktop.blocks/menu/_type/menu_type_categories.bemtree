@@ -8,10 +8,10 @@ block menu, mod type categories{
 
         var orderHash = {
             'bem': 0,
-            'languages': 1,
-            'parsers': 2,
-            'builders': 3,
-            'optimizers': 4
+            'languages': 10,
+            'parsers': 20,
+            'builders': 30,
+            'optimizers': 40
         };
 
         source = leJspath.find('.' + data.lang + '{.type === "' + type + '"}.categories', source, {});
