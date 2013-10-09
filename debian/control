@@ -1,4 +1,4 @@
-Source: yandex-legoa-www
+Source: yandex-bem-info-www
 Section: yandex
 Priority: optional
 Build-Depends:
@@ -6,20 +6,16 @@ Build-Depends:
  debhelper (>= 7),
  yandex-debhelper-all (>= 1.3.5),
  git-core
-Maintainer: Vladimir Varankin <varankinv@yandex-team.ru>
-Vcs-Git: git://github.yandex-team.ru/lego/legoa-www.git
-Vcs-Browser: http://github.yandex-team.ru/lego/legoa-www
+Maintainer: Andrey Kuznecov <bemer@yandex-team.ru>
+Vcs-Git: git://github.yandex-team.ru/lego/bem-info.git
+Vcs-Browser: http://github.yandex-team.ru/lego/bem-info
 
-Package: yandex-legoa-www
+Package: yandex-bem-info-www
 Section: yandex
 Priority: optional
 Depends:
  nginx,
  config-tools-nginx-vhost (>= 1-4-200),
  yandex-environment,
- yandex-vertis-nodejs0.10,
- yandex-vertis-nodejs-init (>= 2.1.0),
- yandex-legoa-data (>= 1.2)
-Architecture: all
-Description: Front-end for legoa
-
+Architecture: any
+Description: Node.js frontend for bem.info

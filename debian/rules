@@ -1,13 +1,15 @@
 #!/usr/bin/make -f
 
+TMP_PATH := /opt/nodejs/0.10/bin:$(PATH)
+PATH=$(TMP_PATH)
+
 YENV ?= production
-NPM ?= npm --registry=http://npm.yandex-team.ru
+NPM ?= /opt/nodejs/0.10/bin/npm --registry=http://npm.yandex-team.ru
 BEM := $(shell $(NPM) bin)/bem
 
-WWW_DESTDIR := debian/yandex-legoa-www/usr/local/www5/legoa
-STATIC_DESTDIR := debian/yandex-legoa-www/usr/local/www5/legoa-static
+WWW_DESTDIR := debian/yandex-bem-info-www/usr/lib/yandex/bem-info-www
+STATIC_DESTDIR := debian/yandex-bem-info-www/var/lib/yandex/bem-info-static
 TMP_PREFIX := $(CURDIR)/debian/tmp
-NODEJS_INIT_PREFIX := etc/vertis-nodejs/conf-available
 
 %:
 	dh $@ --with=environment --no-restart
@@ -24,9 +26,6 @@ override_dh_auto_build:
 	YENV=$(YENV) $(BEM) make desktop.bundles
 
 override_dh_auto_install:
-	mkdir -p $(TMP_PREFIX)/$(NODEJS_INIT_PREFIX)
-	# `dh_vertis-nodejs-init` для бедных
-	cp debian/yandex-legoa-www.legoa.vertis-nodejs $(TMP_PREFIX)/$(NODEJS_INIT_PREFIX)/legoa
 	$(NPM) install --global --production --prefix=$(TMP_PREFIX)
 
 override_dh_auto_clean:
@@ -38,6 +37,8 @@ override_dh_auto_clean:
 
 override_dh_install:
 	dh_install
+	dh_installlogrotate
+	#dh_nodeubic -n
 	dh_clearvcs
 	dh_strip
 	
@@ -66,4 +67,3 @@ override_dh_install:
 		-not -type d \
 		-a -not \( -path "*.i18n/*" -o -name "*.priv.js" -o -name "*.node.js" -o -name "*.bemtree.js" -o -name "*.bemhtml.js" \) \
 		-delete
-
