@@ -33,15 +33,14 @@ block p-tools {
         var articlesQuery = null;
 
         if(category) {
-            var predicate = null;
-            //пытаемся найти корневую статью для данной категории (библиотеки инструментов)
+            var predicate = '.' + data.lang + '{.type === $type}' +
+                '{.categories === $category || .categories.url === $category}';
+
             if(!id){
                 id = leJspath.findRootPostIdByCategory(data.source, TYPE, category, data.lang);
-                predicate = '.' + data.lang + '{.type === $type}' + '{.id !== "' + id +'"}' +
-                    '{.categories === $category || .categories.url === $category}';
-            }else {
-                predicate = '.' + data.lang + '{.type === $type}' + '{.categories === $category || .categories.url === $category}';
+                predicate +=  '{.id !== "' + id +'"}';
             }
+
             articlesQuery = {
                 predicate: predicate,
                 substitution: { type: TYPE, category: category }
@@ -83,7 +82,9 @@ block p-tools {
                             :
                                 {
                                     block: 'g-posts',
-                                    query: articlesQuery
+                                    config: {
+                                        query: articlesQuery
+                                    }
                                 }
                     ]
                 }
