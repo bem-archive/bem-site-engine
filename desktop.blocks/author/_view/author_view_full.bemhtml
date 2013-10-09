@@ -3,54 +3,72 @@ block author, mod view full {
     mix: { block: 'island' }
 
     content: [
-
         {
             elem: 'avatar-wrapper',
             content: [
-                {
-                    block: 'author',
-                    elem: 'avatar',
-                    elemMods: { size: 'medium' },
-                    content: this.ctx.content
-                }
+                apply('avatar')
             ]
         },
         {
             elem: 'data-wrapper',
             content: [
+                apply('name'),
                 {
-                    block: 'author',
-                    elem: 'name',
-                    content: this.ctx.content
+                    block: 'contact-info',
+                    content: [
+                        apply('e-mail'),
+                        apply('github'),
+                        apply('twitter'),
+                        apply('skype')
+                    ]
                 },
-                {
-                    block: 'author',
-                    elem: 'e-mail',
-                    content: this.ctx.content.email
-                },
-                {
-                    block: 'author',
-                    elem: 'github',
-                    content: this.ctx.content.github
-                },
-                {
-                    block: 'author',
-                    elem: 'twitter',
-                    content: this.ctx.content.twitter
-                },
-                {
-                    block: 'author',
-                    elem: 'skype',
-                    content: this.ctx.content.skype
-                },
-                {
-                    block: 'author',
-                    elem: 'info',
-                    content: this.ctx.content.info
-                }
+                apply('info')
             ]
         }
     ]
+
+    avatar: {
+        block: 'author',
+        elem: 'avatar',
+        elemMods: { size: 'medium' },
+        content: this.ctx.content
+    }
+
+    name: {
+        block: 'author',
+        elem: 'name',
+        content: this.ctx.content
+    }
+
+    e-mail: {
+        block: 'author',
+        elem: 'e-mail',
+        content: this.ctx.content.email
+    }
+
+    github: {
+        block: 'author',
+        elem: 'github',
+        content: this.ctx.content.github
+    }
+
+    twitter: {
+        block: 'author',
+        elem: 'twitter',
+        content: this.ctx.content.twitter
+    }
+
+    skype: {
+        block: 'author',
+        elem: 'skype',
+        content: this.ctx.content.skype
+    }
+
+    info: {
+        block: 'author',
+        elem: 'info',
+        content: this.ctx.content.info
+    }
 
     this._.isSimple(this.ctx.content), content: this.ctx.content
 }
