@@ -4,6 +4,7 @@ block author, elem info {
         return false;
     }
 
+    /*
     content: [
         BEM.I18N('author', this.elem),
         ': ',
@@ -12,4 +13,5 @@ block author, elem info {
             content: applyNext()
         }
     ]
+    */
 }
