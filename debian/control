@@ -17,5 +17,8 @@ Depends:
  nginx,
  config-tools-nginx-vhost (>= 1-4-200),
  yandex-environment,
-Architecture: any
+Provides: yandex-bem-www-www
+Conflicts: yandex-bem-www-www
+Replaces: yandex-bem-www-www
+Architecture: all
 Description: Node.js frontend for bem.info

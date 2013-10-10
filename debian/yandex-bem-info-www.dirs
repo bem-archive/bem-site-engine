@@ -1,4 +1,4 @@
 usr/lib/yandex/bem-info-www
 var/lib/yandex/bem-info-static
-usr/log/yandex/bem-info-www
-usr/run/yandex/bem-info-www
+var/log/yandex/bem-info-www
+var/run/yandex/bem-info-www

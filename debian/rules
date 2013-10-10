@@ -1,10 +1,7 @@
 #!/usr/bin/make -f
 
-TMP_PATH := /opt/nodejs/0.10/bin:$(PATH)
-PATH=$(TMP_PATH)
-
 YENV ?= production
-NPM ?= /opt/nodejs/0.10/bin/npm --registry=http://npm.yandex-team.ru
+NPM ?= npm --registry=http://npm.yandex-team.ru
 BEM := $(shell $(NPM) bin)/bem
 
 WWW_DESTDIR := debian/yandex-bem-info-www/usr/lib/yandex/bem-info-www
@@ -38,7 +35,7 @@ override_dh_auto_clean:
 override_dh_install:
 	dh_install
 	dh_installlogrotate
-	#dh_nodeubic -n
+	dh_nodeubic -n
 	dh_clearvcs
 	dh_strip
 	
