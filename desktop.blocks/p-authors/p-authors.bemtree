@@ -30,7 +30,7 @@ block p-authors {
         ['method', 'articles', 'tools', 'libs', 'news'].forEach(function(item) {
             buf.push({
                 block: 'posts',
-                mods: { view: 'authors' },
+                mods: { view: 'articles' },
                 config: {
                     title: BEM.I18N('p-authors', item),
                     // filter: [

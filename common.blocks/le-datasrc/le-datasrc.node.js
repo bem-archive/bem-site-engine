@@ -47,7 +47,7 @@ provide({
     loadData : function(params) {
         var path = PATH.join.apply(null, [datasrc.root, 'data']) + '.json';
 
-        this._data = this._data || fileProvider.create({ path : path, dataType : 'json' })
+        this._data = fileProvider.create({ path : path, dataType : 'json' })
             .run()
             .fail(function(err) {
                 var message = 'Data for bem-info not found';

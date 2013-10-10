@@ -29,6 +29,7 @@ block p-tools {
         //разворачиваем массив частей для категории поста в обратном порядке
         //и соединяем их по /
         category = category && category.reverse().join('/');
+        console.debug('category = %s id = %s', category, id);
 
         var articlesQuery = null;
 
@@ -54,8 +55,8 @@ block p-tools {
                 }
             }
         }
-
         console.debug('category = %s id = %s', category, id);
+        console.debug(leJspath.find('.' + data.lang + '{.type === "' + TYPE + '"}.categories', data.source, {}).length);
 
         var categories = {
             block: 'center',

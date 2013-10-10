@@ -72,7 +72,7 @@ block post, mod view articles {
             id: this.ctx.content.id,
             type: this.ctx.content.type,
             title: this.ctx.content.title,
-            category: this.ctx.category
+            category: this.ctx.category || this.ctx.content.categories
         }
     }
 

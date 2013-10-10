@@ -1,12 +1,37 @@
 block post, elem title {
 
-    content: [
-        {
+    !this.ctx.category, content: {
+        var url =  '/' + this.ctx.type + '/' + this.ctx.id;
+        return {
             block: 'link',
-            url: this.ctx.category ?
-            '/' + this.ctx.type + '/' + this.ctx.category + '/' + this.ctx.id :
-            '/' + this.ctx.type + '/' + this.ctx.id,
+            url: url,
             content: this.ctx.title
+        };
+    }
+
+    this._.isSimple(this.ctx.category), content: {
+        var url =  '/' + this.ctx.type + '/' + this.ctx.category + '/' + this.ctx.id;
+        return {
+            block: 'link',
+            url: url,
+            content: this.ctx.title
+        };
+    }
+
+    this._.isArray(this.ctx.category), content: {
+        var url = null;
+        if(this.ctx.category.length  == 0){
+            url =  '/' + this.ctx.type + '/' + this.ctx.id
+        }else {
+            var category = this.ctx.category.shift();
+            url = '/' + this.ctx.type + '/' +
+                (this._.isSimple(category) ? category : category.url) + '/' + this.ctx.id;
         }
-    ]
+
+        return {
+            block: 'link',
+            url: url,
+            content: this.ctx.title
+        };
+    }
 }

@@ -16,6 +16,8 @@ block menu, mod type categories{
 
         source = leJspath.find('.' + data.lang + '{.type === "' + type + '"}.categories', source, {});
 
+        //leJspath.stringify(source);
+
         //Удаляем дубликаты категорий
         source = leJspath.removeDublicates(source, function(a, b) {
             return (!self._.isSimple(a) && !self._.isSimple(b)) ?
@@ -64,7 +66,7 @@ block menu, mod type categories{
             });
         });
 
-        leJspath.stringify(itemsHash);
+        //leJspath.stringify(itemsHash);
 
         //Превращаем полученный hash в array
         Object.getOwnPropertyNames(itemsHash).forEach(function(item, index) {
