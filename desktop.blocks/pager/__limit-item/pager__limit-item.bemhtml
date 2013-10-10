@@ -1,4 +1,0 @@
-block pager, elem limit-item {
-
-    tag: 'li'
-}

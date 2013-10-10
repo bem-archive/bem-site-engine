@@ -14,7 +14,6 @@
         { block : 'p-tools' },
         { block : 'p-tags' },
         { block : 'p-authors' },
-        { block : 'p-general' },
         { block : 'p-method' },
         { block : 'p-libraries' },
         { block : 'p-post' }

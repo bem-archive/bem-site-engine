@@ -1,4 +1,0 @@
-block pager, elem page-item, elemMod delimeter yes {
-
-    content: [' ... ']
-}

@@ -1,7 +1,0 @@
-block p-tools {
-
-    content: [
-        this.ctx.content
-    ]
-
-}
