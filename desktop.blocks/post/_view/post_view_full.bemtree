@@ -18,7 +18,7 @@ block post, mod view full {
             apply('editDate', this.ctx.content = source.editDate),
             apply('tags', this.ctx.content = source.tags),
             apply('translation'),
-            apply('title', this.ctx.content = source.title),
+            apply('title', this.ctx.content = source),
             apply('contentFull', this.ctx.content = source.content)
         ];
     }
@@ -58,8 +58,10 @@ block post, mod view full {
     //заголовок поста
     title: {
         elem: 'title',
-        mods: { static: 'yes' },
-        content: this.ctx.content
+        id: this.ctx.content.id,
+        type: this.ctx.content.type,
+        title: this.ctx.content.longTitle || this.ctx.content.title,
+        category: this.ctx.category || this.ctx.content.categories
     }
 
     //содержимое поста

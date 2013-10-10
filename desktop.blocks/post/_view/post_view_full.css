@@ -3,3 +3,18 @@
     margin-bottom: 10px;
     padding: 1px 10px 5px 10px;
 }
+
+.post_view_full .post__title
+{
+    font-weight: bold;
+    font-size: 2.3em !important;
+
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.post_view_full .post__title > .link,
+.post_view_full .post__title > .link:hover
+{
+    color: #555;
+}

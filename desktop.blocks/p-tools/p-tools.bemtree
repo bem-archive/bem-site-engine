@@ -71,6 +71,7 @@ block p-tools {
                             config: {
                                 type: TYPE,
                                 query: articlesQuery,
+                                sort: [{ field: 'title' }],
                                 category: category,
                                 id: id
                             }

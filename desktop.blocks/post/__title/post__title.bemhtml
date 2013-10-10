@@ -35,3 +35,12 @@ block post, elem title {
         };
     }
 }
+
+block post, mod view full, elem title {
+
+    content: {
+        block: 'link',
+        url: null,
+        content: this.ctx.title
+    }
+}

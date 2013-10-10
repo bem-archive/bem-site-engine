@@ -1,9 +1,0 @@
-block post, elem title, elemMod static yes {
-
-    content: [
-        {
-            block: 'h2',
-            content: applyNext()
-        }
-    ]
-}

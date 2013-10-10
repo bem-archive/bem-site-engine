@@ -25,62 +25,48 @@ block post, mod view articles {
 
     //автор и соавторы поста
     author: {
-        return {
-            elem: 'author',
-            content: this.ctx.content
-        };
+        elem: 'author',
+        content: this.ctx.content
     }
 
     //переводчик или группа переводчиков для поста
     translator: {
-        return {
-            elem: 'translator',
-            content: this.ctx.content
-        };
+        elem: 'translator',
+        content: this.ctx.content
     }
 
     //дата создания поста
     createDate: {
-        return {
-            elem: 'date',
-            elemMods: {'type': 'create'},
-            content: this.ctx.content
-        };
+        elem: 'date',
+        elemMods: {'type': 'create'},
+        content: this.ctx.content
     }
 
     //дата изменения поста
     editDate: {
-        return {
-            elem: 'date',
-            elemMods: {'type': 'edit'},
-            content: this.ctx.content
-        }
+        elem: 'date',
+        elemMods: {'type': 'edit'},
+        content: this.ctx.content
     }
 
     //массив тего для поста
     tags: {
-        return {
-            elem: 'tags',
-            content: this.ctx.content
-        };
+        elem: 'tags',
+        content: this.ctx.content
     }
 
     //заголовок поста
     title: {
-        return {
-            elem: 'title',
-            id: this.ctx.content.id,
-            type: this.ctx.content.type,
-            title: this.ctx.content.title,
-            category: this.ctx.category || this.ctx.content.categories
-        }
+        elem: 'title',
+        id: this.ctx.content.id,
+        type: this.ctx.content.type,
+        title: this.ctx.content.longTitle || this.ctx.content.title,
+        category: this.ctx.category || this.ctx.content.categories
     }
 
     //краткое содержание (summary) для поста
     summary: {
-        return {
-            elem: 'summary',
-            content: this.ctx.content
-        }
+        elem: 'summary',
+        content: this.ctx.content
     }
 }
