@@ -7,15 +7,9 @@ block p-authors {
     //т.е. в параметрах запроса передан id то отображаем
     //блок персональной информации и блоки с постами текущего автора всех типов
     author: {
-        var buf = [],
+        var data = this.data,
+            buf = [],
             self = this;
-
-        //заголовок
-        // buf.push({
-        //     elem: 'title',
-        //     mix: { block: 'menu', elem: 'title' },
-        //     content: BEM.I18N('p-authors', 'info')
-        // });
 
         //блок персональной информации об авторе
         buf.push({
@@ -33,10 +27,6 @@ block p-authors {
                 mods: { view: 'articles' },
                 config: {
                     title: BEM.I18N('p-authors', item),
-                    // filter: [
-                    //     { field: 'type', operand: '===', value: item },
-                    //     { field: 'authors', operand: '===', value: self.ctx.id }
-                    // ],
                     query: {
                         predicate: '.' + this.data.lang +
                             '{.type === $type}{.authors === $id || .translators === $id}',
@@ -54,18 +44,21 @@ block p-authors {
                 {
                     block: 'left',
                     mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-                    content: [
-                        {
+                    content: ['authors', 'translators'].map(function(item) {
+                        return {
                             block: 'menu', //меню со списком авторов
-                            id: this.ctx.id, //id автора, необходим для выделения пункта меню
-                            mods: { type: 'authors' }
-                        },
-                        {
-                            block: 'menu', //меню со списком переводчиков
-                            id: this.ctx.id, //id переводчика, необходим для выделения пункта меню
-                            mods: { type: 'translators' }
+                            config: {
+                                type: item,
+                                query: {
+                                    predicate: '.' + data.lang + '{.type === $type}',
+                                    substitution: { type: item }
+                                },
+                                sort: [{ field: 'lastName' }, { field: 'firstName' }],
+                                title: true,
+                                id: self.ctx.id
+                            }
                         }
-                    ]
+                    })
                 },
                 {
                     block: 'center',
@@ -90,13 +83,6 @@ block p-authors {
 
         //сортируем в алфавитном порядке по фамилии и имени
         source = leJspath.sort(source, [{ field: 'lastName' }, { field: 'firstName' }]);
-
-        //заголовок
-        // buf.push({
-        //     elem: 'title',
-        //     mix: { block: 'menu', elem: 'title' },
-        //     content: BEM.I18N('p-authors', 'team')
-        // });
 
         //собираем контент из блоков
         buf.push({

@@ -1,25 +1,30 @@
 block p-tags {
 
     content: {
-        var tag = this.ctx.id || '',
+        var id = this.ctx.id,
+            data = this.data,
+            predicate = null,
+            substitution = null,
             content = [];
 
-        ['method', 'articles', 'tools', 'libs', 'news'].forEach(function(item) {
-            content.push({
+        content = ['method', 'articles', 'tools', 'libs', 'news'].map(function(item) {
+            predicate = '.' + data.lang + '{.type === $type}';
+            substitution = { type: item };
+
+            if(id) {
+                predicate += '{.tags === $id}';
+                substitution['id'] = id;
+            }
+
+            return {
                 block: 'posts',
                 mods: { view: 'articles' },
                 config: {
                     title: BEM.I18N('p-tags', item),
-                    query: (tag && tag.length > 0) ? {
-                        predicate: '.' + data.lang + '{.type === $type}{.tags === $tag}',
-                        substitution: { type: item, tag: tag }
-                    } : {
-                        predicate: '.' + data.lang + '{.type === $type}',
-                        substitution: { type: item }
-                    },
-                    sort: [{field: 'title', direction: 'asc'}]
+                    query: { predicate: predicate, substitution: substitution },
+                    sort: [{ field: 'title', direction: 'asc' }]
                 }
-            })
+            };
         });
 
         return [
@@ -33,8 +38,16 @@ block p-tags {
                         content: [
                             {
                                 block: 'menu',
-                                id: tag,
-                                mods: { type: 'tags' }
+                                config: {
+                                    type: 'tags',
+                                    query: {
+                                        predicate: '.' + data.lang + '.tags',
+                                        substitution: {}
+                                    },
+                                    removeDublicates: true,
+                                    title: true,
+                                    id: id
+                                }
                             }
                         ]
                     },

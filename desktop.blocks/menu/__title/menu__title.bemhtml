@@ -1,4 +1,4 @@
 block menu, elem title {
 
-    content, this.mods['type']: BEM.I18N('menu', this.mods['type'])
+    content, this.ctx.type: BEM.I18N('menu', this.ctx.type)
 }

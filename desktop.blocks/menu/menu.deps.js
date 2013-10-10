@@ -5,6 +5,6 @@
             'articles', 'news', 'libs', 'tools', 'method', 'translators'], active: 'yes', complex: 'yes' } },
         { elem: 'title'},
         { elem: 'list'},
-        { mods: { type: ['authors', 'translators', 'tags', 'categories', 'articles', 'mixed'] } }
+        { mods: { type: ['categories', 'mixed'] } }
     ]
 })

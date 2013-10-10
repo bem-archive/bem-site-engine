@@ -1,0 +1,56 @@
+block menu {
+
+    content: {
+
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            source = data.source, //содержимое модели (файл data.json)
+            config = this.ctx.config;
+
+        source = leJspath.find(config.query.predicate, source, config.query.substitution);
+
+        //убираем дубликаты
+        if(config.removeDublicates) {
+            source = source.filter(function(elem, pos, self) {
+                return self.indexOf(elem) == pos;
+            });
+        }
+
+        if(config.sort) {
+            source = leJspath.sort(source, config.sort);
+        }else {
+            source = source.sort();
+        }
+
+        if(this._.isArray(source)) {
+
+            //цикличеки применяем шаблоны к элементу item текущего блока
+            //с модификатором соотвествующим полю мета-информации
+            //значения которого отображаются в меню и идентификацией
+            //текущего значения для выделения активного пункта меню
+            source = source.map(function(item) {
+                return apply(
+                    this._mode = '',
+                    this.ctx = {
+                        elem: 'item',
+                        elemMods: {
+                            type : config.type,
+                            active : apply('active', this.ctx = this._.extend(config, { item : item })) },
+                        id: item.id || item,
+                        category: config.category
+                    }
+                );
+            });
+
+            if(config.title) {
+                source.unshift({ elem: 'title', type: config.type });
+            }
+
+            return source;
+        }
+    }
+
+    //определение активного пункта меню и установка значения модификатора active
+    active: {
+        return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+    }
+}

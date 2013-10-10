@@ -4,7 +4,7 @@ block g-posts-menu {
         {
             block: 'menu',
             config: this.ctx.config,
-            mods: this._.extend({ type: 'articles' }, this.mods)
+            mods: this.mods
         }
     ]
 }
