@@ -14,6 +14,6 @@ module.exports = {
     },
     datasrc : {
         host : '/datasrc',
-        root : '/var/lib/yandex/legoa/datasrc'
+        root : '/usr/lib/yandex/bem-info-www/datasrc'
     }
 };

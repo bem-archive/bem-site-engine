@@ -6,11 +6,11 @@ module.exports = {
     debug : false,
     app : {
         env : 'production',
-        socket : '/tmp/legoa-nodejs.sock',
+        socket : '/var/run/yandex/bem-info-www/bem-info-www.sock',
         workers : nworkers < 1? 1 : nworkers
     },
     logger : {
         level : 'info',
-        file : '/var/log/yandex/legoa/nodejs.log'
+        file : '/var/log/yandex/bem-info-www/nodejs.log'
     }
 };

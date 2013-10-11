@@ -1,5 +1,5 @@
 #!/bin/sh
-# postinst script for yandex-legoa-www
+# postinst script for yandex-bem-info-www
 #
 # see: dh_installdeb(1)
 
@@ -7,15 +7,11 @@ set -e
 
 USER="www-data"
 GROUP="www-data"
-RUN_DIR=/var/run/yandex/legoa
-LOG_DIR=/var/log/yandex/legoa
+RUN_DIR=/var/run/yandex/bem-info-www
+LOG_DIR=/var/log/yandex/bem-info-www
 
 if [ -e /etc/yandex/environment.type ]; then
     yandex_environment=$(cat /etc/yandex/environment.type)
-fi
-
-if [ -f /etc/vertis-nodejs/conf-available/legoa ]; then
-    ln -sfn /etc/vertis-nodejs/conf-available/legoa /etc/vertis-nodejs/conf-enabled/legoa
 fi
 
 case "$1" in
@@ -38,7 +34,4 @@ esac
 
 #DEBHELPER#
 
-nginx-enable-mod yandex-tools-lego
-
 exit 0
-

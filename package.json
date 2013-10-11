@@ -1,10 +1,10 @@
 {
-  "name": "legoa-www",
-  "description": "Front-end for beta-lego.yandex-team.ru",
-  "version": "0.0.0",
+  "name": "bem-info",
+  "description": "Front-end for bem.info",
+  "version": "2.0.0",
   "repository": {
     "type": "git",
-    "url": "git://github.yandex-team.ru/lego/legoa-www.git"
+    "url": "git://github.yandex-team.ru/lego/bem-info.git"
   },
   "engines": {
     "node": ">=0.8"

@@ -1,0 +1,9 @@
+configs usr/lib/yandex/bem-info-www
+desktop.bundles usr/lib/yandex/bem-info-www
+lib/node_modules/bem-info/node_modules usr/lib/yandex/bem-info-www
+node_modules/legoa-conf usr/lib/yandex/bem-info-www/node_modules
+freeze/* var/lib/yandex/bem-info-static/_
+desktop.bundles var/lib/yandex/bem-info-static
+humans.txt var/lib/yandex/bem-info-static
+robots.txt var/lib/yandex/bem-info-static
+favicon.ico var/lib/yandex/bem-info-static

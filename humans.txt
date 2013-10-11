@@ -1,7 +1,25 @@
 /* TEAM */
-Maintainer: Vladimir Varankin
-Contact: varankinv@yandex-team.ru
-Twitter: @tvii
+    Maintainer: Andrey Kuznecov
+    Contact: bemer at yandex -team.ru
+    From: Simferopol, Crimea, Ukraine
+
+    Chef: Vitaly Harisov
+    Contact: bem at bem.info
+    From: Simferopol, Crimea, Ukraine
+
+    Team leader: Vladimir Grinenko
+    From: Simferopol, Crimea, Ukraine
+
+    Consultant: Vladimir Varankin
+    From: Moscow, Russia
+
+    UI developer: Alexandra Nekhaeva
+    From: Simferopol, Crimea, Ukraine
+
+    Web designer: Danil Kovchiy
+    From: Moscow, Russia
 
 /* SITE */
-
+    Language: English / Russian
+    Doctype: HTML5
+    IDE: Sublime Text, MC
