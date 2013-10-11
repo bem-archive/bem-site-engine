@@ -10,6 +10,16 @@ var JsonStringify = require('json-stringify-safe');
 
 provide({
 
+    _source: null,
+
+    getSource: function() {
+        return _source;
+    },
+
+    setSource: function(source) {
+        this._source = source;
+    },
+
     /**
      * Returns founded data from json by selector with substitutions
      * @param  {String} selector - query selector
@@ -19,55 +29,6 @@ provide({
      */
     find: function(selector, json, substitution) {
          return jspath.apply(selector, json, substitution);
-    },
-
-    parseQuery: function(data, key) {
-        var type = data.params.type || data.page, //тип данных
-            query = data.req.query[key], //хэш с параметрами запросa
-            config = [];
-
-        if(key === 'filter') {
-            config.push({ field: 'type', operand: '===', value: type });
-
-            //при наличии параметров фильтрации мы парсим строку
-            //с этими параметрами и заполняем хэш с ключами
-            //названия поля, операнда сравлнения и значения
-            if(query && query.length > 0) {
-                query = query.split(',');
-
-                for(var i = 0; i < query.length; i++) {
-                    var condition = query[i].split(' ');
-                    config.push({
-                        field : condition[0],
-                        operand : condition[1],
-                        value : condition[2]
-                    });
-                }
-            }
-        }
-
-        if(key === 'sort') {
-            if(query && query.length > 0) {
-
-                //парсим строку с параметрами поиска и формируем массив хэшей типа
-                //{field "field", direction: "direction"} коорый полсностью описывает характеристики сортировки
-                query = query.split(',');
-
-                for(var i = 0; i < query.length; i++) {
-                    var condition = query[i].split(' ');
-                    config.push({field : condition[0], direction : (condition[1] || 'asc') })
-                }
-            }
-        }
-
-        if(key === 'page') {
-            var page = query;
-            var limit = data.req.query['limit'];
-
-            config.push({ page : page, limit: limit });
-        }
-
-        return config;
     },
 
     /**
