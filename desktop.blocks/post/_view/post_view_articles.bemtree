@@ -64,7 +64,7 @@ block post, mod view articles {
     //заголовок поста
     title: {
         elem: 'title',
-        id: this.ctx.content.id,
+        url: this.ctx.content.url,
         type: this.ctx.content.type,
         title: this.ctx.content.longTitle || this.ctx.content.title,
         category: this.ctx.category || this.ctx.content.categories

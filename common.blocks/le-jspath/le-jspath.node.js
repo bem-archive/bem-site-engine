@@ -173,24 +173,6 @@ provide({
         return (result && result.length > 0) ? result.shift() : null;
     },
 
-    // isExist: function(url, type, lang) {
-    //     var config = [];
-
-    //     url && config.push({ field: 'url', operand: '===', value: url });
-    //     type && config.push({ field: 'type', operand: '===', value: type });
-
-    //     return this.filter(config, lang).length > 0;
-    // },
-
-    isExist: function(id, type, lang) {
-        var config = [];
-
-        id && config.push({ field: 'id', operand: '===', value: id });
-        type && config.push({ field: 'type', operand: '===', value: type });
-
-        return this.filter(config, lang).length > 0;
-    },
-
     findRootPostId: function(type, lang) {
         var result = this.filter([
             { field: 'type', operand:  '===', value: type },
