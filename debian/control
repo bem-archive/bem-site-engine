@@ -13,12 +13,6 @@ Vcs-Browser: http://github.yandex-team.ru/lego/bem-info
 Package: yandex-bem-info-www
 Section: yandex
 Priority: optional
-Depends:
- nginx,
- config-tools-nginx-vhost (>= 1-4-200),
- yandex-environment,
-Provides: yandex-bem-www-www
-Conflicts: yandex-bem-www-www
-Replaces: yandex-bem-www-www
+Depends: nodejs (>= 0.8)
 Architecture: all
 Description: Node.js frontend for bem.info
