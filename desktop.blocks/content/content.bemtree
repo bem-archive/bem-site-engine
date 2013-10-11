@@ -5,9 +5,7 @@ block content {
             this._datasrc = this.data.params);
     }
 
-    content: apply('processData', this.ctx = { source : this.data.source })
-
-    !this.data.source, content: {
+    content: {
         return this.doAsync(
                 leDatasrc.loadData.bind(leDatasrc, {})
             )
