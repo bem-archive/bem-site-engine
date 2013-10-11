@@ -34,6 +34,4 @@ esac
 
 #DEBHELPER#
 
-nginx-enable-mod yandex-tools-lego
-
 exit 0
