@@ -3,13 +3,24 @@
 
 modules.define(
     'le-datasrc',
-    ['file-provider', 'yana-config', 'yana-error_type_http'],
-    function(provide, fileProvider, config, HttpError) {
+    ['file-provider', 'yana-config', 'yana-error_type_http', 'yana-logger'],
+    function(provide, fileProvider, config, HttpError, logger) {
 
 var PATH = require('path'),
     datasrc = config.hosts.datasrc;
 
 provide({
+
+    _source: null,
+
+    getSource: function() {
+        logger.debug('load data from cache');
+        return this._source;
+    },
+
+    setSource: function(source) {
+        this._source = source;
+    },
 
     _buildPath : function(params) {
         var path = params.lib?
@@ -47,14 +58,20 @@ provide({
     loadData : function(params) {
         var path = PATH.join.apply(null, [datasrc.root, 'data']) + '.json';
 
-        this._data = fileProvider.create({ path : path, dataType : 'json' })
-            .run()
-            .fail(function(err) {
-                var message = 'Data for bem-info not found';
-                throw new HttpError(404, message);
-            });
+        var data = this.getSource();
 
-        return this._data;
+        if(!data) {
+            logger.debug('load data from file');
+            data = fileProvider.create({ path : path, dataType : 'json' })
+                .run()
+                .fail(function(err) {
+                    var message = 'Data for bem-info not found';
+                    throw new HttpError(404, message);
+                });
+            this.setSource(data);
+        }
+
+        return data;
     }
 
 });

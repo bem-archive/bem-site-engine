@@ -23,7 +23,7 @@ block post, elem title {
         if(this.ctx.category.length  == 0){
             url =  '/' + this.ctx.type + '/' + this.ctx.id
         }else {
-            var category = this.ctx.category.shift();
+            var category = this.ctx.category[0];
             url = '/' + this.ctx.type + '/' +
                 (this._.isSimple(category) ? category : category.url) + '/' + this.ctx.id;
         }

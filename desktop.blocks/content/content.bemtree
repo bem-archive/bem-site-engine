@@ -13,12 +13,8 @@ block content {
             )
             .then(
                 function(result) {
-                    return
-                        apply('processData',
-                            this.ctx = {
-                                source : result
-                            }
-                        );
+                    leJspath.setSource(result); //кешируем данные
+                    return apply('processData');
                 },
                 function(err) {
                     return apply('error', this.ctx = err);
@@ -30,16 +26,13 @@ block content {
     processData: {
         this.layout = { block : 'layout', elem : 'col', mods: {type: 'center'} };
 
-        var source = this.ctx.source; //содержимое файла data.json
-            data = this.data, //объект хранящий request, response и.т.д
+        var data = this.data, //объект хранящий request, response и.т.д
             page = data.page, //страница сайта [method, libraries, tools, articles, news, authors, tags, index]
             buf = [];
 
         console.debug('PAGE = ' + page);
 
         //leJspath.stringify(data);
-
-        this.data.source = source;
 
         //отрисовка главного меню сайта
         buf.push(apply(this._mode = '', this.ctx = { block: 'main-menu' }));

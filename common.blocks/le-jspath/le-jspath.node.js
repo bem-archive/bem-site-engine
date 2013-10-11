@@ -10,74 +10,33 @@ var JsonStringify = require('json-stringify-safe');
 
 provide({
 
+    _source: null,
+
+    getSource: function() {
+        return this._source;
+    },
+
+    setSource: function(source) {
+        this._source = source;
+    },
+
     /**
      * Returns founded data from json by selector with substitutions
-     * @param  {String} selector - query selector
-     * @param  {JSON} json - target json
+     * @param  {String} predicate - query selector
      * @param  {Object} substitution - key-value substitution hash
      * @return Object - filter result
      */
-    find: function(selector, json, substitution) {
-         return jspath.apply(selector, json, substitution);
-    },
-
-    parseQuery: function(data, key) {
-        var type = data.params.type || data.page, //тип данных
-            query = data.req.query[key], //хэш с параметрами запросa
-            config = [];
-
-        if(key === 'filter') {
-            config.push({ field: 'type', operand: '===', value: type });
-
-            //при наличии параметров фильтрации мы парсим строку
-            //с этими параметрами и заполняем хэш с ключами
-            //названия поля, операнда сравлнения и значения
-            if(query && query.length > 0) {
-                query = query.split(',');
-
-                for(var i = 0; i < query.length; i++) {
-                    var condition = query[i].split(' ');
-                    config.push({
-                        field : condition[0],
-                        operand : condition[1],
-                        value : condition[2]
-                    });
-                }
-            }
-        }
-
-        if(key === 'sort') {
-            if(query && query.length > 0) {
-
-                //парсим строку с параметрами поиска и формируем массив хэшей типа
-                //{field "field", direction: "direction"} коорый полсностью описывает характеристики сортировки
-                query = query.split(',');
-
-                for(var i = 0; i < query.length; i++) {
-                    var condition = query[i].split(' ');
-                    config.push({field : condition[0], direction : (condition[1] || 'asc') })
-                }
-            }
-        }
-
-        if(key === 'page') {
-            var page = query;
-            var limit = data.req.query['limit'];
-
-            config.push({ page : page, limit: limit });
-        }
-
-        return config;
+    find: function(predicate, substitution) {
+         return jspath.apply(predicate, this.getSource(), substitution);
     },
 
     /**
      * Filter method for result set
-     * @param  {JSON} content
      * @param  {Object} config - object with filter configuration parameters
      * @param  {String} lang - localization
      * @return {Array} filtered content
      */
-    filter: function(content, config, lang) {
+    filter: function(config, lang) {
         var lang = lang || 'en', //язык локализации
             predicate = '', //предикат фильтрации
             substitution = {}; //хэш подстановок
@@ -98,7 +57,7 @@ provide({
 
         //фильтруем данные по предикату и объекту подстановок
         //return jspath.apply(predicate, content, substitution);
-        return jspath.apply(predicate, content);
+        return jspath.apply(predicate, this.getSource());
     },
 
     /**
@@ -202,29 +161,29 @@ provide({
         return arr
     },
 
-    findByIdAndType: function(source, id, type, lang) {
+    findByIdAndType: function(id, type, lang) {
         var config = [],
             result = null;
 
         id && config.push({ field: 'id', operand: '===', value: id });
         type && config.push({ field: 'type', operand: '===', value: type });
 
-        result = this.filter(source, config, lang);
+        result = this.filter(config, lang);
 
         return (result && result.length > 0) ? result.shift() : null;
     },
 
-    isExist: function(source, id, type, lang) {
+    isExist: function(id, type, lang) {
         var config = [];
 
         id && config.push({ field: 'id', operand: '===', value: id });
         type && config.push({ field: 'type', operand: '===', value: type });
 
-        return this.filter(source, config, lang).length > 0;
+        return this.filter(config, lang).length > 0;
     },
 
-    findRootPostId: function(source, type, lang) {
-        var result = this.filter(source, [
+    findRootPostId: function(type, lang) {
+        var result = this.filter([
             { field: 'type', operand:  '===', value: type },
             { field: 'root', operand:  '===', value: "true" }
         ], lang);
@@ -240,7 +199,7 @@ provide({
         return rootId;
     },
 
-    findRootPostIdByCategory: function(source, type, category, lang) {
+    findRootPostIdByCategory: function(type, category, lang) {
         var predicate = '.' + lang +
             '{.type === $type}' +
             '{.root === "true"}' +
@@ -249,7 +208,7 @@ provide({
                 type: type,
                 category: category
             },
-            result = this.find(predicate, source, substitution);
+            result = this.find(predicate, substitution);
 
         return (result && result.length > 0) ? result.shift() : null;
     }

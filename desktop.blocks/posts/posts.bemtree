@@ -1,16 +1,15 @@
  block posts {
 
     content: {
-        DEFAULT_LIMIT = 10; //число записей на странице по умолчанию
+        //DEFAULT_LIMIT = 10; //число записей на странице по умолчанию
 
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             config = this.ctx.config, //конфиг для фильтрации, сортировки и пагинации
-            source = data.source, //содержимое модели (файл data.json)
             buf = [];
 
-            source = config['query'] ?
-                leJspath.find(config['query'].predicate, source, config['query'].substitution) :
-                leJspath.filter(source, config['filter'], data.lang);
+        var source = config['query'] ?
+                leJspath.find(config['query'].predicate, config['query'].substitution) :
+                leJspath.filter(config['filter'], data.lang);
 
         //сортировка данных
         source = config['sort'] ?

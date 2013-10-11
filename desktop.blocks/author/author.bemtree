@@ -4,8 +4,8 @@ block author {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             id = this.ctx.id; //уникальный id автора
 
-        return leJspath.findByIdAndType(data.source, id, 'authors', data.lang) ||
-               leJspath.findByIdAndType(data.source, id, 'translators', data.lang) ||
+        return leJspath.findByIdAndType(id, 'authors', data.lang) ||
+               leJspath.findByIdAndType(id, 'translators', data.lang) ||
                id;
     }
 }
