@@ -14,7 +14,7 @@ block author, mod view menu-item {
 
         tag: 'a'
 
-        attrs: { href : '/authors/' + this.ctx.id }
+        attrs: { href : '/authors/' + this.ctx.content.url }
     }
 
     this._.isSimple(this.ctx.content), content: this.ctx.content

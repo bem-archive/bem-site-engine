@@ -10,6 +10,8 @@ block p-authors {
         var data = this.data,
             buf = [],
             self = this;
+            //id = leJspath.findIdByTypeAndUrl('authors', this.ctx.id, data.lang) ||
+                 //leJspath.findIdByTypeAndUrl('translators', this.ctx.id, data.lang);
 
         //блок персональной информации об авторе
         buf.push({
@@ -89,7 +91,7 @@ block p-authors {
                 return {
                     block: 'author',
                     mods: { view: 'grid-cell' },
-                    id: item.id
+                    id: item.url
                 }
             })
         });

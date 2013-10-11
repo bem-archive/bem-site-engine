@@ -224,6 +224,16 @@ provide({
             });
 
         return result;
+    },
+
+    findIdByTypeAndUrl: function(type, url, lang) {
+        var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
+        return (result && result.length > 0) ? result[0].id : null;
+    },
+
+    findByTypeAndUrl: function(type, url, lang) {
+        var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
+        return (result && result.length > 0) ? result[0] : null;
     }
 });
 
