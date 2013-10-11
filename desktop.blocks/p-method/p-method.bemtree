@@ -4,6 +4,8 @@ block p-method {
         var CATEGORY_MAX_DEPTH = 2,
             TYPE = 'method';
 
+        console.debug('step 1');
+
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             params = data.params, //хэш с параметрами запроса
             category = null, //категория поста
@@ -16,7 +18,7 @@ block p-method {
         //Если нет, то часть отделенная / добавляется в пассив частей из которых складывается категория
         for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
             if(params[i]) {
-                if(!isIdFounded && leJspath.isExist(data.source, params[i], TYPE, data.lang)) {
+                if(!isIdFounded && leJspath.isExist(params[i], TYPE, data.lang)) {
                     isIdFounded = true;
                     id = params[i];
                 }else {
@@ -26,13 +28,15 @@ block p-method {
             }
         }
 
+        console.debug('step 2');
+
         //при наличии массива из частей категорий строим категорию
         //как строку, полученную из развернутого в обратном порядке массива
         //элементы которого соединены через /
         category = category && category.reverse().join('/');
 
         var articlesQuery = null,
-            rootId = leJspath.findRootPostId(data.source, TYPE, data.lang);
+            rootId = leJspath.findRootPostId(TYPE, data.lang);
 
         //если id статьи методологии не был передан, то пытаемся найти корневую статью
         id = id || rootId;
@@ -43,6 +47,8 @@ block p-method {
             predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
             substitution: { type: TYPE, rootId: rootId }
         };
+
+        console.debug('step 3');
 
         return [
             {

@@ -2,11 +2,10 @@ block post, mod view full {
 
     content: {
         var id = this.ctx.id,
-            data = this.data,
-            source = data.source;
+            data = this.data;
 
         //находим полную информацию о посте по его id
-        source = leJspath.findByIdAndType(source, id, null, data.lang);
+        var source = leJspath.findByIdAndType(id, null, data.lang);
 
         if(!source)
             return [];

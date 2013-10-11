@@ -2,13 +2,12 @@ block menu, mod type mixed {
 
     content: {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            source = data.source, //содержимое модели (файл data.json)
             type = this.ctx.type,
             query = this.ctx.query,
             id = this.ctx.id,
             self = this;
 
-        source = leJspath.find(query.predicate, source, query.substitution);
+        var source = leJspath.find(query.predicate, query.substitution);
 
         //сортируем в алфавитном порядке
         //source = leJspath.sort(source, [{ field: 'title' }]);

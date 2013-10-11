@@ -15,25 +15,35 @@ block post, elem categories {
             buf = [];
         this.ctx.content.forEach(function(item, index) {
             index > 0 && buf.push({
-                    block: 'span',
-                    content: ','
+                    tag: 'span',
+                    content: ' , '
                 });
 
-            if(self._.isSimple(item)) {
-                buf.push({
-                    block: 'link',
-                    url: '/' + self.ctx.type + '/' + item,
-                    content: item
-                });
-            } else {
-                buf.push({
-                    block: 'link',
-                    url: '/' + self.ctx.type + '/' + item.url,
-                    content: item.name
-                });
-            }
+            buf.push({
+                block: 'link',
+                url: '/' + self.ctx.type,
+                content: BEM.I18N('post', self.ctx.type)
+            });
+
+            buf.push({
+                block: 'splitter',
+                tag: 'span',
+                content: ' / '
+            });
+
+            buf.push({
+                block: 'link',
+                url: '/' + self.ctx.type + '/' + (item.url || item),
+                content:  apply('drawCategoryName', this.ctx.content = item)
+            });
 
         });
         return buf;
+    }
+
+    drawCategoryName: {
+        var item = this._.isSimple(this.ctx.content) ? this.ctx.content : this.ctx.content.name;
+
+        return item.split('/').join(' / ');
     }
 }

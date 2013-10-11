@@ -28,7 +28,7 @@ block p-authors {
                 config: {
                     title: BEM.I18N('p-authors', item),
                     query: {
-                        predicate: '.' + this.data.lang +
+                        predicate: '.' + data.lang +
                             '{.type === $type}{.authors === $id || .translators === $id}',
                         substitution: { type: item, id: self.ctx.id }
                     },
@@ -74,12 +74,10 @@ block p-authors {
     //данные для всей команды и сетку портретов с подписями для каждого члена команды
     authors: {
         var buf = [], //массив вывода контента
-            data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            source = data.source; //содержимое модели (файл data.json)
+            data = this.data;
 
         //выбираем все сущности с типом authors для данной локализации
-        source = leJspath.filter(source,
-            [{ field: 'type', operand: '===', value: 'authors' }], data.lang);
+        var source = leJspath.filter([{ field: 'type', operand: '===', value: 'authors' }], data.lang);
 
         //сортируем в алфавитном порядке по фамилии и имени
         source = leJspath.sort(source, [{ field: 'lastName' }, { field: 'firstName' }]);

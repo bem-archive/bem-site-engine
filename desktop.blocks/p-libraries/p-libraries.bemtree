@@ -16,7 +16,7 @@ block p-libraries {
         //Если нет, то часть отделенная / добавляется в пассив частей из которых складывается категория
         for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
             if(params[i]) {
-                if(!isIdFounded && leJspath.isExist(data.source, params[i], TYPE, data.lang)) {
+                if(!isIdFounded && leJspath.isExist(params[i], TYPE, data.lang)) {
                     isIdFounded = true;
                     id = params[i];
                 }else {
@@ -36,7 +36,7 @@ block p-libraries {
 
         if(category) {
             if(!id) {
-                id = leJspath.findRootPostIdByCategory(data.source, TYPE, category, data.lang);
+                id = leJspath.findRootPostIdByCategory(TYPE, category, data.lang);
             }
         }
 

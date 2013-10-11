@@ -11,6 +11,12 @@ module.exports = {
         "summary": "Summary",
         "translation": "Russian version",
         "plug": "This post is available only in ",
-        "plugLink": "russian language"
+        "plugLink": "russian language",
+
+        "tools": "Tools",
+        "libs": "Libraries",
+        "articles": "Articles",
+        "method": "Methodology",
+        "news": "News"
     }
 };

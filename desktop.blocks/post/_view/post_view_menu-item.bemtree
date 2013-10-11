@@ -5,11 +5,10 @@ block post, mod view menu-item {
             category = this.ctx.category, //категория поста
             active = this.ctx.active === 'yes' ? true : false,
 
-            data = this.data, //объект содержащий информацию о request, response и.т.д
-            source = data.source;
+            data = this.data; //объект содержащий информацию о request, response и.т.д
 
         //находим полную информацию о посте по его id
-        source = leJspath.findByIdAndType(source, id, null, data.lang);
+        var source = leJspath.findByIdAndType(id, null, data.lang);
 
         if(!source)
             return false;

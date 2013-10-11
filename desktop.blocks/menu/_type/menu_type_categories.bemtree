@@ -2,7 +2,6 @@ block menu, mod type categories{
 
     content: {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            source = data.source, //содержимое модели (файл data.json)
             type = this.ctx.type,
             self = this;
 
@@ -14,7 +13,7 @@ block menu, mod type categories{
             'optimizers': 40
         };
 
-        source = leJspath.find('.' + data.lang + '{.type === "' + type + '"}.categories', source, {});
+        var source = leJspath.find('.' + data.lang + '{.type === "' + type + '"}.categories', {});
 
         //leJspath.stringify(source);
 

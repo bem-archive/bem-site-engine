@@ -3,10 +3,9 @@ block menu {
     content: {
 
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            source = data.source, //содержимое модели (файл data.json)
             config = this.ctx.config;
 
-        source = leJspath.find(config.query.predicate, source, config.query.substitution);
+        var source = leJspath.find(config.query.predicate, config.query.substitution);
 
         //убираем дубликаты
         if(config.removeDublicates) {

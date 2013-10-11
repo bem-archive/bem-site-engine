@@ -1,3 +1,8 @@
 .post__categories
 {
 }
+
+.post__categories > .splitter
+{
+    color: #268BD2;
+}

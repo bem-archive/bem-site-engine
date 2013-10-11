@@ -2,10 +2,9 @@ block post, mod view articles {
 
     content: {
         var id = this.ctx.source,
-            data = this.data,
-            source = data.source;
+            data = this.data;
 
-        source = leJspath.findByIdAndType(source, id, null, data.lang);
+        var source = leJspath.findByIdAndType(id, null, data.lang);
 
         if(!source)
             return [];
@@ -18,6 +17,7 @@ block post, mod view articles {
             apply('author', this.ctx.content = source.authors),
             apply('translator', this.ctx.content = source.translators),
             apply('tags', this.ctx.content = source.tags),
+            apply('categories', this.ctx = { content: source.categories, type: source.type }),
             apply('title', this.ctx = { content: source, category: this.ctx.category }),
             apply('summary', this.ctx.content = source.summary)
         ]
@@ -52,6 +52,12 @@ block post, mod view articles {
     //массив тего для поста
     tags: {
         elem: 'tags',
+        content: this.ctx.content
+    }
+
+    categories: {
+        elem: 'categories',
+        type: this.ctx.type,
         content: this.ctx.content
     }
 
