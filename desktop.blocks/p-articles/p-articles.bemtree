@@ -1,42 +1,16 @@
 block p-articles {
 
     content: {
-        var CATEGORY_MAX_DEPTH = 2,
-            TYPE = 'articles';
+        var TYPE = 'articles';
 
-        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            params = data.params, //хэш с параметрами запроса
-            category = null, //категория поста
-            id = null, //id конкретного поста
-            isIdFounded = false;
-
-        for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
-            if(params[i]) {
-                if(!isIdFounded && leJspath.isExist(params[i], TYPE, data.lang)) {
-                    isIdFounded = true;
-                    id = params[i];
-                }else {
-                    category = category || [];
-                    category.push(params[i]);
-                }
-            }
-        }
-
-        category = category && category.reverse().join('/');
-
-        console.debug('id = %s category = %s', id, category);
-
-        var predicate = '.' + data.lang + '{.type === $type}',
-            substitution = { type: TYPE },
-            articlesQuery = {};
-
-        // Этот код закомментирован для показа меню в режиме mixed
-        // if(category) {
-        //     predicate += '{.categories === $category || .categories.url === $category}';
-        //     substitution = this._.extend(substitution, { category: category });
-        // }
-
-        articlesQuery = { predicate: predicate, substitution: substitution };
+        var data = this.data,
+            res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
+            id = res && res.id,
+            category = res && res.category,
+            articlesQuery = {
+                predicate: '.' + data.lang + '{.type === $type}',
+                substitution: { type: TYPE }
+            };
 
         return [
             {

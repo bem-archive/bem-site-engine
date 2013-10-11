@@ -11,12 +11,21 @@ block post, mod view full {
             return [];
 
         return [
-            apply('author', this.ctx.content = source.authors),
-            apply('translator', this.ctx.content = source.translators),
-            apply('createDate', this.ctx.content = source.createDate),
-            apply('editDate', this.ctx.content = source.editDate),
-            apply('tags', this.ctx.content = source.tags),
-            apply('translation'),
+            {
+                elem: 'authorAvatar',
+                content: source.authors
+            },
+            {
+                elem: 'meta',
+                content: [
+                    apply('author', this.ctx.content = source.authors),
+                    apply('translator', this.ctx.content = source.translators),
+                    apply('createDate', this.ctx.content = source.createDate),
+                    apply('editDate', this.ctx.content = source.editDate),
+                    apply('tags', this.ctx.content = source.tags),
+                    apply('translation')
+                ]
+            },
             apply('title', this.ctx.content = source),
             apply('contentFull', this.ctx.content = source.content)
         ];
@@ -91,6 +100,24 @@ block post, mod view full {
                     content: BEM.I18N('post', 'translation')
                 }
             ]
+        }
+    }
+}
+
+block post, mod view full, elem authorAvatar {
+
+    (this._.isArray(this.ctx.content) && this.ctx.content.length > 1), default: {
+        return false
+    }
+
+    content {
+
+        this._.isArray(this.ctx.content): {
+
+        }
+
+        !this._.isArray(this.ctx.content): {
+
         }
     }
 }

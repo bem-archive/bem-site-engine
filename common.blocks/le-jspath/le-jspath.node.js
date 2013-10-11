@@ -173,6 +173,15 @@ provide({
         return (result && result.length > 0) ? result.shift() : null;
     },
 
+    // isExist: function(url, type, lang) {
+    //     var config = [];
+
+    //     url && config.push({ field: 'url', operand: '===', value: url });
+    //     type && config.push({ field: 'type', operand: '===', value: type });
+
+    //     return this.filter(config, lang).length > 0;
+    // },
+
     isExist: function(id, type, lang) {
         var config = [];
 
@@ -211,6 +220,28 @@ provide({
             result = this.find(predicate, substitution);
 
         return (result && result.length > 0) ? result.shift() : null;
+    },
+
+    findCategoryAndIdByUrl: function(path, type, lang) {
+        logger.debug('path = %s', path);
+        var result = null;
+        var posts = this.find('.' + lang + '{ .type === $type }', { type: type });
+            posts.forEach(function(post) {
+                post.categories.forEach(function(category) {
+                    if('/' + post.type + '/' + (category.url || category) + '/' + post.url === path) {
+                        result = { category: category.url || category,  id: post.id };
+                    }
+                    if('/' + post.type + '/' + (category.url || category) === path) {
+                        result = { category: category.url || category,  id: null };
+                    }
+                });
+
+                if('/' + post.type + '/' + post.url === path) {
+                    result = { category: null,  id: post.id };
+                }
+            });
+
+        return result;
     }
 });
 

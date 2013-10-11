@@ -1,54 +1,22 @@
 block p-method {
 
     content: {
-        var CATEGORY_MAX_DEPTH = 2,
-            TYPE = 'method';
+        var TYPE = 'method';
 
-        console.debug('step 1');
-
-        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            params = data.params, //хэш с параметрами запроса
-            category = null, //категория поста
-            id = null, //id конкретного поста
-            isIdFounded = false;
-
-        //Итерируемся по параметрам запроса справа в лево
-        //на каждом шаге пытаемся определить что часть отделенная / это
-        //id поста. Если это так, то оставшиеся части образуют категорию поста.
-        //Если нет, то часть отделенная / добавляется в пассив частей из которых складывается категория
-        for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
-            if(params[i]) {
-                if(!isIdFounded && leJspath.isExist(params[i], TYPE, data.lang)) {
-                    isIdFounded = true;
-                    id = params[i];
-                }else {
-                    category = category || [];
-                    category.push(params[i]);
-                }
-            }
-        }
-
-        console.debug('step 2');
-
-        //при наличии массива из частей категорий строим категорию
-        //как строку, полученную из развернутого в обратном порядке массива
-        //элементы которого соединены через /
-        category = category && category.reverse().join('/');
-
-        var articlesQuery = null,
+        var data = this.data,
+            res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
+            id = res && res.id,
+            category = res && res.category,
             rootId = leJspath.findRootPostId(TYPE, data.lang);
 
         //если id статьи методологии не был передан, то пытаемся найти корневую статью
         id = id || rootId;
 
         //в меню статей отображаем все посты
-        //TODO сделать так чтобы не отображался корневой пост !!!
-        articlesQuery = {
+        var articlesQuery = {
             predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
             substitution: { type: TYPE, rootId: rootId }
         };
-
-        console.debug('step 3');
 
         return [
             {

@@ -17,8 +17,8 @@ block post, mod view menu-item-with-date {
             {
                 block: 'link',
                 url: active ? null : (category ?
-                    '/' + source.type + '/' + category + '/' + id :
-                    '/' + source.type + '/' + id),
+                    '/' + source.type + '/' + category + '/' + source.url :
+                    '/' + source.type + '/' + source.url),
                 content: [
                     {
                         block: 'post',
