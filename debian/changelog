@@ -1,3 +1,9 @@
+yandex-bem-info-www (2.0.4) unstable; urgency=low
+
+  * Rebuild for testing
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Mon, 14 Oct 2013 14:50:01 +0400
+
 yandex-bem-info-www (2.0.3) unstable; urgency=low
 
   * Legoa cleaning
