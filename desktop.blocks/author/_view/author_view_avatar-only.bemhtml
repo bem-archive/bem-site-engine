@@ -1,0 +1,11 @@
+block author, mod view avatar-only {
+
+    content: [
+        {
+            block: 'author',
+            elem: 'avatar',
+            elemMods: { size: 'small' },
+            content: this.ctx.content
+        }
+    ]
+}

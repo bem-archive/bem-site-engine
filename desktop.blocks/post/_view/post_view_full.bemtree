@@ -74,33 +74,27 @@ block post, mod view full {
 
     //содержимое поста
     contentFull: {
-        var lang = this.data.lang == 'en' ? 'ru' : 'en',
-            host = this.data.req.headers.host,
-            url = 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
-
-        return {
-            elem: 'content',
-            url: url,
-            content: this.ctx.content
-        }
+        elem: 'content',
+        url: apply('getUrl'),
+        content: this.ctx.content
     },
 
     //ссылка на пост в другой локализации
     translation: {
-        var lang = this.data.lang == 'en' ? 'ru' : 'en',
-            host = this.data.req.headers.host,
-            url = 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
+        elem: 'translation',
+        content: [
+            {
+                block: 'link',
+                url: apply('getUrl'),
+                content: BEM.I18N('post', 'translation')
+            }
+        ]
+    }
 
-        return {
-            elem: 'translation',
-            content: [
-                {
-                    block: 'link',
-                    url: url,
-                    content: BEM.I18N('post', 'translation')
-                }
-            ]
-        }
+    getUrl: {
+        var lang = this.data.lang == 'en' ? 'ru' : 'en',
+            host = this.data.req.headers.host;
+        return 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
     }
 }
 
@@ -111,13 +105,16 @@ block post, mod view full, elem authorAvatar {
     }
 
     content {
-
         this._.isArray(this.ctx.content): {
-
+            block: 'author',
+            mods: { view: 'avatar-only' },
+            id: this.ctx.content[0]
         }
 
         !this._.isArray(this.ctx.content): {
-
+            block: 'author',
+            mods: { view: 'avatar-only' },
+            id: this.ctx.content
         }
     }
 }

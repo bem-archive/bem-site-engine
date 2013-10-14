@@ -3,7 +3,7 @@
         { block : 'i-bem', elems : ['i18n'] }
     ],
     shouldDeps: [
-        { block : 'author', mods : { view: ['full', 'menu-item', 'simple'] } },
+        { block : 'author', mods : { view: ['full', 'menu-item', 'simple', 'avatar-only'] } },
         { mods: { view: ['full', 'menu-item', 'articles'] } },
         { elem : 'title' },
         { elem : 'date' },
