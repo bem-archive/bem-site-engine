@@ -19,7 +19,6 @@ block p-articles {
                 content: [
                     {
                         block: 'g-posts-menu',
-                        //mods: { type: 'mixed' }, //режим mixed для показа постов с группировкой по категориям
                         config: {
                             type: TYPE,
                             query: articlesQuery,

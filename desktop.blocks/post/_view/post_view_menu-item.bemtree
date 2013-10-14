@@ -2,10 +2,8 @@ block post, mod view menu-item {
 
     default: {
         var id = this.ctx.id, //уникальный id поста
-            category = this.ctx.category, //категория поста
-            active = this.ctx.active === 'yes' ? true : false,
-
-            data = this.data; //объект содержащий информацию о request, response и.т.д
+            data = this.data, //объект содержащий информацию о request, response и.т.д
+            buf = [];
 
         //находим полную информацию о посте по его id
         var source = leJspath.findByIdAndType(id, null, data.lang);
@@ -13,14 +11,28 @@ block post, mod view menu-item {
         if(!source)
             return false;
 
+        //показать дату поста
+        this.ctx.showDate && buf.push({
+            block: 'post',
+            elem: 'date',
+            content: source.createDate
+        });
+
+        buf.push(source.title);
+
         return [
             {
                 block: 'link',
-                url: active ? null : (category ?
-                    '/' + source.type + '/' + category + '/' + source.url :
-                    '/' + source.type + '/' + source.url),
-                content: source.title
+                url: apply('getUrl', this.ctx = this._.extend(this.ctx, { source: source })),
+                content: buf
             }
         ]
+    }
+
+    getUrl: {
+        var category = this.ctx.category; //категория поста
+
+        return this.ctx.active === 'yes' ?
+            null : '/' + this.ctx.source.type + (category ? '/' + category : '') + '/' + this.ctx.source.url;
     }
 }

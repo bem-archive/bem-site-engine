@@ -4,7 +4,7 @@
     ],
     shouldDeps: [
         { block : 'author', mods : { view: ['full', 'menu-item', 'simple'] } },
-        { mods: { view: ['full', 'menu-item', 'menu-item-with-date', 'articles'] } },
+        { mods: { view: ['full', 'menu-item', 'articles'] } },
         { elem : 'title' },
         { elem : 'date' },
         { elem : 'summary' },
