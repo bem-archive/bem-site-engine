@@ -1,11 +1,11 @@
-block g-categories-menu {
+block g-tools-menu {
 
     content: [
         {
             block: 'menu',
             type: this.ctx.type,
             id: this.ctx.category,
-            mods: { type: 'categories', all: 'yes' }
+            mods: { type: 'tools', all: 'yes' }
         }
     ]
 }

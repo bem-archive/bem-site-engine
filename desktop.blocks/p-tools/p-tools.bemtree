@@ -13,9 +13,13 @@ block p-tools {
             var predicate = '.' + data.lang + '{.type === $type}' +
                 '{.categories === $category || .categories.url === $category}';
 
-            if(!id){
-                id = leJspath.findRootPostIdByCategory(TYPE, category, data.lang);
-                predicate +=  '{.id !== "' + id +'"}';
+            var rootId = leJspath.findRootPostIdByCategory(TYPE, category, data.lang);
+            if(rootId) {
+                predicate +=  '{.id !== "' + rootId + '"}';
+            }
+
+            if(!id && rootId){
+                id = rootId;
             }
 
             articlesQuery = {
@@ -83,7 +87,7 @@ block p-tools {
                 mods: {section: 'p-menu'},
                 content: [
                     {
-                        block: 'g-categories-menu',
+                        block: 'g-tools-menu',
                         type: TYPE,
                         category: category
                     },

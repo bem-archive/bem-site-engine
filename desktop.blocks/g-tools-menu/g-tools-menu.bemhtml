@@ -1,4 +1,4 @@
-block g-categories-menu {
+block g-tools-menu {
 
     mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} }
 }

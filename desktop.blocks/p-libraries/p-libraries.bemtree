@@ -32,7 +32,6 @@ block p-libraries {
                         content: [
                             {
                                 block: 'g-posts-menu',
-                                //mods: { type: 'mixed' },
                                 config: {
                                     type: TYPE,
                                     query: articlesQuery,

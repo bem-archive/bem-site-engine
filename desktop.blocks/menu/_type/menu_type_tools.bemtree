@@ -1,10 +1,11 @@
-block menu, mod type categories{
+block menu, mod type tools{
 
     content: {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             type = this.ctx.type,
             self = this;
 
+        //хэш весов групп пунктов меню инструментов для правильной сортировки
         var orderHash = {
             'bem': 0,
             'languages': 10,
@@ -90,13 +91,6 @@ block menu, mod type categories{
             }
         });
 
-
-        //leJspath.stringify(items);
-
-        // items.sort(function(a, b) {
-        //     return a.name > b.name;
-        // });
-
         if(this._.isArray(items)) {
             var i = 0,
                 item;
@@ -175,4 +169,8 @@ block menu, mod type categories{
     active: {
         return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
     }
+
+    // disable: {
+    //     return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+    // }
 }
