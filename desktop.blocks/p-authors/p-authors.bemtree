@@ -57,6 +57,7 @@ block p-authors {
                                 },
                                 sort: [{ field: 'lastName' }, { field: 'firstName' }],
                                 title: true,
+                                activeField: 'url', //это поле по которому будет отпределяться аквтивное состояние пункта меню
                                 id: self.ctx.id
                             }
                         }

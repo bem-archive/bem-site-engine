@@ -50,6 +50,12 @@ block menu {
 
     //определение активного пункта меню и установка значения модификатора active
     active: {
-        return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+        if(typeof this.ctx.activeField === 'undefined') {
+            return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+        }else if(this.ctx.activeField == null) {
+            return (this.ctx.id && this.ctx.id === this.ctx.item) ? 'yes' : '';
+        }else {
+            return (this.ctx.id && this.ctx.id === this.ctx.item[this.ctx.activeField]) ? 'yes' : '';
+        }
     }
 }

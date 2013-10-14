@@ -46,6 +46,7 @@ block p-tags {
                                     },
                                     removeDublicates: true,
                                     title: true,
+                                    activeField: null,
                                     id: id
                                 }
                             }
