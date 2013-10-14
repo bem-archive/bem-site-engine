@@ -1,3 +1,9 @@
+yandex-bem-info-www (2.0.5) unstable; urgency=low
+
+  * Rebuild with more changes
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Mon, 14 Oct 2013 19:44:41 +0400
+
 yandex-bem-info-www (2.0.4) unstable; urgency=low
 
   * Rebuild for testing
