@@ -173,15 +173,6 @@ provide({
         return (result && result.length > 0) ? result.shift() : null;
     },
 
-    isExist: function(id, type, lang) {
-        var config = [];
-
-        id && config.push({ field: 'id', operand: '===', value: id });
-        type && config.push({ field: 'type', operand: '===', value: type });
-
-        return this.filter(config, lang).length > 0;
-    },
-
     findRootPostId: function(type, lang) {
         var result = this.filter([
             { field: 'type', operand:  '===', value: type },
@@ -211,6 +202,38 @@ provide({
             result = this.find(predicate, substitution);
 
         return (result && result.length > 0) ? result.shift() : null;
+    },
+
+    findCategoryAndIdByUrl: function(path, type, lang) {
+        logger.debug('path = %s', path);
+        var result = null;
+        var posts = this.find('.' + lang + '{ .type === $type }', { type: type });
+            posts.forEach(function(post) {
+                post.categories.forEach(function(category) {
+                    if('/' + post.type + '/' + (category.url || category) + '/' + post.url === path) {
+                        result = { category: category.url || category,  id: post.id };
+                    }
+                    if('/' + post.type + '/' + (category.url || category) === path) {
+                        result = { category: category.url || category,  id: null };
+                    }
+                });
+
+                if('/' + post.type + '/' + post.url === path) {
+                    result = { category: null,  id: post.id };
+                }
+            });
+
+        return result;
+    },
+
+    findIdByTypeAndUrl: function(type, url, lang) {
+        var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
+        return (result && result.length > 0) ? result[0].id : null;
+    },
+
+    findByTypeAndUrl: function(type, url, lang) {
+        var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
+        return (result && result.length > 0) ? result[0] : null;
     }
 });
 

@@ -3,8 +3,8 @@
         { block : 'i-bem', elems : ['i18n'] }
     ],
     shouldDeps: [
-        { block : 'author', mods : { view: ['full', 'menu-item', 'simple'] } },
-        { mods: { view: ['full', 'menu-item', 'menu-item-with-date', 'articles'] } },
+        { block : 'author', mods : { view: ['full', 'menu-item', 'simple', 'avatar-only'] } },
+        { mods: { view: ['full', 'menu-item', 'articles'] } },
         { elem : 'title' },
         { elem : 'date' },
         { elem : 'summary' },

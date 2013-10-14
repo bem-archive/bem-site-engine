@@ -8,7 +8,8 @@
 }
 
 .p-method .post__author,
-.p-method .post__translator
+.p-method .post__translator,
+.p-method .post__authorAvatar
 {
     display: none;
 }

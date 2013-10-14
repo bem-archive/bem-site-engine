@@ -1,7 +1,7 @@
 block post, elem title {
 
     !this.ctx.category, content: {
-        var url =  '/' + this.ctx.type + '/' + this.ctx.id;
+        var url =  '/' + this.ctx.type + '/' + this.ctx.url;
         return {
             block: 'link',
             url: url,
@@ -10,7 +10,7 @@ block post, elem title {
     }
 
     this._.isSimple(this.ctx.category), content: {
-        var url =  '/' + this.ctx.type + '/' + this.ctx.category + '/' + this.ctx.id;
+        var url =  '/' + this.ctx.type + '/' + this.ctx.category + '/' + this.ctx.url;
         return {
             block: 'link',
             url: url,
@@ -21,11 +21,11 @@ block post, elem title {
     this._.isArray(this.ctx.category), content: {
         var url = null;
         if(this.ctx.category.length  == 0){
-            url =  '/' + this.ctx.type + '/' + this.ctx.id
+            url =  '/' + this.ctx.type + '/' + this.ctx.url
         }else {
             var category = this.ctx.category[0];
             url = '/' + this.ctx.type + '/' +
-                (this._.isSimple(category) ? category : category.url) + '/' + this.ctx.id;
+                (this._.isSimple(category) ? category : category.url) + '/' + this.ctx.url;
         }
 
         return {

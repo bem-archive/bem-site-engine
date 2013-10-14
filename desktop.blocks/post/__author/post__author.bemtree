@@ -3,14 +3,12 @@ block post, elem author {
     content {
 
         this._.isArray(this.ctx.content): {
-            var i = 0,
-                buf = [],
-                item;
+            var buf = [];
 
-            while(item = this.ctx.content[i]) {
+            this.ctx.content.forEach(function(item, index){
                 //console.debug(item);
 
-                i++ > 0 &&
+                index++ > 0 &&
                     buf.push({
                         tag: 'span',
                         content: ', '
@@ -24,14 +22,13 @@ block post, elem author {
                         id: item
                     }
                 ));
-            }
+            });
 
             return buf;
         }
 
         !this._.isArray(this.ctx.content): {
-
-           return apply(
+            return apply(
                 this._mode = '',
                 this.ctx = {
                     block: 'author',

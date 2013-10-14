@@ -5,7 +5,8 @@ block menu, elem item, elemMod type news {
         return [
             {
                 block: 'post',
-                mods: {view: 'menu-item-with-date'},
+                mods: { view: 'menu-item' },
+                showDate: true,
                 id: this.ctx.id,
                 category: this.ctx.category,
                 active: this.elemMods['active']

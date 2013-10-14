@@ -1,7 +1,7 @@
 ({
     mustDeps: [],
     shouldDeps: [
-        { mods : { view: ['full', 'menu-item', 'simple', 'grid-cell'] } },
+        { mods : { view: ['full', 'menu-item', 'simple', 'grid-cell', 'avatar-only'] } },
         { elem : 'avatar'},
         { elem : 'name'},
         { elem : 'e-mail'},

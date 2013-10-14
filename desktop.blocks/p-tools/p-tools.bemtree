@@ -1,36 +1,13 @@
 block p-tools {
 
     content: {
-        var CATEGORY_MAX_DEPTH = 3,
-            TYPE = 'tools';
+        var TYPE = 'tools';
 
-        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            params = data.params, //хэш с параметрами запроса
-            category = null, //категория поста
-            id = null, //id конкретного поста
-            isIdFounded = false;
-
-        //Итерируемся по параметрам запроса справа в лево
-        //на каждом шаге пытаемся определить что часть отделенная / это
-        //id поста. Если это так, то оставшиеся части образуют категорию поста.
-        //Если нет, то часть отделенная / добавляется в пассив частей из которых складывается категория
-        for(var i = CATEGORY_MAX_DEPTH + 1; i > 0; i--) {
-            if(params[i]) {
-                if(!isIdFounded && leJspath.isExist(params[i], TYPE, data.lang)) {
-                    isIdFounded = true;
-                    id = params[i];
-                }else {
-                    category = category || [];
-                    category.push(params[i]);
-                }
-            }
-        }
-
-        //разворачиваем массив частей для категории поста в обратном порядке
-        //и соединяем их по /
-        category = category && category.reverse().join('/');
-
-        var articlesQuery = null;
+        var data = this.data,
+            res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
+            id = res && res.id,
+            category = res && res.category,
+            articlesQuery = null;
 
         if(category) {
             var predicate = '.' + data.lang + '{.type === $type}' +
@@ -54,9 +31,6 @@ block p-tools {
                 }
             }
         }
-        console.debug('category = %s id = %s', category, id);
-        console.debug(leJspath.find('.' + data.lang + '{.type === "' + TYPE + '"}.categories', {}).length);
-        //leJspath.stringify(leJspath.getSource());
 
         var categories = {
             block: 'center',

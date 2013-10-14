@@ -14,6 +14,7 @@ block menu {
             });
         }
 
+        //применение сортировки при необходимости
         if(config.sort) {
             source = leJspath.sort(source, config.sort);
         }else {
@@ -40,6 +41,7 @@ block menu {
                 );
             });
 
+            //добавление заголовка для меню
             if(config.title) {
                 source.unshift({ elem: 'title', type: config.type });
             }
@@ -50,6 +52,12 @@ block menu {
 
     //определение активного пункта меню и установка значения модификатора active
     active: {
-        return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+        if(typeof this.ctx.activeField === 'undefined') {
+            return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+        }else if(this.ctx.activeField == null) {
+            return (this.ctx.id && this.ctx.id === this.ctx.item) ? 'yes' : '';
+        }else {
+            return (this.ctx.id && this.ctx.id === this.ctx.item[this.ctx.activeField]) ? 'yes' : '';
+        }
     }
 }

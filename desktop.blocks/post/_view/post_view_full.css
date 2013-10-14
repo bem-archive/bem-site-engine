@@ -18,3 +18,9 @@
 {
     color: #555;
 }
+
+.post_view_full .post__authorAvatar,
+.post_view_full .post__meta
+{
+    display: inline-block;
+}

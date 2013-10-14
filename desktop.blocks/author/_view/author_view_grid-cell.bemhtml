@@ -2,7 +2,7 @@ block author, mod view grid-cell {
 
     tag: 'a',
 
-    attrs: { href: '/' + this.ctx.content.type + '/' + this.ctx.content.id }
+    attrs: { href: '/' + this.ctx.content.type + '/' + this.ctx.content.url }
 
     content: [
         {
