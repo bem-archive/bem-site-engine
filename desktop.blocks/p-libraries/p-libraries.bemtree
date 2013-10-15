@@ -4,22 +4,28 @@ block p-libraries {
         var TYPE = 'libs';
 
         var data = this.data,
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
-            id = res && res.id,
-            category = res && res.category,
-            predicate = '.' + data.lang + '{.type === $type}',
+            lib = data.params['lib'],
+            version = data.params['version'],
+            category = data.params['category'] || null,
+            id = data.params['id'],
+            predicate = '.' + data.lang + '{ .type == $type }',
             substitution = { type: TYPE },
-            articlesQuery = {};
+            query = null;
 
-        if(category) {
-            if(!id) {
-                id = leJspath.findRootPostIdByCategory(TYPE, category, data.lang);
-            }
+        id = leJspath.findIdByTypeAndUrl(TYPE, id || category, data.lang);
+
+        console.debug('lib = %s version = %s category = %s id = %s', lib, version, category, id);
+
+        if(lib) {
+            predicate += '{.categories ^== $category || .categories.url ^== $category }';
+            substitution = this._.extend(substitution, { category: lib });
         }
 
-        articlesQuery = { predicate: predicate, substitution: substitution };
+        if(version) {
+            substitution = this._.extend(substitution, { category: lib + '/' + version });
+        }
 
-        console.debug('category = %s id = %s', category, id);
+        query = { predicate: predicate, substitution: substitution };
 
         return [
             {
@@ -27,30 +33,55 @@ block p-libraries {
                 mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
                 content: [
                     {
-                       block: 'layout',
+                        block: 'layout',
                         mods: { section: 'p-menu' },
                         content: [
                             {
-                                block: 'g-posts-menu',
+                                block: 'menu',
+                                mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+                                mods: { type: 'libs' },
+                                type: 'libs',
                                 config: {
-                                    type: TYPE,
-                                    query: articlesQuery,
-                                    category: category,
-                                    id: id
+                                    lib: lib,
+                                    version: version
                                 }
                             },
-                            id  ?
+                            {
+                                block: 'center',
+                                mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
+                                content: [
                                     {
-                                        block: 'g-post',
-                                        id: id
+                                       block: 'layout',
+                                        mods: { section: 'p-menu' },
+                                        content: [
+                                            {
+                                                block: 'g-posts-menu',
+                                                mods: { type: 'mixed' },
+                                                config: {
+                                                    type: TYPE,
+                                                    query: query,
+                                                    sort: [{ field: 'title' }],
+                                                    category: lib + '/' + version + '/' + category,
+                                                    id: id
+                                                }
+                                            },
+                                            id  ?
+                                                    {
+                                                        block: 'g-post',
+                                                        id: id
+                                                    }
+                                                :
+                                                    {
+                                                        block: 'g-posts',
+                                                        config: {
+                                                            query: query,
+                                                            category: lib + '/' + version + '/' + category
+                                                        }
+                                                    }
+                                        ]
                                     }
-                                :
-                                    {
-                                        block: 'g-posts',
-                                        config: {
-                                            query: articlesQuery
-                                        }
-                                    }
+                                ]
+                            }
                         ]
                     }
                 ]

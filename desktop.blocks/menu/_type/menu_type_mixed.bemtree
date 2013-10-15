@@ -2,21 +2,30 @@ block menu, mod type mixed {
 
     content: {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            type = this.ctx.type,
-            query = this.ctx.query,
-            id = this.ctx.id,
+            config = this.ctx.config,
             self = this;
 
-        var source = leJspath.find(query.predicate, query.substitution);
+        var source = leJspath.find(config.query.predicate, config.query.substitution);
 
         //сортируем в алфавитном порядке
-        //source = leJspath.sort(source, [{ field: 'title' }]);
+        source = leJspath.sort(source, [{ field: 'title' }]);
 
         var categories = null,
-            name = null,
             url = null,
-            items = {},
-            buf = [];
+            items = {};
+
+        this.buf = [];
+
+        //метод проверки на то, что категория - это версия библиотеки
+        //в таком случае посты относятся непосредственно к версии библиотеки
+        //и должны отображаться первыми
+        var isTag = function(a) {
+            return /\d+\.\d+\.\d+/.test(a) == true;
+        };
+
+        var isCategory = function(a) {
+            return /\d+\.\d+\.\d+/.test(a) == false;
+        };
 
         if(this._.isArray(source)) {
             source.forEach(function(post) {
@@ -24,6 +33,7 @@ block menu, mod type mixed {
                 if(self._.isArray(categories)) {
                     categories.forEach(function(category) {
                         url = category['url'] || category;
+                        url = url.split('/').pop();
                         if(!items[url]) {
                             items[url] = category;
                             items[url]['posts'] = [];
@@ -33,40 +43,56 @@ block menu, mod type mixed {
                 }
             });
 
-            Object.getOwnPropertyNames(items).forEach(function(url) {
-                var category = items[url];
-                buf.push(apply(
-                    this._mode = '',
-                    this.ctx = {
-                        elem: 'item',
-                        elemMods: {
-                            type : 'categories',
-                            complex: 'yes'
-                        },
-                        name: category.name
-                    }
-                ));
-                category.posts.forEach(function(post) {
-                    buf.push(apply(
-                        this._mode = '',
-                        this.ctx = {
-                            elem: 'item',
-                            elemMods: {
-                                type : 'articles',
-                                active : apply('active', this.ctx = self._.extend(self.ctx, { item : post })) },
-                            id: post.id,
-                            category: self._.isSimple(category) ? category : category.url
-                        }
-                    ));
-                });
+            Object.getOwnPropertyNames(items).filter(isTag).forEach(function(url) {
+                apply('drawPosts', this.ctx.category = items[url]);
+            });
+
+            Object.getOwnPropertyNames(items).filter(isCategory).sort().forEach(function(url) {
+                apply('drawGroups', this.ctx.category = items[url]);
+                apply('drawPosts', this.ctx.category = items[url]);
             });
         }
 
-        return buf;
+        return this.buf;
+    }
+
+    //отрисовка категорий
+    drawGroups: {
+        this.buf.push(apply(
+            this._mode = '',
+            this.ctx = {
+                elem: 'item',
+                elemMods: {
+                    type : 'categories',
+                    complex: 'yes'
+                },
+                name: this.ctx.category.name.split('/').pop()
+            }
+        ));
+    }
+
+    //отрисовка постов
+    drawPosts: {
+        var category = this.ctx.category,
+            self = this;
+
+        category.posts.forEach(function(post) {
+            self.buf.push(apply(
+                this._mode = '',
+                this.ctx = {
+                    elem: 'item',
+                    elemMods: {
+                        type : 'articles',
+                        active : apply('active', this.ctx = self._.extend(self.ctx, { item : post })) },
+                    id: post.id,
+                    category: self._.isSimple(category) ? category : category.url
+                }
+            ));
+        });
     }
 
     //определение активного пункта меню и установка значения модификатора active
     active: {
-        return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+        return (this.ctx.config.id && this.ctx.config.id === this.ctx.item.id) ? 'yes' : '';
     }
 }

@@ -1,15 +1,10 @@
 block menu, elem item, elemMod type libs {
 
-    content: {
-
-        return [
-            {
-                block: 'post',
-                mods: {view: 'menu-item'},
-                id: this.ctx.id,
-                category: this.ctx.category,
-                active: this.elemMods['active']
-            }
-        ]
-    }
+    content: [
+        {
+            block: 'link',
+            url: this.elemMods['active'] == 'yes' ? null : this.ctx.url,
+            content: this.ctx.name
+        }
+    ]
 }

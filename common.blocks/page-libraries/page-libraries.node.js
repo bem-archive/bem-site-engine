@@ -13,7 +13,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'libs',
-    rule : '/libs/{1}',
+    rule : '/libs/{lib}',
     data : {
         action : 'le-page'
     }
@@ -21,7 +21,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'libs',
-    rule : '/libs/{1}/{2}',
+    rule : '/libs/{lib}/{version}',
     data : {
         action : 'le-page'
     }
@@ -29,7 +29,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'libs',
-    rule : '/libs/{1}/{2}/{3}',
+    rule : '/libs/{lib}/{version}/{category}',
     data : {
         action : 'le-page'
     }
@@ -37,7 +37,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'libs',
-    rule : '/libs/{1}/{2}/{3}/{4}',
+    rule : '/libs/{lib}/{version}/{category}/{id}',
     data : {
         action : 'le-page'
     }
