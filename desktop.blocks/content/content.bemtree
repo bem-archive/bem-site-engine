@@ -30,7 +30,7 @@ block content {
 
         console.debug('PAGE = ' + page);
 
-        //leJspath.stringify(data);
+        // leJspath.stringify(data);
 
         //отрисовка главного меню сайта
         buf.push(apply(this._mode = '', this.ctx = { block: 'main-menu' }));

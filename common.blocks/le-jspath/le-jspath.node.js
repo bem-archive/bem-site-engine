@@ -204,21 +204,27 @@ provide({
         return (result && result.length > 0) ? result.shift() : null;
     },
 
+    /**
+     * Find id and category of post by request path and source type
+     * @param  {Stirng} path - request path /{type}/{category}/{id}
+     * @param  {String} type - source type
+     * @param  {String} lang - source lang
+     * @return {Object} {category: category, id: id} - object with category and id of source
+     */
     findCategoryAndIdByUrl: function(path, type, lang) {
-        logger.debug('path = %s', path);
-        var result = null;
-        var posts = this.find('.' + lang + '{ .type === $type }', { type: type });
+        var result = null,
+            posts = this.find('.' + lang + '{ .type === $type }', { type: type });
             posts.forEach(function(post) {
                 post.categories.forEach(function(category) {
-                    if('/' + post.type + '/' + (category.url || category) + '/' + post.url === path) {
+                    if(path.indexOf('/' + post.type + '/' + (category.url || category) + '/' + post.url) !== -1) {
                         result = { category: category.url || category,  id: post.id };
                     }
-                    if('/' + post.type + '/' + (category.url || category) === path) {
+                    if(path.indexOf('/' + post.type + '/' + (category.url || category)) !== -1) {
                         result = { category: category.url || category,  id: null };
                     }
                 });
 
-                if('/' + post.type + '/' + post.url === path) {
+                if(path.indexOf('/' + post.type + '/' + post.url) !== -1) {
                     result = { category: null,  id: post.id };
                 }
             });
@@ -226,11 +232,25 @@ provide({
         return result;
     },
 
+    /**
+     * Find source unique id by type, url and lang criteria
+     * @param  {String} type -type of source
+     * @param  {String} url - url of source
+     * @param  {String} lang - language
+     * @return {Object} - source id founded by search criteria or null if source was not found
+     */
     findIdByTypeAndUrl: function(type, url, lang) {
         var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
         return (result && result.length > 0) ? result[0].id : null;
     },
 
+    /**
+     * Find source by type, url and lang criteria
+     * @param  {String} type -type of source
+     * @param  {String} url - url of source
+     * @param  {String} lang - language
+     * @return {Object} - source founded by search criteria or null if source was not found
+     */
     findByTypeAndUrl: function(type, url, lang) {
         var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
         return (result && result.length > 0) ? result[0] : null;
