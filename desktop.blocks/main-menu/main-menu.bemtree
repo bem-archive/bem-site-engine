@@ -74,14 +74,17 @@ block main-menu {
         };
     }
 
+    //определение условия некликабельности пункта главного меню
     disable: {
         return this.data.req.path === this.ctx.url ? null : this.ctx.url;
     }
 
+    //определение условия активности пункта главного меню
     active: {
         return this.data.page === this.ctx ? 'yes' : '';
     }
 
+    //построение ссылки на последнюю версию первой библиотеки из списка библиотек
     libUrl: {
         var TYPE = 'libs',
             categories = leJspath.find('.' + this.data.lang + '{.type === $type}.categories', { type : TYPE }),
