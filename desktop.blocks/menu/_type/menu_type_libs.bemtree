@@ -76,15 +76,12 @@ block menu, mod type libs {
             });
         });
 
-        //leJspath.stringify(itemsHash);
-
         //Превращаем полученный hash в array
         Object.getOwnPropertyNames(itemsHash).forEach(function(item, index) {
             items.push(itemsHash[item]);
         });
 
-        //сортируем массив с элементами меню так, чтобы простые элементы отображались сверху
-        //а имеющие вложенность снизу
+        //сортируем массив с элементами меню в алфавитном порядке
         items.sort(function(a, b){
             return a.key > b.key;
         });
@@ -124,15 +121,18 @@ block menu, mod type libs {
             this.ctx = {
                 elem: 'item',
                 elemMods: {
-                    type : 'categories',
+                    type : 'libs',
                     complex: isComplex ? 'yes' : '',
-                    active : apply('active')
+                    active : apply('active'),
+                    disable : apply('disable')
                 },
-                url: !isComplex ? '/' + type + '/' + item.id : null,
+                url:  isComplex ? null : '/' + type + '/' + item.id,
                 name: isComplex ? item.name.toUpperCase() : item.name
             }
         ));
 
+        //Если пункт меню комплексный (название библиотеки)
+        //то дорисовываем пункты меню с версиями библиотеки отсортированные в порядке убывания версии
         if(isComplex) {
             Object.getOwnPropertyNames(item).filter(function(key) {
                  return ['id', 'name', 'key'].indexOf(key) < 0;
@@ -142,6 +142,8 @@ block menu, mod type libs {
         }
     }
 
+    //определение группирующего пункта меню по наличию ключей
+    //дочерних пунктов меню
     complex: {
         return Object.getOwnPropertyNames(this.ctx.item).filter(function(item) {
             return ['id', 'name', 'key'].indexOf(item) < 0
@@ -149,8 +151,17 @@ block menu, mod type libs {
     }
 
     //определение активного пункта меню и установка значения модификатора active
+    //по условию если url содержит id текущего пункта меню
     active: {
-        return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+        return this.data.req.path.indexOf(this.ctx.item.id) !== -1 ? 'yes' : '';
+    }
+
+    //определение отключенного пункта меню, если текущий пункт меню активен и не выбран
+    //пункт из другого меню, т.е. url заканчивается на id текущего пункта меню
+    disable: {
+        var path = this.data.req.path,
+            id = this.ctx.item.id;
+        return path.indexOf(id, path.length - id.length) !== -1 ? 'yes' : '';
     }
 
 }

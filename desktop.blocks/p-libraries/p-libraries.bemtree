@@ -4,8 +4,8 @@ block p-libraries {
         var TYPE = 'libs';
 
         var data = this.data,
-            lib = data.params['lib'],
-            version = data.params['version'],
+            lib = data.params['lib'] || null,
+            version = data.params['version'] || null,
             category = data.params['category'] || null,
             id = data.params['id'],
             predicate = '.' + data.lang + '{ .type == $type }',
@@ -14,70 +14,90 @@ block p-libraries {
 
         id = leJspath.findIdByTypeAndUrl(TYPE, id || category, data.lang);
 
+        //В случае когда не указана библиотека, т.е. url = /libs,
+        //то выбирается первая попавшаяся библиотека
+        if(!lib) {
+            var categories = leJspath.find('.' + this.data.lang + '{.type === $type}.categories',
+                { type : TYPE });
+
+            if(this._.isArray(categories) && categories.length > 0) {
+                var url = categories[0].url || categories[0];
+                lib = url.split('/')[0];
+            }
+        }
+
+        predicate += '{.categories ^== $category || .categories.url ^== $category }';
+        substitution = this._.extend(substitution, { category: lib });
+
+        //если не указана версия, то выбирается самая новая для данной библиотеки
+        if(!version) {
+            var versions = [];
+            leJspath.find(predicate, substitution).forEach(function(post) {
+                post.categories.forEach(function(item){
+                    var url = item.url || item;
+                    versions.push(url.match(/\d+\.\d+\.\d+/)[0]);
+                });
+            });
+
+            version = versions.sort().pop();
+        }
+
         console.debug('lib = %s version = %s category = %s id = %s', lib, version, category, id);
 
-        if(lib) {
-            predicate += '{.categories ^== $category || .categories.url ^== $category }';
-            substitution = this._.extend(substitution, { category: lib });
-        }
-
-        if(version) {
-            substitution = this._.extend(substitution, { category: lib + '/' + version });
-        }
+        substitution = this._.extend(substitution, { category: lib + '/' + version });
 
         query = { predicate: predicate, substitution: substitution };
+
+        var gPostsMenu = {
+            block: 'g-posts-menu',
+            mods: { type: 'mixed' },
+            config: {
+                type: TYPE,
+                query: query,
+                sort: [{ field: 'title' }],
+                category: lib + '/' + version + '/' + category,
+                id: id
+            }
+        },
+        gPost = {
+            block: 'g-post',
+            id: id
+        },
+        gPosts = {
+            block: 'g-posts',
+            config: {
+                query: query,
+                category: lib + '/' + version + '/' + category
+            }
+        },
+        centerLayoutMix = { block : 'layout', elem : 'col', mods: { type: 'center' } };
 
         return [
             {
                 block: 'center',
-                mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
+                mix: centerLayoutMix,
                 content: [
                     {
                         block: 'layout',
                         mods: { section: 'p-menu' },
                         content: [
-                            {
-                                block: 'menu',
-                                mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-                                mods: { type: 'libs' },
-                                type: 'libs',
+                            apply('libsMenu', this.ctx = {
+                                type: TYPE,
                                 config: {
                                     lib: lib,
                                     version: version
                                 }
-                            },
+                            }),
                             {
                                 block: 'center',
-                                mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
+                                mix: centerLayoutMix,
                                 content: [
                                     {
-                                       block: 'layout',
+                                        block: 'layout',
                                         mods: { section: 'p-menu' },
                                         content: [
-                                            {
-                                                block: 'g-posts-menu',
-                                                mods: { type: 'mixed' },
-                                                config: {
-                                                    type: TYPE,
-                                                    query: query,
-                                                    sort: [{ field: 'title' }],
-                                                    category: lib + '/' + version + '/' + category,
-                                                    id: id
-                                                }
-                                            },
-                                            id  ?
-                                                    {
-                                                        block: 'g-post',
-                                                        id: id
-                                                    }
-                                                :
-                                                    {
-                                                        block: 'g-posts',
-                                                        config: {
-                                                            query: query,
-                                                            category: lib + '/' + version + '/' + category
-                                                        }
-                                                    }
+                                            gPostsMenu,
+                                            id  ? gPost : gPosts
                                         ]
                                     }
                                 ]
@@ -87,5 +107,13 @@ block p-libraries {
                 ]
             }
         ];
+    }
+
+    libsMenu: {
+        block: 'menu',
+        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+        mods: { type: this.ctx.type },
+        type: this.ctx.type,
+        config: this.ctx.config
     }
 }

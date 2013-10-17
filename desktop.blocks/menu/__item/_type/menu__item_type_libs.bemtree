@@ -3,7 +3,7 @@ block menu, elem item, elemMod type libs {
     content: [
         {
             block: 'link',
-            url: this.elemMods['active'] == 'yes' ? null : this.ctx.url,
+            url: this.elemMods['disable'] == 'yes' ? null : this.ctx.url,
             content: this.ctx.name
         }
     ]
