@@ -9,7 +9,7 @@ block main-menu {
         apply('mainItem', this.ctx.name = 'tags'),
         apply('delimeter'),
         apply('mainItem', this.ctx.name = 'tools'),
-        apply('mainItem', this.ctx.name = 'libs'),
+        apply('mainItem', this.ctx.name = 'libs', this.ctx.url = apply('libUrl')),
         apply('delimeter'),
         apply('social', this.ctx.name = 'facebook'),
         this.data.lang == 'ru' ?
@@ -31,7 +31,7 @@ block main-menu {
             size: 'normal',
             active: apply('active', this.ctx = this.ctx.name)
         },
-        url: apply('disable', this.ctx.url = '/' + this.ctx.name),
+        url: apply('disable', this.ctx.url = '/' + (this.ctx.url || this.ctx.name)),
         name: this.ctx.name
     }
 
@@ -80,5 +80,37 @@ block main-menu {
 
     active: {
         return this.data.page === this.ctx ? 'yes' : '';
+    }
+
+    libUrl: {
+        var TYPE = 'libs',
+            categories = leJspath.find('.' + this.data.lang + '{.type === $type}.categories', { type : TYPE }),
+            result = TYPE;
+
+        if(this._.isArray(categories) && categories.length > 0) {
+            var url = categories[0].url || categories[0],
+                lib = url.split('/')[0],
+                versions = [],
+                version = null;
+
+            leJspath.find('.' + this.data.lang + '{.type === $type}' +
+                '{.categories ^== $category || .categories.url ^== $category }', {type: TYPE, category: lib })
+                .forEach(function(post) {
+                    post.categories.forEach(function(item){
+                        var url = item.url || item;
+                        versions.push(url.match(/\d+\.\d+\.\d+/)[0]);
+                    });
+                });
+
+            version = versions.sort().pop();
+
+            if(lib)
+                result += '/' + lib;
+
+            if(version)
+                result += '/' + version;
+        }
+
+        return result;
     }
 }
