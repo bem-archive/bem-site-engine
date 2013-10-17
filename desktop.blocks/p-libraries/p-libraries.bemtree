@@ -46,6 +46,17 @@ block p-libraries {
 
         substitution = this._.extend(substitution, { category: lib + '/' + version });
 
+        //поиск корневой статьи для библиотеки и показ ее если не указан id другого поста для библиотеки явно
+        var rootId = leJspath.find(predicate + '{.root == "true"}.id', substitution);
+        rootId = rootId.length > 0 ? rootId[0] : null;
+
+        if(rootId) {
+            predicate += '{.id !== $rootId}';
+            substitution = this._.extend(substitution, { rootId: rootId });
+            id = id || rootId;
+        }
+
+
         query = { predicate: predicate, substitution: substitution };
 
         var gPostsMenu = {
