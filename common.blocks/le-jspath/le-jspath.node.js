@@ -5,8 +5,9 @@ modules.define(
     'le-jspath', ['inherit', 'objects', 'yana-logger'],
     function(provide, inherit, objects, logger) {
 
-var jspath = require('jspath');
-var JsonStringify = require('json-stringify-safe');
+var jspath = require('jspath'),
+    PATH = require('path'),
+    JsonStringify = require('json-stringify-safe');
 
 provide({
 
@@ -214,20 +215,28 @@ provide({
     findCategoryAndIdByUrl: function(path, type, lang) {
         var result = null,
             posts = this.find('.' + lang + '{ .type === $type }', { type: type });
-            posts.forEach(function(post) {
-                post.categories.forEach(function(category) {
-                    if(path.indexOf('/' + post.type + '/' + (category.url || category) + '/' + post.url) !== -1) {
-                        result = { category: category.url || category,  id: post.id };
-                    }
-                    if(path.indexOf('/' + post.type + '/' + (category.url || category)) !== -1) {
-                        result = { category: category.url || category,  id: null };
-                    }
-                });
 
-                if(path.indexOf('/' + post.type + '/' + post.url) !== -1) {
-                    result = { category: null,  id: post.id };
+        posts.forEach(function(post) {
+            post.categories.forEach(function(category) {
+                if(path.indexOf('/' + PATH.join.apply(null, [post.type, (category.url || category), post.url])) !== -1) {
+                    result = { category: category.url || category,  id: post.id };
                 }
             });
+        });
+
+        result || posts.forEach(function(post) {
+            if(path.indexOf('/' + PATH.join.apply(null, [post.type, post.url])) !== -1) {
+                result = { category: null,  id: post.id };
+            }
+        });
+
+        result || posts.forEach(function(post) {
+            post.categories.forEach(function(category) {
+                if(path.indexOf('/' + PATH.join.apply(null, [post.type, (category.url || category)])) !== -1) {
+                    result = { category: category.url || category,  id: null };
+                }
+            });
+        });
 
         return result;
     },
