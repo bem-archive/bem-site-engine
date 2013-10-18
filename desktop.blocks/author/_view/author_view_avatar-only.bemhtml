@@ -4,7 +4,7 @@ block author, mod view avatar-only {
         {
             block: 'author',
             elem: 'avatar',
-            elemMods: { size: 'small' },
+            elemMods: this.ctx.content.avatar ? { size: 'small' } : { size: 'small', 'no-image': 'yes' },
             content: this.ctx.content
         }
     ]

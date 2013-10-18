@@ -9,16 +9,5 @@ block author, elem avatar {
                 alt : this.ctx.content.id
             }
         }
-
-        /*
-        !this.ctx.content.avatar, default: {
-            applyNext(
-                this.ctx.mods = this._.extend(
-                    { 'no-image': this.ctx.mods['size'] },
-                    this.ctx.mods
-                )
-            )
-        }
-        */
     }
 }
