@@ -1,3 +1,15 @@
+yandex-bem-info-www (2.0.9) unstable; urgency=low
+
+  * Test rebuild. Verify fix for author avatar loading
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Fri, 18 Oct 2013 18:24:57 +0400
+
+yandex-bem-info-www (2.0.8ubuntu1) precise; urgency=low
+
+  * Test rebuild. Verify fix for author avatar loading
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Fri, 18 Oct 2013 18:21:35 +0400
+
 yandex-bem-info-www (2.0.8) unstable; urgency=low
 
   * Test rebuild. Bug fixes and new features
