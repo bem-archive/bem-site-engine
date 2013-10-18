@@ -11,11 +11,15 @@ block author {
                id;
 
         this.doAsync(
-            leDatasrc.isExist.bind(leDatasrc, author.relative, 'png')
+            leDatasrc.isExist.bind(leDatasrc, author, 'png')
         )
         .then(
             function(result) {
-                author.avatar = this.data.yaApiHosts.datasrc.host + '/' + author.relative + '.png';
+                author.avatar = this.data.yaApiHosts.datasrc.host +
+                '/' + author.relative +
+                '/' + author.url +
+                '.png';
+
                 return author;
             },
             function(err) {

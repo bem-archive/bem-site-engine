@@ -77,8 +77,8 @@ provide({
     },
 
 
-    isExist: function(path, extention) {
-        return FS.isFile(PATH.join.apply(null, [datasrc.root, path]) + '.png');
+    isExist: function(source, extention) {
+        return FS.isFile(PATH.join.apply(null, [datasrc.root, source.relative, source.url]) + '.png');
     }
 });
 
