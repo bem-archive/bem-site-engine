@@ -24,3 +24,9 @@
 {
     display: inline-block;
 }
+
+.post_view_full .post__authorAvatar
+{
+    margin-top: 15px;
+    vertical-align: top;
+}
