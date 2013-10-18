@@ -7,6 +7,8 @@ modules.define(
     function(provide, fileProvider, config, HttpError, logger) {
 
 var PATH = require('path'),
+    FS = require('vow-fs'),
+    Vow = require('vow'),
     datasrc = config.hosts.datasrc;
 
 provide({
@@ -72,8 +74,12 @@ provide({
         }
 
         return data;
-    }
+    },
 
+
+    isExist: function(path, extention) {
+        return FS.isFile(PATH.join.apply(null, [datasrc.root, path]) + '.png');
+    }
 });
 
 });
