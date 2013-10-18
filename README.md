@@ -15,7 +15,7 @@ bem-info
 ### 2 Устанавливаем сборщик данных как git submodule
 
 ```
-% git submodule add https://github.com/tormozz48/bem-info-source datasrc
+% git submodule add -f https://github.com/tormozz48/bem-info-source datasrc
 ```
 
 ### 3. Устанавливаем зависимости
