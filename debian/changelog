@@ -1,3 +1,15 @@
+yandex-bem-info-www (2.0.7) unstable; urgency=low
+
+  * Test rebuild
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Wed, 16 Oct 2013 19:38:04 +0400
+
+yandex-bem-info-www (2.0.6) unstable; urgency=low
+
+  * Test rebuild
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Wed, 16 Oct 2013 16:49:39 +0400
+
 yandex-bem-info-www (2.0.5) unstable; urgency=low
 
   * Rebuild with more changes
