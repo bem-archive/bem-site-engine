@@ -9,7 +9,7 @@ module.exports = {
     app : {
         env : 'development',
         //port : 3014,
-        socket : PATH.join(OS.tmpdir(), socket),
+        socket : PATH.join('/tmp', socket),
         workers : 1
     },
     logger : {

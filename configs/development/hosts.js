@@ -17,6 +17,6 @@ module.exports = {
     },
     datasrc : {
         host : '/datasrc',
-        root : '/usr/lib/yandex/bem-info-www/datasrc'
+        root : PATH.join(appRoot, 'datasrc')
     }
 };
