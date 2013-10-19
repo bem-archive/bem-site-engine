@@ -1,44 +1,43 @@
 block p-articles {
 
     content: {
-        var TYPE = 'articles';
-
-        var data = this.data,
+        var TYPE = 'articles',
+            data = this.data,
             res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
             id = res && res.id,
             category = res && res.category,
             articlesQuery = {
                 predicate: '.' + data.lang + '{.type === $type}',
                 substitution: { type: TYPE }
+            },
+            menu = {
+                block: 'g-posts-menu',
+                config: {
+                    type: TYPE,
+                    query: articlesQuery,
+                    sort: [{ field:  'title' }],
+                    category: category,
+                    id: id
+                }
+            },
+            post = {
+                block: 'g-post',
+                id: id
+            },
+            posts = {
+                block: 'g-posts',
+                config: {
+                    query: articlesQuery,
+                    sort: [{ field:  'title' }],
+                    category: category
+                }
             };
 
         return [
             {
                 block: 'layout',
                 mods: { section: 'p-menu', size: 'wide' },
-                content: [
-                    {
-                        block: 'g-posts-menu',
-                        config: {
-                            type: TYPE,
-                            query: articlesQuery,
-                            category: category,
-                            id: id
-                        }
-                    },
-                    id  ?   {
-                                block: 'g-post',
-                                id: id
-                            }
-                        :
-                            {
-                                block: 'g-posts',
-                                config: {
-                                    query: articlesQuery,
-                                    category: category
-                                }
-                            }
-                ]
+                content: [ menu, id ? post : posts ]
             }
         ];
     }
