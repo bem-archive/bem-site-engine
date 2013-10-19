@@ -2,47 +2,42 @@ block p-news {
 
     content: {
         var TYPE = 'news';
-
-        var data = this.data,
+            data = this.data,
             res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
             id = res && res.id,
             category = res && res.category;
-
-        var articlesQuery = {
-            predicate: '.' + data.lang + '{.type === $type}',
-            substitution: { type: TYPE }
-        };
+            articlesQuery = {
+                predicate: '.' + data.lang + '{.type === $type}',
+                substitution: { type: TYPE }
+            },
+            menu = {
+                block: 'g-posts-menu',
+                config: {
+                    type: TYPE,
+                    query: articlesQuery,
+                    sort: [{ field:  'createDate', direction: 'desc' }],
+                    category: category,
+                    id: id
+                }
+            },
+            post = {
+                block: 'g-post',
+                id: id
+            },
+            posts = {
+                block: 'g-posts',
+                config: {
+                    query: articlesQuery,
+                    sort: [{ field:  'createDate', direction: 'desc' }],
+                    category: category
+                }
+            };
 
         return [
             {
                 block: 'layout',
                 mods: { section: 'p-menu', size: 'wide' },
-                content: [
-                    {
-                        block: 'g-posts-menu',
-                        config: {
-                            type: TYPE,
-                            query: articlesQuery,
-                            sort: [{ field:  'createDate', direction: 'desc' }],
-                            category: category,
-                            id: id
-                        }
-                    },
-                    id  ?
-                            {
-                                block: 'g-post',
-                                id: id
-                            }
-                        :
-                            {
-                                block: 'g-posts',
-                                config: {
-                                    query: articlesQuery,
-                                    sort: [{ field:  'createDate', direction: 'desc' }],
-                                    category: category
-                                }
-                            }
-                ]
+                content: [ menu, id ? post : posts ]
             }
         ];
     }
