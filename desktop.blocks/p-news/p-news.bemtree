@@ -1,15 +1,19 @@
 block p-news {
 
     content: {
-        var TYPE = 'news';
+        var TYPE = 'news',
             data = this.data,
             res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
             id = res && res.id,
-            category = res && res.category;
+            category = res && res.category,
+
+            //объект с параметрами запроса для получения данных
             articlesQuery = {
                 predicate: '.' + data.lang + '{.type === $type}',
                 substitution: { type: TYPE }
             },
+
+            //блок меню с постами типа articles
             menu = {
                 block: 'g-posts-menu',
                 config: {
@@ -20,10 +24,14 @@ block p-news {
                     id: id
                 }
             },
+
+            //блок отдельного поста (показывается если был найден id)
             post = {
                 block: 'g-post',
                 id: id
             },
+
+            //список постов с развернутой мета-информацией
             posts = {
                 block: 'g-posts',
                 config: {
