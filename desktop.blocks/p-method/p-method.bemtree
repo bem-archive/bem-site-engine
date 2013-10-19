@@ -1,53 +1,59 @@
 block p-method {
 
     content: {
-        var TYPE = 'method';
-
-        var data = this.data,
+        var TYPE = 'method',
+            data = this.data,
             res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
             id = res && res.id,
             category = res && res.category,
-            rootId = leJspath.findRootPostId(TYPE, data.lang);
+            rootId = leJspath.findRootPostId(TYPE, data.lang),
+            articlesQuery = null,
+            menu = null,
+            post = null,
+            posts = null;
 
         //если id статьи методологии не был передан, то пытаемся найти корневую статью
         id = id || rootId;
 
-        //в меню статей отображаем все посты
-        var articlesQuery = {
+        //в меню постов методологии отображаем все посты кроме корневого
+        articlesQuery = {
             predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
             substitution: { type: TYPE, rootId: rootId }
+        };
+
+        //блок меню с постами типа method
+        menu = {
+            block: 'g-posts-menu',
+            config: {
+                type: TYPE,
+                query: articlesQuery,
+                sort: [{ field: 'order' }],
+                category: category,
+                id: id
+            }
+        };
+
+        //блок отдельного поста (показывается если был найден id)
+        post = {
+            block: 'g-post',
+            id: id
+        };
+
+        //список постов с развернутой мета-информацией
+        posts = {
+            block: 'g-posts',
+            config: {
+                query: articlesQuery,
+                sort: [{ field: 'order' }],
+                category: category
+            }
         };
 
         return [
             {
                 block: 'layout',
                 mods: { section: 'p-menu' },
-                content: [
-                    {
-                        block: 'g-posts-menu',
-                        config: {
-                            type: TYPE,
-                            query: articlesQuery,
-                            sort: [{ field: 'order' }],
-                            category: category,
-                            id: id
-                        }
-                    },
-                    id  ?
-                            {
-                                block: 'g-post',
-                                id: id
-                            }
-                        :
-                            {
-                                block: 'g-posts',
-                                config: {
-                                    query: articlesQuery,
-                                    sort: [{ field: 'order' }],
-                                    category: category
-                                }
-                            }
-                ]
+                content: [ menu, id ? post : posts ]
             }
         ];
     }
