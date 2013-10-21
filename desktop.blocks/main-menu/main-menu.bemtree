@@ -15,7 +15,8 @@ block main-menu {
         this.data.lang == 'ru' ?
         apply('social', this.ctx.name = 'yaru') : null,
         apply('social', this.ctx.name = 'twitter'),
-        apply('langSwitcher')
+        apply('langSwitcher'),
+        { block: 'search' }
     ]
 
     //логотип сайта

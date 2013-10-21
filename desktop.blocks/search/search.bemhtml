@@ -1,0 +1,41 @@
+block search {
+
+    tag: 'form'
+
+    attrs: {
+        action: this.ctx.action || 'http://yandex.ru/sitesearch',
+        method: 'get',
+        target: '_blank'
+    }
+
+    content: [
+        {
+            elem: 'hidden1',
+            tag: 'input',
+            attrs: {
+                type: 'hidden',
+                name: 'searchid',
+                value: '1944806'
+            }
+        },
+        {
+            elem: 'hidden2',
+            tag: 'input',
+            attrs: {
+                type: 'hidden',
+                name: 'l10n',
+                value: 'ru'
+            }
+        },
+        {
+            elem: 'hidden3',
+            tag: 'input',
+            attrs: {
+                type: 'hidden',
+                name: 'reqenc',
+                value: ''
+            }
+        },
+        applyNext()
+    ]
+}
