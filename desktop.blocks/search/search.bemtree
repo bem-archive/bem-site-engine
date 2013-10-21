@@ -1,0 +1,34 @@
+block search {
+
+    default: {
+        return applyCtx(this._.extend(this.ctx, {action : apply('action')}))
+    }
+
+    content: [
+        {
+            block : 'input',
+            name : 'text',
+            val : ''
+        },
+        {
+            block : 'button',
+            type: 'submit'
+        }
+    ]
+
+    action: {
+        var action = 'http://yandex.';
+        switch (this.data.lang) {
+            case 'en':
+                action += 'com'
+                break;
+            case 'ru':
+                action += 'ru'
+                break;
+        }
+
+        action += '/sitesearch';
+
+        return action;
+    }
+}
