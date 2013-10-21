@@ -1,13 +1,14 @@
 .search
 {
     position: absolute;
-    bottom: 10px;
-    left: 23px;
+    bottom: 5px;
+    left: 10px;
 }
 
-.search .input
+.search .input__control
 {
-    background-color: #f00;
+    width: 178px;
+    height: 16px;
 }
 
 .search .button
@@ -17,7 +18,10 @@
 
     background: url('search.svg') no-repeat;
 
-    margin-left: -20px;
+    position: absolute;
+    top: 3px;
+    right: 0;
+
     width: 20px;
     height: 20px;
 
