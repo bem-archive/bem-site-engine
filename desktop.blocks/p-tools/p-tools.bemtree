@@ -36,43 +36,56 @@ block p-tools {
             }
         }
 
-        var categories = {
+        var toolsMenu = {
+            block: 'g-tools-menu',
+            type: TYPE,
+            category: category
+        },
+
+        //меню для отображения для выбранного инструмента
+        postsMenu = {
+            block: 'g-posts-menu',
+            config: {
+                type: TYPE,
+                query: articlesQuery,
+                sort: [{ field: 'title' }],
+                category: category,
+                id: id
+            }
+        },
+
+        //отображение единичного поста
+        post = {
+            block: 'g-post',
+            id: id
+        },
+
+        //список постов с развернутой мета-информацией
+        posts = {
+            block: 'g-posts',
+            config: {
+                query: articlesQuery,
+                category: category
+            }
+        },
+
+        //блок объединяющий меню постов по конкретному инструменту
+        //и список постов в развернутом виде или конкретный пост
+        //в зависимости от наличия или отсутствия переданного id
+        tool = {
             block: 'center',
             mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
             content: [
                 {
                    block: 'layout',
                     mods: { section: 'p-menu' },
-                    content: [
-                        {
-                            block: 'g-posts-menu',
-                            config: {
-                                type: TYPE,
-                                query: articlesQuery,
-                                sort: [{ field: 'title' }],
-                                category: category,
-                                id: id
-                            }
-                        },
-                        id  ?
-                                {
-                                    block: 'g-post',
-                                    id: id
-                                }
-                            :
-                                {
-                                    block: 'g-posts',
-                                    config: {
-                                        query: articlesQuery,
-                                        category: category
-                                    }
-                                }
-                    ]
+                    content: [ postsMenu, id ? post : posts ]
                 }
             ]
-        };
+        },
 
-        var rootPost = {
+        //корневой пост для раздела инструментов
+        rootPost = {
             block: 'center',
             mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
             content: {
@@ -86,12 +99,8 @@ block p-tools {
                 block: 'layout',
                 mods: {section: 'p-menu'},
                 content: [
-                    {
-                        block: 'g-tools-menu',
-                        type: TYPE,
-                        category: category
-                    },
-                    category ? categories : (id ? rootPost : categories)
+                    toolsMenu,
+                    (!category && id) ? rootPost : tool
                 ]
             }
         ];
