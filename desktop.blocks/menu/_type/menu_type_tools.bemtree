@@ -77,13 +77,6 @@ block menu, mod type tools{
         //сортируем массив с элементами меню так, чтобы простые элементы отображались сверху
         //а имеющие вложенность снизу
         items.sort(function(a, b){
-            // if(a.items && b.items) {
-            //     return a.items.length > b.items.length;
-            // }else if(a.items && !b.items) {
-            //     return 1;
-            // }else if(!a.items && b.items) {
-            //     return -1;
-            // }else
             if(orderHash[a.key] && orderHash[b.key]) {
                 return orderHash[a.key] - orderHash[b.key];
             }else {
@@ -153,7 +146,7 @@ block menu, mod type tools{
         if(isComplex) {
             Object.getOwnPropertyNames(item).filter(function(key) {
                  return ['id', 'name', 'key'].indexOf(key) < 0;
-            }).forEach(function(key) {
+            }).sort().forEach(function(key) {
                  apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item[key] }));
             });
         }
