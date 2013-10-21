@@ -7,7 +7,8 @@ block p-tools {
             res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
             id = res && res.id,
             category = res && res.category,
-            articlesQuery = null;
+            articlesQuery = null,
+            isOnlyOnePost = false;
 
         if(category) {
             var predicate = '.' + data.lang + '{.type === $type}' +
@@ -26,6 +27,14 @@ block p-tools {
                 predicate: predicate,
                 substitution: { type: TYPE, category: category }
             };
+
+            //проверка на то, что для данного инструмента есть только один пост
+            //если это так, то показываем его в развернутом виде а меню постов прячем
+            var source = leJspath.find(articlesQuery.predicate, articlesQuery.substitution);
+            if(this._.isArray(source) && source.length == 1) {
+                isOnlyOnePost = true;
+                id = source[0].id;
+            }
         }else {
             id = leJspath.findRootPostId(TYPE, data.lang);
             if(!id) {
@@ -100,7 +109,7 @@ block p-tools {
                 mods: {section: 'p-menu'},
                 content: [
                     toolsMenu,
-                    (!category && id) ? rootPost : tool
+                    (!category && id) || (isOnlyOnePost && id) ? rootPost : tool
                 ]
             }
         ];
