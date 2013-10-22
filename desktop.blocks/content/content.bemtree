@@ -17,69 +17,26 @@ block content {
         ];
     }
 
-    //страница методологии
-    method: {
+    p-block: {
         return apply(this._mode = '', this.ctx = {
-            block: 'p-method',
+            block: this.ctx.name,
             mix: this.ctx.layout
         });
     }
 
-    //страница библиотек
-    libs: {
-        return apply(this._mode = '', this.ctx = {
-            block: 'p-libraries',
-            mix: this.ctx.layout
-        });
-    }
+    method:     apply('p-block', this.ctx.name = 'p-method')
 
-    //страница для отображения статей /articles
-    articles: {
-        return apply(this._mode = '', this.ctx = {
-            block: 'p-articles',
-            mix: this.ctx.layout
-        });
-    }
+    libs:       apply('p-block', this.ctx.name = 'p-libraries')
 
-    //страница инструментов /tools
-    tools: {
-        return apply(this._mode = '', this.ctx = {
-            block: 'p-tools',
-            mix: this.ctx.layout
-        });
-    }
+    articles:   apply('p-block', this.ctx.name = 'p-articles')
 
-    //страница блога /news
-    news: {
-        return apply(this._mode = '', this.ctx = {
-            block: 'p-news',
-            mix: this.ctx.layout
-        });
-    }
+    tools:      apply('p-block', this.ctx.name = 'p-tools')
 
-    //страница авторов /authors
-    authors: {
-        return apply(this._mode = '', this.ctx = {
-            block: 'p-authors',
-            mix: this.ctx.layout,
-            id: this.data.params.id
-        });
-    }
+    news:       apply('p-block', this.ctx.name = 'p-news')
 
-    //страница поиска по тегам /tags
-    tags: {
-        return apply(this._mode = '', this.ctx = {
-            block: 'p-tags',
-            mix: this.ctx.layout,
-            id: this.data.params.id
-        });
-    }
+    authors:    apply('p-block', this.ctx.name = 'p-authors')
 
-    //главная страница сайта
-    index: {
-        return apply(this._mode = '', this.ctx = {
-            block: 'p-index',
-            mix: this.ctx.layout
-        });
-    }
+    tags:       apply('p-block', this.ctx.name = 'p-tags')
+
+    index:      apply('p-block', this.ctx.name = 'p-index')
 }

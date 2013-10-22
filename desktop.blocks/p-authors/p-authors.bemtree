@@ -1,5 +1,9 @@
 block p-authors {
 
+    default: {
+        return applyCtx(this._.extend(this.ctx, { id: this.data.params.id }))
+    }
+
     content: [ this.ctx.id ? apply('author') : apply('authors') ]
 
 
@@ -10,8 +14,6 @@ block p-authors {
         var data = this.data,
             buf = [],
             self = this;
-            //id = leJspath.findIdByTypeAndUrl('authors', this.ctx.id, data.lang) ||
-                 //leJspath.findIdByTypeAndUrl('translators', this.ctx.id, data.lang);
 
         //блок персональной информации об авторе
         buf.push({
@@ -79,16 +81,24 @@ block p-authors {
         var buf = [], //массив вывода контента
             data = this.data;
 
-        //выбираем все сущности с типом authors для данной локализации
-        var source = leJspath.filter([{ field: 'type', operand: '===', value: 'authors' }], data.lang);
-
-        //сортируем в алфавитном порядке по фамилии и имени
-        source = leJspath.sort(source, [{ field: 'lastName' }, { field: 'firstName' }]);
-
         //собираем контент из блоков
         buf.push({
             block: 'authors',
-            content: source.map(function(item) {
+            content: leJspath.sort(
+                leJspath.filter(
+                [
+                    {
+                        field: 'type',
+                        operand: '===',
+                        value: 'authors'
+                    }
+                ], data.lang),
+                [
+                    { field: 'lastName' },
+                    { field: 'firstName' }
+                ]
+            )
+            .map(function(item) {
                 return {
                     block: 'author',
                     mods: { view: 'grid-cell' },

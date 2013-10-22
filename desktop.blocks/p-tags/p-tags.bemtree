@@ -1,5 +1,9 @@
 block p-tags {
 
+    default: {
+        return applyCtx(this._.extend(this.ctx, { id: this.data.params.id }))
+    }
+
     content: {
         var id = this.ctx.id,
             data = this.data,
