@@ -1,80 +1,38 @@
 block p-tools {
 
     content: {
-        var TYPE = 'tools';
+        var _q = this.data._q,
 
-        var data = this.data,
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
-            id = res && res.id,
-            category = res && res.category,
-            articlesQuery = null,
-            isOnlyOnePost = false;
-
-        if(category) {
-            var predicate = '.' + data.lang + '{.type === $type}' +
-                '{.categories === $category || .categories.url === $category}';
-
-            var rootId = leJspath.findRootPostIdByCategory(TYPE, category, data.lang);
-            if(rootId) {
-                predicate +=  '{.id !== "' + rootId + '"}';
-            }
-
-            if(!id && rootId){
-                id = rootId;
-            }
-
-            articlesQuery = {
-                predicate: predicate,
-                substitution: { type: TYPE, category: category }
-            };
-
-            //проверка на то, что для данного инструмента есть только один пост
-            //если это так, то показываем его в развернутом виде а меню постов прячем
-            var source = leJspath.find(articlesQuery.predicate, articlesQuery.substitution);
-            if(this._.isArray(source) && source.length == 1) {
-                isOnlyOnePost = true;
-                id = source[0].id;
-            }
-        }else {
-            id = leJspath.findRootPostId(TYPE, data.lang);
-            if(!id) {
-                articlesQuery = {
-                    predicate: '.' + data.lang + '{.type === $type}',
-                    substitution: { type: TYPE }
-                }
-            }
-        }
-
-        var toolsMenu = {
+        toolsMenu = {
             block: 'g-tools-menu',
-            type: TYPE,
-            category: category
+            type: _q.type,
+            category: _q.category
         },
 
         //меню для отображения для выбранного инструмента
         postsMenu = {
             block: 'g-posts-menu',
             config: {
-                type: TYPE,
-                query: articlesQuery,
+                type: _q.type,
+                query: _q.query,
                 sort: [{ field: 'title' }],
-                category: category,
-                id: id
+                category: _q.category,
+                id: _q.id
             }
         },
 
         //отображение единичного поста
         post = {
             block: 'g-post',
-            id: id
+            id: _q.id
         },
 
         //список постов с развернутой мета-информацией
         posts = {
             block: 'g-posts',
             config: {
-                query: articlesQuery,
-                category: category
+                query: _q.query,
+                category: _q.category
             }
         },
 
@@ -88,7 +46,7 @@ block p-tools {
                 {
                    block: 'layout',
                     mods: { section: 'p-menu' },
-                    content: [ postsMenu, id ? post : posts ]
+                    content: [ postsMenu, _q.id ? post : posts ]
                 }
             ]
         },
@@ -99,7 +57,7 @@ block p-tools {
             mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
             content: {
                 block: 'g-post',
-                id: id
+                id: _q.id
             }
         };
 
@@ -109,7 +67,7 @@ block p-tools {
                 mods: {section: 'p-menu'},
                 content: [
                     toolsMenu,
-                    (!category && id) || (isOnlyOnePost && id) ? rootPost : tool
+                    (!_q.category && _q.id) || (_q.isOnlyOnePost && _q.id) ? rootPost : tool
                 ]
             }
         ];

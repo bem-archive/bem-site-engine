@@ -79,7 +79,57 @@ block b-page {
     }
 
     tools: {
+        var data = this.data,
+            type = data.page,
+            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang),
 
+            id = res && res.id,
+            category = res && res.category,
+            query = null,
+            isOnlyOnePost = false;
+
+        if(category) {
+            var predicate = '.' + data.lang + '{.type === $type}' +
+                '{.categories === $category || .categories.url === $category}';
+
+            var rootId = leJspath.findRootPostIdByCategory(type, category, data.lang);
+            if(rootId) {
+                predicate +=  '{.id !== "' + rootId + '"}';
+            }
+
+            if(!id && rootId){
+                id = rootId;
+            }
+
+            query = {
+                predicate: predicate,
+                substitution: { type: type, category: category }
+            };
+
+            //проверка на то, что для данного инструмента есть только один пост
+            //если это так, то показываем его в развернутом виде а меню постов прячем
+            var source = leJspath.find(query.predicate, query.substitution);
+            if(this._.isArray(source) && source.length == 1) {
+                isOnlyOnePost = true;
+                id = source[0].id;
+            }
+        }else {
+            id = leJspath.findRootPostId(type, data.lang);
+            if(!id) {
+                query = {
+                    predicate: '.' + data.lang + '{.type === $type}',
+                    substitution: { type: type }
+                }
+            }
+        }
+
+        this.data._q = {
+            type: type,
+            id: id,
+            category: category,
+            query: query,
+            isOnlyOnePost: isOnlyOnePost
+        };
     }
 
     news: {
