@@ -1,51 +1,34 @@
 block p-method {
 
     content: {
-        var TYPE = 'method',
-            data = this.data,
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
-            id = res && res.id,
-            category = res && res.category,
-            rootId = leJspath.findRootPostId(TYPE, data.lang),
-            articlesQuery = null,
-            menu = null,
-            post = null,
-            posts = null;
 
-        //если id статьи методологии не был передан, то пытаемся найти корневую статью
-        id = id || rootId;
-
-        //в меню постов методологии отображаем все посты кроме корневого
-        articlesQuery = {
-            predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
-            substitution: { type: TYPE, rootId: rootId }
-        };
+        var _q = this.data._q,
 
         //блок меню с постами типа method
         menu = {
             block: 'g-posts-menu',
             config: {
-                type: TYPE,
-                query: articlesQuery,
+                type: _q.type,
+                query: _q.query,
                 sort: [{ field: 'order' }],
-                category: category,
-                id: id
+                category: _q.category,
+                id: _q.id
             }
-        };
+        },
 
         //блок отдельного поста (показывается если был найден id)
         post = {
             block: 'g-post',
-            id: id
-        };
+            id: _q.id
+        },
 
         //список постов с развернутой мета-информацией
         posts = {
             block: 'g-posts',
             config: {
-                query: articlesQuery,
+                query: _q.query,
                 sort: [{ field: 'order' }],
-                category: category
+                category: _q.category
             }
         };
 
@@ -53,7 +36,7 @@ block p-method {
             {
                 block: 'layout',
                 mods: { section: 'p-menu' },
-                content: [ menu, id ? post : posts ]
+                content: [ menu, _q.id ? post : posts ]
             }
         ];
     }

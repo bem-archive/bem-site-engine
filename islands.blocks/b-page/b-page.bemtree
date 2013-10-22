@@ -19,7 +19,8 @@ block b-page {
     head: {
         return applyCtx([
             { elem : 'css' },
-            { elem : 'js'}
+            { elem : 'js'}, // TODO: move js to the bottom
+            { elem: 'meta', attrs: { name: 'description', content: this.data.description }}
         ]);
     }
 

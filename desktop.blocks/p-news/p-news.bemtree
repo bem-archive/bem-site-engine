@@ -1,43 +1,35 @@
 block p-news {
 
     content: {
-        var TYPE = 'news',
-            data = this.data,
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, TYPE, data.lang),
-            id = res && res.id,
-            category = res && res.category,
+            console.debug('p-news start');
 
-            //объект с параметрами запроса для получения данных
-            articlesQuery = {
-                predicate: '.' + data.lang + '{.type === $type}',
-                substitution: { type: TYPE }
-            },
+            var _q = this.data._q,
 
             //блок меню с постами типа articles
             menu = {
                 block: 'g-posts-menu',
                 config: {
-                    type: TYPE,
-                    query: articlesQuery,
+                    type: _q.type,
+                    query: _q.query,
                     sort: [{ field:  'createDate', direction: 'desc' }],
-                    category: category,
-                    id: id
+                    category: _q.category,
+                    id: _q.id
                 }
             },
 
             //блок отдельного поста (показывается если был найден id)
             post = {
                 block: 'g-post',
-                id: id
+                id: _q.id
             },
 
             //список постов с развернутой мета-информацией
             posts = {
                 block: 'g-posts',
                 config: {
-                    query: articlesQuery,
+                    query: _q.query,
                     sort: [{ field:  'createDate', direction: 'desc' }],
-                    category: category
+                    category: _q.category
                 }
             };
 
@@ -45,7 +37,7 @@ block p-news {
             {
                 block: 'layout',
                 mods: { section: 'p-menu', size: 'wide' },
-                content: [ menu, id ? post : posts ]
+                content: [ menu, _q.id ? post : posts ]
             }
         ];
     }

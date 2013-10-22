@@ -1,10 +1,139 @@
 block b-page {
 
     default: {
-        this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.page },
-            this.ctx.mods);
-        return applyCtx(this.ctx);
+        return this.doAsync(
+                leDatasrc.loadData.bind(leDatasrc, {})
+            )
+            .then(
+                function(result) {
+                    apply('afterLoadData', this.ctx.result = result);
+                    this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.page }, this.ctx.mods);
+                    return applyCtx(this.ctx);
+                },
+                function(err) {
+                    return apply('error', this.ctx = err);
+                },
+                this
+            );
     }
+
+    afterLoadData: {
+        console.debug('after load data start');
+
+        leJspath.setSource(this.ctx.result); //кешируем данные
+        this.data._r = {
+            'method':   function() { return apply('method') },
+            'libs':     function() { return apply('libs') },
+            'articles': function() { return apply('articles') },
+            'tools':    function() { return apply('tools') },
+            'news':     function() { return apply('news') },
+            'authors':  function() { return apply('authors') },
+            'tags':     function() { return apply('tags') },
+            'index':    function() { return apply('index') }
+        };
+
+        console.debug('function = ' + this.data._r[this.data.page]);
+
+        this.data._r[this.data.page].call(this);
+
+        console.debug('after load data end');
+    }
+
+    method: {
+        var data = this.data,
+            type = data.page,
+            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang),
+            rootId = leJspath.findRootPostId(type, data.lang);
+
+        this.data._q = {
+            type: type,
+            id: (res && res.id) || rootId,
+            category: res && res.category,
+            query: {
+                predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
+                substitution: { type: type, rootId: rootId }
+            }
+        };
+    }
+
+    libs: {
+
+    }
+
+    articles: {
+        console.debug('apply articles start');
+
+        var data = this.data,
+            type = data.page,
+            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+
+        this.data._q = {
+            type: type,
+            id: res && res.id,
+            category: res && res.category,
+            query: {
+                predicate: '.' + data.lang + '{.type === $type}',
+                substitution: { type: type }
+            }
+        };
+    }
+
+    tools: {
+
+    }
+
+    news: {
+        console.debug('apply news start');
+
+        var data = this.data,
+            type = data.page,
+            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+
+        this.data._q = {
+            type: type,
+            id: res && res.id,
+            category: res && res.category,
+            query: {
+                predicate: '.' + data.lang + '{.type === $type}',
+                substitution: { type: type }
+            }
+        };
+    }
+
+    authors: {
+
+    }
+
+    tags: {
+
+    }
+
+    index: {
+
+    }
+
+    //createTitleAndMeta: {
+        // var title = null;
+
+        // if(this.data._q) {
+        //     var type = this.data._q.type,
+        //         id = this.data._q.id;
+
+        //     var  source =
+        // }
+
+        // var meta = [];
+
+        // meta.push({
+        //     tag: 'meta',
+        //     attrs: { 'name': 'description', content: '' }
+        // });
+
+        // meta.push({
+        //     tag: 'meta',
+        //     attrs: { 'name': 'keywords  ', content: '' }
+        // });
+    //}
 
     content: [
         { block : 'content' }

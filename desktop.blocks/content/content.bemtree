@@ -1,86 +1,35 @@
 block content {
 
     default: {
-        return applyNext(
-            this._datasrc = this.data.params);
+        return applyCtx(this._.extend(this.ctx, {
+            layout: {
+                block : 'layout',
+                elem : 'col',
+                mods: { type: 'center' }
+            }
+        }));
     }
 
     content: {
-        return this.doAsync(
-                leDatasrc.loadData.bind(leDatasrc, {})
-            )
-            .then(
-                function(result) {
-                    leJspath.setSource(result); //кешируем данные
-                    return apply('processData');
-                },
-                function(err) {
-                    return apply('error', this.ctx = err);
-                },
-                this
-            );
-    }
-
-    processData: {
-        this.layout = { block : 'layout', elem : 'col', mods: {type: 'center'} };
-
-        var data = this.data, //объект хранящий request, response и.т.д
-            page = data.page, //страница сайта [method, libraries, tools, articles, news, authors, tags, index]
-            buf = [];
-
-        console.debug('PAGE = ' + page);
-
-        // leJspath.stringify(data);
-
-        //отрисовка главного меню сайта
-        buf.push(apply(this._mode = '', this.ctx = { block: 'main-menu' }));
-
-        switch(page) {
-            case 'method':
-                buf.push(apply('method'));
-                break;
-            case 'libs':
-                buf.push(apply('libraries'));
-                break;
-            case 'articles':
-                buf.push(apply('articles'));
-                break;
-            case 'tools':
-                buf.push(apply('tools'));
-                break;
-            case 'news':
-                buf.push(apply('news'));
-                break;
-            case 'authors':
-                buf.push(apply('authors'));
-                break;
-            case 'tags':
-                buf.push(apply('tags'));
-                break;
-            case 'index':
-                buf.push(apply('index'));
-                break;
-            default :
-                buf.push(apply('index'));
-                break;
-        }
-
-        return buf;
+        return [
+            apply(this._mode = '', this.ctx = { block: 'main-menu' }),
+            this.data._r[this.data.page].call(this)
+        ];
     }
 
     //страница методологии
     method: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-method',
-            mix: this.layout
+            mix: this.ctx.layout
         });
     }
 
     //страница библиотек
-    libraries: {
+    libs: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-libraries',
-            mix: this.layout
+            mix: this.ctx.layout
         });
     }
 
@@ -88,7 +37,7 @@ block content {
     articles: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-articles',
-            mix: this.layout
+            mix: this.ctx.layout
         });
     }
 
@@ -96,7 +45,7 @@ block content {
     tools: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-tools',
-            mix: this.layout
+            mix: this.ctx.layout
         });
     }
 
@@ -104,7 +53,7 @@ block content {
     news: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-news',
-            mix: this.layout
+            mix: this.ctx.layout
         });
     }
 
@@ -112,7 +61,7 @@ block content {
     authors: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-authors',
-            mix: this.layout,
+            mix: this.ctx.layout,
             id: this.data.params.id
         });
     }
@@ -121,7 +70,7 @@ block content {
     tags: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-tags',
-            mix: this.layout,
+            mix: this.ctx.layout,
             id: this.data.params.id
         });
     }
@@ -130,7 +79,7 @@ block content {
     index: {
         return apply(this._mode = '', this.ctx = {
             block: 'p-index',
-            mix: this.layout
+            mix: this.ctx.layout
         });
     }
 }

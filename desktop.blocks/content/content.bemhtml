@@ -4,7 +4,7 @@ block content {
         applyCtx({
             block : 'body',
             mix: { block: 'layout', mods: {section: 'p-menu'} },
-            content : this.ctx.content._res
+            content : this.ctx.content
         })
     }
 
