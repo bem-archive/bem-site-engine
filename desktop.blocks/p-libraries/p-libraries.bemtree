@@ -1,84 +1,29 @@
 block p-libraries {
 
     content: {
-        var TYPE = 'libs';
 
-        var data = this.data,
-            lib = data.params['lib'] || null,
-            version = data.params['version'] || null,
-            category = data.params['category'] || null,
-            id = data.params['id'],
-            predicate = '.' + data.lang + '{ .type == $type }',
-            substitution = { type: TYPE },
-            query = null;
+        var _q = this.data._q,
 
-        id = leJspath.findIdByTypeAndUrl(TYPE, id || category, data.lang);
-
-        //В случае когда не указана библиотека, т.е. url = /libs,
-        //то выбирается первая попавшаяся библиотека
-        if(!lib) {
-            var categories = leJspath.find('.' + this.data.lang + '{.type === $type}.categories',
-                { type : TYPE });
-
-            if(this._.isArray(categories) && categories.length > 0) {
-                var url = categories[0].url || categories[0];
-                lib = url.split('/')[0];
-            }
-        }
-
-        predicate += '{.categories ^== $category || .categories.url ^== $category }';
-        substitution = this._.extend(substitution, { category: lib });
-
-        //если не указана версия, то выбирается самая новая для данной библиотеки
-        if(!version) {
-            var versions = [];
-            leJspath.find(predicate, substitution).forEach(function(post) {
-                post.categories.forEach(function(item){
-                    var url = item.url || item;
-                    versions.push(url.match(/\d+\.\d+\.\d+/)[0]);
-                });
-            });
-
-            version = versions.sort().pop();
-        }
-
-        console.debug('lib = %s version = %s category = %s id = %s', lib, version, category, id);
-
-        substitution = this._.extend(substitution, { category: lib + '/' + version });
-
-        //поиск корневой статьи для библиотеки и показ ее если не указан id другого поста для библиотеки явно
-        var rootId = leJspath.find(predicate + '{.root == "true"}.id', substitution);
-        rootId = rootId.length > 0 ? rootId[0] : null;
-
-        if(rootId) {
-            predicate += '{.id !== $rootId}';
-            substitution = this._.extend(substitution, { rootId: rootId });
-            id = id || rootId;
-        }
-
-
-        query = { predicate: predicate, substitution: substitution };
-
-        var gPostsMenu = {
+        gPostsMenu = {
             block: 'g-posts-menu',
             mods: { type: 'mixed' },
             config: {
-                type: TYPE,
-                query: query,
+                type: _q.type,
+                query: _q.query,
                 sort: [{ field: 'title' }],
-                category: lib + '/' + version + '/' + category,
-                id: id
+                category: _q.lib + '/' + _q.version + '/' + _q.category,
+                id: _q.id
             }
         },
         gPost = {
             block: 'g-post',
-            id: id
+            id: _q.id
         },
         gPosts = {
             block: 'g-posts',
             config: {
-                query: query,
-                category: lib + '/' + version + '/' + category
+                query: _q.query,
+                category: _q.lib + '/' + _q.version + '/' + _q.category
             }
         },
         centerLayoutMix = { block : 'layout', elem : 'col', mods: { type: 'center' } };
@@ -93,10 +38,10 @@ block p-libraries {
                         mods: { section: 'p-menu' },
                         content: [
                             apply('libsMenu', this.ctx = {
-                                type: TYPE,
+                                type: _q.type,
                                 config: {
-                                    lib: lib,
-                                    version: version
+                                    lib: _q.lib,
+                                    version: _q.version
                                 }
                             }),
                             {
@@ -108,7 +53,7 @@ block p-libraries {
                                         mods: { section: 'p-menu' },
                                         content: [
                                             gPostsMenu,
-                                            id  ? gPost : gPosts
+                                            _q.id  ? gPost : gPosts
                                         ]
                                     }
                                 ]
