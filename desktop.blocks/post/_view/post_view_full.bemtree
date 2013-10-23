@@ -11,19 +11,11 @@ block post, mod view full {
             return [];
 
         return [
-            {
-                elem: 'authorAvatar',
-                content: source.authors
-            },
-            {
-                elem: 'meta',
-                content: [
-                    apply('author', this.ctx.content = source.authors),
-                    apply('translator', this.ctx.content = source.translators),
-                    apply('tags', this.ctx.content = source.tags),
-                    apply('date', this.ctx = { createDate: source.createDate, editDate: source.editDate })
-                ]
-            },
+            apply('author', this.ctx.content = source.authors),
+            apply('translator', this.ctx.content = source.translators),
+            apply('tags', this.ctx.content = source.tags),
+            apply('date', this.ctx = { createDate: source.createDate, editDate: source.editDate }),
+
             apply('title', this.ctx.content = source),
             apply('contentFull', this.ctx.content = source.content)
         ];
@@ -68,26 +60,5 @@ block post, mod view full {
         elem: 'content',
         url: apply('getUrl'),
         content: this.ctx.content
-    }
-}
-
-block post, mod view full, elem authorAvatar {
-
-    (this._.isArray(this.ctx.content) && this.ctx.content.length > 1), default: {
-        return false
-    }
-
-    content {
-        this._.isArray(this.ctx.content): {
-            block: 'author',
-            mods: { view: 'avatar-only' },
-            id: this.ctx.content[0]
-        }
-
-        !this._.isArray(this.ctx.content): {
-            block: 'author',
-            mods: { view: 'avatar-only' },
-            id: this.ctx.content
-        }
     }
 }

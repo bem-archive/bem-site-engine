@@ -1,0 +1,14 @@
+.p-tools
+{
+}
+
+.p-tools .post_view_full
+{
+    padding-top: 10px;
+}
+
+.p-tools .post__author,
+.p-tools .post__translator
+{
+    display: none;
+}

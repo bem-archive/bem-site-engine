@@ -4,11 +4,6 @@
     padding: 1px 10px 5px 10px;
 }
 
-.post_view_full .post__meta
-{
-    width: 100%;
-}
-
 .post_view_full  .post__date,
 .post_view_full  .post__author,
 .post_view_full  .post__translator,
@@ -16,6 +11,12 @@
 .post_view_full  .post__categories
 {
     display: inline-block;
+}
+
+.post_view_full  .post__date
+{
+    float: right;
+    color: #AAA;
 }
 
 .post_view_full .post__title
@@ -31,31 +32,4 @@
 .post_view_full .post__title > .link:hover
 {
     color: #555;
-}
-
-/*
-.post_view_full .post__authorAvatar,
-.post_view_full .post__meta
-{
-    display: inline-block;
-}
-*/
-
-/*
-.post_view_full .post__authorAvatar
-{
-    margin-top: 15px;
-    vertical-align: top;
-}
-*/
-
-.post_view_full .post__authorAvatar
-{
-    display: none;
-}
-
-.post_view_full  .post__date
-{
-    float: right;
-    color: #AAA;
 }

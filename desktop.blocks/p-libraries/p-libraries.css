@@ -2,9 +2,14 @@
 {
 }
 
-.p-libraries > .cap
+
+.p-libraries .post_view_full
 {
-    width: 400px;
-    height: 315px;
-    background: url('temp.png');
+    padding-top: 10px;
+}
+
+.p-libraries .post__author,
+.p-libraries .post__translator
+{
+    display: none;
 }
