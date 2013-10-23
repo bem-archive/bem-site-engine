@@ -253,23 +253,22 @@ block b-page {
             description = title = BEM.I18N('main-menu', 'authors');
         }
 
-        apply('setTitleAndMeta', this.ctx = { title: title, description: description });
+        return apply('setTitleAndMeta', this.ctx = { title: title, description: description });
     }
 
     tags: {
         var data = this.data,
-            type = data.page,
             url = data.params.id,
             title = null,
             description = null;
 
         description = title = url || BEM.I18N('main-menu', 'tags');
 
-        apply('setTitleAndMeta', this.ctx = { title: title, description: description });
+        return apply('setTitleAndMeta', this.ctx = { title: title, description: description });
     }
 
     index: {
-
+        return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('main-menu', 'general') });
     }
 
     /**
@@ -308,7 +307,7 @@ block b-page {
             }
         }
 
-        apply('setTitleAndMeta', this.ctx = { title: title, description: description, keywords: keywords });
+        return apply('setTitleAndMeta', this.ctx = { title: title, description: description, keywords: keywords });
 
     }
 

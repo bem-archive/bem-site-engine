@@ -1,6 +1,6 @@
 module.exports = {
     "main-menu": {
-        "general": "General Information",
+        "general": "Main",
         "method": "Methodology",
         "tools": "Tools",
         "libs": "Libraries",
