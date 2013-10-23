@@ -3,18 +3,25 @@ block main-menu {
     content: [
         apply('logobem'),
         apply('mainItem', this.ctx.name = 'method'),
-        apply('mainItem', this.ctx.name = 'articles'),
-        apply('mainItem', this.ctx.name = 'news'),
-        apply('mainItem', this.ctx.name = 'authors'),
-        apply('mainItem', this.ctx.name = 'tags'),
-        apply('delimeter'),
         apply('mainItem', this.ctx.name = 'tools'),
         apply('mainItem', this.ctx.name = 'libs', this.ctx.url = apply('libUrl')),
+
         apply('delimeter'),
-        apply('social', this.ctx.name = 'facebook'),
+
+        apply('mainItem', this.ctx.name = 'articles'),
+        apply('mainItem', this.ctx.name = 'news'),
+        apply('mainItem', this.ctx.name = 'tags'),
+        apply('mainItem', this.ctx.name = 'authors'),
+
+        apply('delimeter'),
+
         this.data.lang == 'ru' ?
         apply('social', this.ctx.name = 'yaru') : null,
+        apply('social', this.ctx.name = 'facebook'),
         apply('social', this.ctx.name = 'twitter'),
+
+        apply('delimeter'),
+
         apply('langSwitcher'),
         { block: 'search' }
     ]
