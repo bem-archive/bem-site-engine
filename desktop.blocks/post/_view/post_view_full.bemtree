@@ -22,8 +22,8 @@ block post, mod view full {
                     apply('translator', this.ctx.content = source.translators),
                     apply('createDate', this.ctx.content = source.createDate),
                     apply('editDate', this.ctx.content = source.editDate),
-                    apply('tags', this.ctx.content = source.tags),
-                    apply('translation')
+                    apply('tags', this.ctx.content = source.tags)
+                    //apply('translation')
                 ]
             },
             apply('title', this.ctx.content = source),
@@ -80,22 +80,22 @@ block post, mod view full {
     },
 
     //ссылка на пост в другой локализации
-    translation: {
-        elem: 'translation',
-        content: [
-            {
-                block: 'link',
-                url: apply('getUrl'),
-                content: BEM.I18N('post', 'translation')
-            }
-        ]
-    }
+    // translation: {
+    //     elem: 'translation',
+    //     content: [
+    //         {
+    //             block: 'link',
+    //             url: apply('getUrl'),
+    //             content: BEM.I18N('post', 'translation')
+    //         }
+    //     ]
+    // }
 
-    getUrl: {
-        var lang = this.data.lang == 'en' ? 'ru' : 'en',
-            host = this.data.req.headers.host;
-        return 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
-    }
+    // getUrl: {
+    //     var lang = this.data.lang == 'en' ? 'ru' : 'en',
+    //         host = this.data.req.headers.host;
+    //     return 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
+    // }
 }
 
 block post, mod view full, elem authorAvatar {
