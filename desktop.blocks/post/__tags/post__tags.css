@@ -3,4 +3,13 @@
     line-height: 20px;
 
     margin-left: 20px;
+    margin-top: 10px;
+}
+
+.post__tags .link
+{
+    background: none repeat scroll 0 0 #DDD;
+    border-radius: 10px 10px 10px 10px;
+    margin-left: 2px;
+    padding: 4px 10px;
 }
