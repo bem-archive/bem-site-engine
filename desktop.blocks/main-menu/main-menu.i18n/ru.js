@@ -9,7 +9,7 @@ module.exports = {
         "authors": "Авторы",
         "tags": "Тэги",
         "facebook": "Facebook",
-        "yaru": "БЭМ на Я.ру",
+        "yaru": "BEM на Я.ru",
         "twitter": "Twitter",
         "lang": "In English"
     }
