@@ -4,8 +4,8 @@ module.exports = {
         "authors": "Авторы",
         "translator": "Переводчик",
         "translators": "Переводчики",
-        "createDate": "Создан",
-        "editDate": "Изменен",
+        "createDate": "Создано",
+        "editDate": "Изменено",
         "tags": "Тэги",
         "categories": "Категории",
         "summary": "Краткое описание",
@@ -17,7 +17,20 @@ module.exports = {
         "libs": "Библиотеки",
         "articles": "Статьи",
         "method": "Методология",
-        "news": "Новости"
+        "news": "Новости",
+
+        "month0": "Января",
+        "month1": "Февраля",
+        "month2": "Марта",
+        "month3": "Апреля",
+        "month4": "Мая",
+        "month5": "Июня",
+        "month6": "Июля",
+        "month7": "Августа",
+        "month8": "Сентября",
+        "month9": "Октября",
+        "month10": "Ноября",
+        "month11": "Декабря"
     }
 };
 

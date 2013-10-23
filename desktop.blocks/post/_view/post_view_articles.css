@@ -15,3 +15,9 @@
 
     padding-right: 10px;
 }
+
+.post_view_articles > .post__date
+{
+    float: right;
+    color: #AAA;
+}

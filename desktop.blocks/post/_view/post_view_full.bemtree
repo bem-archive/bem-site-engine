@@ -20,10 +20,8 @@ block post, mod view full {
                 content: [
                     apply('author', this.ctx.content = source.authors),
                     apply('translator', this.ctx.content = source.translators),
-                    apply('createDate', this.ctx.content = source.createDate),
-                    apply('editDate', this.ctx.content = source.editDate),
-                    apply('tags', this.ctx.content = source.tags)
-                    //apply('translation')
+                    apply('tags', this.ctx.content = source.tags),
+                    apply('date', this.ctx = { createDate: source.createDate, editDate: source.editDate })
                 ]
             },
             apply('title', this.ctx.content = source),
@@ -43,18 +41,11 @@ block post, mod view full {
         content: this.ctx.content
     }
 
-    //дата создания поста
-    createDate: {
+    date: {
         elem: 'date',
-        elemMods: {'type': 'create'},
-        content: this.ctx.content
-    }
-
-    //дата изменения поста
-    editDate: {
-        elem: 'date',
-        elemMods: {'type': 'edit'},
-        content: this.ctx.content
+        elemMods: { type: 'human' },
+        createDate: this.ctx.createDate,
+        editDate: this.ctx.editDate
     }
 
     //массив тего для поста
@@ -77,25 +68,7 @@ block post, mod view full {
         elem: 'content',
         url: apply('getUrl'),
         content: this.ctx.content
-    },
-
-    //ссылка на пост в другой локализации
-    // translation: {
-    //     elem: 'translation',
-    //     content: [
-    //         {
-    //             block: 'link',
-    //             url: apply('getUrl'),
-    //             content: BEM.I18N('post', 'translation')
-    //         }
-    //     ]
-    // }
-
-    // getUrl: {
-    //     var lang = this.data.lang == 'en' ? 'ru' : 'en',
-    //         host = this.data.req.headers.host;
-    //     return 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
-    // }
+    }
 }
 
 block post, mod view full, elem authorAvatar {

@@ -1,50 +1,42 @@
 block post, elem date {
 
-    default, !(this.ctx && this.ctx.content): {
-        return false;
-    }
-
     content, /\d{13}/.test(this.ctx.content) : [
         apply('format')
-        //TODO make date as url to other page
     ]
 
     format: {
-        var pad = function(val, len) {
-                 val = String(val);
-                 len = len || 2;
-                 while (val.length < len) val = "0" + val;
-                 return val;
-            },
-            date = new Date();
-
+        date = new Date();
         date.setTime(this.ctx.content)
 
         var  d = date.getDate(),
-             D = pad(date.getDate()),
-             m = pad(date.getMonth() + 1),
+             D = date.getDate(),
+             m = date.getMonth(),
              y = date.getFullYear();
-        return D + '-' + m + '-' + y;
-        //return this.ctx.content;
+        return D + ' ' + BEM.I18N('post', 'month' + m) + ' ' + y;
     }
 }
 
-block post, elem date, elemMod type create {
+block post, elem date, elemMod type human {
 
-    content : [
-        BEM.I18N('post', 'createDate'),
-        ': ',
-        applyNext()
-    ]
+    default, (!this.ctx.createDate && !this.ctx.editDate): {
+        return false;
+    }
+
+    content {
+
+        this.ctx.createDate, content: {
+            return applyNext(this.ctx.content = this.ctx.createDate)
+        }
+
+        (this.ctx.createDate && this.ctx.editDate && this.ctx.editDate > this.ctx.createDate): {
+            return [
+                BEM.I18N('post', 'editDate'),
+                ' ',
+                applyNext(this.ctx.content = this.ctx.editDate)
+            ]
+        }
+
+    }
+
 }
-
-block post, elem date, elemMod type edit {
-
-    content : [
-        BEM.I18N('post', 'editDate'),
-        ': ',
-        applyNext()
-    ]
-}
-
 

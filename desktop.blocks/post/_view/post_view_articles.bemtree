@@ -12,12 +12,11 @@ block post, mod view articles {
         //console.debug(source.authors);
 
         return [
-            apply('createDate', this.ctx.content = source.createDate),
-            apply('editDate', this.ctx.content = source.editDate),
             apply('author', this.ctx.content = source.authors),
             apply('translator', this.ctx.content = source.translators),
             apply('tags', this.ctx.content = source.tags),
             apply('categories', this.ctx = { content: source.categories, type: source.type }),
+            apply('date', this.ctx = { createDate: source.createDate, editDate: source.editDate }),
             apply('title', this.ctx = { content: source, category: this.ctx.category }),
             apply('summary', this.ctx.content = source.summary)
         ]
@@ -35,18 +34,11 @@ block post, mod view articles {
         content: this.ctx.content
     }
 
-    //дата создания поста
-    createDate: {
+    date: {
         elem: 'date',
-        elemMods: {'type': 'create'},
-        content: this.ctx.content
-    }
-
-    //дата изменения поста
-    editDate: {
-        elem: 'date',
-        elemMods: {'type': 'edit'},
-        content: this.ctx.content
+        elemMods: { type: 'human' },
+        createDate: this.ctx.createDate,
+        editDate: this.ctx.editDate
     }
 
     //массив тего для поста
