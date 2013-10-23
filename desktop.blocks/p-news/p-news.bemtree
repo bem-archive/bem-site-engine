@@ -1,8 +1,6 @@
 block p-news {
 
     content: {
-            console.debug('p-news start');
-
             var _q = this.data._q,
 
             //блок меню с постами типа articles

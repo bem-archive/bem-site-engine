@@ -1,12 +1,14 @@
 block b-page {
 
-    default: {
+    !leJspath.getSource(), default: {
         return this.doAsync(
                 leDatasrc.loadData.bind(leDatasrc, {})
             )
             .then(
                 function(result) {
-                    apply('afterLoadData', this.ctx.result = result);
+                    leJspath.setSource(result); //кеширование данных
+
+                    apply('route');
                     this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.page }, this.ctx.mods);
                     return applyCtx(this.ctx);
                 },
@@ -17,10 +19,15 @@ block b-page {
             );
     }
 
-    afterLoadData: {
-        console.debug('after load data start');
+    leJspath.getSource(), default: {
+        apply('route');
+        this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.page }, this.ctx.mods);
+        return applyCtx(this.ctx);
+    }
 
-        leJspath.setSource(this.ctx.result); //кешируем данные
+    route: {
+        //leJspath.stringify(this.data);
+
         this.data._r = {
             'method':   function() { return apply('method') },
             'libs':     function() { return apply('libs') },
@@ -31,14 +38,11 @@ block b-page {
             'tags':     function() { return apply('tags') },
             'index':    function() { return apply('index') }
         };
-
-        console.debug('function = ' + this.data._r[this.data.page]);
-
-        this.data._r[this.data.page].call(this);
-
-        console.debug('after load data end');
+        return this.data._r[this.data.page].call(this);
     }
 
+
+    /* ---------------method------------------ */
     method: {
         var data = this.data,
             type = data.page,
@@ -54,8 +58,12 @@ block b-page {
                 substitution: { type: type, rootId: rootId }
             }
         };
+
+        return apply('createSEO');
     }
 
+
+    /* ---------------libs------------------ */
     libs: {
         var data = this.data,
             type = data.page,
@@ -122,11 +130,13 @@ block b-page {
             lib: lib,
             version: version
         };
+
+        return apply('createSEO');
     }
 
-    articles: {
-        console.debug('apply articles start');
 
+    /* --------------articles------------------- */
+    articles: {
         var data = this.data,
             type = data.page,
             res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
@@ -140,8 +150,12 @@ block b-page {
                 substitution: { type: type }
             }
         };
+
+        return apply('createSEO');
     }
 
+
+    /* ----------------tools----------------- */
     tools: {
         var data = this.data,
             type = data.page,
@@ -192,13 +206,16 @@ block b-page {
             id: id,
             category: category,
             query: query,
+
             isOnlyOnePost: isOnlyOnePost
         };
+
+        return apply('createSEO');
     }
 
-    news: {
-        console.debug('apply news start');
 
+    /* ---------------news------------------ */
+    news: {
         var data = this.data,
             type = data.page,
             res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
@@ -212,6 +229,8 @@ block b-page {
                 substitution: { type: type }
             }
         };
+
+        return apply('createSEO');
     }
 
     authors: {
@@ -226,28 +245,49 @@ block b-page {
 
     }
 
-    //createTitleAndMeta: {
-        // var title = null;
+    createSEO: {
+        if(!this.data._q) return {};
 
-        // if(this.data._q) {
-        //     var type = this.data._q.type,
-        //         id = this.data._q.id;
+        var _q = this.data._q,
+            title = null,
+            description = null,
+            keywords = null;
 
-        //     var  source =
-        // }
+        this.data._m = {};
 
-        // var meta = [];
+        if(_q.type) {
+            description = title = BEM.I18N('main-menu', _q.type);
 
-        // meta.push({
-        //     tag: 'meta',
-        //     attrs: { 'name': 'description', content: '' }
-        // });
+            if(_q.id) {
+                var source = leJspath.findByIdAndType(_q.id, _q.type, this.data.lang);
+                if(source) {
+                    title = source.title;
+                    description = source.summary;
+                    keywords = source.tags ? source.tags.join(', ') : ''
+                }else {
+                    description = title = BEM.I18N('main-menu', _q.type);
+                }
+            }
+        }
 
-        // meta.push({
-        //     tag: 'meta',
-        //     attrs: { 'name': 'keywords  ', content: '' }
-        // });
-    //}
+        if(title) {
+            this.data.pageTitle = title;
+            this.data._m['ogTitle'] = title;
+        }
+
+        if(description) {
+            this.data._m['description'] = description;
+            this.data._m['ogDescription'] = description;
+        }
+
+        if(keywords) {
+            this.data._m['keywords'] = keywords;
+            this.data._m['ogKeywords'] = keywords;
+        }
+
+        this.data._m['ogType'] = 'article';
+        this.data._m['ogUrl'] = 'http://' + this.data.req.headers.host + this.data.req.path;
+    }
 
     content: [
         { block : 'content' }

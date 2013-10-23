@@ -1,7 +1,6 @@
 block p-articles {
 
     content: {
-            console.debug('p-articles start');
 
             var _q = this.data._q,
 
