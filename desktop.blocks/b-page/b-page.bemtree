@@ -234,11 +234,38 @@ block b-page {
     }
 
     authors: {
+        var data = this.data,
+            type = data.page,
+            url = data.params.id,
+            title = null,
+            description = null;
 
+        if(url){
+            var source = leJspath.findByTypeAndUrl('authors', url, data.lang) ||
+                         leJspath.findByTypeAndUrl('translators', url, data.lang);
+            if(source) {
+                title = source.firstName + ' ' + source.lastName;
+                description = source.info;
+            }else {
+                description = title = BEM.I18N('main-menu', 'authors');
+            }
+        }else{
+            description = title = BEM.I18N('main-menu', 'authors');
+        }
+
+        apply('setTitleAndMeta', this.ctx = { title: title, description: description });
     }
 
     tags: {
+        var data = this.data,
+            type = data.page,
+            url = data.params.id,
+            title = null,
+            description = null;
 
+        description = title = url || BEM.I18N('main-menu', 'tags');
+
+        apply('setTitleAndMeta', this.ctx = { title: title, description: description });
     }
 
     index: {
@@ -270,23 +297,27 @@ block b-page {
             }
         }
 
-        if(title) {
-            this.data.pageTitle = title;
-            this.data._m['ogTitle'] = title;
-        }
+        apply('setTitleAndMeta', this.ctx = { title: title, description: description, keywords: keywords });
 
-        if(description) {
-            this.data._m['description'] = description;
-            this.data._m['ogDescription'] = description;
-        }
+    }
 
-        if(keywords) {
-            this.data._m['keywords'] = keywords;
-            this.data._m['ogKeywords'] = keywords;
-        }
+    setTitleAndMeta: {
+        this.data._m = {};
 
         this.data._m['ogType'] = 'article';
         this.data._m['ogUrl'] = 'http://' + this.data.req.headers.host + this.data.req.path;
+
+        if(this.ctx.title) {
+            this.data._m['ogTitle'] = this.data.pageTitle = this.ctx.title;
+        }
+
+        if(this.ctx.description) {
+            this.data._m['ogDescription'] = this.data._m['description'] = this.ctx.description;
+        }
+
+        if(this.ctx.keywords) {
+            this.data._m['keywords'] = this.data._m['ogKeywords'] = this.ctx.keywords;
+        }
     }
 
     content: [
