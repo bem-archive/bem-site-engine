@@ -24,7 +24,8 @@ block p-articles {
 
             //список постов с развернутой мета-информацией
             posts = {
-                block: 'g-posts',
+                block: 'posts',
+                mods: { view: 'articles' },
                 config: {
                     query: _q.query,
                     sort: [{ field:  'title' }],
@@ -33,11 +34,11 @@ block p-articles {
             };
 
         return [
-            {
+            _q.id ? {
                 block: 'layout',
                 mods: { section: 'p-menu', size: 'wide' },
-                content: [ menu, _q.id ? post : posts ]
-            }
+                content: [ menu, post ]
+            } : posts
         ];
     }
 }
