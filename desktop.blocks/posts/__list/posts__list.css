@@ -1,3 +1,13 @@
-.posts__list
+.posts__list > .post
 {
+    -webkit-transition: background .4s ease;
+    -moz-transition: background .4s ease;
+    -ms-transition: background .4s ease;
+    -o-transition: background .4s ease;
+    transition: background .4s ease;
+}
+
+.posts__list > .post:hover
+{
+    background: rgba(255,235,160,.35);
 }

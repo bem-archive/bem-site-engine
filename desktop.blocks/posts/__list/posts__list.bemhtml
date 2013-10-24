@@ -1,4 +1,4 @@
-block posts, elem list {
+//block posts, elem list {
 
-    mix: { block: 'island' }
-}
+    //mix: { block: 'island' }
+//}

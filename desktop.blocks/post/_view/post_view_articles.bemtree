@@ -1,4 +1,4 @@
-block post, mod view articles {
+    block post, mod view articles {
 
     content: {
         var id = this.ctx.source,
@@ -8,8 +8,6 @@ block post, mod view articles {
 
         if(!source)
             return [];
-
-        //console.debug(source.authors);
 
         return [
             apply('author', this.ctx = { authors: source.authors, translators: source.translators }),
