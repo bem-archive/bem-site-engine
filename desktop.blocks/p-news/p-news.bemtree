@@ -1,6 +1,7 @@
 block p-news {
 
     content: {
+
             var _q = this.data._q,
 
             //блок меню с постами типа articles
@@ -23,7 +24,8 @@ block p-news {
 
             //список постов с развернутой мета-информацией
             posts = {
-                block: 'g-posts',
+                block: 'posts',
+                mods: { view: 'articles' },
                 config: {
                     query: _q.query,
                     sort: [{ field:  'createDate', direction: 'desc' }],
@@ -32,11 +34,11 @@ block p-news {
             };
 
         return [
-            {
+            _q.id ? {
                 block: 'layout',
                 mods: { section: 'p-menu', size: 'wide' },
-                content: [ menu, _q.id ? post : posts ]
-            }
+                content: [ menu, post ]
+            } : posts
         ];
     }
 }
