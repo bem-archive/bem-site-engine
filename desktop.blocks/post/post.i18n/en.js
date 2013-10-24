@@ -30,6 +30,8 @@ module.exports = {
         "month8": "September",
         "month9": "October",
         "month10": "November",
-        "month11": "December"
+        "month11": "December",
+
+        "translate": "(translate)"
     }
 };

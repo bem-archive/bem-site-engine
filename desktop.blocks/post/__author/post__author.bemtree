@@ -2,17 +2,17 @@ block post, elem author {
 
     content {
 
-        this._.isArray(this.ctx.content): {
-            var buf = [];
+        this._.isArray(this.ctx.authors): {
+            var buf = [],
+                self = this,
+                splitter = {
+                    tag: 'span',
+                    content: ', '
+                };
 
-            this.ctx.content.forEach(function(item, index){
-                //console.debug(item);
+            this.ctx.authors.forEach(function(item, index){
 
-                index++ > 0 &&
-                    buf.push({
-                        tag: 'span',
-                        content: ', '
-                    });
+                index++ > 0 && buf.push(splitter);
 
                 buf.push(apply(
                     this._mode = '',
@@ -24,16 +24,40 @@ block post, elem author {
                 ));
             });
 
+            if(this._.isArray(this.ctx.translators) && this.ctx.translators.length > 0) {
+
+                this.ctx.translators.filter(function(item) {
+                    return self.ctx.authors.indexOf(item) == -1;
+                }).forEach(function(item, index) {
+                    buf.push(splitter);
+
+                    buf.push(apply(
+                        this._mode = '',
+                        this.ctx = {
+                            block: 'author',
+                            mods: { view: 'simple' },
+                            id: item
+                        }
+                    ));
+
+                    buf.push({
+                        tag: 'span',
+                        cls: 'translate',
+                        content: ' ' + BEM.I18N('post', 'translate')
+                    });
+                });
+            }
+
             return buf;
         }
 
-        !this._.isArray(this.ctx.content): {
+        !this._.isArray(this.ctx.authors): {
             return apply(
                 this._mode = '',
                 this.ctx = {
                     block: 'author',
                     mods: { view: 'simple' },
-                    id: this.ctx.content
+                    id: this.ctx.authors
                 }
             );
         }

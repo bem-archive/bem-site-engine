@@ -12,11 +12,11 @@ block post, mod view articles {
         //console.debug(source.authors);
 
         return [
-            apply('author', this.ctx.content = source.authors),
-            apply('translator', this.ctx.content = source.translators),
+            apply('author', this.ctx = { authors: source.authors, translators: source.translators }),
             apply('tags', this.ctx.content = source.tags),
             apply('categories', this.ctx = { content: source.categories, type: source.type }),
             apply('date', this.ctx = { createDate: source.createDate, editDate: source.editDate }),
+
             apply('title', this.ctx = { content: source, category: this.ctx.category }),
             apply('summary', this.ctx.content = source.summary)
         ]
@@ -25,13 +25,8 @@ block post, mod view articles {
     //автор и соавторы поста
     author: {
         elem: 'author',
-        content: this.ctx.content
-    }
-
-    //переводчик или группа переводчиков для поста
-    translator: {
-        elem: 'translator',
-        content: this.ctx.content
+        authors: this.ctx.authors,
+        translators: this.ctx.translators
     }
 
     date: {

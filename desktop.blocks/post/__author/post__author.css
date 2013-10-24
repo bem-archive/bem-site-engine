@@ -3,3 +3,8 @@
     line-height: 20px;
     margin-left: 20px;
 }
+
+.post__author > .translate
+{
+    color: #AAAAAA;
+}
