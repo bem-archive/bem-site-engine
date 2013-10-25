@@ -8,6 +8,8 @@ module.exports = {
         "news": "Blog",
         "authors": "Authors",
         "tags": "Tags",
+        "jobs": "Jobs",
+        "acknowledgements": "Acknowledgements",
         "facebook": "Facebook",
         "twitter": "Twitter",
         "yaru": "BEM on ya.ru",

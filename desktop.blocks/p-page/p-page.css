@@ -1,0 +1,10 @@
+.p-page
+{
+}
+
+.p-page .post__author,
+.p-page .post__tags,
+.p-page .post__date
+{
+    display: none;
+}

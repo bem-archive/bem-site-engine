@@ -12,6 +12,7 @@ block main-menu {
         apply('mainItem', this.ctx.name = 'news'),
         apply('mainItem', this.ctx.name = 'tags'),
         apply('mainItem', this.ctx.name = 'authors'),
+        apply('mainItem', this.ctx.name = 'jobs', this.ctx.url = 'page/jobs'),
 
         apply('delimeter'),
 
@@ -19,6 +20,13 @@ block main-menu {
         apply('social', this.ctx.name = 'yaru') : null,
         apply('social', this.ctx.name = 'facebook'),
         apply('social', this.ctx.name = 'twitter'),
+
+        {
+            elem: 'item',
+            elemMods: { size: 'small' },
+            url: apply('disable', this.ctx.url = '/page/acknowledgement'),
+            name: 'acknowledgements'
+        },
 
         apply('delimeter'),
 

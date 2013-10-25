@@ -32,4 +32,6 @@ block content {
     tags:       apply('p-block', this.ctx.name = 'p-tags')
 
     index:      apply('p-block', this.ctx.name = 'p-index')
+
+    page:     apply('p-block', this.ctx.name = 'p-page')
 }

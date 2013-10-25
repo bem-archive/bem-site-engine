@@ -36,7 +36,8 @@ block b-page {
             'news':     function() { return apply('news') },
             'authors':  function() { return apply('authors') },
             'tags':     function() { return apply('tags') },
-            'index':    function() { return apply('index') }
+            'index':    function() { return apply('index') },
+            'page':     function() { return apply('page') }
         };
         return this.data._r[this.data.page].call(this);
     }
@@ -273,6 +274,26 @@ block b-page {
 
     index: {
         return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('main-menu', 'general') });
+    }
+
+    page: {
+        var data = this.data,
+            type = 'page',
+            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+
+        this.data._q = {
+            type: type,
+            id: res && res.id,
+            category: res && res.category,
+            query: {
+                predicate: '.' + data.lang + '{.type === $type}',
+                substitution: { type: type }
+            }
+        };
+
+        leJspath.stringify(this.data._q);
+
+        return apply('createSEO');
     }
 
     /**

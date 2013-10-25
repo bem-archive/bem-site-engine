@@ -1,0 +1,8 @@
+block p-page {
+
+    content: {
+        block: 'post',
+        mods: { view: 'full' },
+        id: this.data._q.id
+    }
+}

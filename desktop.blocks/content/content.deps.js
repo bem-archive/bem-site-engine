@@ -14,5 +14,6 @@
         { block : 'p-authors' },
         { block : 'p-method' },
         { block : 'p-libraries' },
+        { block : 'p-page' }
     ]
 })
