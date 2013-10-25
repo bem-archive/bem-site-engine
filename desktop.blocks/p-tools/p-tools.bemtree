@@ -4,14 +4,17 @@ block p-tools {
         var _q = this.data._q,
 
         toolsMenu = {
-            block: 'g-tools-menu',
+            block: 'menu',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
             type: _q.type,
-            category: _q.category
+            id: _q.category,
+            mods: { type: 'tools', all: 'yes' }
         },
 
         //меню для отображения для выбранного инструмента
         postsMenu = {
-            block: 'g-posts-menu',
+            block: 'menu',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
             config: {
                 type: _q.type,
                 query: _q.query,
@@ -23,13 +26,17 @@ block p-tools {
 
         //отображение единичного поста
         post = {
-            block: 'g-post',
+            block: 'post',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            mods: { view: 'full' },
             id: _q.id
         },
 
         //список постов с развернутой мета-информацией
         posts = {
-            block: 'g-posts',
+            block: 'posts',
+            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            mods: { view: 'articles' },
             config: {
                 query: _q.query,
                 category: _q.category
@@ -56,7 +63,9 @@ block p-tools {
             block: 'center',
             mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
             content: {
-                block: 'g-post',
+                block: 'post',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                mods: { view: 'full' },
                 id: _q.id
             }
         };

@@ -1,4 +1,0 @@
-block g-posts {
-
-    mix: { block : 'layout', elem : 'col', mods: {type: 'center'} }
-}

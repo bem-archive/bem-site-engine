@@ -1,4 +1,0 @@
-block g-posts-menu {
-
-    mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} }
-}

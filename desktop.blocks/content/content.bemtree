@@ -10,19 +10,12 @@ block content {
         }));
     }
 
-    content: {
-        return [
-            apply(this._mode = '', this.ctx = { block: 'main-menu' }),
-            this.data._r[this.data.page].call(this)
-        ];
-    }
+    content: [
+        apply(this._mode = '', this.ctx = { block: 'main-menu' }),
+        this.data._r[this.data.page].call(this)
+    ]
 
-    p-block: {
-        return apply(this._mode = '', this.ctx = {
-            block: this.ctx.name,
-            mix: this.ctx.layout
-        });
-    }
+    p-block: apply(this._mode = '', this.ctx = { block: this.ctx.name, mix: this.ctx.layout })
 
     method:     apply('p-block', this.ctx.name = 'p-method')
 

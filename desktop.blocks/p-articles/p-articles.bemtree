@@ -6,7 +6,8 @@ block p-articles {
 
             //блок меню с постами типа articles
             menu = {
-                block: 'g-posts-menu',
+                block: 'menu',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
                 config: {
                     type: _q.type,
                     query: _q.query,
@@ -18,7 +19,9 @@ block p-articles {
 
             //блок отдельного поста (показывается если был найден id)
             post = {
-                block: 'g-post',
+                block: 'post',
+                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                mods: { view: 'full' },
                 id: _q.id
             },
 
