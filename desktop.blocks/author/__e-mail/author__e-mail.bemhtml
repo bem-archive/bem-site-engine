@@ -1,6 +1,6 @@
 block author, elem e-mail {
 
-    default, !(this.ctx && this.ctx.content): {
+    default, !(this.ctx && this.ctx.content && this._.isArray(this.ctx.content) && this.ctx.content.length > 0): {
         return false;
     }
 
@@ -10,14 +10,12 @@ block author, elem e-mail {
         apply('contentTransformation')
     ]
 
-    contentTransformation, this._.isArray(this.ctx.content): {
+    contentTransformation: {
 
-        var i = 0,
-            buf = [],
-            item;
+        var buf = [];
 
-        while(item = this.ctx.content[i]) {
-            i++ > 0 &&
+        this.ctx.content.forEach(function(item, index){
+            index > 0 &&
                 buf.push({
                     tag: 'span',
                     content: ', '
@@ -27,7 +25,7 @@ block author, elem e-mail {
                 tag: 'span',
                 content: item
             });
-        }
+        });
 
         return buf;
     }

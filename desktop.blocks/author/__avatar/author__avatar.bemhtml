@@ -6,7 +6,7 @@ block author, elem avatar {
 
             attrs: {
                 src : this.ctx.content.avatar,
-                alt : this.ctx.content.id
+                alt : this.ctx.content.url
             }
         }
     }
