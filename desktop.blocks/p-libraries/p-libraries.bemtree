@@ -2,79 +2,78 @@ block p-libraries {
 
     content: {
 
-        var _q = this.data._q,
+        var LAYOUT_LEFT = { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+            LAYOUT_CENTER = { block : 'layout', elem : 'col', mods: {type: 'center'} },
+            _q = this.data._q,
 
-        gPostsMenu = {
-            block: 'menu',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-            mods: { type: 'mixed' },
-            config: {
-                type: _q.type,
-                query: _q.query,
-                sort: [{ field: 'title' }],
-                category: _q.lib + '/' + _q.version + '/' + _q.category,
+            gPostsMenu = {
+                block: 'menu',
+                mix: LAYOUT_LEFT,
+                mods: { type: 'mixed' },
+                config: {
+                    type: _q.type,
+                    query: _q.query,
+                    sort: [{ field: 'title' }],
+                    category: _q.lib + '/' + _q.version + '/' + _q.category,
+                    id: _q.id
+                }
+            },
+
+            gPost = {
+                block: 'post',
+                mix: LAYOUT_CENTER,
+                mods: { view: 'full' },
                 id: _q.id
-            }
-        },
-        gPost = {
-            block: 'post',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            mods: { view: 'full' },
-            id: _q.id
-        },
-        gPosts = {
-            block: 'posts',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            mods: { view: 'articles' },
-            config: {
-                query: _q.query,
-                category: _q.lib + '/' + _q.version + '/' + _q.category
-            }
-        },
-        centerLayoutMix = { block : 'layout', elem : 'col', mods: { type: 'center' } };
+            },
 
-        return [
-            {
+            gPosts = {
+                block: 'posts',
+                mix: LAYOUT_CENTER,
+                mods: { view: 'articles' },
+                config: {
+                    query: _q.query,
+                    category: _q.lib + '/' + _q.version + '/' + _q.category
+                }
+            },
+
+            menu = {
+                block: 'menu',
+                mix: LAYOUT_LEFT,
+                mods: { type: _q.type },
+                type: _q.type,
+                config: {
+                    lib: _q.lib,
+                    version: _q.version
+                }
+            },
+
+            center = {
                 block: 'center',
-                mix: centerLayoutMix,
+                mix: LAYOUT_CENTER,
                 content: [
                     {
                         block: 'layout',
                         mods: { section: 'p-menu' },
                         content: [
-                            apply('libsMenu', this.ctx = {
-                                type: _q.type,
-                                config: {
-                                    lib: _q.lib,
-                                    version: _q.version
-                                }
-                            }),
-                            {
-                                block: 'center',
-                                mix: centerLayoutMix,
-                                content: [
-                                    {
-                                        block: 'layout',
-                                        mods: { section: 'p-menu' },
-                                        content: [
-                                            gPostsMenu,
-                                            _q.id  ? gPost : gPosts
-                                        ]
-                                    }
-                                ]
-                            }
+                            gPostsMenu,
+                            _q.id  ? gPost : gPosts
                         ]
+                    }
+                ]
+            };
+
+        return [
+            {
+                block: 'center',
+                mix: LAYOUT_CENTER,
+                content: [
+                    {
+                        block: 'layout',
+                        mods: { section: 'p-menu' },
+                        content: [ menu, center ]
                     }
                 ]
             }
         ];
-    }
-
-    libsMenu: {
-        block: 'menu',
-        mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-        mods: { type: this.ctx.type },
-        type: this.ctx.type,
-        config: this.ctx.config
     }
 }
