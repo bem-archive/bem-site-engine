@@ -27,6 +27,7 @@
         translators: this.ctx.translators
     }
 
+    //дата изменения или создания поста
     date: {
         elem: 'date',
         elemMods: { type: 'human' },
@@ -34,7 +35,7 @@
         editDate: this.ctx.editDate
     }
 
-    //массив тего для поста
+    //массив тегов для поста
     tags: {
         elem: 'tags',
         content: this.ctx.content

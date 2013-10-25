@@ -30,7 +30,7 @@ block p-method {
             //список постов с развернутой мета-информацией
             posts = {
                 block: 'posts',
-                mix: LAYOUT_CENTER,
+                //mix: LAYOUT_CENTER,
                 mods: { view: 'articles' },
                 config: {
                     query: _q.query,
