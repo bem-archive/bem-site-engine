@@ -30,9 +30,10 @@ block post, mod view menu-item {
     }
 
     getUrl: {
-        var category = this.ctx.category; //категория поста
+        var type = this.ctx.type,
+            category = this.ctx.category; //категория поста
 
         return this.ctx.active === 'yes' ?
-            null : '/' + this.ctx.source.type + (category ? '/' + category : '') + '/' + this.ctx.source.url;
+            null : '/' + (type || this.ctx.source.type) + (category ? '/' + category : '') + '/' + this.ctx.source.url;
     }
 }

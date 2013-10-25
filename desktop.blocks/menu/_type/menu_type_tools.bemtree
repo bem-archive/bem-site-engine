@@ -8,21 +8,26 @@ block menu, mod type tools{
         //хэш весов групп пунктов меню инструментов для правильной сортировки
         var orderHash = {
             'bem': 0,
-            'languages': 10,
-            'parsers': 20,
-            'builders': 30,
-            'optimizers': 40
+            'languages': 50,
+            'parsers': 30,
+            'builders': 40,
+            'optimizers': 10,
+            'templating-engines': 20
         };
 
         var source = leJspath.find('.' + data.lang + '{.type === "' + type + '"}.categories', {});
-
-        //leJspath.stringify(source);
 
         //Удаляем дубликаты категорий
         source = leJspath.removeDublicates(source, function(a, b) {
             return (!self._.isSimple(a) && !self._.isSimple(b)) ?
                 a.url === b.url && a.name === b.name : a === b;
         });
+
+        source = source.filter(function(item) {
+            return !item.type || item.type === type;
+        });
+
+        //leJspath.stringify(source);
 
         var localizationHash = {},
             urlArr = [],

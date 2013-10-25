@@ -157,6 +157,8 @@ block b-page {
 
     /* ----------------tools----------------- */
     tools: {
+        console.debug('tools');
+
         var data = this.data,
             type = data.page,
             res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang),
@@ -200,6 +202,8 @@ block b-page {
                 }
             }
         }
+
+        console.debug('id = %s category = %s type = %s', id, category, type);
 
         this.data._q = {
             type: type,

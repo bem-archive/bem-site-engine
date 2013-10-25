@@ -6,6 +6,7 @@ block menu, elem item, elemMod type articles {
             {
                 block: 'post',
                 mods: { view: 'menu-item' },
+                type: this.ctx.type,
                 id: this.ctx.id,
                 category: this.ctx.category,
                 active: this.elemMods['active']

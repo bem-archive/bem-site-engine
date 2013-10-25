@@ -109,7 +109,7 @@ block main-menu {
                 .forEach(function(post) {
                     post.categories.forEach(function(item){
                         var url = item.url || item;
-                        versions.push(url.match(/\d+\.\d+\.\d+/)[0]);
+                        /\d+\.\d+\.\d+/.test(url) && versions.push(url.match(/\d+\.\d+\.\d+/)[0]);
                     });
                 });
 
