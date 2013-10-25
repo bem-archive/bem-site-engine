@@ -1,74 +1,76 @@
 block p-tools {
 
     content: {
-        var _q = this.data._q,
+        var LAYOUT_LEFT = { block : 'layout', elem : 'col', mods: { type: 'left', fixed: 'yes' } },
+            LAYOUT_CENTER = { block : 'layout', elem : 'col', mods: { type: 'center' } },
+            _q = this.data._q,
 
-        toolsMenu = {
-            block: 'menu',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-            type: _q.type,
-            id: _q.category,
-            mods: { type: 'tools', all: 'yes' }
-        },
-
-        //меню для отображения для выбранного инструмента
-        postsMenu = {
-            block: 'menu',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-            config: {
+            toolsMenu = {
+                block: 'menu',
+                mix: LAYOUT_LEFT,
                 type: _q.type,
-                query: _q.query,
-                sort: [{ field: 'title' }],
-                category: _q.category,
-                id: _q.id
-            }
-        },
+                id: _q.category,
+                mods: { type: 'tools', all: 'yes' }
+            },
 
-        //отображение единичного поста
-        post = {
-            block: 'post',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            mods: { view: 'full' },
-            id: _q.id
-        },
-
-        //список постов с развернутой мета-информацией
-        posts = {
-            block: 'posts',
-            mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
-            mods: { view: 'articles' },
-            config: {
-                query: _q.query,
-                category: _q.category
-            }
-        },
-
-        //блок объединяющий меню постов по конкретному инструменту
-        //и список постов в развернутом виде или конкретный пост
-        //в зависимости от наличия или отсутствия переданного id
-        tool = {
-            block: 'center',
-            mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
-            content: [
-                {
-                   block: 'layout',
-                    mods: { section: 'p-menu' },
-                    content: [ postsMenu, _q.id ? post : posts ]
+            //меню для отображения для выбранного инструмента
+            postsMenu = {
+                block: 'menu',
+                mix: LAYOUT_LEFT,
+                config: {
+                    type: _q.type,
+                    query: _q.query,
+                    sort: [{ field: 'title' }],
+                    category: _q.category,
+                    id: _q.id
                 }
-            ]
-        },
+            },
 
-        //корневой пост для раздела инструментов
-        rootPost = {
-            block: 'center',
-            mix: { block : 'layout', elem : 'col', mods: { type: 'center' } },
-            content: {
+            //отображение единичного поста
+            post = {
                 block: 'post',
-                mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                mix: LAYOUT_CENTER,
                 mods: { view: 'full' },
                 id: _q.id
-            }
-        };
+            },
+
+            //список постов с развернутой мета-информацией
+            posts = {
+                block: 'posts',
+                mix: LAYOUT_CENTER,
+                mods: { view: 'articles' },
+                config: {
+                    query: _q.query,
+                    category: _q.category
+                }
+            },
+
+            //блок объединяющий меню постов по конкретному инструменту
+            //и список постов в развернутом виде или конкретный пост
+            //в зависимости от наличия или отсутствия переданного id
+            tool = {
+                block: 'center',
+                mix: LAYOUT_CENTER,
+                content: [
+                    {
+                        block: 'layout',
+                        mods: { section: 'p-menu' },
+                        content: [ postsMenu, _q.id ? post : posts ]
+                    }
+                ]
+            },
+
+            //корневой пост для раздела инструментов
+            rootPost = {
+                block: 'center',
+                mix: LAYOUT_CENTER,
+                content: {
+                    block: 'post',
+                    mix: LAYOUT_CENTER,
+                    mods: { view: 'full' },
+                    id: _q.id
+                }
+            };
 
         return [
             {
