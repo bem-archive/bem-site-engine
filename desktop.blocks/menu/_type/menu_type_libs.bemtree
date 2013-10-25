@@ -15,6 +15,10 @@ block menu, mod type libs {
                 a.url === b.url && a.name === b.name : a === b;
         });
 
+        source = source.filter(function(item) {
+            return !item.type || item.type === self.ctx.type;
+        });
+
         var localizationHash = {},
             urlArr = [],
             itemsHash = {},
