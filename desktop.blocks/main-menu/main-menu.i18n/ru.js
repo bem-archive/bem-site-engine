@@ -11,7 +11,7 @@ module.exports = {
         "jobs": "Вакансии",
         "acknowledgements": "Благодарности",
         "facebook": "Facebook",
-        "yaru": "BEM на Я.ru",
+        "yaru": "Я.ru",
         "twitter": "Twitter",
         "lang": "In English"
     }
