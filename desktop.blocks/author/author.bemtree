@@ -10,33 +10,8 @@ block author {
                leJspath.findByIdAndType(id, 'translators', data.lang) ||
                id;
 
-        // this.doAsync(
-        //     leDatasrc.isExist.bind(leDatasrc, author, 'png')
-        // )
-        // .then(
-        //     function(result) {
-        //         author.avatar = this.data.yaApiHosts.datasrc.host +
-        //         '/' + author.relative +
-        //         '/' + author.url +
-        //         '.png';
+        author.avatar = this.data.yaApiHosts.static.host + '/' + author.avatar;
 
-        //         return author;
-        //     },
-        //     function(err) {
-        //         author.avatar = null;
-        //         return author;
-        //     },
-        //     this
-        // );
-
-        // return author;
-
-        //TODO можно добавить проверку на существование пути к файлу
-        if(this.data.yaApiHosts && this.data.yaApiHosts.datasrc && author.relative) {
-            author.avatar = this.data.yaApiHosts.datasrc.host +
-                '/' + author.relative +
-                '/' + author.url + '.png';
-        }
         return author;
     }
 }
