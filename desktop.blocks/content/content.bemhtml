@@ -7,5 +7,4 @@ block content {
             content : this.ctx.content
         })
     }
-
 }

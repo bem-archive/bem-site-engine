@@ -1,6 +1,6 @@
 ({
     mustDeps : [
-        { block : 'i-bem', elems : ['tree', 'html'] }
+        { block : 'i-bem', elems : ['dom', 'html', 'tree'] }
     ],
     shouldDeps : [
         { mods : { theme : 'white' } },
