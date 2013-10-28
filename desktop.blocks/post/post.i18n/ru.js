@@ -5,7 +5,7 @@ module.exports = {
         "translator": "Переводчик",
         "translators": "Переводчики",
         "createDate": "Создано",
-        "editDate": "Изменено",
+        "editDate": "изменено",
         "tags": "Тэги",
         "categories": "Категории",
         "summary": "Краткое описание",
@@ -32,7 +32,7 @@ module.exports = {
         "month10": "Ноября",
         "month11": "Декабря",
 
-        "translate": '(перевод)'
+        "translate": "перевод"
     }
 };
 

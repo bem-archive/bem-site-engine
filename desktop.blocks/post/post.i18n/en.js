@@ -5,7 +5,7 @@ module.exports = {
         "translator": "Translator",
         "translators": "Translators",
         "createDate": "Created",
-        "editDate": "Changed",
+        "editDate": "changed",
         "tags": "Tags",
         "categories": "Categories",
         "summary": "Summary",
@@ -32,6 +32,6 @@ module.exports = {
         "month10": "November",
         "month11": "December",
 
-        "translate": "(translate)"
+        "translate": "translate"
     }
 };

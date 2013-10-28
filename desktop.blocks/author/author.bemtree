@@ -10,7 +10,10 @@ block author {
                leJspath.findByIdAndType(id, 'translators', data.lang) ||
                id;
 
-        author.avatar = this.data.yaApiHosts.static.host + '/' + author.avatar;
+        //console.debug('static = %s', this.data.yaApiHosts.static.host);
+
+        if(author.avatar.indexOf(this.data.yaApiHosts.static.host) == -1)
+          author.avatar = this.data.yaApiHosts.static.host + '/' + author.avatar;
 
         return author;
     }
