@@ -23,9 +23,12 @@ block main-menu {
 
         {
             elem: 'item',
-            elemMods: { size: 'small' },
+            elemMods: {
+                size: 'small',
+                active: apply('active', this.ctx = 'acknowledgement')
+            },
             url: apply('disable', this.ctx.url = '/page/acknowledgement'),
-            name: 'acknowledgements'
+            name: 'acknowledgement'
         },
 
         apply('delimeter'),

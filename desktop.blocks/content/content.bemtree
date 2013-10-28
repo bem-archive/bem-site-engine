@@ -33,5 +33,5 @@ block content {
 
     index:      apply('p-block', this.ctx.name = 'p-index')
 
-    page:     apply('p-block', this.ctx.name = 'p-page')
+    page:       apply('p-block', this.ctx.name = 'p-page')
 }

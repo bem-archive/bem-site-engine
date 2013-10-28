@@ -9,7 +9,7 @@ module.exports = {
         "authors": "Авторы",
         "tags": "Тэги",
         "jobs": "Вакансии",
-        "acknowledgements": "Благодарности",
+        "acknowledgement": "Благодарности",
         "facebook": "Facebook",
         "yaru": "Я.ru",
         "twitter": "Twitter",

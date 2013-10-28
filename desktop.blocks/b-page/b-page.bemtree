@@ -29,15 +29,16 @@ block b-page {
         //leJspath.stringify(this.data);
 
         this.data._r = {
-            'method':   function() { return apply('method') },
-            'libs':     function() { return apply('libs') },
-            'articles': function() { return apply('articles') },
-            'tools':    function() { return apply('tools') },
-            'news':     function() { return apply('news') },
-            'authors':  function() { return apply('authors') },
-            'tags':     function() { return apply('tags') },
-            'index':    function() { return apply('index') },
-            'page':     function() { return apply('page') }
+            'method':           function() { return apply('method') },
+            'libs':             function() { return apply('libs') },
+            'articles':         function() { return apply('articles') },
+            'tools':            function() { return apply('tools') },
+            'news':             function() { return apply('news') },
+            'authors':          function() { return apply('authors') },
+            'tags':             function() { return apply('tags') },
+            'index':            function() { return apply('index') },
+            'jobs':             function() { return apply('page') },
+            'acknowledgement':  function() { return apply('page') }
         };
         return this.data._r[this.data.page].call(this);
     }
