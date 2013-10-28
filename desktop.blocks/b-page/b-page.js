@@ -15,16 +15,14 @@ BEMDOM.decl('b-page', {
     },
 
     _resizePostContent: function() {
-        console.log('resize post content');
-
         var windowW = BEMDOM.win.width();
             mainMenuW = this.findBlockInside('main-menu').domElem.width();
             menusW = this.findBlocksInside('menu').reduce(function(prev, item) {
-            return prev + item.domElem.width();
-        }, 0);
+                return prev + item.domElem.width();
+            }, 0),
+            post = this.findBlockInside({ block: 'post', modName: 'view', modVal: 'full' });
 
-        this.findBlockInside({ block: 'post', modName: 'view', modVal: 'full' })
-            .domElem.width(windowW - mainMenuW - menusW - 30)
+            post && post.domElem.width(windowW - mainMenuW - menusW - 30);
 
         return this;
     }
