@@ -6,7 +6,7 @@ block p-index {
                     'generated', 'ironman', 'motion', 'robin',
                     'scheme', 'spots', 'stripe', 'waves'][index];
 
-        console.debug('index = %s mod = %s', index, mod);
+        //console.debug('index = %s mod = %s', index, mod);
 
         return {
             elem: 'logo',

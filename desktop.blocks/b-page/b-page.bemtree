@@ -7,10 +7,7 @@ block b-page {
             .then(
                 function(result) {
                     leJspath.setSource(result); //кеширование данных
-
-                    apply('route');
-                    this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.page }, this.ctx.mods);
-                    return applyCtx(this.ctx);
+                    return applyNext();
                 },
                 function(err) {
                     return apply('error', this.ctx = err);
@@ -27,6 +24,8 @@ block b-page {
 
     route: {
         //leJspath.stringify(this.data);
+        //
+        //console.debug('page = %s', this.data.page);
 
         this.data._r = {
             'method':           function() { return apply('method') },
@@ -38,7 +37,8 @@ block b-page {
             'tags':             function() { return apply('tags') },
             'index':            function() { return apply('index') },
             'jobs':             function() { return apply('page') },
-            'acknowledgement':  function() { return apply('page') }
+            'acknowledgement':  function() { return apply('page') },
+            'error':            function() { return apply('error') }
         };
         return this.data._r[this.data.page].call(this);
     }
@@ -159,7 +159,7 @@ block b-page {
 
     /* ----------------tools----------------- */
     tools: {
-        console.debug('tools');
+        //console.debug('tools');
 
         var data = this.data,
             type = data.page,
@@ -295,6 +295,10 @@ block b-page {
         leJspath.stringify(this.data._q);
 
         return apply('createSEO');
+    }
+
+    error: {
+
     }
 
     /**

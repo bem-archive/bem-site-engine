@@ -1,10 +1,15 @@
 block p-error {
 
-    tag: ''
-
     content: [
-        { block : 'headline', content : this.ctx.title },
-        { block : 'para', content : this.ctx.content }
+        {
+            elem: 'title',
+            tag: 'h1',
+            content: BEM.I18N('p-error', 'title')
+        },
+        {
+            elem: 'description',
+            tag: 'h3',
+            content: BEM.I18N('p-error', 'description')
+        }
     ]
-
 }
