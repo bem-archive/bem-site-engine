@@ -4,13 +4,15 @@ block posts, elem list {
 
         this._.isArray(this.ctx.source): {
 
+            var self = this;
+
             return this.ctx.source.map(function(item){
-                return apply(this._mode = '', this.ctx = {
+                return {
                     block: 'post',
-                    mods: this.mods,
+                    mods: self.mods,
                     source: item.id,
-                    category: this.ctx.category
-                });
+                    category: self.ctx.category
+                }
             });
         }
     }
