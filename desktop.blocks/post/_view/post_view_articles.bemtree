@@ -10,12 +10,26 @@
             return [];
 
         return [
-            apply('author', this.ctx = { authors: source.authors, translators: source.translators }),
+            apply('author', this.ctx = {
+                authors: source.authors,
+                translators: source.translators
+            }),
             apply('tags', this.ctx.content = source.tags),
-            apply('categories', this.ctx = { content: source.categories, type: source.type }),
-            apply('date', this.ctx = { createDate: source.createDate, editDate: source.editDate }),
+            apply('categories', this.ctx = {
+                content: source.categories,
+                type: source.type
+            }),
 
-            apply('title', this.ctx = { content: source, category: this.ctx.category }),
+            apply('date', this.ctx = {
+                createDate: source.createDate,
+                editDate: source.editDate
+            }),
+
+            apply('title', this.ctx = {
+                content: source,
+                category: this.ctx.category
+            }),
+
             apply('summary', this.ctx.content = source.summary)
         ]
     }
