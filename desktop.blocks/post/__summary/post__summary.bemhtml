@@ -3,15 +3,4 @@ block post, elem summary {
     default, !(this.ctx && this.ctx.content): {
         return false;
     }
-
-    /*
-    content : [
-        BEM.I18N('posts-item', this.elem),
-        ': ',
-        {
-            tag: 'strong',
-            content: this.ctx.content
-        }
-    ]
-    */
 }
