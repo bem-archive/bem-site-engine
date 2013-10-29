@@ -10,7 +10,9 @@ block post, elem author {
                     content: ', '
                 };
 
-            this.ctx.authors.forEach(function(item, index){
+            this.ctx.authors.filter(function(item) {
+                    return item.length > 0;
+                }).forEach(function(item, index){
 
                 index++ > 0 && buf.push(splitter);
 
@@ -27,8 +29,9 @@ block post, elem author {
             if(this._.isArray(this.ctx.translators) && this.ctx.translators.length > 0) {
 
                 this.ctx.translators.filter(function(item) {
-                    return self.ctx.authors.indexOf(item) == -1;
+                    return self.ctx.authors.indexOf(item) == -1 && item.length > 0;
                 }).forEach(function(item, index) {
+
                     buf.push(splitter);
 
                     buf.push(apply(
