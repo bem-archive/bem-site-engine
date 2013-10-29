@@ -46,21 +46,7 @@ block b-page {
 
     /* ---------------method------------------ */
     method: {
-        var data = this.data,
-            type = data.page,
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang),
-            rootId = leJspath.findRootPostId(type, data.lang);
-
-        this.data._q = {
-            type: type,
-            id: (res && res.id) || rootId,
-            category: res && res.category,
-            query: {
-                predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
-                substitution: { type: type, rootId: rootId }
-            }
-        };
-
+        this.data._q = leLogic.getMethodology(this.data);
         return apply('createSEO');
     }
 
