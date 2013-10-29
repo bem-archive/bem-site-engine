@@ -298,7 +298,7 @@ block b-page {
     }
 
     error: {
-
+        return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('p-error', 'title') });
     }
 
     /**
