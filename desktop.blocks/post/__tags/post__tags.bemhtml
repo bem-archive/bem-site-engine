@@ -4,30 +4,22 @@ block post, elem tags {
         return false;
     }
 
-    content: [
-        //BEM.I18N('post', this.elem),
-        //': ',
-        apply('contentTransformation')
-    ]
+    content, this._.isArray(this.ctx.content): {
+        var buf = [],
+            delimeter = {
+                tag: 'span',
+                content: ' '
+            };
 
-    contentTransformation, this._.isArray(this.ctx.content): {
-        var i = 0,
-            buf = [],
-            item;
-
-        while(item = this.ctx.content[i]) {
-            i++ > 0 &&
-                buf.push({
-                    tag: 'span',
-                    content: ' '
-                });
+        this.ctx.content.forEach(function(item, index) {
+            index > 0 && buf.push(delimeter);
 
             buf.push({
                 block: 'link',
                 url: '/tags/' + item,
                 content: item
             });
-        }
+        });
 
         return buf;
 
