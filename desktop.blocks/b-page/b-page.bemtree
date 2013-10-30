@@ -34,18 +34,22 @@ block b-page {
             'acknowledgement':  function() { return apply('page') },
             'authors':          function() { return apply('authors') },
             'tags':             function() { return apply('tags') },
-            'index':            function() {
-                return apply('setTitleAndMeta', this.ctx = {
-                    title: apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', 'general')])
-                });
-            },
-            'error':            function() {
-                return apply('setTitleAndMeta', this.ctx = {
-                    title: apply('buildTitle', this.ctx.content = [BEM.I18N('p-error', 'title')])
-                });
-            }
+            'index':            function() { return apply('index') },
+            'error':            function() { return apply('error') }
         };
         return this.data._r[this.data.page].call(this);
+    }
+
+    index: {
+        return apply('setTitleAndMeta', this.ctx = {
+            title: apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', 'general')])
+        });
+    }
+
+    error: {
+        return apply('setTitleAndMeta', this.ctx = {
+            title: apply('buildTitle', this.ctx.content = [BEM.I18N('p-error', 'title')])
+        });
     }
 
     method: {

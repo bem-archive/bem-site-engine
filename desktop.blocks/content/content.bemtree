@@ -35,5 +35,5 @@ block content {
 
     page:       apply('p-block', this.ctx.name = 'p-page')
 
-    error:       apply('p-block', this.ctx.name = 'p-error')
+    error:      apply('p-block', this.ctx.name = 'p-error')
 }
