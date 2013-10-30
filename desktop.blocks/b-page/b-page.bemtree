@@ -32,10 +32,18 @@ block b-page {
             'news':             function() { return apply('news') },
             'jobs':             function() { return apply('page') },
             'acknowledgement':  function() { return apply('page') },
-            'index':            function() { return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('main-menu', 'general') }) },
-            'error':            function() { return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('p-error', 'title') }) },
             'authors':          function() { return apply('authors') },
-            'tags':             function() { return apply('tags') }
+            'tags':             function() { return apply('tags') },
+            'index':            function() {
+                return apply('setTitleAndMeta', this.ctx = {
+                    title: apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', 'general')])
+                });
+            },
+            'error':            function() {
+                return apply('setTitleAndMeta', this.ctx = {
+                    title: apply('buildTitle', this.ctx.content = [BEM.I18N('p-error', 'title')])
+                });
+            }
         };
         return this.data._r[this.data.page].call(this);
     }
@@ -76,13 +84,13 @@ block b-page {
             title = null,
             description = null;
 
-        description = title = BEM.I18N('main-menu', 'authors');
+        description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', 'authors')]);
 
         if(url) {
             var source = leJspath.findByTypeAndUrl('authors', url, data.lang) ||
                          leJspath.findByTypeAndUrl('translators', url, data.lang);
             if(source) {
-                title = source.firstName + ' ' + source.lastName;
+                title = apply('buildTitle', this.ctx.content = [source.firstName + ' ' + source.lastName, BEM.I18N('main-menu', 'authors')]);
                 description = source.info;
             }
         }
@@ -91,10 +99,16 @@ block b-page {
     }
 
     tags: {
-        return apply('setTitleAndMeta', this.ctx = {
-            title: this.data.params.id || BEM.I18N('main-menu', 'tags'),
-            description: this.data.params.id || BEM.I18N('main-menu', 'tags')
-        });
+        var tag = this.data.params.id,
+            title = apply('buildTitle', this.ctx.content = [tag, BEM.I18N('main-menu', 'tags')]);
+
+        return apply('setTitleAndMeta', this.ctx = { title:  title, description: title });
+    }
+
+    buildTitle: {
+        return this.ctx.content.reduce(function(prev, item) {
+            return item ? prev + item + ' / ' : '';
+        }, '') + 'BEM';
     }
 
     /**
@@ -115,12 +129,12 @@ block b-page {
             keywords = null;
 
         if(_q.type) {
-            description = title = BEM.I18N('main-menu', _q.type);
+            description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', this.data.page)]);
 
             if(_q.id) {
                 var source = leJspath.findByIdAndType(_q.id, _q.type, this.data.lang);
                 if(source) {
-                    title = source.title;
+                    title = apply('buildTitle', this.ctx.content = [source.title, BEM.I18N('main-menu', this.data.page)]);
                     description = source.summary;
                     keywords = source.tags ? source.tags.join(', ') : ''
                 }
