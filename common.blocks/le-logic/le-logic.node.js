@@ -20,7 +20,7 @@ modules.define(
             this._logicCache[this.generateKey(data)] = value;
         },
 
-        getMethodology: function(data) {
+        resolveMethodology: function(data) {
             var result = this.getLogicCache(data);
 
             if(result) return result;
@@ -44,7 +44,7 @@ modules.define(
             return result;
         },
 
-        getArticles: function(data) {
+        resolveArticles: function(data) {
             var result = this.getLogicCache(data);
 
             if(result) return result;
@@ -67,7 +67,7 @@ modules.define(
             return result;
         },
 
-        getNews: function(data) {
+        resolveNews: function(data) {
             var result = this.getLogicCache(data);
 
             if(result) return result;
@@ -90,7 +90,7 @@ modules.define(
             return result;
         },
 
-        getTools: function(data) {
+        resolveTools: function(data) {
             var result = this.getLogicCache(data);
 
             if(result) return result;
@@ -153,7 +153,7 @@ modules.define(
             return result;
         },
 
-        getLibraries: function(data) {
+        resolveLibraries: function(data) {
             var result = this.getLogicCache(data);
 
             if(result) return result;
@@ -222,6 +222,29 @@ modules.define(
 
                 lib: lib,
                 version: version
+            };
+
+            this.setLogicCache(data, result);
+
+            return result;
+        },
+
+        resolveCustomPage: function(data) {
+            var result = this.getLogicCache(data);
+
+            if(result) return result;
+
+            var type = 'page',
+                res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+
+            result = {
+                type: type,
+                id: res && res.id,
+                category: res && res.category,
+                query: {
+                    predicate: '.' + data.lang + '{.type === $type}',
+                    substitution: { type: type }
+                }
             };
 
             this.setLogicCache(data, result);

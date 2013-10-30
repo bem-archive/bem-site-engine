@@ -30,101 +30,71 @@ block b-page {
             'articles':         function() { return apply('articles') },
             'tools':            function() { return apply('tools') },
             'news':             function() { return apply('news') },
-            'authors':          function() { return apply('authors') },
-            'tags':             function() { return apply('tags') },
-            'index':            function() { return apply('index') },
             'jobs':             function() { return apply('page') },
             'acknowledgement':  function() { return apply('page') },
-            'error':            function() { return apply('error') }
+            'index':            function() { return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('main-menu', 'general') }) },
+            'error':            function() { return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('p-error', 'title') }) },
+            'authors':          function() { return apply('authors') },
+            'tags':             function() { return apply('tags') }
         };
         return this.data._r[this.data.page].call(this);
     }
 
     method: {
-        this.data._q = leLogic.getMethodology(this.data);
-        return apply('createSEO');
+        this.data._q = leLogic.resolveMethodology(this.data);
+        return apply('createSEO')
     }
 
     libs: {
-        this.data._q = leLogic.getLibraries(this.data);
+        this.data._q = leLogic.resolveLibraries(this.data);
         return apply('createSEO');
     }
 
     articles: {
-        this.data._q = leLogic.getArticles(this.data);
+        this.data._q = leLogic.resolveArticles(this.data);
         return apply('createSEO');
     }
 
     tools: {
-        this.data._q = leLogic.getTools(this.data);
+        this.data._q = leLogic.resolveTools(this.data);
         return apply('createSEO');
     }
 
     news: {
-        this.data._q = leLogic.getNews(this.data);
+        this.data._q = leLogic.resolveNews(this.data);
+        return apply('createSEO');
+    }
+
+    page: {
+        this.data._q = leLogic.resolveCustomPage(this.data);
         return apply('createSEO');
     }
 
     authors: {
         var data = this.data,
-            type = data.page,
             url = data.params.id,
             title = null,
             description = null;
 
-        if(url){
+        description = title = BEM.I18N('main-menu', 'authors');
+
+        if(url) {
             var source = leJspath.findByTypeAndUrl('authors', url, data.lang) ||
                          leJspath.findByTypeAndUrl('translators', url, data.lang);
             if(source) {
                 title = source.firstName + ' ' + source.lastName;
                 description = source.info;
-            }else {
-                description = title = BEM.I18N('main-menu', 'authors');
             }
-        }else{
-            description = title = BEM.I18N('main-menu', 'authors');
         }
 
         return apply('setTitleAndMeta', this.ctx = { title: title, description: description });
     }
 
     tags: {
-        var data = this.data,
-            url = data.params.id,
-            title = null,
-            description = null;
-
-        description = title = url || BEM.I18N('main-menu', 'tags');
-
-        return apply('setTitleAndMeta', this.ctx = { title: title, description: description });
-    }
-
-    index: {
-        return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('main-menu', 'general') });
-    }
-
-    page: {
-        var data = this.data,
-            type = 'page',
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
-
-        this.data._q = {
-            type: type,
-            id: res && res.id,
-            category: res && res.category,
-            query: {
-                predicate: '.' + data.lang + '{.type === $type}',
-                substitution: { type: type }
-            }
-        };
-
-        leJspath.stringify(this.data._q);
-
-        return apply('createSEO');
-    }
-
-    error: {
-        return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('p-error', 'title') });
+        return apply('setTitleAndMeta', this.ctx = {
+            title: this.data.params.id || BEM.I18N('main-menu', 'tags'),
+            description: this.data.params.id || BEM.I18N('main-menu', 'tags')
+        });
     }
 
     /**
@@ -139,14 +109,10 @@ block b-page {
      * - libs
      */
     createSEO: {
-        if(!this.data._q) return {};
-
         var _q = this.data._q,
             title = null,
             description = null,
             keywords = null;
-
-        this.data._m = {};
 
         if(_q.type) {
             description = title = BEM.I18N('main-menu', _q.type);
@@ -157,8 +123,6 @@ block b-page {
                     title = source.title;
                     description = source.summary;
                     keywords = source.tags ? source.tags.join(', ') : ''
-                }else {
-                    description = title = BEM.I18N('main-menu', _q.type);
                 }
             }
         }
