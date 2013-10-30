@@ -3,7 +3,8 @@ block menu {
     content: {
 
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            config = this.ctx.config;
+            config = this.ctx.config,
+            self = this;
 
         var source = leJspath.find(config.query.predicate, config.query.substitution);
 
@@ -23,11 +24,16 @@ block menu {
 
         if(this._.isArray(source)) {
 
+            source = source.filter(function(item) {
+                return !self._.isSimple(item) || item.length > 0;
+            });
+
             //цикличеки применяем шаблоны к элементу item текущего блока
             //с модификатором соотвествующим полю мета-информации
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
             source = source.map(function(item) {
+                //console.debug('item =%s=', item);
                 return apply(
                     this._mode = '',
                     this.ctx = {
