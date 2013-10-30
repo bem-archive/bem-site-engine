@@ -168,7 +168,9 @@ modules.define(
                 substitution = { type: type },
                 query = null;
 
-            id = leJspath.findIdByTypeAndUrl(type, id || category, data.lang);
+            id = leJspath.findByTypeAndUrl(type, id || category, data.lang);
+
+            id = id && id.id;
 
             //В случае когда не указана библиотека, т.е. url = /libs,
             //то выбирается первая попавшаяся библиотека

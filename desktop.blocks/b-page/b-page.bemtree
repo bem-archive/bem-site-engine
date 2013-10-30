@@ -23,9 +23,6 @@ block b-page {
     }
 
     route: {
-        //leJspath.stringify(this.data);
-        //
-        //console.debug('page = %s', this.data.page);
 
         this.data._r = {
             'method':           function() { return apply('method') },

@@ -95,32 +95,6 @@ provide({
     },
 
     /**
-     * Pagination method for result set
-     * @param  {Array} content - full result set
-     * @param  {Array} config - object with pagination configuration parameters
-     * @param  {Number} defaultLimit - default number of records per page
-     * @return {Array} - sliced array according to pagnation parameters
-     */
-    paginate: function(content, config, defaultLimit) {
-
-        if(!config) {
-            return content;
-        }
-
-        config = config[0];
-
-        //проверка page и limit. Если не заданы или имеют неверный формат, то page = 1
-        //limit = defaultLimit (10)
-        var page = (config.page && !isNaN(parseFloat(config.page)) && isFinite(config.page)) ? config.page : 1,
-            limit = (config.limit && !isNaN(parseFloat(config.limit)) && isFinite(config.limit)) ? config.limit : defaultLimit;
-
-        //вырезаем нужный набор записей из исходного массива
-        return page * limit  <= content.length ?
-                content.slice((page - 1) * limit, page * limit) :
-                content.slice((page - 1) * limit);
-    },
-
-    /**
      * Utility method for development, stringify
      * object and place it into console log
      * @param  {Object} object target object which should be stringified
@@ -172,6 +146,18 @@ provide({
         result = this.filter(config, lang);
 
         return (result && result.length > 0) ? result.shift() : null;
+    },
+
+    /**
+     * Find source by type, url and lang criteria
+     * @param  {String} type -type of source
+     * @param  {String} url - url of source
+     * @param  {String} lang - language
+     * @return {Object} - source founded by search criteria or null if source was not found
+     */
+    findByTypeAndUrl: function(type, url, lang) {
+        var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
+        return (result && result.length > 0) ? result[0] : null;
     },
 
     findRootPostId: function(type, lang) {
@@ -239,30 +225,6 @@ provide({
         });
 
         return result;
-    },
-
-    /**
-     * Find source unique id by type, url and lang criteria
-     * @param  {String} type -type of source
-     * @param  {String} url - url of source
-     * @param  {String} lang - language
-     * @return {Object} - source id founded by search criteria or null if source was not found
-     */
-    findIdByTypeAndUrl: function(type, url, lang) {
-        var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
-        return (result && result.length > 0) ? result[0].id : null;
-    },
-
-    /**
-     * Find source by type, url and lang criteria
-     * @param  {String} type -type of source
-     * @param  {String} url - url of source
-     * @param  {String} lang - language
-     * @return {Object} - source founded by search criteria or null if source was not found
-     */
-    findByTypeAndUrl: function(type, url, lang) {
-        var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
-        return (result && result.length > 0) ? result[0] : null;
     }
 });
 
