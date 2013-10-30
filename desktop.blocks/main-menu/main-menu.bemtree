@@ -80,7 +80,16 @@ block main-menu {
     langSwitcher: {
         var lang = this.data.lang == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,
-            url = 'http://' + lang + host.slice(host.indexOf('.')) + this.data.req.path;
+
+            url = 'http://' + lang +
+                (
+                    host.indexOf(this.data.lang) == 0 ?
+                        host.slice(host.indexOf('.')) :
+                        ('.' + host)
+                ) +
+                this.data.req.path;
+
+       // console.debug('lang = %s host = %s url = %s', lang, host, url);
 
         return {
             elem: 'item',

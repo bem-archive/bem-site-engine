@@ -7,7 +7,7 @@ module.exports = {
         "articles": "Статьи",
         "news": "Блог",
         "authors": "Авторы",
-        "tags": "Тэги",
+        "tags": "Теги",
         "jobs": "Вакансии",
         "acknowledgement": "Благодарности",
         "facebook": "Facebook",

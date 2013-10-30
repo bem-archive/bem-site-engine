@@ -7,10 +7,7 @@ block b-page {
             .then(
                 function(result) {
                     leJspath.setSource(result); //кеширование данных
-
-                    apply('route');
-                    this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.page }, this.ctx.mods);
-                    return applyCtx(this.ctx);
+                    return applyNext();
                 },
                 function(err) {
                     return apply('error', this.ctx = err);
@@ -26,7 +23,6 @@ block b-page {
     }
 
     route: {
-        //leJspath.stringify(this.data);
 
         this.data._r = {
             'method':           function() { return apply('method') },
@@ -34,267 +30,85 @@ block b-page {
             'articles':         function() { return apply('articles') },
             'tools':            function() { return apply('tools') },
             'news':             function() { return apply('news') },
+            'jobs':             function() { return apply('page') },
+            'acknowledgement':  function() { return apply('page') },
             'authors':          function() { return apply('authors') },
             'tags':             function() { return apply('tags') },
-            'index':            function() { return apply('index') },
-            'jobs':             function() { return apply('page') },
-            'acknowledgement':  function() { return apply('page') }
+            'index':            function() {
+                return apply('setTitleAndMeta', this.ctx = {
+                    title: apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', 'general')])
+                });
+            },
+            'error':            function() {
+                return apply('setTitleAndMeta', this.ctx = {
+                    title: apply('buildTitle', this.ctx.content = [BEM.I18N('p-error', 'title')])
+                });
+            }
         };
         return this.data._r[this.data.page].call(this);
     }
 
-
-    /* ---------------method------------------ */
     method: {
-        var data = this.data,
-            type = data.page,
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang),
-            rootId = leJspath.findRootPostId(type, data.lang);
-
-        this.data._q = {
-            type: type,
-            id: (res && res.id) || rootId,
-            category: res && res.category,
-            query: {
-                predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
-                substitution: { type: type, rootId: rootId }
-            }
-        };
-
-        return apply('createSEO');
+        this.data._q = leLogic.resolveMethodology(this.data);
+        return apply('createSEO')
     }
 
-
-    /* ---------------libs------------------ */
     libs: {
-        var data = this.data,
-            type = data.page,
-
-            lib = data.params['lib'] || null,
-            version = data.params['version'] || null,
-            category = data.params['category'] || null,
-            id = data.params['id'],
-
-            predicate = '.' + data.lang + '{ .type == $type }',
-            substitution = { type: type },
-            query = null;
-
-        id = leJspath.findIdByTypeAndUrl(type, id || category, data.lang);
-
-        //В случае когда не указана библиотека, т.е. url = /libs,
-        //то выбирается первая попавшаяся библиотека
-        if(!lib) {
-            var categories = leJspath.find('.' + this.data.lang + '{.type === $type}.categories',
-                { type : type });
-
-            if(this._.isArray(categories) && categories.length > 0) {
-                var url = categories[0].url || categories[0];
-                lib = url.split('/')[0];
-            }
-        }
-
-        predicate += '{.categories ^== $category || .categories.url ^== $category }';
-        substitution = this._.extend(substitution, { category: lib });
-
-        //если не указана версия, то выбирается самая новая для данной библиотеки
-        if(!version) {
-            var versions = [];
-            leJspath.find(predicate, substitution).forEach(function(post) {
-                post.categories.forEach(function(item){
-                    var url = item.url || item;
-                    versions.push(url.match(/\d+\.\d+\.\d+/)[0]);
-                });
-            });
-
-            version = versions.sort().pop();
-        }
-
-        substitution = this._.extend(substitution, { category: lib + '/' + version });
-
-        //поиск корневой статьи для библиотеки и показ ее если не указан id другого поста для библиотеки явно
-        var rootId = leJspath.find(predicate + '{.root == "true"}.id', substitution);
-        rootId = rootId.length > 0 ? rootId[0] : null;
-
-        if(rootId) {
-            predicate += '{.id !== $rootId}';
-            substitution = this._.extend(substitution, { rootId: rootId });
-            id = id || rootId;
-        }
-
-        query = { predicate: predicate, substitution: substitution };
-
-        this.data._q = {
-            type: type,
-            id: id,
-            category: category,
-            query: query,
-
-            lib: lib,
-            version: version
-        };
-
+        this.data._q = leLogic.resolveLibraries(this.data);
         return apply('createSEO');
     }
 
-
-    /* --------------articles------------------- */
     articles: {
-        var data = this.data,
-            type = data.page,
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
-
-        this.data._q = {
-            type: type,
-            id: res && res.id,
-            category: res && res.category,
-            query: {
-                predicate: '.' + data.lang + '{.type === $type}',
-                substitution: { type: type }
-            }
-        };
-
+        this.data._q = leLogic.resolveArticles(this.data);
         return apply('createSEO');
     }
 
-
-    /* ----------------tools----------------- */
     tools: {
-        console.debug('tools');
-
-        var data = this.data,
-            type = data.page,
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang),
-
-            id = res && res.id,
-            category = res && res.category,
-            query = null,
-            isOnlyOnePost = false;
-
-        if(category) {
-            var predicate = '.' + data.lang + '{.type === $type}' +
-                '{.categories === $category || .categories.url === $category}';
-
-            var rootId = leJspath.findRootPostIdByCategory(type, category, data.lang);
-            if(rootId) {
-                predicate +=  '{.id !== "' + rootId + '"}';
-            }
-
-            if(!id && rootId){
-                id = rootId;
-            }
-
-            query = {
-                predicate: predicate,
-                substitution: { type: type, category: category }
-            };
-
-            //проверка на то, что для данного инструмента есть только один пост
-            //если это так, то показываем его в развернутом виде а меню постов прячем
-            var source = leJspath.find(query.predicate, query.substitution);
-            if(this._.isArray(source) && source.length == 1) {
-                isOnlyOnePost = true;
-                id = source[0].id;
-            }
-        }else {
-            id = leJspath.findRootPostId(type, data.lang);
-            if(!id) {
-                query = {
-                    predicate: '.' + data.lang + '{.type === $type}',
-                    substitution: { type: type }
-                }
-            }
-        }
-
-        console.debug('id = %s category = %s type = %s', id, category, type);
-
-        this.data._q = {
-            type: type,
-            id: id,
-            category: category,
-            query: query,
-
-            isOnlyOnePost: isOnlyOnePost
-        };
-
+        this.data._q = leLogic.resolveTools(this.data);
         return apply('createSEO');
     }
 
-
-    /* ---------------news------------------ */
     news: {
-        var data = this.data,
-            type = data.page,
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+        this.data._q = leLogic.resolveNews(this.data);
+        return apply('createSEO');
+    }
 
-        this.data._q = {
-            type: type,
-            id: res && res.id,
-            category: res && res.category,
-            query: {
-                predicate: '.' + data.lang + '{.type === $type}',
-                substitution: { type: type }
-            }
-        };
-
+    page: {
+        this.data._q = leLogic.resolveCustomPage(this.data);
         return apply('createSEO');
     }
 
     authors: {
         var data = this.data,
-            type = data.page,
             url = data.params.id,
             title = null,
             description = null;
 
-        if(url){
+        description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', 'authors')]);
+
+        if(url) {
             var source = leJspath.findByTypeAndUrl('authors', url, data.lang) ||
                          leJspath.findByTypeAndUrl('translators', url, data.lang);
             if(source) {
-                title = source.firstName + ' ' + source.lastName;
+                title = apply('buildTitle', this.ctx.content = [source.firstName + ' ' + source.lastName, BEM.I18N('main-menu', 'authors')]);
                 description = source.info;
-            }else {
-                description = title = BEM.I18N('main-menu', 'authors');
             }
-        }else{
-            description = title = BEM.I18N('main-menu', 'authors');
         }
 
         return apply('setTitleAndMeta', this.ctx = { title: title, description: description });
     }
 
     tags: {
-        var data = this.data,
-            url = data.params.id,
-            title = null,
-            description = null;
+        var tag = this.data.params.id,
+            title = apply('buildTitle', this.ctx.content = [tag, BEM.I18N('main-menu', 'tags')]);
 
-        description = title = url || BEM.I18N('main-menu', 'tags');
-
-        return apply('setTitleAndMeta', this.ctx = { title: title, description: description });
+        return apply('setTitleAndMeta', this.ctx = { title:  title, description: title });
     }
 
-    index: {
-        return apply('setTitleAndMeta', this.ctx = { title: BEM.I18N('main-menu', 'general') });
-    }
-
-    page: {
-        var data = this.data,
-            type = 'page',
-            res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
-
-        this.data._q = {
-            type: type,
-            id: res && res.id,
-            category: res && res.category,
-            query: {
-                predicate: '.' + data.lang + '{.type === $type}',
-                substitution: { type: type }
-            }
-        };
-
-        leJspath.stringify(this.data._q);
-
-        return apply('createSEO');
+    buildTitle: {
+        return this.ctx.content.reduce(function(prev, item) {
+            return item ? prev + item + ' / ' : '';
+        }, '') + 'BEM';
     }
 
     /**
@@ -309,26 +123,20 @@ block b-page {
      * - libs
      */
     createSEO: {
-        if(!this.data._q) return {};
-
         var _q = this.data._q,
             title = null,
             description = null,
             keywords = null;
 
-        this.data._m = {};
-
         if(_q.type) {
-            description = title = BEM.I18N('main-menu', _q.type);
+            description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', this.data.page)]);
 
             if(_q.id) {
                 var source = leJspath.findByIdAndType(_q.id, _q.type, this.data.lang);
                 if(source) {
-                    title = source.title;
+                    title = apply('buildTitle', this.ctx.content = [source.title, BEM.I18N('main-menu', this.data.page)]);
                     description = source.summary;
                     keywords = source.tags ? source.tags.join(', ') : ''
-                }else {
-                    description = title = BEM.I18N('main-menu', _q.type);
                 }
             }
         }
