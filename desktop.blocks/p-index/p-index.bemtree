@@ -8,9 +8,32 @@ block p-index {
 
         //console.debug('index = %s mod = %s', index, mod);
 
-        return {
-            elem: 'logo',
-            elemMods: { theme: mod }
-        };
+        return [
+            {
+                elem: 'logo',
+                elemMods: { theme: mod }
+            },
+            {
+                elem: 'title',
+                content : BEM.I18N('p-index', 'title')
+            },
+            {
+                elem: 'phrase',
+                content : BEM.I18N('p-index', 'phrase')
+            },
+            {
+                block : 'link',
+                mix : {block: 'p-index', elem: 'link'},
+                url   : '//github.com/bem/project-stub',
+                content : BEM.I18N('p-index', 'project-stub')
+            },
+            {
+                block : 'link',
+                mix : {block: 'p-index', elem: 'ya'},
+                url   : BEM.I18N('p-index', 'url'),
+                content : BEM.I18N('p-index', 'ya')
+            }
+
+        ];
     }
 }

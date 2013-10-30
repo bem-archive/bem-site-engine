@@ -1,7 +1,7 @@
 .p-index__logo_theme_batman
 {
-    width: 500px;
-    height: 432px;
+    /*width: 500px;*/
+    /*height: 432px;*/
 
-    background: url('sign_theme_batman.png') no-repeat;
+    background-image: url('sign_theme_batman.png') ;
 }

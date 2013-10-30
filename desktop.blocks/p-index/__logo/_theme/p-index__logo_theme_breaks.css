@@ -1,7 +1,7 @@
 .p-index__logo_theme_breaks
 {
-    width: 500px;
-    height: 414px;
+    /*width: 500px;*/
+    /*height: 414px;*/
 
-    background: url('sign_theme_breaks.png') no-repeat;
+    background-image: url('sign_theme_breaks.png') ;
 }
