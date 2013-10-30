@@ -1,3 +1,9 @@
+yandex-bem-info-www (2.0.16) unstable; urgency=low
+
+  * Test rebuild. Fix miscellanious bugs. Provide improvments
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 29 Oct 2013 14:59:47 +0400
+
 yandex-bem-info-www (2.0.15) unstable; urgency=low
 
   * Test rebuild. Verify fix for avatar loading
