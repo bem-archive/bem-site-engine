@@ -1,0 +1,21 @@
+@font-face {
+    font-family: textbook;
+    src: local(textbook), url(./TBN45.otf);
+}
+
+
+.p-index__ya
+{
+    font-family: textbook, arial, sans-serif;
+    font-size: 25px;
+
+    position: absolute;
+    right: 0;
+    bottom: 20px;
+    left: 0;
+
+    display: block;
+
+    color: #BFBFBF;
+
+}

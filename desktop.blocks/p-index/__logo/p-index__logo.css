@@ -1,5 +1,10 @@
 .p-index__logo
 {
-    margin: auto;
-    margin-top: 50px;
+    margin: 0 auto;
+
+    height: 300px;
+    width: 500px;
+
+    background-size: auto 300px;
+    background: no-repeat center;
 }

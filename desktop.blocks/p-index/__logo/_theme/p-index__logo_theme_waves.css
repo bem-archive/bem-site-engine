@@ -1,7 +1,7 @@
 .p-index__logo_theme_waves
 {
-    width: 500px;
-    height: 272px;
+    /*width: 500px;*/
+    /*height: 272px;*/
 
-    background: url('sign_theme_waves.png') no-repeat;
+    background-image: url('sign_theme_waves.png') ;
 }

@@ -1,0 +1,37 @@
+/*
+block p-index {
+
+    content: [
+        this.ctx.content
+    ]
+
+    elem item {
+
+        content: [
+            {
+                elem : 'title',
+                content : {
+                    block : 'link',
+                    url   : this.ctx.url,
+                    content : BEM.I18N('p-index', this.ctx.name)
+                }
+            }
+        ]
+
+    }
+
+    elem title {
+
+        tag: ''
+
+        content: {
+            block : 'headline',
+            mods : { level : 3 },
+            mix : { block : this.block, elem : this.elem },
+            content : this.ctx.content
+        }
+
+    }
+
+}
+*/
