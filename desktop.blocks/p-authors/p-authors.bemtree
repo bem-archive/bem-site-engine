@@ -25,7 +25,7 @@ block p-authors {
         //для каждого из типов постов отображаем блоки posts
         //c постами соответствующего типа для которых автором
         //или соавтором является текущий выбранный автор
-        ['method', 'articles', 'tools', 'libs', 'news'].forEach(function(item) {
+        ['method', 'tools', 'libs', 'articles', 'news'].forEach(function(item) {
             buf.push({
                 block: 'posts',
                 mods: { view: 'articles' },

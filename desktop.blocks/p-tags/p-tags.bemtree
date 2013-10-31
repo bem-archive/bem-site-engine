@@ -11,7 +11,7 @@ block p-tags {
             substitution = null,
             content = [];
 
-        content = ['method', 'articles', 'tools', 'libs', 'news'].map(function(item) {
+        content = ['method', 'tools', 'libs', 'articles', 'news'].map(function(item) {
             predicate = '.' + data.lang + '{.type === $type}';
             substitution = { type: item };
 
