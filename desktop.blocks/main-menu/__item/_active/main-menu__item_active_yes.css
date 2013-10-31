@@ -2,4 +2,5 @@
 .main-menu__item_active_yes .link
 {
     color: #FFD94D;
+    cursor: default;
 }
