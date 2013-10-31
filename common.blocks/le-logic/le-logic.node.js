@@ -172,44 +172,24 @@ modules.define(
 
             id = id && id.id;
 
-            //В случае когда не указана библиотека, т.е. url = /libs,
-            //то выбирается первая попавшаяся библиотека
-            if(!lib) {
-                var categories = leJspath.find('.' + this.data.lang + '{.type === $type}.categories',
-                    { type : type });
+            if(lib){
+                predicate += '{.categories ^== $category || .categories.url ^== $category }';
+                substitution['category'] = lib;
 
-                if(categories.length > 0) {
-                    var url = categories[0].url || categories[0];
-                    lib = url.split('/')[0];
+
+                if(version){
+                    substitution['category'] = lib + '/' + version ;
                 }
-            }
 
-            predicate += '{.categories ^== $category || .categories.url ^== $category }';
-            substitution['category'] = lib;
+                //поиск корневой статьи для библиотеки и показ ее если не указан id другого поста для библиотеки явно
+                var rootId = leJspath.find(predicate + '{.root == "true"}.id', substitution);
+                rootId = rootId.length > 0 ? rootId[0] : null;
 
-            //если не указана версия, то выбирается самая новая для данной библиотеки
-            if(!version) {
-                var versions = [];
-                leJspath.find(predicate, substitution).forEach(function(post) {
-                    post.categories.forEach(function(item){
-                        var url = item.url || item;
-                        versions.push(url.match(/\d+\.\d+\.\d+/)[0]);
-                    });
-                });
-
-                version = versions.sort().pop();
-            }
-
-            substitution['category'] = lib + '/' + version ;
-
-            //поиск корневой статьи для библиотеки и показ ее если не указан id другого поста для библиотеки явно
-            var rootId = leJspath.find(predicate + '{.root == "true"}.id', substitution);
-            rootId = rootId.length > 0 ? rootId[0] : null;
-
-            if(rootId) {
-                predicate += '{.id !== $rootId}';
-                substitution['rootId'] = rootId;
-                id = id || rootId;
+                if(rootId) {
+                    predicate += '{.id !== $rootId}';
+                    substitution['rootId'] = rootId;
+                    id = id || rootId;
+                }
             }
 
             query = { predicate: predicate, substitution: substitution };
