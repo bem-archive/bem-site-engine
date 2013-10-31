@@ -63,4 +63,13 @@ block post, mod view full {
         url: apply('getUrl'),
         content: this.ctx.content
     }
+
+    getUrl: {
+        var lang = this.data.lang == 'en' ? 'ru' : 'en',
+            host = this.data.req.headers.host,
+            path = this.data.req.path;
+
+            return 'http://' + lang +
+                (host.indexOf(this.data.lang) == 0 ? host.slice(host.indexOf('.')) : ('.' + host)) + path;
+    }
 }
