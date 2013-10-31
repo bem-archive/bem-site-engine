@@ -5,8 +5,15 @@ block author, elem skype {
     }
 
     content: [
-        BEM.I18N('author', this.elem),
-        ': ',
-        applyNext()
+        {
+            block: 'author',
+            elem: 'label',
+            content: ''
+        },
+        {
+            block: 'author',
+            elem: 'value',
+            content: this.ctx.content
+        }
     ]
 }

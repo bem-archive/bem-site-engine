@@ -1,0 +1,4 @@
+.author__github > .author__label
+{
+    background: url('github.png') no-repeat;
+}

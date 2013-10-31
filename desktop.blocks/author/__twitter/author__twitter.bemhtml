@@ -5,12 +5,21 @@ block author, elem twitter {
     }
 
     content: [
-        BEM.I18N('author', this.elem),
-        ': ',
         {
-            block: 'link',
-            url: 'https://twitter.com/' + this.ctx.content,
-            content: '@' + this.ctx.content
+            block: 'author',
+            elem: 'label',
+            content: ''
+        },
+        {
+            block: 'author',
+            elem: 'value',
+            content: [
+                {
+                    block: 'link',
+                    url: 'https://twitter.com/' + this.ctx.content,
+                    content: '@' + this.ctx.content
+                }
+            ]
         }
     ]
 }

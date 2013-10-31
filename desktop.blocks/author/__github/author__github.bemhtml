@@ -5,12 +5,21 @@ block author, elem github {
     }
 
     content: [
-        BEM.I18N('author', this.elem),
-        ': ',
         {
-            block: 'link',
-            url: apply('url'),
-            content: this.ctx.content
+            block: 'author',
+            elem: 'label',
+            content: ''
+        },
+        {
+            block: 'author',
+            elem: 'value',
+            content: [
+                {
+                    block: 'link',
+                    url: apply('url'),
+                    content: this.ctx.content
+                }
+            ]
         }
     ]
 

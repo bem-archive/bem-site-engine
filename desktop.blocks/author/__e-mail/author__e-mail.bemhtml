@@ -5,28 +5,28 @@ block author, elem e-mail {
     }
 
     content: [
-        BEM.I18N('author', this.elem),
-        ': ',
+        {
+            block: 'author',
+            elem: 'label',
+            content: ''
+        },
         apply('contentTransformation')
     ]
 
     contentTransformation: {
 
-        var buf = [];
-
-        this.ctx.content.forEach(function(item, index){
-            index > 0 &&
-                buf.push({
-                    tag: 'span',
-                    content: ', '
-                });
-
-            buf.push({
-                tag: 'span',
-                content: item
-            });
+        return this.ctx.content.map(function(item, index){
+            return {
+                block: 'author',
+                elem: 'value',
+                content: [
+                    {
+                        block: 'link',
+                        url: 'mailto:' + item,
+                        content: item
+                    }
+                ]
+            };
         });
-
-        return buf;
     }
 }
