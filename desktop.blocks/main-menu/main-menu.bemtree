@@ -12,7 +12,7 @@ block main-menu {
         apply('mainItem', this.ctx.name = 'news'),
         apply('mainItem', this.ctx.name = 'tags'),
         apply('mainItem', this.ctx.name = 'authors'),
-        apply('mainItem', this.ctx.name = 'jobs', this.ctx.url = 'jobs'),
+        apply('mainItem', this.ctx.name = 'jobs'),
 
         apply('delimeter'),
 
@@ -48,7 +48,8 @@ block main-menu {
         elem: 'item',
         elemMods: {
             size: 'normal',
-            active: apply('active', this.ctx = this.ctx.name)
+            active: apply('active', this.ctx = this.ctx.name),
+            hidden: apply('hidden', this.ctx = this.ctx.name)
         },
         url: apply('disable', this.ctx.url = '/' + (this.ctx.url || this.ctx.name)),
         name: this.ctx.name
@@ -108,6 +109,13 @@ block main-menu {
     //определение условия активности пункта главного меню
     active: {
         return this.data.page === this.ctx ? 'yes' : '';
+    }
+
+    hidden: {
+        return {
+            'en': ['jobs'],
+            'ru': []
+        }[this.data.lang].indexOf(this.ctx) !== -1 ? 'yes' : ''
     }
 
     //построение ссылки на последнюю версию первой библиотеки из списка библиотек
