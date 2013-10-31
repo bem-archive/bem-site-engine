@@ -8,7 +8,7 @@ module.exports = {
         "news": "Блог",
         "authors": "Авторы",
         "tags": "Теги",
-        "jobs": "Вакансии",
+        "jobs": "Работа в команде БЭМ",
         "acknowledgement": "Благодарности",
         "facebook": "Facebook",
         "yaru": "Я.ru",
