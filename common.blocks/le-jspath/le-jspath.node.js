@@ -200,26 +200,44 @@ provide({
      */
     findCategoryAndIdByUrl: function(path, type, lang) {
         var result = null,
+            find = null,
             posts = this.find('.' + lang + '{ .type === $type }', { type: type });
 
+        //поиск по связке тип + категория + url
         posts.forEach(function(post) {
             post.categories.forEach(function(category) {
-                if(path.indexOf('/' + PATH.join.apply(null, [post.type, (category.url || category), post.url])) !== -1) {
-                    result = { category: category.url || category,  id: post.id };
+                category = category.url || category;
+                find = path.indexOf([post.type, category, post.url].reduce(function(prev, item) {
+                    return prev + ((item && item.length > 0) ? ('/' + item) : '');
+                }, '')) !== -1;
+                if(find) {
+                    logger.debug('find type = %s category = %s url = %s', post.type, category, post.url);
+                    result = { category: category,  id: post.id };
                 }
             });
         });
 
+        //поиск по связке тип + url
         result || posts.forEach(function(post) {
-            if(path.indexOf('/' + PATH.join.apply(null, [post.type, post.url])) !== -1) {
-                result = { category: null,  id: post.id };
+            find = path.indexOf([post.type, post.url].reduce(function(prev, item) {
+                return prev + ((item && item.length > 0) ? ('/' + item) : '');
+            }, '')) !== -1;
+            if(find) {
+                logger.debug('find type = %s url = %s ', post.type, post.url);
+                result = { id: post.id };
             }
         });
 
+        //поиск по связке тип + категория
         result || posts.forEach(function(post) {
             post.categories.forEach(function(category) {
-                if(path.indexOf('/' + PATH.join.apply(null, [post.type, (category.url || category)])) !== -1) {
-                    result = { category: category.url || category,  id: null };
+                category = category.url || category;
+                find = path.indexOf([post.type, category].reduce(function(prev, item) {
+                    return prev + ((item && item.length > 0) ? ('/' + item) : '');
+                }, '')) !== -1;
+                if(find) {
+                    logger.debug('find type = %s category = %s ', post.type, category);
+                    result = { category: category };
                 }
             });
         });
