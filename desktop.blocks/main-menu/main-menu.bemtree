@@ -31,7 +31,7 @@ block main-menu {
             name: 'acknowledgement'
         },
 
-        apply('delimeter'),
+        // apply('delimeter'),
 
         apply('langSwitcher'),
         { block: 'search' }
