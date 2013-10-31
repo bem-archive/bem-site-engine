@@ -9,11 +9,6 @@
     display: inline-block;
 }
 
-.author__avatar-wrapper
-{
-
-}
-
 .author__data-wrapper
 {
     padding-top: 8px;
@@ -23,7 +18,7 @@
 
 .author__data-wrapper > .contact-info
 {
-    margin: 10px 0;
+    margin-top: 10px;
 }
 
 .author_view_full .author__name
@@ -37,4 +32,18 @@
 .author_view_full .author__avatar
 {
     padding: 5px 5px 2px;
+}
+
+
+.contact-info .author__e-mail,
+.contact-info .author__twitter,
+.contact-info .author__github,
+.contact-info .author__skype
+{
+    padding: 5px 0;
+}
+
+.author_view_full .author__info
+{
+    padding: 15px 0 10px 0;
 }
