@@ -11,4 +11,10 @@
     border-radius: 10px 10px 10px 10px;
     margin-left: 2px;
     padding: 4px 10px;
+    color: #AAAAAA;
+}
+
+.post__tags .link:hover{
+    background: none repeat scroll 0 0 #DDDDDD;
+    color: #777777;
 }
