@@ -5,7 +5,7 @@ modules.define(
 
 router.addRoute({
     name : 'jobs',
-    rule : '/page/jobs',
+    rule : '/jobs',
     data : {
         action : 'le-page'
     }
@@ -13,7 +13,7 @@ router.addRoute({
 
 router.addRoute({
     name : 'acknowledgement',
-    rule : '/page/acknowledgement',
+    rule : '/acknowledgement',
     data : {
         action : 'le-page'
     }

@@ -235,7 +235,7 @@ modules.define(
             if(result) return result;
 
             var type = 'page',
-                res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+                res = leJspath.findCategoryAndIdByUrl('/' + type + data.req.path, type, data.lang);
 
             result = {
                 type: type,

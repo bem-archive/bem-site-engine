@@ -12,7 +12,7 @@ block main-menu {
         apply('mainItem', this.ctx.name = 'news'),
         apply('mainItem', this.ctx.name = 'tags'),
         apply('mainItem', this.ctx.name = 'authors'),
-        apply('mainItem', this.ctx.name = 'jobs', this.ctx.url = 'page/jobs'),
+        apply('mainItem', this.ctx.name = 'jobs', this.ctx.url = 'jobs'),
 
         apply('delimeter'),
 
@@ -27,7 +27,7 @@ block main-menu {
                 size: 'small',
                 active: apply('active', this.ctx = 'acknowledgement')
             },
-            url: apply('disable', this.ctx.url = '/page/acknowledgement'),
+            url: apply('disable', this.ctx.url = '/acknowledgement'),
             name: 'acknowledgement'
         },
 
@@ -88,8 +88,6 @@ block main-menu {
                         ('.' + host)
                 ) +
                 this.data.req.path;
-
-       // console.debug('lang = %s host = %s url = %s', lang, host, url);
 
         return {
             elem: 'item',
