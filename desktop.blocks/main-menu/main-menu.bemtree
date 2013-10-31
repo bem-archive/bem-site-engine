@@ -1,10 +1,11 @@
 block main-menu {
 
     content: [
-        apply('logobem'),
+        apply('logobem'), //логотип сайта
+
         apply('mainItem', this.ctx.name = 'method'),
         apply('mainItem', this.ctx.name = 'tools'),
-        apply('mainItem', this.ctx.name = 'libs', this.ctx.url = apply('libUrl')),
+        apply('mainItem', this.ctx.name = 'libs'),
 
         apply('delimeter'),
 
@@ -16,25 +17,14 @@ block main-menu {
 
         apply('delimeter'),
 
-        this.data.lang == 'ru' ?
-        apply('social', this.ctx.name = 'yaru') : null,
-        apply('social', this.ctx.name = 'facebook'),
-        apply('social', this.ctx.name = 'twitter'),
+        apply('smallItem', this.ctx.name = 'yaru'),
+        apply('smallItem', this.ctx.name = 'facebook'),
+        apply('smallItem', this.ctx.name = 'twitter'),
+        apply('smallItem', this.ctx.name = 'acknowledgement'),
 
-        {
-            elem: 'item',
-            elemMods: {
-                size: 'small',
-                active: apply('active', this.ctx = 'acknowledgement')
-            },
-            url: apply('disable', this.ctx.url = '/acknowledgement'),
-            name: 'acknowledgement'
-        },
+        apply('langSwitcher'), //переключатель языков
 
-        // apply('delimeter'),
-
-        apply('langSwitcher'),
-        { block: 'search' }
+        { block: 'search' } //форма поиска
     ]
 
     //логотип сайта
@@ -55,18 +45,23 @@ block main-menu {
         name: this.ctx.name
     }
 
-    //ссылка на социальные ресурсы
-    social: {
+    //второстепенные пункты меню
+    smallItem: {
         var urls = {
             facebook: 'http://www.facebook.com/#!/groups/209713935765634/',
             twitter: 'https://twitter.com/bem_' + this.data.lang,
-            yaru: 'http://clubs.ya.ru/bem/'
+            yaru: 'http://clubs.ya.ru/bem/',
+            acknowledgement: '/acknowledgement'
         };
 
         return {
             elem: 'item',
-            elemMods: { size: 'small' },
-            url: urls[this.ctx.name],
+            elemMods: {
+                size: 'small',
+                active: apply('active', this.ctx = this.ctx.name),
+                hidden: apply('hidden', this.ctx = this.ctx.name)
+            },
+            url: apply('disable', this.ctx.url = urls[this.ctx.name]),
             name: this.ctx.name
         };
     }
@@ -81,6 +76,10 @@ block main-menu {
     langSwitcher: {
         var lang = this.data.lang == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,
+            path = this.data.req.path,
+            shoudReturnToMainPage = apply('hiddenMap')[lang].some(function(item) {
+                return path.indexOf(item) !== -1;
+            });
 
             url = 'http://' + lang +
                 (
@@ -88,7 +87,7 @@ block main-menu {
                         host.slice(host.indexOf('.')) :
                         ('.' + host)
                 ) +
-                this.data.req.path;
+                (!shoudReturnToMainPage ? path : '');
 
         return {
             elem: 'item',
@@ -111,43 +110,13 @@ block main-menu {
         return this.data.page === this.ctx ? 'yes' : '';
     }
 
+    //определение условия скрывания пункта главного меню
     hidden: {
-        return {
-            'en': ['jobs'],
-            'ru': []
-        }[this.data.lang].indexOf(this.ctx) !== -1 ? 'yes' : ''
+        return apply('hiddenMap')[this.data.lang].indexOf(this.ctx) !== -1 ? 'yes' : ''
     }
 
-    //построение ссылки на последнюю версию первой библиотеки из списка библиотек
-    libUrl: {
-        var TYPE = 'libs',
-            categories = leJspath.find('.' + this.data.lang + '{.type === $type}.categories', { type : TYPE }),
-            result = TYPE;
-
-        if(this._.isArray(categories) && categories.length > 0) {
-            var url = categories[0].url || categories[0],
-                lib = url.split('/')[0],
-                versions = [],
-                version = null;
-
-            leJspath.find('.' + this.data.lang + '{.type === $type}' +
-                '{.categories ^== $category || .categories.url ^== $category }', {type: TYPE, category: lib })
-                .forEach(function(post) {
-                    post.categories.forEach(function(item){
-                        var url = item.url || item;
-                        /\d+\.\d+\.\d+/.test(url) && versions.push(url.match(/\d+\.\d+\.\d+/)[0]);
-                    });
-                });
-
-            version = versions.sort().pop();
-
-            if(lib)
-                result += '/' + lib;
-
-            if(version)
-                result += '/' + version;
-        }
-
-        return result;
+    hiddenMap: {
+        'en': ['jobs', 'yaru'],
+        'ru': []
     }
 }
