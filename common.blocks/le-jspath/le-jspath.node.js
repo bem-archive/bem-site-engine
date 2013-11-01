@@ -148,6 +148,21 @@ provide({
         return (result && result.length > 0) ? result.shift() : null;
     },
 
+    findById: function(id, lang) {
+        var result = this.find('.' + lang + '{.id === $id}', { id: id });
+        return (result && result.length > 0) ? result[0] : null;
+    },
+
+    findByUrl: function(url, lang) {
+        var result = this.find('.' + lang + '{.url === $url}', { url: url });
+        return (result && result.length > 0) ? result[0] : null;
+    },
+
+    findBySlug: function(slug, lang) {
+        var result = this.find('.' + lang + '{.slug === $slug}', { slug: slug });
+        return (result && result.length > 0) ? result[0] : null;
+    },
+
     /**
      * Find source by type, url and lang criteria
      * @param  {String} type -type of source
@@ -155,10 +170,12 @@ provide({
      * @param  {String} lang - language
      * @return {Object} - source founded by search criteria or null if source was not found
      */
+    /*
     findByTypeAndUrl: function(type, url, lang) {
         var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
         return (result && result.length > 0) ? result[0] : null;
     },
+    */
 
     findRootPostId: function(type, lang) {
         var result = this.filter([
@@ -207,11 +224,11 @@ provide({
         posts.forEach(function(post) {
             post.categories.forEach(function(category) {
                 category = category.url || category;
-                find = path.indexOf([post.type, category, post.url].reduce(function(prev, item) {
+                find = path.indexOf([post.type, category, post.slug].reduce(function(prev, item) {
                     return prev + ((item && item.length > 0) ? ('/' + item) : '');
                 }, '')) !== -1;
                 if(find) {
-                    logger.debug('find type = %s category = %s url = %s', post.type, category, post.url);
+                    logger.debug('find type = %s category = %s url = %s', post.type, category, post.slug);
                     result = { category: category,  id: post.id };
                 }
             });
@@ -219,11 +236,11 @@ provide({
 
         //поиск по связке тип + url
         result || posts.forEach(function(post) {
-            find = path.indexOf([post.type, post.url].reduce(function(prev, item) {
+            find = path.indexOf([post.type, post.slug].reduce(function(prev, item) {
                 return prev + ((item && item.length > 0) ? ('/' + item) : '');
             }, '')) !== -1;
             if(find) {
-                logger.debug('find type = %s url = %s ', post.type, post.url);
+                logger.debug('find type = %s url = %s ', post.type, post.slug);
                 result = { id: post.id };
             }
         });

@@ -4,7 +4,7 @@ block author, mod view simple {
 
     mix: { block: 'link' }
 
-    attrs: { href : '/authors/' + this.ctx.content.url }
+    attrs: { href : this.ctx.content.url }
 
     content: [
         {

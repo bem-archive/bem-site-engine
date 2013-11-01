@@ -84,15 +84,14 @@ block b-page {
 
     authors: {
         var data = this.data,
-            url = data.params.id,
+            slug = data.params.id,
             title = null,
             description = null;
 
         description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', 'authors')]);
 
-        if(url) {
-            var source = leJspath.findByTypeAndUrl('authors', url, data.lang) ||
-                         leJspath.findByTypeAndUrl('translators', url, data.lang);
+        if(slug) {
+            var source = leJspath.findBySlug(slug, data.lang);
             if(source) {
                 title = apply('buildTitle', this.ctx.content = [source.firstName + ' ' + source.lastName, BEM.I18N('main-menu', 'authors')]);
                 description = source.info;

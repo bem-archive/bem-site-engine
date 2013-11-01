@@ -59,7 +59,7 @@ block p-authors {
                                 },
                                 sort: [{ field: 'lastName' }, { field: 'firstName' }],
                                 title: true,
-                                activeField: 'url', //это поле по которому будет отпределяться аквтивное состояние пункта меню
+                                activeField: 'slug', //это поле по которому будет отпределяться аквтивное состояние пункта меню
                                 id: self.ctx.id
                             }
                         }
@@ -102,7 +102,7 @@ block p-authors {
                 return {
                     block: 'author',
                     mods: { view: 'grid-cell' },
-                    id: item.url
+                    id: item.slug
                 }
             })
         });

@@ -168,7 +168,7 @@ modules.define(
                 substitution = { type: type },
                 query = null;
 
-            id = leJspath.findByTypeAndUrl(type, id || category, data.lang);
+            id = leJspath.findByUrl(data.req.path, data.lang);
 
             id = id && id.id;
 
