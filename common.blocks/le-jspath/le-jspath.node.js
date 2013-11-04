@@ -224,7 +224,7 @@ provide({
         posts.forEach(function(post) {
             post.categories.forEach(function(category) {
                 category = category.url || category;
-                find = path.indexOf([post.type, category, post.slug].reduce(function(prev, item) {
+                find = path.indexOf([type, category, post.slug].reduce(function(prev, item) {
                     return prev + ((item && item.length > 0) ? ('/' + item) : '');
                 }, '')) !== -1;
                 if(find) {
@@ -236,7 +236,7 @@ provide({
 
         //поиск по связке тип + url
         result || posts.forEach(function(post) {
-            find = path.indexOf([post.type, post.slug].reduce(function(prev, item) {
+            find = path.indexOf([type, post.slug].reduce(function(prev, item) {
                 return prev + ((item && item.length > 0) ? ('/' + item) : '');
             }, '')) !== -1;
             if(find) {
@@ -249,7 +249,7 @@ provide({
         result || posts.forEach(function(post) {
             post.categories.forEach(function(category) {
                 category = category.url || category;
-                find = path.indexOf([post.type, category].reduce(function(prev, item) {
+                find = path.indexOf([type, category].reduce(function(prev, item) {
                     return prev + ((item && item.length > 0) ? ('/' + item) : '');
                 }, '')) !== -1;
                 if(find) {
