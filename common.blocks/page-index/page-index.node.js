@@ -4,6 +4,14 @@ modules.define(
     function(provide, router, View) {
 
 router.addRoute({
+    name : 'custom',
+    rule : '/.*',
+    data : {
+        action : 'le-page'
+    }
+});
+
+router.addRoute({
     name : 'index',
     rule : '/',
     data : {

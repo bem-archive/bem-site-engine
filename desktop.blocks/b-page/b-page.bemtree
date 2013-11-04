@@ -22,6 +22,19 @@ block b-page {
         return applyCtx(this.ctx);
     }
 
+    (leJspath.getSource() && this.data.page === 'custom'), default: {
+        var data = this.data,
+            entity = leJspath.findCategoryAndIdByManualUrl(data.req.path, data.lang);
+        if(entity) {
+            data.req.path = entity.url;
+            data.page = this._.isArray(entity.type) ? entity.type[0] : entity.type;
+        }else {
+            data.page = 'error';
+        }
+        this.data = data;
+        return applyNext();
+    }
+
     route: {
 
         this.data._r = {

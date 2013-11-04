@@ -218,7 +218,7 @@ provide({
     findCategoryAndIdByUrl: function(path, type, lang) {
         var result = null,
             find = null,
-            posts = this.find('.' + lang + '{ .type === $type }', { type: type });
+            posts = this.find('.' + lang + '{.type === $type}', { type: type });
 
         //поиск по связке тип + категория + url
         posts.forEach(function(post) {
@@ -260,6 +260,11 @@ provide({
         });
 
         return result;
+    },
+
+    findCategoryAndIdByManualUrl: function(path, lang) {
+        var entities = this.find('.' + lang + '{.manualUrl === $manualUrl}', { manualUrl: path });
+        return entities.length > 0 ? entities.shift() : null;
     }
 });
 
