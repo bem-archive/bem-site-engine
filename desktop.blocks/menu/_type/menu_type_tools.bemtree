@@ -95,10 +95,6 @@ block menu, mod type tools{
 
             this.buf = [];
 
-            //при наличии соответсвующего модификатора добавляем
-            //пункт меню при нажатии по которому показываются все посты
-            //apply('drawAllItem');
-
             //рекурсивно строим меню
             //применяем шаблоны к элементу item текущего блока
             //с модификатором соотвествующим полю мета-информации
@@ -109,23 +105,6 @@ block menu, mod type tools{
             });
 
             return this.buf;
-        }
-    }
-
-    drawAllItem: {
-        if(this.mods['all'] === 'yes') {
-            this.buf.push(apply(
-                this._mode = '',
-                this.ctx = {
-                    elem: 'item',
-                    elemMods: {
-                        type : 'categories',
-                        active : !this.ctx.id ? 'yes' : ''
-                    },
-                    url: '/' + this.ctx.type,
-                    name: BEM.I18N('menu', 'all-' + this.ctx.type)
-                }
-            ));
         }
     }
 
