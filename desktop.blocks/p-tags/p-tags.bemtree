@@ -5,7 +5,7 @@ block p-tags {
     }
 
     content: {
-        var id = this.ctx.id,
+        var id = decodeURIComponent(this.ctx.id),
             data = this.data,
             predicate = null,
             substitution = null,
