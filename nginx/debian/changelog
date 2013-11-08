@@ -1,3 +1,10 @@
+yandex-bem-info-nginx-conf (2.3) unstable; urgency=low
+
+  * Проект конфига с дебианизацией перенесен в проек bem-info
+  * Конфиг переименован из 90-bem-www.conf в 90-bem-info.conf
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Fri, 08 Nov 2013 17:03:02 +0400
+
 yandex-bem-info-nginx-conf (2.2) unstable; urgency=low
 
   * Cleaning
