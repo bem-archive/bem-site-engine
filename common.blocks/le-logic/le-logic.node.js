@@ -168,7 +168,12 @@ modules.define(
                 substitution = { type: type },
                 query = null;
 
-            id = leJspath.findByUrl(data.req.path, data.lang);
+            var path = data.req.path.split('/').reduce(function(prev, item) {
+                return item.length > 0 ? (prev + '/' + item) : (prev + '');
+            }, '');
+
+
+            id = leJspath.findByUrl(path, data.lang);
 
             id = id && id.id;
 
