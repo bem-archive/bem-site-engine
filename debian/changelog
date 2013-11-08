@@ -1,3 +1,9 @@
+yandex-bem-info-www (2.0.17) unstable; urgency=low
+
+  * Test rebuild. New index page and refactoring
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Wed, 30 Oct 2013 18:28:27 +0400
+
 yandex-bem-info-www (2.0.16) unstable; urgency=low
 
   * Test rebuild. Fix miscellanious bugs. Provide improvments
