@@ -14,3 +14,10 @@ datasrc
 *.bundles/*/*.*
 !*.bundles/*/*.bemdecl.js
 !*.bundles/.bem/*
+
+*.deb
+*.build
+*.changes
+*.upload
+*.dsc
+*.tar.gz
