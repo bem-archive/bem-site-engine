@@ -40,7 +40,7 @@
 .contact-info .author__github,
 .contact-info .author__skype
 {
-    padding: 5px 0;
+    padding: 2px 0;
 }
 
 .author_view_full .author__info
@@ -62,6 +62,6 @@
 
 .author_view_full .author__value
 {
-    padding: 3px 0 0 10px;
+    padding: 0 0 0 10px;
     vertical-align: top;
 }
