@@ -8,8 +8,9 @@ module.exports = {
 
         "title": "BEM",
         "phrase": "Technology for creating web applications",
-        "project-stub": "Taste BEM now!",
+        "project-stub": "Quick start",
         "ya" : "Yandex",
-        "url": "//www.yandex.com/"
+        "url": "//www.yandex.com/",
+        "yaLogoSrc": "//yandex.st/lego/_/w3fZdbIEslxR_9CQRR-ezRNUZ_Q.png"
     }
 };

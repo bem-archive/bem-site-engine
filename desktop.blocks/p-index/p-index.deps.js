@@ -9,6 +9,7 @@
         { elem: 'title'},
         { elem: 'phrase'},
         { elem: 'link'},
-        { elem: 'ya'}
+        { elem: 'ya'},
+        { block: 'b-head-logo'}
     ]
 })

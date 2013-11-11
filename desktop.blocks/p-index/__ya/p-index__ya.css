@@ -6,8 +6,8 @@
 
 .p-index__ya
 {
-    font-family: textbook, arial, sans-serif;
-    font-size: 25px;
+    /*font-family: textbook, arial, sans-serif;*/
+    /*font-size: 25px;*/
 
     position: absolute;
     right: 0;
@@ -16,6 +16,6 @@
 
     display: block;
 
-    color: #BFBFBF;
+    /*color: #BFBFBF;*/
 
 }

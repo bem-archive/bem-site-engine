@@ -28,12 +28,24 @@ block p-index {
                 content : BEM.I18N('p-index', 'project-stub')
             },
             {
-                block : 'link',
+                block: 'b-head-logo',
                 mix : {block: 'p-index', elem: 'ya'},
-                url   : BEM.I18N('p-index', 'url'),
-                content : BEM.I18N('p-index', 'ya')
+                content: [
+                    {
+                        elem: 'logo',
+                        content: {
+                            elem: 'link',
+                            url: BEM.I18N('p-index', 'url'),
+                            content: {
+                                elem: 'img',
+                                url: BEM.I18N('p-index', 'yaLogoSrc')
+                            }
+                        }
+                    }
+                ]
             }
 
         ];
     }
 }
+
