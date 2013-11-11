@@ -142,7 +142,8 @@ block b-page {
         var _q = this.data._q,
             title = null,
             description = null,
-            keywords = null;
+            keywords = null,
+            image = null;
 
         if(_q.type) {
             description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', this.data.page)]);
@@ -152,12 +153,25 @@ block b-page {
                 if(source) {
                     title = apply('buildTitle', this.ctx.content = [source.title, BEM.I18N('main-menu', this.data.page)]);
                     description = source.summary;
-                    keywords = source.tags ? source.tags.join(', ') : ''
+                    keywords = source.tags ? source.tags.join(', ') : '';
+
+                    if(source.ogImage && source.ogImage.length > 0) {
+                        image = source.ogImage;
+                    }
+
+                    if(!image && source.thumbnail && source.thumbnail.length > 0) {
+                        image = source.thumbnail
+                    }
                 }
             }
         }
 
-        return apply('setTitleAndMeta', this.ctx = { title: title, description: description, keywords: keywords });
+        return apply('setTitleAndMeta', this.ctx = {
+            title: title,
+            description: description,
+            keywords: keywords,
+            image: image
+        });
 
     }
 
@@ -183,10 +197,15 @@ block b-page {
         if(this.ctx.keywords) {
             this.data._m['keywords'] = this.data._m['ogKeywords'] = this.ctx.keywords;
         }
+
+        if(this.ctx.image) {
+            this.data._m['ogImage'] = this.ctx.image;
+        }
     }
 
     content: [
-        { block : 'content' }
+        { block : 'content' },
+        { elem : 'js' }
     ]
 
 }

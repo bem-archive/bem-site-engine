@@ -20,7 +20,7 @@ block b-page {
 
 
         c.push({ elem : 'css' });
-        c.push({ elem : 'js' });
+        //c.push({ elem : 'js' });
 
         if(_m) {
             if(_m.description)
@@ -43,6 +43,10 @@ block b-page {
 
             if(_m.ogUrl)
                 c.push({ elem: 'meta', attrs: { property: 'og:url', content: _m.ogUrl }});
+
+            if(_m.ogImage)
+                c.push({ elem: 'meta', attrs: { property: 'og:image', content: _m.ogImage }});
+
         }
 
         return applyCtx(c);
