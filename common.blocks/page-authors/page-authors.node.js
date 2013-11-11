@@ -19,6 +19,22 @@ router.addRoute({
     }
 });
 
+router.addRoute({
+    name : 'authors',
+    rule : '/translators',
+    data : {
+        action : 'le-page'
+    }
+});
+
+router.addRoute({
+    name : 'authors',
+    rule : '/translators/{id}',
+    data : {
+        action : 'le-page'
+    }
+});
+
 provide(View);
 
 });
