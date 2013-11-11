@@ -4,6 +4,11 @@
     color: #268bd2;
 }
 
+.link:link
+{
+    color: #268bd2;
+}
+
 .link:hover
 {
     color: #D00;
