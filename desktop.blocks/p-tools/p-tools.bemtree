@@ -41,6 +41,7 @@ block p-tools {
                 mods: { view: 'articles' },
                 config: {
                     query: _q.query,
+                    sort: [{ field:  'order' }, { field: 'title' }],
                     category: _q.category
                 }
             },
@@ -48,17 +49,17 @@ block p-tools {
             //блок объединяющий меню постов по конкретному инструменту
             //и список постов в развернутом виде или конкретный пост
             //в зависимости от наличия или отсутствия переданного id
-            tool = {
+            tool = _q.id ? {
                 block: 'center',
                 mix: LAYOUT_CENTER,
                 content: [
                     {
                         block: 'layout',
                         mods: { section: 'p-menu' },
-                        content: [ postsMenu, _q.id ? post : posts ]
+                        content: [ postsMenu, post ]
                     }
                 ]
-            },
+            } : posts,
 
             //корневой пост для раздела инструментов
             rootPost = {
