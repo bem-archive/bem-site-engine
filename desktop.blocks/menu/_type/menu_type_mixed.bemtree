@@ -10,6 +10,10 @@ block menu, mod type mixed {
         //сортируем в алфавитном порядке
         source = leJspath.sort(source, [{ field: 'title' }]);
 
+        source = source.filter(function(item) {
+            return !item.root;
+        });
+
         var categories = null,
             url = null,
             items = {};
