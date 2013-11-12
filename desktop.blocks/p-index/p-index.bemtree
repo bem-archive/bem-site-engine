@@ -24,7 +24,7 @@ block p-index {
             {
                 block : 'link',
                 mix : {block: 'p-index', elem: 'link'},
-                url   : '//github.com/bem/project-stub',
+                url   : '/articles/start-with-project-stub',
                 content : BEM.I18N('p-index', 'project-stub')
             },
             {
