@@ -11,7 +11,6 @@
 
 .link:hover
 {
-    color: #D00;
 
     -webkit-transition: color .15s ease-out;
     -moz-transition: color .15s ease-out;
