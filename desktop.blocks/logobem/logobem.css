@@ -2,9 +2,8 @@
 {
     display: block;
 
-    width: 61px;
     height: 50px;
-    margin: 20px 0 20px 30px;
+    margin: 0 0 20px 30px;
 
     background: url('logobem.png') no-repeat;
 }

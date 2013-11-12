@@ -10,3 +10,16 @@
 
     background: #000;
 }
+
+.main-menu__wrapper
+{
+    position: relative;
+
+    min-height: 100%;
+    padding-top: 20px;
+    padding-bottom: 30px;
+
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}

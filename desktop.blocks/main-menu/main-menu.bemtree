@@ -1,30 +1,35 @@
 block main-menu {
 
     content: [
-        apply('logobem'), //логотип сайта
+        {
+            elem: 'wrapper',
+            content: [
+                apply('logobem'), //логотип сайта
 
-        apply('mainItem', this.ctx.name = 'method'),
-        apply('mainItem', this.ctx.name = 'tools'),
-        apply('mainItem', this.ctx.name = 'libs'),
+                apply('mainItem', this.ctx.name = 'method'),
+                apply('mainItem', this.ctx.name = 'tools'),
+                apply('mainItem', this.ctx.name = 'libs'),
 
-        apply('delimeter'),
+                apply('delimeter'),
 
-        apply('mainItem', this.ctx.name = 'articles'),
-        apply('mainItem', this.ctx.name = 'news'),
-        apply('mainItem', this.ctx.name = 'tags'),
-        apply('mainItem', this.ctx.name = 'authors'),
-        apply('mainItem', this.ctx.name = 'jobs'),
+                apply('mainItem', this.ctx.name = 'articles'),
+                apply('mainItem', this.ctx.name = 'news'),
+                apply('mainItem', this.ctx.name = 'tags'),
+                apply('mainItem', this.ctx.name = 'authors'),
+                apply('mainItem', this.ctx.name = 'jobs'),
 
-        apply('delimeter'),
+                apply('delimeter'),
 
-        apply('smallItem', this.ctx.name = 'yaru'),
-        apply('smallItem', this.ctx.name = 'facebook'),
-        apply('smallItem', this.ctx.name = 'twitter'),
-        apply('smallItem', this.ctx.name = 'acknowledgement'),
+                apply('smallItem', this.ctx.name = 'yaru'),
+                apply('smallItem', this.ctx.name = 'facebook'),
+                apply('smallItem', this.ctx.name = 'twitter'),
+                apply('smallItem', this.ctx.name = 'acknowledgement'),
 
-        apply('langSwitcher'), //переключатель языков
+                apply('langSwitcher'), //переключатель языков
 
-        { block: 'search' } //форма поиска
+                { block: 'search' } //форма поиска
+            ]
+        }
     ]
 
     //логотип сайта
