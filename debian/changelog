@@ -1,3 +1,9 @@
+yandex-bem-info-www (2.0.19) unstable; urgency=low
+
+  * Test rebuild. Fix critical routing error for libraries.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Fri, 08 Nov 2013 18:23:20 +0400
+
 yandex-bem-info-www (2.0.18) unstable; urgency=low
 
   * Test rebuild. Add miscellanious fixes and changes.
