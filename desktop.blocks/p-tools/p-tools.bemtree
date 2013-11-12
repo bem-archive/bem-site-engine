@@ -20,7 +20,7 @@ block p-tools {
                 config: {
                     type: _q.type,
                     query: _q.query,
-                    sort: [{ field: 'title' }],
+                    sort: [{ field:  'order' }, { field: 'title' }],
                     category: _q.category,
                     id: _q.id
                 }

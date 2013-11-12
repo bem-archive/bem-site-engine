@@ -5,16 +5,7 @@ block menu, mod type tools{
             type = this.ctx.type,
             self = this;
 
-        //хэш весов групп пунктов меню инструментов для правильной сортировки
-        var orderHash = {
-            'bem': 0,
-            'languages': 50,
-            'parsers': 30,
-            'builders': 40,
-            'optimizers': 10,
-            'templating-engines': 20
-        };
-
+        //выбираем все категории для постов определенного типа (в нашем случае это tools)
         var source = leJspath.find('.' + data.lang + '{.type === "' + type + '"}.categories', {});
 
         //Удаляем дубликаты категорий
@@ -23,13 +14,13 @@ block menu, mod type tools{
                 a.url === b.url && a.name === b.name : a === b;
         });
 
+        //отфильтровываем категории мультираздельных постов для которых тип категории не совпадает с текущим типом
         source = source.filter(function(item) {
             return !item.type || item.type === type;
         });
 
-        //leJspath.stringify(source);
-
         var localizationHash = {},
+            orderHash = {},
             urlArr = [],
             itemsHash = {},
             items = [];
@@ -38,8 +29,9 @@ block menu, mod type tools{
         //Собираем в массив все url для категорий
         source.forEach(function(item, index) {
            if(!self._.isSimple(item)) {
-               localizationHash[item['url']] = item['name'];
-               urlArr.push(item['url']);
+               localizationHash[item.url] = item.name;
+               orderHash[item.url] = item.order;
+               urlArr.push(item.url);
            }else {
                urlArr.push(item);
            }
@@ -47,16 +39,22 @@ block menu, mod type tools{
 
         //Для составных url получаем дополнительную локализацию
         //для каждой из частей разделенных /
-        var t = {};
+        var lh = {},
+            oh = {};
+
         Object.getOwnPropertyNames(localizationHash).forEach(function(item, index) {
-            var urlParts = item.split('/');
-            var nameParts = localizationHash[item].split('/');
+            var urlParts = item.split('/'),
+                nameParts = localizationHash[item].split('/'),
+                orderParts = orderHash[item] ? orderHash[item].split('/') : [];
+
             urlParts.forEach(function(item, index) {
-                t[item] = nameParts[index];
+                lh[item] = nameParts[index];
+                oh[item] = orderParts[index];
             });
         });
 
-        localizationHash = t;
+        localizationHash = lh;
+        orderHash = oh;
 
         //из плоского списка категорий строим их дерево
         //с локализованными частями для категорий и подкатегорий
@@ -67,20 +65,20 @@ block menu, mod type tools{
                 pointer = itemsHash;
 
             parts.forEach(function(part) {
-                pointer = (pointer[part] || (pointer[part] = {key: part, id: item, name: localizationHash[part] || part }));
+                pointer = (pointer[part] || (pointer[part] = {
+                    key: part,
+                    id: item,
+                    name: localizationHash[part] || part,
+                    order: orderHash[part] || 0
+                }));
             });
         });
 
-        //leJspath.stringify(itemsHash);
-
         //Превращаем полученный hash в array
-        Object.getOwnPropertyNames(itemsHash).forEach(function(item, index) {
-            items.push(itemsHash[item]);
+        items = Object.getOwnPropertyNames(itemsHash).map(function(item, index) {
+            return itemsHash[item];
         });
 
-
-        //сортируем массив с элементами меню так, чтобы простые элементы отображались сверху
-        //а имеющие вложенность снизу
         items.sort(function(a, b){
             if(orderHash[a.key] && orderHash[b.key]) {
                 return orderHash[a.key] - orderHash[b.key];
@@ -101,7 +99,7 @@ block menu, mod type tools{
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
             items.forEach(function(item, index){
-                apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item }));
+                apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item, orderHash: orderHash }));
             });
 
             return this.buf;
@@ -111,6 +109,7 @@ block menu, mod type tools{
     drawMenuItem: {
         var item = this.ctx.item,
             type = this.ctx.type,
+            orderHash = this.ctx.orderHash,
             isComplex = apply('complex');
 
         this.buf.push(apply(
@@ -130,8 +129,16 @@ block menu, mod type tools{
 
         if(isComplex) {
             Object.getOwnPropertyNames(item).filter(function(key) {
-                 return ['id', 'name', 'key'].indexOf(key) < 0;
-            }).sort().forEach(function(key) {
+                 return ['id', 'name', 'key', 'order'].indexOf(key) < 0;
+            })
+            .sort(function(a, b) {
+                if(orderHash[a] && orderHash[b]) {
+                    return orderHash[a] - orderHash[b];
+                }else {
+                    return a > b;
+                }
+            })
+            .forEach(function(key) {
                  apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item[key] }));
             });
         }
@@ -139,7 +146,7 @@ block menu, mod type tools{
 
     complex: {
         return Object.getOwnPropertyNames(this.ctx.item).filter(function(item) {
-            return ['id', 'name', 'key'].indexOf(item) < 0
+            return ['id', 'name', 'key', 'order'].indexOf(item) < 0
         }).length > 0
     }
 
