@@ -1,2 +1,5 @@
 User-agent: *
-Disallow:
+Allow: /libs/bem-core/1.0.0/
+Disallow: /libs/bem-core/
+Disallow: /tags/
+Disallow: /tools/optimizers/borschik/borschik/
