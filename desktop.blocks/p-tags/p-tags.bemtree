@@ -15,7 +15,9 @@ block p-tags {
             predicate = '.' + data.lang + '{.type === $type}';
             substitution = { type: item };
 
-            if(id) {
+            //console.debug('tags id = %s %s', id, id != undefined);
+
+            if(id && id != 'undefined') {
                 predicate += '{.tags === $id}';
                 substitution['id'] = id;
             }
