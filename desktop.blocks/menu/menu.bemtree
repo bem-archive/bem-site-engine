@@ -16,9 +16,20 @@ block menu {
         }
 
         //применение сортировки при необходимости
+        // if(config.sort) {
+        //     source = leJspath.sort(source, config.sort);
+        // }else {
+        //     source = source.sort();
+        // }
+        //
+
         if(config.sort) {
-            source = leJspath.sort(source, config.sort);
-        }else {
+            if(this._.isArray(config.sort)) {
+                source = leJspath.sort(source, config.sort);
+            } else {
+                source = source.sort(config.sort);
+            }
+        }else{
             source = source.sort();
         }
 

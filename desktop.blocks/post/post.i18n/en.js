@@ -4,7 +4,7 @@ module.exports = {
         "authors": "Authors",
         "translator": "Translator",
         "translators": "Translators",
-        "createDate": "Created",
+        "createDate": "published",
         "editDate": "changed",
         "tags": "Tags",
         "categories": "Categories",

@@ -2,8 +2,26 @@ block p-articles {
 
     content: {
 
-        var LAYOUT_LEFT = { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
-            LAYOUT_CENTER = { block : 'layout', elem : 'col', mods: {type: 'center'} },
+        var LAYOUT_LEFT = {
+                block : 'layout',
+                elem : 'col',
+                mods: {
+                    type: 'left',
+                    fixed: 'yes'
+                }
+            },
+            LAYOUT_CENTER = {
+                block : 'layout',
+                elem : 'col',
+                mods: {
+                    type: 'center'
+                }
+            },
+            SORT_FUNC = function(a, b) {
+                var aDate = (a.editDate && ('' + a.editDate).length > 0) ? a.editDate : a.createDate;
+                var bDate = (b.editDate && ('' + b.editDate).length > 0) ? b.editDate : b.createDate;
+                return bDate - aDate;
+            },
             _q = this.data._q,
 
             //блок меню с постами типа articles
@@ -13,7 +31,7 @@ block p-articles {
                 config: {
                     type: _q.type,
                     query: _q.query,
-                    sort: [{ field:  'title' }],
+                    sort: SORT_FUNC,
                     category: _q.category,
                     id: _q.id
                 }
@@ -34,7 +52,7 @@ block p-articles {
                 mods: { view: 'articles' },
                 config: {
                     query: _q.query,
-                    sort: [{ field:  'title' }],
+                    sort: SORT_FUNC,
                     category: _q.category
                 }
             };

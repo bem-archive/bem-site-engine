@@ -11,8 +11,16 @@
                 leJspath.filter(config['filter'], data.lang);
 
         //сортировка данных
-        source = config['sort'] ?
-            leJspath.sort(source, config['sort']) : source;
+        // source = config['sort'] ?
+        //     leJspath.sort(source, config['sort']) : source;
+
+        if(config.sort) {
+            if(this._.isArray(config.sort)) {
+                source = leJspath.sort(source, config.sort);
+            } else {
+                source = source.sort(config.sort);
+            }
+        }
 
         source.length > 0 &&
             buf.push({

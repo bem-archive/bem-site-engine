@@ -4,7 +4,7 @@ module.exports = {
         "authors": "Авторы",
         "translator": "Переводчик",
         "translators": "Переводчики",
-        "createDate": "Создано",
+        "createDate": "опубликовано",
         "editDate": "изменено",
         "tags": "Тэги",
         "categories": "Категории",

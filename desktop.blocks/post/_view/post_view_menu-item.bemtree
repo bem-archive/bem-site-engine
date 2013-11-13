@@ -15,7 +15,7 @@ block post, mod view menu-item {
         this.ctx.showDate && buf.push({
             block: 'post',
             elem: 'date',
-            content: source.createDate
+            content: (source.editDate && ('' + source.editDate).length > 0) ? source.editDate : source.createDate
         });
 
         buf.push(source.title);
