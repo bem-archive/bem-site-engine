@@ -1,3 +1,21 @@
+yandex-bem-info-nginx-conf (2.7) unstable; urgency=low
+
+  * Починил магию с редиректами старого bem.info для bem-core
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Wed, 13 Nov 2013 19:44:30 +0400
+
+yandex-bem-info-nginx-conf (2.6) unstable; urgency=low
+
+  * Уменьшено кол-во Regexp в путях до максимально-безопасного кол-ва
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Wed, 13 Nov 2013 19:26:55 +0400
+
+yandex-bem-info-nginx-conf (2.5) unstable; urgency=low
+
+  * Убрано зацикливание в пути URL
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Wed, 13 Nov 2013 18:57:16 +0400
+
 yandex-bem-info-nginx-conf (2.4) unstable; urgency=low
 
   * Test release
