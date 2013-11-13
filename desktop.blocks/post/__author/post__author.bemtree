@@ -43,11 +43,11 @@ block post, elem author {
                         }
                     ));
 
-                    buf.push({
-                        tag: 'span',
-                        cls: 'translate',
-                        content: ' ' + BEM.I18N('post', 'translate')
-                    });
+                    // buf.push({
+                    //     tag: 'span',
+                    //     cls: 'translate',
+                    //     content: ' ' + BEM.I18N('post', 'translate')
+                    // });
                 });
             }
 
