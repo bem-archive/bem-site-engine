@@ -19,6 +19,7 @@ block post, elem categories {
                     content: ' , '
                 });
 
+            /*
             buf.push({
                 block: 'link',
                 url: '/' + self.ctx.type,
@@ -30,10 +31,11 @@ block post, elem categories {
                 tag: 'span',
                 content: ' / '
             });
+            */
 
             buf.push({
                 block: 'link',
-                url: '/' + self.ctx.type + '/' + (item.url || item),
+                url: '/' + (item.type || self.ctx.type) + '/' + (item.url || item),
                 content:  apply('drawCategoryName', this.ctx.content = item)
             });
 
