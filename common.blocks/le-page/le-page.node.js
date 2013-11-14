@@ -22,7 +22,7 @@ View.decl('le-page', {
     },
 
     _lang: function(req) {
-        var LANGS = ['en', 'ru', 'ja'],
+        var LANGS = ['en', 'ru'],
             DEFAULT_LANG = 'en';
 
         var headers = req.headers,
