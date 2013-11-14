@@ -1,3 +1,9 @@
+yandex-bem-info-nginx-conf (2.10) unstable; urgency=low
+
+  * bugfix нет listen в блоке server с перенаправлением
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Thu, 14 Nov 2013 18:55:33 +0400
+
 yandex-bem-info-nginx-conf (2.9) unstable; urgency=low
 
   * Зафиксированы для продакшен домены bem.info ru.bem.info
