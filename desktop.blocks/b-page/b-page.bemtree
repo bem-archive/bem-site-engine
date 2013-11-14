@@ -67,6 +67,10 @@ block b-page {
 
     method: {
         this.data._q = leLogic.resolveMethodology(this.data);
+        if(this.data._q.error) {
+            this.data.page = 'error';
+            return apply('route');
+        }
         return apply('createSEO')
     }
 
@@ -108,6 +112,9 @@ block b-page {
             if(source) {
                 title = apply('buildTitle', this.ctx.content = [source.firstName + ' ' + source.lastName, BEM.I18N('main-menu', 'authors')]);
                 description = source.info;
+            }else {
+                this.data.page = 'error';
+                return apply('route');
             }
         }
 

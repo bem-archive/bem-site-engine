@@ -21,27 +21,53 @@ modules.define(
         },
 
         resolveMethodology: function(data) {
+            //достаем закешированный результат
             var result = this.getLogicCache(data);
 
+            //если он есть то возвращаем его
             if(result) return result;
 
-            var type = data.page,
-                res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang),
-                rootId = leJspath.findRootPostId(type, data.lang);
+            try {
+                //type устанавливаем по data.page
+                //достаем корневой пост по значению type и текущей локали
+                //берем slug для поста из параметров запроса
+                var type = data.page,
+                    rootId = leJspath.findRootPostId(type, data.lang),
+                    id = data.params.id;
 
-            result = {
-                type: type,
-                id: (res && res.id) || rootId,
-                category: res && res.category,
-                query: {
-                    predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
-                    substitution: { type: type, rootId: rootId }
+                result = {
+                    error: false,
+                    type: type,
+                    category: null,
+                    query: {
+                        predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
+                        substitution: { type: type, rootId: rootId }
+                    }
+                };
+
+                //если в запросе был передан slug поста, то пробуем найти по нему пост
+                //если пост не был найден то показываем 404 ошибку
+                //если в запросе не был передан slug поста то показываем корневой пост
+                if(id) {
+                    var res = leJspath.findByTypeAndSlug(type, id, data.lang);
+                    if(!res) {
+                        result.error = { state: true, code: 404 };
+                    }else {
+                        result.id = res.id;
+                        result.category = res && res.category;
+                    }
+                }else {
+                    result.id = rootId;
                 }
-            };
 
-            this.setLogicCache(data, result);
-
-            return result;
+            }catch(e) {
+                result = {
+                    error: { state: true, code: 500 }
+                }
+            }finally {
+                this.setLogicCache(data, result);
+                return result;
+            }
         },
 
         resolveArticles: function(data) {

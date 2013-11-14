@@ -1,6 +1,7 @@
 module.exports = {
     "p-error": {
-        "title": "Error",
-        "description": "Resource not found"
+        "title": "Error 404",
+        "description": "Resource not found",
+        "sitemap": "sitemap"
     }
 };

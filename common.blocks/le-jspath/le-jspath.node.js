@@ -163,6 +163,11 @@ provide({
         return (result && result.length > 0) ? result[0] : null;
     },
 
+    findByTypeAndSlug: function(type, slug, lang) {
+        var result = this.find('.' + lang + '{.type === $type}{.slug === $slug}', { type: type, slug: slug });
+        return (result && result.length > 0) ? result[0] : null;
+    },
+
     /**
      * Find source by type, url and lang criteria
      * @param  {String} type -type of source
