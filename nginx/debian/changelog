@@ -1,3 +1,16 @@
+yandex-bem-info-nginx-conf (2.9) unstable; urgency=low
+
+  * Зафиксированы для продакшен домены bem.info ru.bem.info
+  * Перенаправление с доменов en.bem.info, www.bem.info на bem.info
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Thu, 14 Nov 2013 13:55:32 +0400
+
+yandex-bem-info-nginx-conf (2.8) unstable; urgency=low
+
+  * Поправил redirect со статьи /articles/deps-js-syntax/
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Wed, 13 Nov 2013 22:13:10 +0400
+
 yandex-bem-info-nginx-conf (2.7) unstable; urgency=low
 
   * Починил магию с редиректами старого bem.info для bem-core
