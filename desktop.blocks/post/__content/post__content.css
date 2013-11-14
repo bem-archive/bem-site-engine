@@ -60,10 +60,10 @@
 
 .post__content a:hover
 {
-    text-decoration: none;
+    /*text-decoration: none;*/
 
-    color: #fff;
-    background-color: #000;
+    /*color: #fff;*/
+    /*background-color: #000;*/
 }
 
 /* Tables */
