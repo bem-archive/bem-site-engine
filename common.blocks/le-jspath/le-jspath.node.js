@@ -154,7 +154,7 @@ provide({
     },
 
     findByUrl: function(url, lang) {
-        var result = this.find('.' + lang + '{.url === $url}', { url: url });
+        var result = this.find('.' + lang + '{.url === $url1 || .url === $url2}', { url1: url, url2: url + '/' });
         return (result && result.length > 0) ? result[0] : null;
     },
 

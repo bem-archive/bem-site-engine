@@ -8,18 +8,43 @@ modules.define(
 
         _logicCache: {},
 
+        /**
+         * Genenrates cache key for logic cache
+         * @param  {Object} data - object with request and response params
+         * @return {String} key which build from current locale and request path
+         */
         generateKey: function(data) {
             return data.lang + ':' + data.req.path;
         },
 
+        /**
+         * Returns logic cache by data request path
+         * @param  {Object} data - object with request and response params
+         * @return {Object} - object with params of data
+         */
         getLogicCache: function(data) {
             return this._logicCache[this.generateKey(data)];
         },
 
+        /**
+         * Sets logic cache
+         * @param  {Object} data - object with request and response params
+         * @param  {Object} value - object with params of data
+         */
         setLogicCache: function(data, value) {
             this._logicCache[this.generateKey(data)] = value;
         },
 
+        /**
+         * Implements logic for resolving methodology urls
+         * @param  {Object} data - object with request and response params
+         * @return {Object} result - object with params of data
+         *  - error {Object} error with  status and error code or false
+         *  - type - {String} type of resource
+         *  - category - {String} category of resource
+         *  - id - {String} unique id if resource
+         *  - query - {Object} query object for menu block
+         */
         resolveMethodology: function(data) {
             //достаем закешированный результат
             var result = this.getLogicCache(data);
@@ -45,16 +70,18 @@ modules.define(
                     }
                 };
 
-                //если в запросе был передан slug поста, то пробуем найти по нему пост
+                //если в запросе был передан slug поста, то пробуем найти пост по чатичному совпадению
+                //его полного url-а c адрестной строкой в браузере
                 //если пост не был найден то показываем 404 ошибку
                 //если в запросе не был передан slug поста то показываем корневой пост
                 if(id) {
-                    var res = leJspath.findByTypeAndSlug(type, id, data.lang);
+                    var res = leJspath.findByUrl(data.req.path, data.lang);
                     if(!res) {
                         result.error = { state: true, code: 404 };
                     }else {
+                        res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
                         result.id = res.id;
-                        result.category = res && res.category;
+                        result.category = res.category;
                     }
                 }else {
                     result.id = rootId;
@@ -63,57 +90,126 @@ modules.define(
             }catch(e) {
                 result = {
                     error: { state: true, code: 500 }
-                }
+                };
             }finally {
+                //кешируем построенный результат и возвращаем его
                 this.setLogicCache(data, result);
                 return result;
             }
         },
 
+        /**
+         * Implements logic for resolving articles urls
+         * @param  {Object} data - object with request and response params
+         * @return {type} result - object with params of data
+         *  - error {Object} error with  status and error code or false
+         *  - type - {String} type of resource
+         *  - category - {String} category of resource
+         *  - id - {String} unique id if resource
+         *  - query - {Object} query object for menu block
+         */
         resolveArticles: function(data) {
+            //достаем закешированный результат
             var result = this.getLogicCache(data);
 
+            //если он есть то возвращаем его
             if(result) return result;
 
-            var type = data.page,
-                res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+            try {
+                //Делаем проверку на то, что мы находимся в корне раздела articles
+                //составляем первичный объект с результатами обработки логики
+                var type = data.page,
+                    isRoot = Object.getOwnPropertyNames(data.params).length == 0,
+                    result = {
+                        error: false,
+                        type: type,
+                        id: null,
+                        category: null,
+                        query: {
+                            predicate: '.' + data.lang + '{.type === $type}',
+                            substitution: { type: type }
+                        }
+                    };
 
-            result = {
-                type: type,
-                id: res && res.id,
-                category: res && res.category,
-                query: {
-                    predicate: '.' + data.lang + '{.type === $type}',
-                    substitution: { type: type }
+                //Если мы не находимся в корне раздела статей, то пытаемся найти  пост по полному совпадению
+                //его полного url с data.req.path. Если пост не находится то показываем 404 ошибку
+                //если находится то дополнительно прогоняем через поиск для определения категории
+                if(!isRoot) {
+                    var res = leJspath.findByUrl(data.req.path, data.lang);
+                    if(!res) {
+                        result.error = { state: true, code: 404 };
+                    }else {
+                        res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+                        result.id = res.id;
+                        result.category = res.category;
+                    }
                 }
-            };
 
-            this.setLogicCache(data, result);
-
-            return result;
+            }catch(e) {
+                result = {
+                    error: { state: true, code: 500 }
+                }
+            }finally {
+                //кешируем построенный результат и возвращаем его
+                this.setLogicCache(data, result);
+                return result;
+            }
         },
 
+        /**
+         * Implements logic for resolving news urls
+         * @param  {Object} data - object with request and response params
+         * @return {type} result - object with params of data
+         *  - error {Object} error with  status and error code or false
+         *  - type - {String} type of resource
+         *  - category - {String} category of resource
+         *  - id - {String} unique id if resource
+         *  - query - {Object} query object for menu block
+         */
         resolveNews: function(data) {
+            //достаем закешированный результат
             var result = this.getLogicCache(data);
 
+            //если он есть то возвращаем его
             if(result) return result;
 
-            var type = data.page,
-                res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+            try {
+                var type = data.page,
+                isRoot = Object.getOwnPropertyNames(data.params).length == 0,
 
-            result = {
-                type: type,
-                id: res && res.id,
-                category: res && res.category,
-                query: {
-                    predicate: '.' + data.lang + '{.type === $type}',
-                    substitution: { type: type }
+                result = {
+                    error: false,
+                    type: type,
+                    id: null,
+                    category: null,
+                    query: {
+                        predicate: '.' + data.lang + '{.type === $type}',
+                        substitution: { type: type }
+                    }
+                };
+
+                //Если мы не находимся в корне раздела новостей, то пытаемся найти  пост по полному совпадению
+                //его полного url с data.req.path. Если пост не находится то показываем 404 ошибку
+                //если находится то дополнительно прогоняем через поиск для определения категории
+                if(!isRoot) {
+                    var res = leJspath.findByUrl(data.req.path, data.lang);
+                    if(!res) {
+                        result.error = { state: true, code: 404 };
+                    }else {
+                        res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+                        result.id = res.id;
+                        result.category = res.category;
+                    }
                 }
-            };
-
-            this.setLogicCache(data, result);
-
-            return result;
+            }catch(e) {
+                result = {
+                    error: { state: true, code: 500 }
+                }
+            }finally {
+                //кешируем построенный результат и возвращаем его
+                this.setLogicCache(data, result);
+                return result;
+            }
         },
 
         resolveTools: function(data) {

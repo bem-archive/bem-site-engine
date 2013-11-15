@@ -30,6 +30,7 @@ block b-page {
             data.page = this._.isArray(entity.type) ? entity.type[0] : entity.type;
         }else {
             data.page = 'error';
+            data._q = { error: { state: true, code: 404 } };
         }
         this.data = data;
         return applyNext();
@@ -67,10 +68,6 @@ block b-page {
 
     method: {
         this.data._q = leLogic.resolveMethodology(this.data);
-        if(this.data._q.error) {
-            this.data.page = 'error';
-            return apply('route');
-        }
         return apply('createSEO')
     }
 
@@ -180,6 +177,11 @@ block b-page {
             image: image
         });
 
+    }
+
+    this.data._q.error, createSEO: {
+        this.data.page = 'error';
+        return apply('error');
     }
 
     /**
