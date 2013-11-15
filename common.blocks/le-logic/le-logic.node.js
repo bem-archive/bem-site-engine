@@ -212,67 +212,102 @@ modules.define(
             }
         },
 
+        /**
+         * Implements logic for resolving tools urls
+         * @param  {Object} data - object with request and response params
+         * @return {type} result - object with params of data
+         *  - error {Object} error with  status and error code or false
+         *  - type - {String} type of resource
+         *  - category - {String} category of resource
+         *  - id - {String} unique id if resource
+         *  - query - {Object} query object for menu block
+         *  - isOnlyOnePost - {Boolean} indicates that is only one post exist for current selected category
+         */
         resolveTools: function(data) {
+            //достаем закешированный результат
             var result = this.getLogicCache(data);
 
+            //если он есть то возвращаем его
             if(result) return result;
 
-            var type = data.page,
-                res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang),
+            try {
+                var type = data.page,
+                    isRoot = Object.getOwnPropertyNames(data.params).length == 0,
+                    rootId = leJspath.findRootPostId(type, data.lang),
+                    result = {
+                        error: false,
+                        type: type,
+                        id: rootId,
+                        category: null,
+                        query: {
+                            predicate: '.' + data.lang + '{.type === $type}',
+                            substitution: { type: type }
+                        },
+                        isOnlyOnePost: false
+                    };
 
-                id = res && res.id,
-                category = res && res.category,
-                query = null,
-                isOnlyOnePost = false;
+                logger.debug('type: %s isRoot %s rootId %s', type, isRoot, rootId);
 
-            if(category) {
-                var predicate = '.' + data.lang + '{.type === $type}' +
-                    '{.categories === $category || .categories.url === $category}';
-
-                var rootId = leJspath.findRootPostIdByCategory(type, category, data.lang);
-                if(rootId) {
-                    predicate +=  '{.id !== "' + rootId + '"}';
+                //Если у нас корневой пост, то дальне ничего не нужно делать
+                //возвращаем результат
+                if(isRoot) {
+                    return result;
                 }
 
-                if(!id && rootId){
-                    id = rootId;
+                //запускаем мега-метод по поиску id и категории по url
+                var res = leJspath.findCategoryAndIdByUrl(data.req.path, type, data.lang);
+
+                //если ничего не найдено, то возвращаем 404 ошибку
+                //тут есть упячка про то что этот метод срабатывает на частичное совпадение
+                //т.е. если дописать к урлу разное то статья тоже найдется
+                //но с другой стороны если что-то в середине будет неправильно то 404 выдастся
+                if(!res) {
+                    result.error = { state: true, code: 404 };
                 }
 
-                query = {
-                    predicate: predicate,
-                    substitution: { type: type, category: category }
-                };
+                result.category = res && res.category;
+                result.id = res && res.id;
 
-                //проверка на то, что для данного инструмента есть только один пост
-                //если это так, то показываем его в развернутом виде а меню постов прячем
-                var source = leJspath.find(query.predicate, query.substitution);
-                if(source.length == 1) {
-                    isOnlyOnePost = true;
-                    id = source[0].id;
-                }
+                //если была найдена категория, то нужно дополнительное исследование
+                //составляем query постов для выбранной категории
+                if(result.category) {
+                    var predicate = '.' + data.lang + '{.type === $type}' +
+                        '{.categories === $category || .categories.url === $category}';
 
-            }else {
-                id = leJspath.findRootPostId(type, data.lang);
-                if(!id) {
-                    query = {
-                        predicate: '.' + data.lang + '{.type === $type}',
-                        substitution: { type: type }
+                    //находим корневой пост для выбранной категории
+                    //если id еще не был установлен и есть корневой пост то показываем его
+                    rootId = leJspath.findRootPostIdByCategory(type, result.category, data.lang);
+                    if(rootId) {
+                        predicate +=  '{.id !== "' + rootId + '"}';
+                    }
+
+                    if(!result.id && rootId) {
+                        result.id = rootId;
+                    }
+
+                    result.query = {
+                        predicate: predicate,
+                        substitution: { type: type, category: result.category }
+                    };
+
+                    //проверка на то, что для данного инструмента есть только один пост
+                    //если это так, то показываем его в развернутом виде а меню постов прячем
+                    var source = leJspath.find(result.query.predicate, result.query.substitution);
+                    if(source.length == 1) {
+                        result.isOnlyOnePost = true;
+                        result.id = source.shift().id;
                     }
                 }
+
+            }catch(e) {
+                result = {
+                    error: { state: true, code: 500 }
+                };
+            }finally {
+                //кешируем построенный результат и возвращаем его
+                this.setLogicCache(data, result);
+                return result;
             }
-
-            result = {
-                type: type,
-                id: id,
-                category: category,
-                query: query,
-
-                isOnlyOnePost: isOnlyOnePost
-            };
-
-            this.setLogicCache(data, result);
-
-            return result;
         },
 
         resolveLibraries: function(data) {
