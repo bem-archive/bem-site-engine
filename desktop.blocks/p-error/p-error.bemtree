@@ -1,2 +1,7 @@
+block p-error {
 
+    (this.data._q && this.data._q.error), content: {
+        return applyCtx(this.ctx.code = this.data._q.error.code);
+    }
+}
 

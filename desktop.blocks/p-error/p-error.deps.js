@@ -5,6 +5,7 @@
     ],
     shouldDeps : [
         { block : 'b-page', mods : { page : 'error' } },
-        { block : 'b-index', elems : ['logo'] }
+        { block : 'b-index', elems : ['logo'] },
+        { block : 'link'}
     ]
 })

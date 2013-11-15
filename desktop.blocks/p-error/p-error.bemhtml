@@ -19,28 +19,70 @@ block p-error {
                     {
                         block: 'p-error',
                         elem: 'title',
-                        tag: 'h1',
-                        content: BEM.I18N('p-error', 'title')
+                        code: this.ctx.code
                     },
                     {
                         block: 'p-error',
                         elem: 'description',
-                        tag: 'h3',
-                        content: BEM.I18N('p-error', 'description')
+                        code: this.ctx.code
                     },
                     {
                         block: 'p-error',
-                        elem: 'sitemap',
-                        content: [
-                            {
-                                block: 'link',
-                                url: '/tags',
-                                content: BEM.I18N('p-error', 'sitemap')
-                            }
-                        ]
+                        elem: 'report'
+                    },
+                    {
+                        block: 'p-error',
+                        elem: 'sitemap'
                     }
 
                 ]
+            }
+        ]
+    }
+
+    elem title {
+
+        tag: 'h1'
+
+        content: BEM.I18N('p-error', 'title')
+
+        this.ctx.code, content: BEM.I18N('p-error', 'title') + ' ' + this.ctx.code
+    }
+
+    elem description {
+
+        tag: 'h3'
+
+        !this.ctx.code, default: {
+            return false;
+        }
+
+        this.ctx.code, content: BEM.I18N('p-error', 'description' + this.ctx.code)
+    }
+
+    elem report {
+
+        tag: 'h3'
+
+        content: [
+            {
+                tag: 'span',
+                content: BEM.I18N('p-error', 'report')
+            },
+            {
+                block: 'link',
+                url: 'mailto:info@bem.info',
+                content: 'info@bem.info'
+            }
+        ]
+    }
+
+    elem sitemap {
+        content: [
+            {
+                block: 'link',
+                url: '/tags',
+                content: BEM.I18N('p-error', 'sitemap')
             }
         ]
     }
