@@ -246,8 +246,6 @@ modules.define(
                         isOnlyOnePost: false
                     };
 
-                logger.debug('type: %s isRoot %s rootId %s', type, isRoot, rootId);
-
                 //Если у нас корневой пост, то дальне ничего не нужно делать
                 //возвращаем результат
                 if(isRoot) {
