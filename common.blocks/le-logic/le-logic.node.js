@@ -313,60 +313,68 @@ modules.define(
 
             if(result) return result;
 
-            var type = data.page,
-                lib = data.params['lib'] || null,
-                version = data.params['version'] || null,
-                category = data.params['category'] || null,
-                id = data.params['id'],
+            try {
 
-                predicate = '.' + data.lang + '{ .type == $type }',
-                substitution = { type: type },
-                query = null;
+                var type = data.page,
+                    lib = data.params['lib'] || null,
+                    version = data.params['version'] || null,
+                    category = data.params['category'] || null,
+                    id = data.params['id'],
 
-            var path = data.req.path.split('/').reduce(function(prev, item) {
-                return item.length > 0 ? (prev + '/' + item) : (prev + '');
-            }, '');
+                    predicate = '.' + data.lang + '{ .type == $type }',
+                    substitution = { type: type },
+                    query = null;
 
-
-            id = leJspath.findByUrl(path, data.lang);
-
-            id = id && id.id;
-
-            if(lib){
-                predicate += '{.categories ^== $category || .categories.url ^== $category }';
-                substitution['category'] = lib;
+                var path = data.req.path.split('/').reduce(function(prev, item) {
+                    return item.length > 0 ? (prev + '/' + item) : (prev + '');
+                }, '');
 
 
-                if(version){
-                    substitution['category'] = lib + '/' + version ;
+                id = leJspath.findByUrl(path, data.lang);
+
+                id = id && id.id;
+
+                if(lib){
+                    predicate += '{.categories ^== $category || .categories.url ^== $category }';
+                    substitution['category'] = lib;
+
+
+                    if(version){
+                        substitution['category'] = lib + '/' + version ;
+                    }
+
+                    //поиск корневой статьи для библиотеки и показ ее если не указан id другого поста для библиотеки явно
+                    var rootId = leJspath.find(predicate + '{.root == "true"}.id', substitution);
+                    rootId = rootId.length > 0 ? rootId[0] : null;
+
+                    if(rootId) {
+                        predicate += '{.id !== $rootId}';
+                        substitution['rootId'] = rootId;
+                        id = id || rootId;
+                    }
                 }
 
-                //поиск корневой статьи для библиотеки и показ ее если не указан id другого поста для библиотеки явно
-                var rootId = leJspath.find(predicate + '{.root == "true"}.id', substitution);
-                rootId = rootId.length > 0 ? rootId[0] : null;
+                query = { predicate: predicate, substitution: substitution };
 
-                if(rootId) {
-                    predicate += '{.id !== $rootId}';
-                    substitution['rootId'] = rootId;
-                    id = id || rootId;
-                }
+                result = {
+                    type: type,
+                    id: id,
+                    category: category,
+                    query: query,
+
+                    lib: lib,
+                    version: version
+                };
+
+            }catch(e) {
+                result = {
+                    error: { state: true, code: 500 }
+                };
+            }finally {
+                //кешируем построенный результат и возвращаем его
+                this.setLogicCache(data, result);
+                return result;
             }
-
-            query = { predicate: predicate, substitution: substitution };
-
-            result = {
-                type: type,
-                id: id,
-                category: category,
-                query: query,
-
-                lib: lib,
-                version: version
-            };
-
-            this.setLogicCache(data, result);
-
-            return result;
         },
 
         /**
@@ -380,8 +388,10 @@ modules.define(
          *  - query - {Object} query object for menu block
          */
         resolveCustomPage: function(data) {
+            //достаем закешированный результат
             var result = this.getLogicCache(data);
 
+            //если он есть то возвращаем его
             if(result) return result;
 
             try {
@@ -399,6 +409,9 @@ modules.define(
                     }
                 };
 
+                //Пытаемся найти  пост по полному совпадению
+                //его полного url с data.req.path. Если пост не находится то показываем 404 ошибку
+                //если находится то дополнительно прогоняем через поиск для определения категории
                 var res = leJspath.findByUrl(path, data.lang);
                 if(!res) {
                     result.error = { state: true, code: 404 };
