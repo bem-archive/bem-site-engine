@@ -369,27 +369,54 @@ modules.define(
             return result;
         },
 
+        /**
+         * Implements logic for resolving urls for general pages such as jobs or acknowledgements
+         * @param  {Object} data - object with request and response params
+         * @return {type} result - object with params of data
+         *  - error {Object} error with  status and error code or false
+         *  - type - {String} type of resource
+         *  - category - {String} category of resource
+         *  - id - {String} unique id if resource
+         *  - query - {Object} query object for menu block
+         */
         resolveCustomPage: function(data) {
             var result = this.getLogicCache(data);
 
             if(result) return result;
 
-            var type = 'page',
-                res = leJspath.findCategoryAndIdByUrl('/' + type + data.req.path, type, data.lang);
+            try {
+                var type = 'page',
+                    path = '/' + type + data.req.path;
 
-            result = {
-                type: type,
-                id: res && res.id,
-                category: res && res.category,
-                query: {
-                    predicate: '.' + data.lang + '{.type === $type}',
-                    substitution: { type: type }
+                result = {
+                    error: false,
+                    type: type,
+                    id: null,
+                    category: null,
+                    query: {
+                        predicate: '.' + data.lang + '{.type === $type}',
+                        substitution: { type: type }
+                    }
+                };
+
+                var res = leJspath.findByUrl(path, data.lang);
+                if(!res) {
+                    result.error = { state: true, code: 404 };
+                }else {
+                    res = leJspath.findCategoryAndIdByUrl(path, type, data.lang);
+                    result.id = res.id;
+                    result.category = res.category;
                 }
-            };
 
-            this.setLogicCache(data, result);
-
-            return result;
+            }catch(e) {
+                result = {
+                    error: { state: true, code: 500 }
+                };
+            }finally {
+                //кешируем построенный результат и возвращаем его
+                this.setLogicCache(data, result);
+                return result;
+            }
         }
     });
 });
