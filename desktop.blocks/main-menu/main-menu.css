@@ -1,5 +1,6 @@
 .main-menu
 {
+    display: table-cell;
     position: fixed;
     top: 0;
     bottom: 0;

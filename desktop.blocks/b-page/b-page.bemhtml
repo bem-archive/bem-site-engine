@@ -4,5 +4,5 @@ block b-page {
 
 block b-page, !this.ctx.favicon {
 
-    default: applyNext(this.ctx.favicon = '//yandex.st/lego/_/4T_76fSx3VxD1DL-axH7GZH6CjY.ico')
+    default: applyNext(this.ctx.favicon = '/favicon.ico')
 }

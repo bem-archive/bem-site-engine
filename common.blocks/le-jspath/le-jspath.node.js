@@ -154,12 +154,17 @@ provide({
     },
 
     findByUrl: function(url, lang) {
-        var result = this.find('.' + lang + '{.url === $url}', { url: url });
+        var result = this.find('.' + lang + '{.url === $url1 || .url === $url2}', { url1: url, url2: url + '/' });
         return (result && result.length > 0) ? result[0] : null;
     },
 
     findBySlug: function(slug, lang) {
         var result = this.find('.' + lang + '{.slug === $slug}', { slug: slug });
+        return (result && result.length > 0) ? result[0] : null;
+    },
+
+    findByTypeAndSlug: function(type, slug, lang) {
+        var result = this.find('.' + lang + '{.type === $type}{.slug === $slug}', { type: type, slug: slug });
         return (result && result.length > 0) ? result[0] : null;
     },
 

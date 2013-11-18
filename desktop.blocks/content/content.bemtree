@@ -15,7 +15,7 @@ block content {
         this.data._r[this.data.page].call(this)
     ]
 
-    p-block: { block: this.ctx.name, mix: this.ctx.layout }
+    p-block: { block: this.ctx.name, mix: [this.ctx.layout, { block: 'layout', elem: 'page' }] }
 
     method:     apply('p-block', this.ctx.name = 'p-method')
 

@@ -13,12 +13,14 @@ router.addRoute({
 
 router.addRoute({
     name : 'method',
-    rule : '/method/{1}',
+    rule : '/method/{id}',
     data : {
         action : 'le-page'
     }
 });
 
+//temporary remote these routes
+/*
 router.addRoute({
     name : 'method',
     rule : '/method/{1}/{2}',
@@ -34,6 +36,7 @@ router.addRoute({
         action : 'le-page'
     }
 });
+*/
 
 provide(View);
 

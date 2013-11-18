@@ -7,7 +7,7 @@
 
 .layout_section_p-menu > .layout__col
 {
-    display: block;
+    /*display: block;*/
 }
 
 .layout_section_p-menu > .layout__col_fixed_yes
@@ -48,5 +48,11 @@
 .layout_size_wide > .layout__col_type_right
 {
     width: 250px;
+}
+
+.layout__page
+{
+    display: table-cell;
+    padding-left: 200px;
 }
 

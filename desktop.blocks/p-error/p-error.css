@@ -1,5 +1,25 @@
 .p-error
 {
-    padding-left: 20px;
+    padding-top: 50px;
+}
+
+.p-error__panel
+{
+    margin: 100px auto;
+    width: 50%
+}
+
+.p-error__title,
+.p-error__description,
+.p-error__report,
+.p-error__sitemap
+{
+    text-align: center;
+}
+
+.p-error__sitemap
+{
+    font-size: 1.5em;
+    margin-top: 50px;
 }
 

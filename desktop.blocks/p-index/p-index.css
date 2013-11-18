@@ -1,27 +1,10 @@
 .p-index
 {
-    position: absolute;
-    top: 50%;
-    bottom: 0;
-    left: 50%;
+    position: static;
+    vertical-align: middle;
 
     min-height: 550px;
-    margin: -270px 0 0 -150px;
     padding-bottom: 30px;
 
     text-align: center;
 }
-
-.p-index > .cap
-{
-    width: 400px;
-    height: 315px;
-
-    background: url('temp.png');
-}
-
-.p-index.layout__col.layout__col_type_center
-{
-    margin: -270px 0 0 -150px;
-}
-
