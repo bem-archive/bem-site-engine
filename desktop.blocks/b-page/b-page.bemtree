@@ -111,6 +111,7 @@ block b-page {
                 description = source.info;
             }else {
                 this.data.page = 'error';
+                this.data._q = { error: { state: true, code: 404 } };
                 return apply('route');
             }
         }
