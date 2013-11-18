@@ -24,6 +24,11 @@
     width: 200px;
 }
 
+/* hotfix https://st.yandex-team.ru/BEM-1464 */
+.i-ua_touch_yes .layout_section_p-menu>.layout__col_type_left {
+    position: static;
+}
+
 .layout_section_p-menu > .layout__col_type_center
 {
     margin-left: 200px;
