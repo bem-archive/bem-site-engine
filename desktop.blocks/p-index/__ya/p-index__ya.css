@@ -10,12 +10,10 @@
     /*font-size: 25px;*/
 
     position: absolute;
-    right: 0;
     bottom: 20px;
-    left: 0;
-
     display: block;
 
-    /*color: #BFBFBF;*/
-
+    padding-left: 200px;
+    left: 0;
+    right: 0;
 }
