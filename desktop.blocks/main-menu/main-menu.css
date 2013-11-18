@@ -1,13 +1,15 @@
 .main-menu
 {
-    display: table-cell;
     position: fixed;
     top: 0;
     bottom: 0;
 
+    display: table-cell;
     overflow: auto;
 
     width: 200px;
+
+    vertical-align: top;
 
     background: #000;
 }
