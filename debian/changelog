@@ -1,3 +1,9 @@
+yandex-bem-info-www (2.0.29) unstable; urgency=low
+
+  * Test rebuild. Change menu item value.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 19 Nov 2013 20:03:06 +0400
+
 yandex-bem-info-www (2.0.28) unstable; urgency=low
 
   * Test rebuild. Hotfixes for production.
