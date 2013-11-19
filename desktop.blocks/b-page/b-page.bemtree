@@ -30,6 +30,7 @@ block b-page {
             data.page = this._.isArray(entity.type) ? entity.type[0] : entity.type;
         }else {
             data.page = 'error';
+            this.data.res.statusCode = 404;
             data._q = { error: { state: true, code: 404 } };
         }
         this.data = data;
@@ -111,6 +112,7 @@ block b-page {
                 description = source.info;
             }else {
                 this.data.page = 'error';
+                this.data.res.statusCode = 404;
                 this.data._q = { error: { state: true, code: 404 } };
                 return apply('route');
             }
@@ -182,6 +184,7 @@ block b-page {
 
     this.data._q.error, createSEO: {
         this.data.page = 'error';
+        this.data.res.statusCode = 404;
         return apply('error');
     }
 
