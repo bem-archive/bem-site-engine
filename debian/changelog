@@ -1,3 +1,9 @@
+yandex-bem-info-www (2.0.28) unstable; urgency=low
+
+  * Test rebuild. Hotfixes for production.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 19 Nov 2013 15:34:40 +0400
+
 yandex-bem-info-www (2.0.27) unstable; urgency=low
 
   * Test rebuild. Hotfixes for production.
