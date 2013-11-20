@@ -14,14 +14,6 @@
     background: #000;
 }
 
-/* hotfix https://st.yandex-team.ru/BEM-1464 */
-.i-ua_touch_yes .main-menu
-{
-    position: static;
-
-    float: left;
-}
-
 .main-menu__wrapper
 {
     position: relative;
