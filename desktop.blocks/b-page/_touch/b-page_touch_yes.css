@@ -3,6 +3,7 @@
     position: static;
 
     float: left;
+    overflow: visible;
 
     height: 100%;
 }
