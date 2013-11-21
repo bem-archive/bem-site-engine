@@ -1,0 +1,42 @@
+.b-page_touch_yes .main-menu
+{
+    position: static;
+
+    float: left;
+
+    height: 100%;
+}
+
+.b-page_touch_yes .search
+{
+    position: static;
+
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.b-page_touch_yes .layout__col,
+.b-page_touch_yes .layout_section_p-menu
+
+{
+    height: 100%;
+}
+
+.b-page_touch_yes .layout_section_p-menu .layout__col_type_left
+{
+    position: static;
+
+    height: 100%;
+}
+
+.b-page_touch_yes .layout__page:not(.p-index)
+{
+    display: block;
+
+    padding-left: 0;
+}
+
+.b-page_touch_yes .p-index
+{
+    padding-bottom: 0;
+}
