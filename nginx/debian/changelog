@@ -1,3 +1,9 @@
+yandex-bem-info-nginx-conf (2.13) unstable; urgency=low
+
+  * Test rebuild. Redirect from blog to news has been added.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 19 Nov 2013 20:07:52 +0400
+
 yandex-bem-info-nginx-conf (2.12) unstable; urgency=low
 
   * Test rebuild. Remove default forwarding for 404 errors.
