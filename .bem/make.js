@@ -87,8 +87,7 @@ MAKE.decl('BundleNode', {
             'islands-page/common.blocks',
             'islands-page/desktop.blocks',
 
-            // bem-bl + romochka
-            'romochka/bem-bl/blocks-desktop',
+            // romochka
             'romochka/blocks-common',
             'romochka/blocks-desktop',
             //'romochka/intranet/blocks-desktop'
