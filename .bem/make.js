@@ -24,7 +24,8 @@ MAKE.decl('Arch', {
 
     libraries : [
         'bem-core @ 8981332a71',
-        'bem-components @ v2'
+        'bem-components @ v2',
+        'bem-techs-core @ v0.3.1'
     ]
 
 });
