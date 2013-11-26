@@ -28,7 +28,7 @@ block p-index {
                 content : BEM.I18N('p-index', 'project-stub')
             },
             {
-                block: 'b-head-logo',
+                block: 'ya-logo',
                 mix : {block: 'p-index', elem: 'ya'},
                 content: [
                     {

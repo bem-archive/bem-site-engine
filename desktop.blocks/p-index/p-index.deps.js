@@ -10,6 +10,6 @@
         { elem: 'phrase'},
         { elem: 'link'},
         { elem: 'ya'},
-        { block: 'b-head-logo'}
+        { block: 'ya-logo'}
     ]
 })
