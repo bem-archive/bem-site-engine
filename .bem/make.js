@@ -25,7 +25,6 @@ MAKE.decl('Arch', {
     libraries : [
         'bem-yana',
         'bem-core @ 8981332a71',
-        'bem-ycommon @ v2',
         'bem-components @ v2',
 
         //'islands-components @ v2',
@@ -72,10 +71,6 @@ MAKE.decl('BundleNode', {
             // bem-yana
             'bem-yana/common.blocks',
             'bem-yana/app.blocks',
-
-            // bem-ycommon
-            'bem-ycommon/ycommon.blocks',
-            'bem-ycommon/common.blocks',
 
             // bem-components
             'bem-components/common.blocks',
