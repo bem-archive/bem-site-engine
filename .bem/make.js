@@ -33,8 +33,6 @@ MAKE.decl('Arch', {
         'islands-page @ feature/bem-core',
         //'islands-services @ v1.0.0',
         //'islands-user @ feature/bem-core',
-
-        'romochka @ feature/bem-core'
     ]
 
 });
@@ -85,12 +83,7 @@ MAKE.decl('BundleNode', {
 
             // islands-page
             'islands-page/common.blocks',
-            'islands-page/desktop.blocks',
-
-            // romochka
-            'romochka/blocks-common',
-            'romochka/blocks-desktop',
-            //'romochka/intranet/blocks-desktop'
+            'islands-page/desktop.blocks'
         ]
         .map(function(path) { return PATH.resolve(environ.LIB_ROOT, path) })
         .concat([
