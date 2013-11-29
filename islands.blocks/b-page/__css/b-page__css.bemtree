@@ -7,7 +7,7 @@ block b-page, elem css {
             suffix = url.suffix;
         return [
             { elem : elem, url : prefix + '.' + suffix, ie : false },
-            { elem : elem, url : prefix + '.ie9.' + suffix, ie : 'lt IE 9' }
+            { elem : elem, url : prefix + '.ie9.' + suffix, ie : 'lte IE 9' }
         ];
     }
 
