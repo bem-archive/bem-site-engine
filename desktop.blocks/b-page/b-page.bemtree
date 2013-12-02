@@ -1,19 +1,8 @@
 block b-page {
 
     !leJspath.getSource(), default: {
-        return this.doAsync(
-                leDatasrc.loadData.bind(leDatasrc, {})
-            )
-            .then(
-                function(result) {
-                    leJspath.setSource(result); //кеширование данных
-                    return applyNext();
-                },
-                function(err) {
-                    return apply('error', this.ctx = err);
-                },
-                this
-            );
+        leJspath.setSource(datasrc); //кеширование данных
+        return applyNext();
     }
 
     leJspath.getSource(), default: {
