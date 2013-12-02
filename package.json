@@ -13,7 +13,8 @@
     "vow": "~0.3.0",
     "ym": "~0.0.1",
     "json-stringify-safe": "~4.0.0",
-    "jspath": "~0.2.10"
+    "jspath": "~0.2.10",
+    "susanin": "0.1.10"
   },
   "devDependencies": {
     "inherit": "~1.0.4",
