@@ -20,7 +20,7 @@ this._mode === '', !this.data {
         var lang = this.ctx.lang;
 
         BEM.I18N.lang(lang);
-        console.debug('Language is exposed to "%s"', lang);
+//        console.debug('Language is exposed to "%s"', lang);
 
         return applyNext();
     }
