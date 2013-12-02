@@ -1,16 +1,8 @@
-/* jshint node:true */
-/* global modules:false */
-
-modules.define(
-    'le-jspath', ['inherit', 'objects', 'yana-logger'],
-    function(provide, inherit, objects, logger) {
-
 var jspath = require('jspath'),
     PATH = require('path'),
     JsonStringify = require('json-stringify-safe');
 
-provide({
-
+module.exports = {
     _source: null,
 
     getSource: function() {
@@ -28,7 +20,7 @@ provide({
      * @return Object - filter result
      */
     find: function(predicate, substitution) {
-         return jspath.apply(predicate, this.getSource(), substitution);
+        return jspath.apply(predicate, this.getSource(), substitution);
     },
 
     /**
@@ -75,7 +67,7 @@ provide({
         function compare(a, b, config, index) {
             index = index || 0;
             if(!config[index])
-               return 0;
+                return 0;
 
             var field = config[index]['field'], //поле, по которому производится сортировка
                 desc = config[index]['direction'] === 'desc'; //направление сортировки
@@ -176,11 +168,11 @@ provide({
      * @return {Object} - source founded by search criteria or null if source was not found
      */
     /*
-    findByTypeAndUrl: function(type, url, lang) {
-        var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
-        return (result && result.length > 0) ? result[0] : null;
-    },
-    */
+     findByTypeAndUrl: function(type, url, lang) {
+     var result = this.find('.' + lang + '{ .type === $type }{ .url === $url }', { type: type, url: url });
+     return (result && result.length > 0) ? result[0] : null;
+     },
+     */
 
     findRootPostId: function(type, lang) {
         var result = this.filter([
@@ -201,9 +193,9 @@ provide({
 
     findRootPostIdByCategory: function(type, category, lang) {
         var predicate = '.' + lang +
-            '{.type === $type}' +
-            '{.root === "true"}' +
-            '{.categories === $category || .categories.url === $category}.id',
+                '{.type === $type}' +
+                '{.root === "true"}' +
+                '{.categories === $category || .categories.url === $category}.id',
             substitution = {
                 type: type,
                 category: category
@@ -233,7 +225,7 @@ provide({
                     return prev + ((item && item.length > 0) ? ('/' + item) : '');
                 }, '')) !== -1;
                 if(find) {
-                    logger.debug('find type = %s category = %s url = %s', post.type, category, post.slug);
+                    //logger.debug('find type = %s category = %s url = %s', post.type, category, post.slug);
                     result = { category: category,  id: post.id };
                 }
             });
@@ -245,7 +237,7 @@ provide({
                 return prev + ((item && item.length > 0) ? ('/' + item) : '');
             }, '')) !== -1;
             if(find) {
-                logger.debug('find type = %s url = %s ', post.type, post.slug);
+                //logger.debug('find type = %s url = %s ', post.type, post.slug);
                 result = { id: post.id };
             }
         });
@@ -258,7 +250,7 @@ provide({
                     return prev + ((item && item.length > 0) ? ('/' + item) : '');
                 }, '')) !== -1;
                 if(find) {
-                    logger.debug('find type = %s category = %s ', post.type, category);
+                    //logger.debug('find type = %s category = %s ', post.type, category);
                     result = { category: category };
                 }
             });
@@ -271,6 +263,4 @@ provide({
         var entities = this.find('.' + lang + '{.manualUrl === $manualUrl}', { manualUrl: path });
         return entities.length > 0 ? entities.shift() : null;
     }
-});
-
-});
+};
