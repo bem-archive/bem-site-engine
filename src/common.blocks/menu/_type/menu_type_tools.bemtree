@@ -156,11 +156,11 @@ block menu, mod type tools{
 
     //определение активного пункта меню и установка значения модификатора active
     active: {
-        return this.data.req.path.indexOf(this.ctx.item.id) !== -1 ? 'yes' : '';
+        return this.data.req._parsedUrl.pathname.indexOf(this.ctx.item.id) !== -1 ? 'yes' : '';
     }
 
     disable: {
-        var path = this.data.req.path,
+        var path = this.data.req._parsedUrl.pathname,
             id = this.ctx.item.id;
         return path.indexOf(id, path.length - id.length) !== -1 ? 'yes' : '';
     }

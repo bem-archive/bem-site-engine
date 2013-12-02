@@ -98,7 +98,7 @@ block post, mod view full {
     getUrl: {
         var lang = this.data.lang == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,
-            path = this.data.req.path;
+            path = this.data.req._parsedUrl.pathname;
 
             return 'http://' + lang +
                 (host.indexOf(this.data.lang) == 0 ? host.slice(host.indexOf('.')) : ('.' + host)) + path;

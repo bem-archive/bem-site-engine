@@ -163,13 +163,13 @@ block menu, mod type libs {
     //определение активного пункта меню и установка значения модификатора active
     //по условию если url содержит id текущего пункта меню
     active: {
-        return this.data.req.path.indexOf(this.ctx.item.id) !== -1 ? 'yes' : '';
+        return this.data.req._parsedUrl.pathname.indexOf(this.ctx.item.id) !== -1 ? 'yes' : '';
     }
 
     //определение отключенного пункта меню, если текущий пункт меню активен и не выбран
     //пункт из другого меню, т.е. url заканчивается на id текущего пункта меню
     disable: {
-        var path = this.data.req.path,
+        var path = this.data.req._parsedUrl.pathname,
             id = this.ctx.item.id;
         return path.indexOf(id, path.length - id.length) !== -1 ? 'yes' : '';
     }
