@@ -1,4 +1,4 @@
-require('../desktop.bundles/common/_common.node.js');
+require('./desktop.bundles/common/_common.node.js');
 
 var connect = require('connect'),
     config = require('legoa-conf'),

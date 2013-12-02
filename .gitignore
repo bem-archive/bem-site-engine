@@ -3,7 +3,6 @@
 .settings
 .project
 
-.bem/cache
 .bem/snapshots
 .gitmodules
 freeze
@@ -11,9 +10,10 @@ node_modules
 libs
 datasrc
 
-*.bundles/*/*.*
-!*.bundles/*/*.bemdecl.js
-!*.bundles/.bem/*
+src/.bem/cache
+src/*.bundles/*/*.*
+!src/*.bundles/*/*.bemdecl.js
+!src/*.bundles/.bem/*
 
 *.deb
 *.build
