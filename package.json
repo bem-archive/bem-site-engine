@@ -29,7 +29,7 @@
     "jshint": "~2.1.4"
   },
   "scripts": {
-    "start": "nodemon -w desktop.bundles/ -e node.js,bemtree.js,bemhtml.js -d 1 ./desktop.bundles/common/_common.node.js",
+    "start": "node bin/app",
     "test": "jshint ."
   },
   "author": "lego-team@yandex-team.ru",
