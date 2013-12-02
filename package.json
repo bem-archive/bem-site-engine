@@ -30,6 +30,8 @@
   },
   "scripts": {
     "start": "node bin/app",
+    "build": "make build",
+    "static": "make static",
     "test": "jshint ."
   },
   "author": "lego-team@yandex-team.ru",
