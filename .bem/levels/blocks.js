@@ -3,7 +3,6 @@ var PATH = require('path'),
 
     join = PATH.join,
 
-    LEGO_TECHS = environ.getLibPath('romochka', 'tools/bem/techs/nodejs'),
     BEMCORE_TECHS = environ.getLibPath('bem-core', '.bem/techs'),
     BEMTECHSCORE_TECHS = environ.getLibPath('bem-techs-core', 'techs');
 
@@ -41,7 +40,7 @@ exports.getTechs = function() {
 
     [
         'i18n.keys.js'
-    ].forEach(resolveTechs(techs, LEGO_TECHS));
+    ].forEach(resolveTechs(techs, PATH.join('..', '..', '.bem', 'techs')));
 
     return techs;
 };
