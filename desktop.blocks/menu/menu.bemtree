@@ -44,6 +44,8 @@ block menu {
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
             source = source.map(function(item) {
+                var nc = config;
+                nc.item = { item: item };
                 //console.debug('item =%s=', item);
                 return apply(
                     this._mode = '',
@@ -51,7 +53,7 @@ block menu {
                         elem: 'item',
                         elemMods: {
                             type : config.type,
-                            active : apply('active', this.ctx = this._.extend(config, { item : item })) },
+                            active : apply('active', this.ctx = nc) },
                         id: item.id || item,
                         category: config.category
                     }

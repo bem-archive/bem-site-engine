@@ -92,10 +92,13 @@ block menu, mod type libs {
 
         if(this._.isArray(items)) {
 
+            var ctx = this.ctx,
+                _extend = this._.extend;
+
             this.buf = [];
 
             items.forEach(function(item, index){
-                apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item }));
+                apply('drawMenuItem', this.ctx = _extend(ctx, { item : item }));
             });
 
             return this.buf;
@@ -138,10 +141,13 @@ block menu, mod type libs {
         //Если пункт меню комплексный (название библиотеки)
         //то дорисовываем пункты меню с версиями библиотеки отсортированные в порядке убывания версии
         if(isComplex) {
+            var ctx = this.ctx,
+                _extend = this._.extend;
+
             Object.getOwnPropertyNames(item).filter(function(key) {
                  return ['id', 'name', 'key'].indexOf(key) < 0;
             }).sort(sortF).forEach(function(key) {
-                 apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item[key] }));
+                 apply('drawMenuItem', this.ctx = _extend(ctx, { item : item[key] }));
             });
         }
     }

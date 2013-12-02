@@ -89,7 +89,9 @@ block menu, mod type tools{
 
         if(this._.isArray(items)) {
             var i = 0,
-                item;
+                item,
+                ctx = this.ctx,
+                _extend = this._.extend;
 
             this.buf = [];
 
@@ -99,7 +101,7 @@ block menu, mod type tools{
             //значения которого отображаются в меню и идентификацией
             //текущего значения для выделения активного пункта меню
             items.forEach(function(item, index){
-                apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item, orderHash: orderHash }));
+                apply('drawMenuItem', this.ctx = _extend(ctx, { item : item, orderHash: orderHash }));
             });
 
             return this.buf;
@@ -128,6 +130,8 @@ block menu, mod type tools{
         ));
 
         if(isComplex) {
+            var ctx = this.ctx,
+                _extend = this._.extend;
             Object.getOwnPropertyNames(item).filter(function(key) {
                  return ['id', 'name', 'key', 'order'].indexOf(key) < 0;
             })
@@ -139,7 +143,7 @@ block menu, mod type tools{
                 }
             })
             .forEach(function(key) {
-                 apply('drawMenuItem', this.ctx = this._.extend(this.ctx, { item : item[key] }));
+                 apply('drawMenuItem', this.ctx = _extend(ctx, { item : item[key] }));
             });
         }
     }
