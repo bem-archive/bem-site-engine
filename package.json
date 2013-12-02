@@ -14,7 +14,8 @@
     "ym": "~0.0.1",
     "json-stringify-safe": "~4.0.0",
     "jspath": "~0.2.10",
-    "susanin": "0.1.10"
+    "susanin": "0.1.10",
+    "terror": "0.3.4"
   },
   "devDependencies": {
     "inherit": "~1.0.4",
