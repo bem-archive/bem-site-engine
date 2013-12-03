@@ -82,7 +82,6 @@ MAKE.decl('BundleNode', {
         ]
         .map(function(path) { return PATH.resolve(environ.LIB_ROOT, path) })
         .concat([
-            'islands.blocks',
             'common.blocks',
             'desktop.blocks'
         ]
