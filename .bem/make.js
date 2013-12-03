@@ -24,13 +24,7 @@ MAKE.decl('Arch', {
 
     libraries : [
         'bem-core @ 8981332a71',
-        'bem-components @ v2',
-
-        //'islands-components @ v2',
-        //'islands-media @ v1.0.0',
-        'islands-page @ feature/bem-core',
-        //'islands-services @ v1.0.0',
-        //'islands-user @ feature/bem-core',
+        'bem-components @ v2'
     ]
 
 });
@@ -69,11 +63,7 @@ MAKE.decl('BundleNode', {
 
             // bem-components
             'bem-components/common.blocks',
-            'bem-components/desktop.blocks',
-
-            // islands-page
-            'islands-page/common.blocks',
-            'islands-page/desktop.blocks'
+            'bem-components/desktop.blocks'
         ]
         .map(function(path) { return PATH.resolve(environ.LIB_ROOT, path) })
         .concat([
