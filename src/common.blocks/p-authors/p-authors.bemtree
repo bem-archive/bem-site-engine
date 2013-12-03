@@ -84,8 +84,8 @@ block p-authors {
         //собираем контент из блоков
         buf.push({
             block: 'authors',
-            content: this.modules.leJspath.sort(
-                    this.modules.leJspath.filter(
+            content: leJsPath.sort(
+                    leJsPath.filter(
                 [
                     {
                         field: 'type',

@@ -6,10 +6,10 @@ block menu, mod type tools{
             self = this;
 
         //выбираем все категории для постов определенного типа (в нашем случае это tools)
-        var source = this.modules.leJspath.find('.' + data.req.prefLocale + '{.type === "' + type + '"}.categories', {});
+        var source = leJsPath.find('.' + data.req.prefLocale + '{.type === "' + type + '"}.categories', {});
 
         //Удаляем дубликаты категорий
-        source = this.modules.leJspath.removeDublicates(source, function(a, b) {
+        source = leJsPath.removeDublicates(source, function(a, b) {
             return (!self._.isSimple(a) && !self._.isSimple(b)) ?
                 a.url === b.url && a.name === b.name : a === b;
         });

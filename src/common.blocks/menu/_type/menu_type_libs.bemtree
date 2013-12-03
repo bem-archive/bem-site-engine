@@ -5,12 +5,12 @@ block menu, mod type libs {
             config = this.ctx.config,
             self = this;
 
-        var source = this.modules.leJspath.find('.' + data.req.prefLocale + '{.type === $type}.categories', { type : this.ctx.type });
+        var source = leJsPath.find('.' + data.req.prefLocale + '{.type === $type}.categories', { type : this.ctx.type });
 
         //  console.debug(source);
 
         //Удаляем дубликаты категорий
-        source = this.modules.leJspath.removeDublicates(source, function(a, b) {
+        source = leJsPath.removeDublicates(source, function(a, b) {
             return (!self._.isSimple(a) && !self._.isSimple(b)) ?
                 a.url === b.url && a.name === b.name : a === b;
         });

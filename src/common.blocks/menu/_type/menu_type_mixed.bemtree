@@ -5,10 +5,10 @@ block menu, mod type mixed {
             config = this.ctx.config,
             self = this;
 
-        var source = this.modules.leJspath.find(config.query.predicate, config.query.substitution);
+        var source = leJsPath.find(config.query.predicate, config.query.substitution);
 
         //сортируем в алфавитном порядке
-        source = this.modules.leJspath.sort(source, [{ field: 'title' }]);
+        source = leJsPath.sort(source, [{ field: 'title' }]);
 
         source = source.filter(function(item) {
             return !item.root;

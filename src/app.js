@@ -6,10 +6,6 @@ var connect = require('connect'),
     middleware = require('./middleware'),
     template = require('./template'),
     datasrc = require('../datasrc/data.json'),
-    leJsPath = require('./le-jspath'),
-    leLogic = require('./le-logic'),
-    statics = new (require('../lib/Statics').Statics)(config.get('statics')),
-    bundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' }),
     BUNDLE_NAME = 'common';
 
 module.export = connect()
@@ -19,17 +15,9 @@ module.export = connect()
     .use(connect.query())
     .use(function(req, res) {
         var ctx = {
-                data: {
-                    req: req,
-                    bundleName: BUNDLE_NAME,
-                    datasrc: datasrc
-                },
-                modules: {
-                    bundles: bundles,
-                    statics: statics,
-                    leJspath: leJsPath,
-                    leLogic: leLogic
-                }
+                req: req,
+                bundleName: BUNDLE_NAME,
+                datasrc: datasrc
             };
 
         return template.apply(ctx, req.query['__mode'])

@@ -6,7 +6,7 @@ block menu {
             config = this.ctx.config,
             self = this;
 
-        var source = this.modules.leJspath.find(config.query.predicate, config.query.substitution);
+        var source = leJsPath.find(config.query.predicate, config.query.substitution);
 
         //убираем дубликаты
         if(config.removeDublicates) {
@@ -25,7 +25,7 @@ block menu {
 
         if(config.sort) {
             if(this._.isArray(config.sort)) {
-                source = this.modules.leJspath.sort(source, config.sort);
+                source = leJsPath.sort(source, config.sort);
             } else {
                 source = source.sort(config.sort);
             }

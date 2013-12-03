@@ -53,7 +53,7 @@ block page {
     }
 
     asset, this.elem !== '': {
-        prefix : this.modules.statics.getUrl(this.modules.bundles.getBundlePath(this.data.bundleName) + '/_' + this.data.bundleName),
+        prefix : leStatics.getUrl(leBundles.getBundlePath(this.data.bundleName) + '/_' + this.data.bundleName),
         suffix : this.ctx.ext
     }
 
@@ -61,20 +61,20 @@ block page {
 
 block page {
 
-    !this.modules.leJspath.getSource(), default: {
-        this.modules.leJspath.setSource(this.data.datasrc); //кеширование данных
+    !leJsPath.getSource(), default: {
+        leJsPath.setSource(this.data.datasrc); //кеширование данных
         return applyNext();
     }
 
-    this.modules.leJspath.getSource(), default: {
+    leJsPath.getSource(), default: {
         apply('route');
         this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.req.route }, this.ctx.mods);
         return applyCtx(this.ctx);
     }
 
-    (this.modules.leJspath.getSource() && this.data.req.route === 'custom'), default: {
+    (leJsPath.getSource() && this.data.req.route === 'custom'), default: {
         var data = this.data,
-            entity = this.modules.leJspath.findCategoryAndIdByManualUrl(data.req.path, data.req.prefLocale);
+            entity = leJsPath.findCategoryAndIdByManualUrl(data.req.path, data.req.prefLocale);
         if(entity) {
             data.req.path = entity.url;
             data.req.route = this._.isArray(entity.type) ? entity.type[0] : entity.type;
@@ -118,32 +118,32 @@ block page {
     }
 
     method: {
-        this.data._q = this.modules.leLogic.resolveMethodology(this.data);
+        this.data._q = leLogic.resolveMethodology(this.data);
         return apply('createSEO')
     }
 
     libs: {
-        this.data._q = this.modules.leLogic.resolveLibraries(this.data);
+        this.data._q = leLogic.resolveLibraries(this.data);
         return apply('createSEO');
     }
 
     articles: {
-        this.data._q = this.modules.leLogic.resolveArticles(this.data);
+        this.data._q = leLogic.resolveArticles(this.data);
         return apply('createSEO');
     }
 
     tools: {
-        this.data._q = this.modules.leLogic.resolveTools(this.data);
+        this.data._q = leLogic.resolveTools(this.data);
         return apply('createSEO');
     }
 
     news: {
-        this.data._q = this.modules.leLogic.resolveNews(this.data);
+        this.data._q = leLogic.resolveNews(this.data);
         return apply('createSEO');
     }
 
     page: {
-        this.data._q = this.modules.leLogic.resolveCustomPage(this.data);
+        this.data._q = leLogic.resolveCustomPage(this.data);
         return apply('createSEO');
     }
 
@@ -156,7 +156,7 @@ block page {
         description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', 'authors')]);
 
         if(slug) {
-            var source = this.modules.leJspath.findBySlug(slug, data.req.prefLocale);
+            var source = leJsPath.findBySlug(slug, data.req.prefLocale);
             if(source) {
                 title = apply('buildTitle', this.ctx.content = [source.firstName + ' ' + source.lastName, BEM.I18N('main-menu', 'authors')]);
                 description = source.info;
@@ -206,7 +206,7 @@ block page {
             description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', this.data.req.route)]);
 
             if(_q.id) {
-                var source = this.modules.leJspath.findByIdAndType(_q.id, _q.type, this.data.req.prefLocale);
+                var source = leJsPath.findByIdAndType(_q.id, _q.type, this.data.req.prefLocale);
                 if(source) {
                     title = apply('buildTitle', this.ctx.content = [source.title, BEM.I18N('main-menu', this.data.req.route)]);
                     description = source.summary;

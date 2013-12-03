@@ -6,7 +6,7 @@ block post, mod view menu-item {
             buf = [];
 
         //находим полную информацию о посте по его id
-        var source = this.modules.leJspath.findByIdAndType(id, null, data.req.prefLocale);
+        var source = leJsPath.findByIdAndType(id, null, data.req.prefLocale);
 
         if(!source)
             return false;

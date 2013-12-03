@@ -7,8 +7,8 @@
             buf = [];
 
         var source = config['query'] ?
-                this.modules.leJspath.find(config['query'].predicate, config['query'].substitution) :
-                this.modules.leJspath.filter(config['filter'], data.req.prefLocale);
+                leJsPath.find(config['query'].predicate, config['query'].substitution) :
+                leJsPath.filter(config['filter'], data.req.prefLocale);
 
         //сортировка данных
         // source = config['sort'] ?
@@ -16,7 +16,7 @@
 
         if(config.sort) {
             if(this._.isArray(config.sort)) {
-                source = this.modules.leJspath.sort(source, config.sort);
+                source = leJsPath.sort(source, config.sort);
             } else {
                 source = source.sort(config.sort);
             }
