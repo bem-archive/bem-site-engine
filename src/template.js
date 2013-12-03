@@ -2,6 +2,7 @@ var VM = require('vm'),
     fs = require('fs'),
     Vow = require('vow'),
     PATH = require('path'),
+    JsonStringify = require('json-stringify-safe'),
     datasrc = require('../datasrc/data.json'),
     leJsPath = require('./le-jspath'),
     leLogic = require('./le-logic'),
@@ -24,9 +25,13 @@ VM.runInNewContext(bemhtml, ctx);
 var BEMTREE = ctx.BEMTREE,
     BEMHTML = ctx.BEMHTML;
 
-exports.apply = function(ctx) {
+exports.apply = function(ctx, mode) {
     return BEMTREE.apply(ctx)
         .then(function(bemjson) {
+            if ('bemjson' === mode) {
+                return JsonStringify(bemjson, null, 2);
+            }
+
             return BEMHTML.apply(bemjson);
         });
 };
