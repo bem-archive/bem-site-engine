@@ -12,6 +12,7 @@ module.export = connect()
     .use(connect.logger('dev'))
     .use(middleware.prefLocale(LANGS, DEFAULT_LANG))
     .use(middleware.router(router))
+    .use(connect.query())
     .use(function(req, res, next) {
         var hosts = config.hosts,
             ctx = {
@@ -25,7 +26,7 @@ module.export = connect()
                 lang: req.prefLocale
             };
 
-        return template.apply(ctx)
+        return template.apply(ctx, req.query['__mode'])
             .then(function(html) {
                 res.end(html);
             });
