@@ -1,8 +1,9 @@
-block b-page {
+block page {
     js: true
 }
 
-block b-page, !this.ctx.favicon {
+block page, !this.ctx.favicon {
 
     default: applyNext(this.ctx.favicon = '/favicon.ico')
+
 }

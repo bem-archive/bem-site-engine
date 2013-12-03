@@ -3,7 +3,7 @@ modules.define(
     ['jquery', 'dom', 'events'],
     function(provide, $, dom, events, BEMDOM) {
 
-BEMDOM.decl('b-page', {
+BEMDOM.decl('page', {
 
     onSetMod : {
         'js' : {

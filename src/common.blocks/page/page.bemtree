@@ -1,4 +1,4 @@
-block b-page {
+block page {
 
     default: {
         return applyCtx({
@@ -59,7 +59,7 @@ block b-page {
 
 }
 
-block b-page {
+block page {
 
     !leJspath.getSource(), default: {
         leJspath.setSource(datasrc); //кеширование данных

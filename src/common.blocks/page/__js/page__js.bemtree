@@ -1,4 +1,4 @@
-block b-page, elem js {
+block page, elem js {
 
     default: {
         var url = apply('asset', this.ctx.ext = this.elem);
