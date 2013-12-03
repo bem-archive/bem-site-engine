@@ -1,3 +1,9 @@
+yandex-bem-info-www (2.0.30) unstable; urgency=low
+
+  * Test rebuild. Make touch compatibility.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Thu, 21 Nov 2013 13:51:43 +0400
+
 yandex-bem-info-www (2.0.29) unstable; urgency=low
 
   * Test rebuild. Change menu item value.
