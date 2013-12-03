@@ -10,18 +10,18 @@
     "node": ">=0.8"
   },
   "dependencies": {
-    "inherit": "~1.0.4",
     "vow": "~0.3.0",
-    "vow-fs": "~0.1.10",
     "ym": "~0.0.1",
-    "legoa-repodb": "git://github.yandex-team.ru/varankinv/legoa-repodb.git",
     "json-stringify-safe": "~4.0.0",
-    "dom-js": "0.0.9",
-    "bem-environ": "~1.2.0",
     "jspath": "~0.2.10"
   },
   "devDependencies": {
+    "inherit": "~1.0.4",
+    "vow-fs": "~0.1.10",
     "bem": "~0.6.6",
+    "bem-environ": "~1.2.0",
+    "legoa-repodb": "git://github.yandex-team.ru/varankinv/legoa-repodb.git",
+    "dom-js": "0.0.9",
     "nodemon": "~0.7.6",
     "jshint": "~2.1.4"
   },
