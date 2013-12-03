@@ -1,5 +1,66 @@
 block b-page {
 
+    default: {
+        return applyCtx({
+            block : this.block,
+            title : apply('title'),
+            mods : this.ctx.mods,
+            head : apply('head'),
+            content : this.ctx.content
+        });
+    }
+
+    title: {
+        return this.data.pageTitle;
+    }
+
+    head: {
+        var c = [],
+            _m = this.data._m;
+
+
+        c.push({ elem : 'css' });
+        //c.push({ elem : 'js' });
+
+        if(_m) {
+            if(_m.description)
+                c.push({ elem: 'meta', attrs: { name: 'description', content: _m.description }});
+
+            if(_m.keywords)
+                c.push({ elem: 'meta', attrs: { name: 'keywords', content: _m.keywords }});
+
+            if(_m.ogTitle)
+                c.push({ elem: 'meta', attrs: { property: 'og:title', content: _m.ogTitle }});
+
+            if(_m.ogDescription)
+                c.push({ elem: 'meta', attrs: { property: 'og:description', content: _m.ogDescription }});
+
+            if(_m.ogType)
+                c.push({ elem: 'meta', attrs: { property: 'og:type', content: _m.ogType }});
+
+            if(_m.ogKeywords)
+                c.push({ elem: 'meta', attrs: { property: 'og:article:tag', content: _m.ogKeywords }});
+
+            if(_m.ogUrl)
+                c.push({ elem: 'meta', attrs: { property: 'og:url', content: _m.ogUrl }});
+
+            if(_m.ogImage)
+                c.push({ elem: 'meta', attrs: { property: 'og:image', content: _m.ogImage }});
+
+        }
+
+        return applyCtx(c);
+    }
+
+    asset, this.elem !== '': {
+        prefix : [this.data.staticUrl, '_', this.data.bundleName].join(''),
+        suffix : this.ctx.ext
+    }
+
+}
+
+block b-page {
+
     !leJspath.getSource(), default: {
         leJspath.setSource(datasrc); //кеширование данных
         return applyNext();
