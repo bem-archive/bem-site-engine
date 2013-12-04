@@ -23,7 +23,6 @@
     "vow-fs": "~0.1.10",
     "bem": "~0.6.6",
     "bem-environ": "~1.2.0",
-    "legoa-repodb": "git://github.yandex-team.ru/varankinv/legoa-repodb.git",
     "dom-js": "0.0.9",
     "nodemon": "~0.7.6",
     "jshint": "~2.1.4"
