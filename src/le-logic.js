@@ -54,7 +54,7 @@ module.exports = {
             //берем slug для поста из параметров запроса
             var type = data.page,
                 rootId = leJspath.findRootPostId(type, data.lang),
-                id = data.params.id;
+                id = data.req.params.id;
 
             result = {
                 error: false,
@@ -116,7 +116,7 @@ module.exports = {
             //Делаем проверку на то, что мы находимся в корне раздела articles
             //составляем первичный объект с результатами обработки логики
             var type = data.page,
-                isRoot = Object.getOwnPropertyNames(data.params).length == 0,
+                isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
                 result = {
                     error: false,
                     type: type,
@@ -172,7 +172,7 @@ module.exports = {
 
         try {
             var type = data.page,
-            isRoot = Object.getOwnPropertyNames(data.params).length == 0,
+            isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
 
             result = {
                 error: false,
@@ -229,7 +229,7 @@ module.exports = {
 
         try {
             var type = data.page,
-                isRoot = Object.getOwnPropertyNames(data.params).length == 0,
+                isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
                 rootId = leJspath.findRootPostId(type, data.lang),
                 result = {
                     error: false,
@@ -313,10 +313,10 @@ module.exports = {
         try {
 
             var type = data.page,
-                lib = data.params['lib'] || null,
-                version = data.params['version'] || null,
-                category = data.params['category'] || null,
-                id = data.params['id'],
+                lib = data.req.params['lib'] || null,
+                version = data.req.params['version'] || null,
+                category = data.req.params['category'] || null,
+                id = data.req.params['id'],
 
                 predicate = '.' + data.lang + '{ .type == $type }',
                 substitution = { type: type },

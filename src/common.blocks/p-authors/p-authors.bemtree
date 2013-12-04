@@ -1,7 +1,7 @@
 block p-authors {
 
     default: {
-        return applyCtx(this._.extend(this.ctx, { id: this.data.params.id }))
+        return applyCtx(this._.extend(this.ctx, { id: this.data.req.params.id }))
     }
 
     content: [ this.ctx.id ? apply('author') : apply('authors') ]
