@@ -68,18 +68,18 @@ block page {
 
     leJspath.getSource(), default: {
         apply('route');
-        this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.page }, this.ctx.mods);
+        this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.req.route }, this.ctx.mods);
         return applyCtx(this.ctx);
     }
 
-    (leJspath.getSource() && this.data.page === 'custom'), default: {
+    (leJspath.getSource() && this.data.req.route === 'custom'), default: {
         var data = this.data,
             entity = leJspath.findCategoryAndIdByManualUrl(data.req.path, data.lang);
         if(entity) {
             data.req.path = entity.url;
-            data.page = this._.isArray(entity.type) ? entity.type[0] : entity.type;
+            data.req.route = this._.isArray(entity.type) ? entity.type[0] : entity.type;
         }else {
-            data.page = 'error';
+            data.req.route = 'error';
             this.data.res.statusCode = 404;
             data._q = { error: { state: true, code: 404 } };
         }
@@ -102,7 +102,7 @@ block page {
             'index':            function() { return apply('index') },
             'error':            function() { return apply('error') }
         };
-        return this.data._r[this.data.page].call(this);
+        return this.data._r[this.data.req.route].call(this);
     }
 
     index: {
@@ -161,7 +161,7 @@ block page {
                 title = apply('buildTitle', this.ctx.content = [source.firstName + ' ' + source.lastName, BEM.I18N('main-menu', 'authors')]);
                 description = source.info;
             }else {
-                this.data.page = 'error';
+                this.data.req.route = 'error';
                 this.data.res.statusCode = 404;
                 this.data._q = { error: { state: true, code: 404 } };
                 return apply('route');
@@ -203,12 +203,12 @@ block page {
             image = null;
 
         if(_q.type) {
-            description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', this.data.page)]);
+            description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', this.data.req.route)]);
 
             if(_q.id) {
                 var source = leJspath.findByIdAndType(_q.id, _q.type, this.data.lang);
                 if(source) {
-                    title = apply('buildTitle', this.ctx.content = [source.title, BEM.I18N('main-menu', this.data.page)]);
+                    title = apply('buildTitle', this.ctx.content = [source.title, BEM.I18N('main-menu', this.data.req.route)]);
                     description = source.summary;
                     keywords = source.tags ? source.tags.join(', ') : '';
 
@@ -233,7 +233,7 @@ block page {
     }
 
     this.data._q.error, createSEO: {
-        this.data.page = 'error';
+        this.data.req.route = 'error';
         this.data.res.statusCode = 404;
         return apply('error');
     }

@@ -52,7 +52,7 @@ module.exports = {
             //type устанавливаем по data.page
             //достаем корневой пост по значению type и текущей локали
             //берем slug для поста из параметров запроса
-            var type = data.page,
+            var type = data.req.route,
                 rootId = leJspath.findRootPostId(type, data.lang),
                 id = data.req.params.id;
 
@@ -115,7 +115,7 @@ module.exports = {
         try {
             //Делаем проверку на то, что мы находимся в корне раздела articles
             //составляем первичный объект с результатами обработки логики
-            var type = data.page,
+            var type = data.req.route,
                 isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
                 result = {
                     error: false,
@@ -171,7 +171,7 @@ module.exports = {
         if(result) return result;
 
         try {
-            var type = data.page,
+            var type = data.req.route,
             isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
 
             result = {
@@ -228,7 +228,7 @@ module.exports = {
         if(result) return result;
 
         try {
-            var type = data.page,
+            var type = data.req.route,
                 isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
                 rootId = leJspath.findRootPostId(type, data.lang),
                 result = {
@@ -312,7 +312,7 @@ module.exports = {
 
         try {
 
-            var type = data.page,
+            var type = data.req.route,
                 lib = data.req.params['lib'] || null,
                 version = data.req.params['version'] || null,
                 category = data.req.params['category'] || null,

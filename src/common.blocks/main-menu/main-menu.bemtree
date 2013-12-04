@@ -112,7 +112,7 @@ block main-menu {
 
     //определение условия активности пункта главного меню
     active: {
-        return this.data.page === this.ctx ? 'yes' : '';
+        return this.data.req.route === this.ctx ? 'yes' : '';
     }
 
     //определение условия скрывания пункта главного меню

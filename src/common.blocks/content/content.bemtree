@@ -12,7 +12,7 @@ block content {
 
     content: [
         apply(this._mode = '', this.ctx = { block: 'main-menu' }),
-        this.data._r[this.data.page].call(this)
+        this.data._r[this.data.req.route].call(this)
     ]
 
     p-block: { block: this.ctx.name, mix: [this.ctx.layout, { block: 'layout', elem: 'page' }] }
