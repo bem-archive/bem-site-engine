@@ -16,7 +16,8 @@
     "jspath": "~0.2.10",
     "connect": "2.11.0",
     "susanin": "0.1.10",
-    "terror": "0.3.4"
+    "terror": "0.3.4",
+    "nconf": "0.6.9"
   },
   "devDependencies": {
     "inherit": "~1.0.4",
