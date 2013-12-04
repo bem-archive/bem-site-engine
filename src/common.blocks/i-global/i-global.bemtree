@@ -30,21 +30,3 @@ this._mode === '', !this.data {
     }
 
 }
-
-//TODO remove it!
-block i-global {
-
-    default: {
-        var data = this.data,
-            req = this.data.req,
-            hosts = data.yaApiHosts,
-            params = this._.extend(data.params, {
-                'id' : 'lego',
-                'lang' : data.lang,
-                'center-host'  : hosts.center.host,
-                'datasrc-host' : hosts.datasrc.host,
-                'static-host'  : hosts.static.host
-            });
-    }
-
-}
