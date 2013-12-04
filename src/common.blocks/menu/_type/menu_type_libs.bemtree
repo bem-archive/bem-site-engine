@@ -5,7 +5,7 @@ block menu, mod type libs {
             config = this.ctx.config,
             self = this;
 
-        var source = leJspath.find('.' + data.lang + '{.type === $type}.categories', { type : this.ctx.type });
+        var source = leJspath.find('.' + data.req.prefLocale + '{.type === $type}.categories', { type : this.ctx.type });
 
         //  console.debug(source);
 

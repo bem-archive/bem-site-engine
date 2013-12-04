@@ -54,7 +54,7 @@ block main-menu {
     smallItem: {
         var urls = {
             facebook: 'http://www.facebook.com/#!/groups/209713935765634/',
-            twitter: 'https://twitter.com/bem_' + this.data.lang,
+            twitter: 'https://twitter.com/bem_' + this.data.req.prefLocale,
             yaru: 'http://clubs.ya.ru/bem/',
             acknowledgement: '/acknowledgement'
         };
@@ -79,7 +79,7 @@ block main-menu {
 
     //переключатель языков
     langSwitcher: {
-        var lang = this.data.lang == 'en' ? 'ru' : 'en',
+        var lang = this.data.req.prefLocale == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,
             path = this.data.req.path,
             shoudReturnToMainPage = apply('hiddenMap')[lang].some(function(item) {
@@ -88,7 +88,7 @@ block main-menu {
 
             url = 'http://' + lang +
                 (
-                    host.indexOf(this.data.lang) == 0 ?
+                    host.indexOf(this.data.req.prefLocale) == 0 ?
                         host.slice(host.indexOf('.')) :
                         ('.' + host)
                 ) +
@@ -117,7 +117,7 @@ block main-menu {
 
     //определение условия скрывания пункта главного меню
     hidden: {
-        return apply('hiddenMap')[this.data.lang].indexOf(this.ctx) !== -1 ? 'yes' : ''
+        return apply('hiddenMap')[this.data.req.prefLocale].indexOf(this.ctx) !== -1 ? 'yes' : ''
     }
 
     hiddenMap: {

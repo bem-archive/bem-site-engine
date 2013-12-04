@@ -74,7 +74,7 @@ block page {
 
     (leJspath.getSource() && this.data.req.route === 'custom'), default: {
         var data = this.data,
-            entity = leJspath.findCategoryAndIdByManualUrl(data.req.path, data.lang);
+            entity = leJspath.findCategoryAndIdByManualUrl(data.req.path, data.req.prefLocale);
         if(entity) {
             data.req.path = entity.url;
             data.req.route = this._.isArray(entity.type) ? entity.type[0] : entity.type;
@@ -156,7 +156,7 @@ block page {
         description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', 'authors')]);
 
         if(slug) {
-            var source = leJspath.findBySlug(slug, data.lang);
+            var source = leJspath.findBySlug(slug, data.req.prefLocale);
             if(source) {
                 title = apply('buildTitle', this.ctx.content = [source.firstName + ' ' + source.lastName, BEM.I18N('main-menu', 'authors')]);
                 description = source.info;
@@ -206,7 +206,7 @@ block page {
             description = title = apply('buildTitle', this.ctx.content = [BEM.I18N('main-menu', this.data.req.route)]);
 
             if(_q.id) {
-                var source = leJspath.findByIdAndType(_q.id, _q.type, this.data.lang);
+                var source = leJspath.findByIdAndType(_q.id, _q.type, this.data.req.prefLocale);
                 if(source) {
                     title = apply('buildTitle', this.ctx.content = [source.title, BEM.I18N('main-menu', this.data.req.route)]);
                     description = source.summary;

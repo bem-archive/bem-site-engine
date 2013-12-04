@@ -10,7 +10,7 @@ module.exports = {
      * @return {String} key which build from current locale and request path
      */
     generateKey: function(data) {
-        return data.lang + ':' + data.req._parsedUrl.pathname;
+        return data.req.prefLocale + ':' + data.req._parsedUrl.pathname;
     },
 
     /**
@@ -53,7 +53,7 @@ module.exports = {
             //достаем корневой пост по значению type и текущей локали
             //берем slug для поста из параметров запроса
             var type = data.req.route,
-                rootId = leJspath.findRootPostId(type, data.lang),
+                rootId = leJspath.findRootPostId(type, data.req.prefLocale),
                 id = data.req.params.id;
 
             result = {
@@ -61,7 +61,7 @@ module.exports = {
                 type: type,
                 category: null,
                 query: {
-                    predicate: '.' + data.lang + '{.type === $type}{.id !== $rootId}',
+                    predicate: '.' + data.req.prefLocale + '{.type === $type}{.id !== $rootId}',
                     substitution: { type: type, rootId: rootId }
                 }
             };
@@ -71,12 +71,12 @@ module.exports = {
             //если пост не был найден то показываем 404 ошибку
             //если в запросе не был передан slug поста то показываем корневой пост
             if(id) {
-                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.lang);
+                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
 
                 if(!res) {
                     result.error = { state: true, code: 404 };
                 }else {
-                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.lang);
+                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
                     result.id = res.id;
                     result.category = res.category;
                 }
@@ -123,7 +123,7 @@ module.exports = {
                     id: null,
                     category: null,
                     query: {
-                        predicate: '.' + data.lang + '{.type === $type}',
+                        predicate: '.' + data.req.prefLocale + '{.type === $type}',
                         substitution: { type: type }
                     }
                 };
@@ -132,11 +132,11 @@ module.exports = {
             //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
             //если находится то дополнительно прогоняем через поиск для определения категории
             if(!isRoot) {
-                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.lang);
+                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
                 if(!res) {
                     result.error = { state: true, code: 404 };
                 }else {
-                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.lang);
+                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
                     result.id = res.id;
                     result.category = res.category;
                 }
@@ -180,7 +180,7 @@ module.exports = {
                 id: null,
                 category: null,
                 query: {
-                    predicate: '.' + data.lang + '{.type === $type}',
+                    predicate: '.' + data.req.prefLocale + '{.type === $type}',
                     substitution: { type: type }
                 }
             };
@@ -189,11 +189,11 @@ module.exports = {
             //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
             //если находится то дополнительно прогоняем через поиск для определения категории
             if(!isRoot) {
-                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.lang);
+                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
                 if(!res) {
                     result.error = { state: true, code: 404 };
                 }else {
-                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.lang);
+                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
                     result.id = res.id;
                     result.category = res.category;
                 }
@@ -230,14 +230,14 @@ module.exports = {
         try {
             var type = data.req.route,
                 isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
-                rootId = leJspath.findRootPostId(type, data.lang),
+                rootId = leJspath.findRootPostId(type, data.req.prefLocale),
                 result = {
                     error: false,
                     type: type,
                     id: rootId,
                     category: null,
                     query: {
-                        predicate: '.' + data.lang + '{.type === $type}',
+                        predicate: '.' + data.req.prefLocale + '{.type === $type}',
                         substitution: { type: type }
                     },
                     isOnlyOnePost: false
@@ -250,7 +250,7 @@ module.exports = {
             }
 
             //запускаем мега-метод по поиску id и категории по url
-            var res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.lang);
+            var res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
 
             //если ничего не найдено, то возвращаем 404 ошибку
             //тут есть упячка про то что этот метод срабатывает на частичное совпадение
@@ -266,12 +266,12 @@ module.exports = {
             //если была найдена категория, то нужно дополнительное исследование
             //составляем query постов для выбранной категории
             if(result.category) {
-                var predicate = '.' + data.lang + '{.type === $type}' +
+                var predicate = '.' + data.req.prefLocale + '{.type === $type}' +
                     '{.categories === $category || .categories.url === $category}';
 
                 //находим корневой пост для выбранной категории
                 //если id еще не был установлен и есть корневой пост то показываем его
-                rootId = leJspath.findRootPostIdByCategory(type, result.category, data.lang);
+                rootId = leJspath.findRootPostIdByCategory(type, result.category, data.req.prefLocale);
                 if(rootId) {
                     predicate +=  '{.id !== "' + rootId + '"}';
                 }
@@ -318,7 +318,7 @@ module.exports = {
                 category = data.req.params['category'] || null,
                 id = data.req.params['id'],
 
-                predicate = '.' + data.lang + '{ .type == $type }',
+                predicate = '.' + data.req.prefLocale + '{ .type == $type }',
                 substitution = { type: type },
                 query = null;
 
@@ -327,7 +327,7 @@ module.exports = {
             }, '');
 
 
-            id = leJspath.findByUrl(path, data.lang);
+            id = leJspath.findByUrl(path, data.req.prefLocale);
 
             id = id && id.id;
 
@@ -401,7 +401,7 @@ module.exports = {
                 id: null,
                 category: null,
                 query: {
-                    predicate: '.' + data.lang + '{.type === $type}',
+                    predicate: '.' + data.req.prefLocale + '{.type === $type}',
                     substitution: { type: type }
                 }
             };
@@ -409,11 +409,11 @@ module.exports = {
             //Пытаемся найти  пост по полному совпадению
             //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
             //если находится то дополнительно прогоняем через поиск для определения категории
-            var res = leJspath.findByUrl(path, data.lang);
+            var res = leJspath.findByUrl(path, data.req.prefLocale);
             if(!res) {
                 result.error = { state: true, code: 404 };
             }else {
-                res = leJspath.findCategoryAndIdByUrl(path, type, data.lang);
+                res = leJspath.findCategoryAndIdByUrl(path, type, data.req.prefLocale);
                 result.id = res.id;
                 result.category = res.category;
             }

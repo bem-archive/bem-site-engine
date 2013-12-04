@@ -12,7 +12,7 @@ block p-tags {
             content = [];
 
         content = ['method', 'tools', 'libs', 'articles', 'news'].map(function(item) {
-            predicate = '.' + data.lang + '{.type === $type}';
+            predicate = '.' + data.req.prefLocale + '{.type === $type}';
             substitution = { type: item };
 
             //console.debug('tags id = %s %s', id, id != undefined);
@@ -47,7 +47,7 @@ block p-tags {
                                 config: {
                                     type: 'tags',
                                     query: {
-                                        predicate: '.' + data.lang + '.tags',
+                                        predicate: '.' + data.req.prefLocale + '.tags',
                                         substitution: {}
                                     },
                                     removeDublicates: true,

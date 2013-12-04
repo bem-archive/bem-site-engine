@@ -8,7 +8,7 @@
 
         var source = config['query'] ?
                 leJspath.find(config['query'].predicate, config['query'].substitution) :
-                leJspath.filter(config['filter'], data.lang);
+                leJspath.filter(config['filter'], data.req.prefLocale);
 
         //сортировка данных
         // source = config['sort'] ?

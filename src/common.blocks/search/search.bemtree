@@ -18,7 +18,7 @@ block search {
 
     action: {
         var action = 'http://yandex.';
-        switch (this.data.lang) {
+        switch (this.data.req.prefLocale) {
             case 'en':
                 action += 'com'
                 break;

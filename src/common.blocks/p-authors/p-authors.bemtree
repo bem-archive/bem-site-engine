@@ -32,7 +32,7 @@ block p-authors {
                 config: {
                     title: BEM.I18N('p-authors', item),
                     query: {
-                        predicate: '.' + data.lang +
+                        predicate: '.' + data.req.prefLocale +
                             '{.type === $type}{.authors === $id || .translators === $id}',
                         substitution: { type: item, id: self.ctx.id }
                     },
@@ -54,7 +54,7 @@ block p-authors {
                             config: {
                                 type: item,
                                 query: {
-                                    predicate: '.' + data.lang + '{.type === $type}',
+                                    predicate: '.' + data.req.prefLocale + '{.type === $type}',
                                     substitution: { type: item }
                                 },
                                 sort: [{ field: 'lastName' }, { field: 'firstName' }],
@@ -92,7 +92,7 @@ block p-authors {
                         operand: '===',
                         value: 'authors'
                     }
-                ], data.lang),
+                ], data.req.prefLocale),
                 [
                     { field: 'lastName' },
                     { field: 'firstName' }

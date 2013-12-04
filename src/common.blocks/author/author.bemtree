@@ -4,8 +4,8 @@ block author {
         var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
             id = this.ctx.id; //уникальный id автора или человекочитаемый url
 
-        var author =  leJspath.findBySlug(id, data.lang) ||
-                      leJspath.findById(id, data.lang) ||
+        var author =  leJspath.findBySlug(id, data.req.prefLocale) ||
+                      leJspath.findById(id, data.req.prefLocale) ||
                       id;
 
         if(author.avatar.indexOf(this.data.yaApiHosts.static.host) == -1)

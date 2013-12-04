@@ -6,7 +6,7 @@ block menu, mod type tools{
             self = this;
 
         //выбираем все категории для постов определенного типа (в нашем случае это tools)
-        var source = leJspath.find('.' + data.lang + '{.type === "' + type + '"}.categories', {});
+        var source = leJspath.find('.' + data.req.prefLocale + '{.type === "' + type + '"}.categories', {});
 
         //Удаляем дубликаты категорий
         source = leJspath.removeDublicates(source, function(a, b) {

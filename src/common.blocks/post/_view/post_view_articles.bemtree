@@ -4,7 +4,7 @@
         var id = this.ctx.source,
             data = this.data;
 
-        var source = leJspath.findByIdAndType(id, null, data.lang);
+        var source = leJspath.findByIdAndType(id, null, data.req.prefLocale);
 
         if(!source)
             return [];
