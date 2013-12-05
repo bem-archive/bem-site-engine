@@ -1,0 +1,13 @@
+{
+    "app": {
+        "logger": {
+            "mode": "default"
+        },
+        "workers": "auto",
+        "languages": ["en", "ru"],
+        "defaultLanguage": "en"
+    },
+    "statics": {
+        "host": "/m"
+    }
+}
