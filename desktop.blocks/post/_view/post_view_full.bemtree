@@ -24,7 +24,8 @@ block post, mod view full {
             }),
 
             apply('title', this.ctx.content = source),
-            apply('contentFull', this.ctx.content = source.content)
+            apply('contentFull', this.ctx.content = source.content),
+            apply('issue', this.ctx.content = source.repo)
         ];
     }
 
@@ -62,6 +63,36 @@ block post, mod view full {
         elem: 'content',
         url: apply('getUrl'),
         content: this.ctx.content
+    }
+
+    issue: {
+        var repo = this.ctx.content,
+            url = repo.url,
+            treeish = repo.treeish;
+
+        url = url.replace('git://', 'https://');
+        url = url.replace('.git', '');
+
+        var pRequestUrl = url + '/tree/' + treeish,
+            issueUrl = url + '/issues';
+
+        return {
+            elem: 'issueLink',
+            content: [
+                BEM.I18N('post', 'issue1'),
+                {
+                    block: 'link',
+                    url: pRequestUrl,
+                    content: ' pull request '
+                },
+                BEM.I18N('post', 'issue2'),
+                {
+                    block: 'link',
+                    url: issueUrl,
+                    content: ' issue '
+                }
+            ]
+        }
     }
 
     getUrl: {

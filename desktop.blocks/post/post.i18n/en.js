@@ -32,6 +32,9 @@ module.exports = {
         "month10": "november",
         "month11": "december",
 
-        "translate": "translate"
+        "translate": "translate",
+
+        "issue1": "If you found a bug please send ",
+        "issue2": " or submit an "
     }
 };
