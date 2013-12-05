@@ -9,6 +9,7 @@ var VM = require('vm'),
     leStatics = new (require('../lib/Statics').Statics)(config.get('statics')),
     leBundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' }),
     commonPath = PATH.join(__dirname, 'desktop.bundles/common'),
+    code = fs.readFileSync(PATH.join(commonPath, 'common.bemtree.js')),
     bemtree = fs.readFileSync(PATH.join(commonPath, 'common.bemtree.js')),
     bemhtml = fs.readFileSync(PATH.join(commonPath, 'common.bemhtml.js')),
     i18n_keys = fs.readFileSync(PATH.join(commonPath, 'common.i18n', 'all.keys.js')),
@@ -21,6 +22,7 @@ var VM = require('vm'),
         console: console
     };
 
+VM.runInNewContext(code, ctx);
 VM.runInNewContext(i18n_keys, ctx);
 VM.runInNewContext(bemtree, ctx);
 VM.runInNewContext(bemhtml, ctx);

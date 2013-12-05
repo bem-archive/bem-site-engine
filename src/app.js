@@ -1,5 +1,3 @@
-require('./desktop.bundles/common/_common.node.js');
-
 var connect = require('connect'),
     config = require('./config'),
     router = require('./router'),
