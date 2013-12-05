@@ -1,3 +1,9 @@
+yandex-bem-info-www (2.0.31) unstable; urgency=low
+
+  * Test rebuild. Miscellanious fixes and improvements.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 03 Dec 2013 14:31:30 +0400
+
 yandex-bem-info-www (2.0.30) unstable; urgency=low
 
   * Test rebuild. Make touch compatibility.
