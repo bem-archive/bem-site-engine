@@ -5,7 +5,7 @@ block post, mod view full {
             data = this.data;
 
         //находим полную информацию о посте по его id
-        var source = leJspath.findByIdAndType(id, null, data.req.prefLocale);
+        var source = this.modules.leJspath.findByIdAndType(id, null, data.req.prefLocale);
 
         if(!source)
             return [];
