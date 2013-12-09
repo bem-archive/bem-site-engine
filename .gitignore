@@ -8,7 +8,6 @@
 freeze
 node_modules
 libs
-datasrc
 
 src/.bem/cache
 src/*.bundles/*/*.*
