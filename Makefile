@@ -10,6 +10,7 @@ build: data app
 .PHONY: app
 app: node_modules libs
 	cd src && ../node_modules/.bin/bem make desktop.bundles/common
+	cd src && ../node_modules/.bin/bem make errors.bundles
 
 .PHONY: libs
 libs: node_modules

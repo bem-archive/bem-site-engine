@@ -12,7 +12,8 @@ datasrc
 
 src/.bem/cache
 src/*.bundles/*/*.*
-!src/*.bundles/*/*.bemdecl.js
+!src/desktop.bundles/*/*.bemdecl.js
+!src/errors.bundles/*/*.bemjson.js
 !src/*.bundles/.bem/*
 
 *.deb
