@@ -25,7 +25,8 @@ MAKE.decl('Arch', {
     libraries : [
         'bem-core @ 8981332a71',
         'bem-components @ v2',
-        'bem-techs-core @ v0.3.1'
+        'bem-techs-core @ v0.3.1',
+        'bem-bl @ 0.3'
     ]
 
 });
@@ -34,7 +35,14 @@ MAKE.decl('Arch', {
 MAKE.decl('BundleNode', {
 
     getTechs : function() {
-        return [
+        var techs = [],
+            isErrorBundles = PATH.basename(this.level.dir) === 'errors.bundles';
+
+        if (isErrorBundles) {
+            techs.push('bemjson.js');
+        }
+
+        techs = techs.concat([
             'bemdecl.js',
             'deps.js',
             'css',
@@ -42,10 +50,16 @@ MAKE.decl('BundleNode', {
             'i18n',
             'i18n.keys.js',
             'bemhtml',
-            'bemtree',
-            'browser.js',
-            'node.js'
-        ];
+            'browser.js'
+        ]);
+
+        if (isErrorBundles) {
+            techs.push('i18n.html');
+        } else {
+            techs = techs.concat(['bemtree', 'node.js']);
+        }
+
+        return techs;
     },
 
     getOptimizerTechs : function() {
@@ -77,6 +91,13 @@ MAKE.decl('BundleNode', {
     },
 
     'create-i18n.keys.js-node' : function(tech, bundleNode, magicNode) {
+        return this.setBemCreateNode(
+            tech,
+            this.level.resolveTech(tech),
+            bundleNode,
+            magicNode);
+    },
+    'create-i18n.html-node': function(tech, bundleNode, magicNode) {
         return this.setBemCreateNode(
             tech,
             this.level.resolveTech(tech),
