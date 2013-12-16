@@ -1,3 +1,9 @@
+yandex-bem-info-www (3.0.0) unstable; urgency=low
+
+  * Test rebuild. Test v3 architecture
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Mon, 16 Dec 2013 20:15:43 +0400
+
 yandex-bem-info-www (2.0.31) unstable; urgency=low
 
   * Test rebuild. Miscellanious fixes and improvements.
