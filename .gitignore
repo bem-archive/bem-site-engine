@@ -4,6 +4,7 @@
 .project
 
 .bem/snapshots
+.bem/cache
 .gitmodules
 freeze
 node_modules
@@ -14,6 +15,8 @@ src/*.bundles/*/*.*
 !src/desktop.bundles/*/*.bemdecl.js
 !src/errors.bundles/*/*.bemjson.js
 !src/*.bundles/.bem/*
+desktop.bundles
+
 
 *.deb
 *.build
