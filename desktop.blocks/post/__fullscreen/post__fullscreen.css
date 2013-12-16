@@ -1,0 +1,35 @@
+.post__fullscreen
+{
+    position: fixed;
+
+    width: 16px;
+    height: 16px;
+    margin-left: -6px;
+
+    cursor: pointer;
+    -webkit-transition: opacity .1s ease-out;
+            transition: opacity .1s ease-out;
+
+    opacity: .25;
+    background: no-repeat url('data:image/svg+xml,%3Csvg%20height%3D%2296%22%20width%3D%2296%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M64%2020l-31.918-20-32.082%2020.031v75.969l32-20%2032%2020%2032-20v-76l-32%2020zm-56%2061.566v-57.098l20-12.488v57.084l-.24.15-19.76%2012.352zm28-12.502v-57.168l23.752%2014.883.248.156v57.131l-23.76-14.85-.24-.152zm52%202.502l-20%2012.5v-57.131l.24-.15%2019.76-12.351v57.132z%22%2F%3E%3C%2Fsvg%3E');
+    background-size: cover;
+}
+
+.post__fullscreen:hover
+{
+    opacity: 1;
+}
+
+.b-page_page_acknowledgement .post__fullscreen
+{
+    display: none;
+}
+
+.b-page_touch_yes .post__fullscreen
+{
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+
+    opacity: 1;
+}

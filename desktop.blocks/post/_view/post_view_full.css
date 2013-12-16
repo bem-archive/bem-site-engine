@@ -1,7 +1,7 @@
 .post_view_full
 {
     margin-bottom: 10px;
-    padding: 1px 10px 5px 10px;
+    padding: 1px 10px 5px 16px;
 }
 
 .post_view_full  .post__date,
@@ -36,4 +36,9 @@
 .post_view_full .post__issueLink
 {
     color: #555;
+}
+
+.b-page_touch_yes .post_view_full
+{
+    padding-left: 24px;
 }
