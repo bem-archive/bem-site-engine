@@ -19,11 +19,9 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	$(NPM) install
-	cd src
-	YENV=$(YENV) $(BEM) make libs
-	YENV=$(YENV) $(BEM) make desktop.bundles/common
-	YENV=$(YENV) $(BEM) make error.bundles
-	cd ..
+	(cd src; YENV=$(YENV) $(BEM) make libs)
+	(cd src; YENV=$(YENV) $(BEM) make desktop.bundles/common)
+	(cd src; YENV=$(YENV) $(BEM) make errors.bundles)
 
 override_dh_auto_install:
 	$(NPM) install --global --production --prefix=$(TMP_PREFIX)
@@ -33,7 +31,6 @@ override_dh_auto_clean:
 		src/libs \
 		freeze \
 		.borschik
-	git checkout -- configs/current node_modules
 
 override_dh_install:
 	dh_install
