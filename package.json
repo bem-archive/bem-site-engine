@@ -10,26 +10,28 @@
     "node": ">=0.8"
   },
   "dependencies": {
-    "inherit": "~1.0.4",
-    "vow": "~0.3.0",
-    "vow-fs": "~0.1.10",
-    "ym": "~0.0.1",
-    "cookie": "~0.0.6",
-    "legoa-repodb": "git://github.yandex-team.ru/varankinv/legoa-repodb.git",
-    "log": "~1.4.0",
-    "log4node": "~0.1.2",
-    "json-stringify-safe": "~4.0.0",
-    "dom-js": "0.0.9",
-    "bem-environ": "~1.2.0",
-    "jspath": "~0.2.10"
+    "connect": "2.11.1",
+    "susanin": "0.1.10",
+    "terror": "0.3.4",
+    "nconf": "0.6.9",
+    "vow": "0.3.12",
+    "vow-fs": "0.2.3",
+    "jspath": "0.2.10",
+    "ym": "0.0.11",
+    "json-stringify-safe": "5.0.0"
   },
   "devDependencies": {
-    "bem": "~0.6.6",
-    "nodemon": "~0.7.6",
-    "jshint": "~2.1.4"
+    "bem": "0.7.2",
+    "bem-environ": "1.4.0",
+    "inherit": "2.1.0",
+    "dom-js": "0.0.9",
+    "nodemon": "0.7.10",
+    "jshint": "2.3.0"
   },
   "scripts": {
-    "start": "nodemon -w desktop.bundles/ -e node.js,bemtree.js,bemhtml.js -d 1 ./desktop.bundles/common/_common.node.js",
+    "start": "node bin/app",
+    "build": "make build",
+    "static": "make static",
     "test": "jshint ."
   },
   "author": "lego-team@yandex-team.ru",

@@ -1,0 +1,11 @@
+block page, elem js {
+
+    default: {
+        var url = apply('asset', this.ctx.ext = this.elem);
+        return [
+            { elem : this.elem, url : '//yandex.st/jquery/1.10.2/jquery.min.js' },
+            { elem : this.elem, url : url.prefix + '.' + url.suffix }
+        ];
+    }
+
+}

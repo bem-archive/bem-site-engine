@@ -1,0 +1,51 @@
+block p-index {
+
+    content: {
+        var index = Math.round(10 * Math.random()),
+            mod = [ 'batman', 'breaks', 'captain-america',
+                    'generated', 'ironman', 'motion', 'robin',
+                    'scheme', 'spots', 'stripe', 'waves'][index];
+
+        //console.debug('index = %s mod = %s', index, mod);
+
+        return [
+            {
+                elem: 'logo',
+                elemMods: { theme: mod }
+            },
+            {
+                elem: 'title',
+                content : BEM.I18N('p-index', 'title')
+            },
+            {
+                elem: 'phrase',
+                content : BEM.I18N('p-index', 'phrase')
+            },
+            {
+                block : 'link',
+                mix : {block: 'p-index', elem: 'link'},
+                url   : '/articles/start-with-project-stub',
+                content : BEM.I18N('p-index', 'project-stub')
+            },
+            {
+                block: 'ya-logo',
+                mix : {block: 'p-index', elem: 'ya'},
+                content: [
+                    {
+                        elem: 'logo',
+                        content: {
+                            elem: 'link',
+                            url: BEM.I18N('p-index', 'url'),
+                            content: {
+                                elem: 'img',
+                                url: BEM.I18N('p-index', 'yaLogoSrc')
+                            }
+                        }
+                    }
+                ]
+            }
+
+        ];
+    }
+}
+

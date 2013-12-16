@@ -1,7 +1,0 @@
-block i-global {
-
-    default: {
-        this._buf.push(JSON.stringify(this.ctx, null, 4));
-    }
-
-}

@@ -1,0 +1,82 @@
+block menu {
+
+    content: {
+
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            config = this.ctx.config,
+            self = this;
+
+        var source = leJsPath.find(config.query.predicate, config.query.substitution);
+
+        //убираем дубликаты
+        if(config.removeDublicates) {
+            source = source.filter(function(elem, pos, self) {
+                return self.indexOf(elem) == pos;
+            });
+        }
+
+        //применение сортировки при необходимости
+        // if(config.sort) {
+        //     source = leJspath.sort(source, config.sort);
+        // }else {
+        //     source = source.sort();
+        // }
+        //
+
+        if(config.sort) {
+            if(this._.isArray(config.sort)) {
+                source = leJsPath.sort(source, config.sort);
+            } else {
+                source = source.sort(config.sort);
+            }
+        }else{
+            source = source.sort();
+        }
+
+        if(this._.isArray(source)) {
+
+            source = source.filter(function(item) {
+                return !self._.isSimple(item) || item.length > 0;
+            });
+
+            //цикличеки применяем шаблоны к элементу item текущего блока
+            //с модификатором соотвествующим полю мета-информации
+            //значения которого отображаются в меню и идентификацией
+            //текущего значения для выделения активного пункта меню
+            source = source.map(function(item) {
+                var nc = config;
+                nc.item = { item: item };
+                //console.debug('item =%s=', item);
+                return apply(
+                    this._mode = '',
+                    this.ctx = {
+                        elem: 'item',
+                        elemMods: {
+                            type : config.type,
+                            active : apply('active', this.ctx = nc) },
+                        id: item.id || item,
+                        category: config.category
+                    }
+                );
+            });
+
+            //добавление заголовка для меню
+            if(config.title) {
+                source.unshift({ elem: 'title', type: config.type });
+            }
+
+            return source;
+        }
+    }
+
+    //определение активного пункта меню и установка значения модификатора active
+    active: {
+        if(typeof this.ctx.activeField === 'undefined') {
+            return (this.ctx.id && this.ctx.id === this.ctx.item.id) ? 'yes' : '';
+        }else if(this.ctx.activeField == null) {
+            return (this.ctx.id && this.ctx.id === this.ctx.item) ? 'yes' : '';
+        }else {
+            return (this.ctx.id && this.ctx.id === this.ctx.item[this.ctx.activeField]) ? 'yes' : '';
+        }
+    }
+}

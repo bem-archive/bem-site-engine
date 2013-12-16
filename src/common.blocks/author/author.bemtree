@@ -1,0 +1,18 @@
+block author {
+
+    content: {
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            id = this.ctx.id; //уникальный id автора или человекочитаемый url
+
+        var author =  leJsPath.findBySlug(id, data.req.prefLocale) ||
+                      leJsPath.findById(id, data.req.prefLocale) ||
+                      id;
+
+        if(author.avatar.indexOf(leStatics._parsedUrl.host) == -1)
+          author.avatar = leStatics.getUrl(author.avatar);
+
+          //TODO remove it for prod
+          //author.avatar = this.data.yaApiHosts.static.host + '/datasrc/images/' + author.avatar;
+        return author;
+    }
+}

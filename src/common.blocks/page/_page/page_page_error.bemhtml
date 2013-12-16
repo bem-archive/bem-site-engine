@@ -1,0 +1,5 @@
+block page, mod page error {
+
+    default: applyNext(this._isErrorPage = true)
+
+}

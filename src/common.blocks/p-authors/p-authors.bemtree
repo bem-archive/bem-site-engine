@@ -1,0 +1,113 @@
+block p-authors {
+
+    default: {
+        return applyCtx(this._.extend(this.ctx, { id: this.data.req.params.id }))
+    }
+
+    content: [ this.ctx.id ? apply('author') : apply('authors') ]
+
+
+    //В случае когда отображается страница с информацией для конкретного автора,
+    //т.е. в параметрах запроса передан id то отображаем
+    //блок персональной информации и блоки с постами текущего автора всех типов
+    author: {
+        var data = this.data,
+            buf = [],
+            self = this;
+
+        //блок персональной информации об авторе
+        buf.push({
+            block: 'author',
+            mods: { view: 'full' },
+            id: this.ctx.id
+        });
+
+        //для каждого из типов постов отображаем блоки posts
+        //c постами соответствующего типа для которых автором
+        //или соавтором является текущий выбранный автор
+        ['method', 'tools', 'libs', 'articles', 'news'].forEach(function(item) {
+            buf.push({
+                block: 'posts',
+                mods: { view: 'articles' },
+                config: {
+                    title: BEM.I18N('p-authors', item),
+                    query: {
+                        predicate: '.' + data.req.prefLocale +
+                            '{.type === $type}{.authors === $id || .translators === $id}',
+                        substitution: { type: item, id: self.ctx.id }
+                    },
+                    sort: [{field: 'title', direction: 'asc'}]
+                }
+            })
+        });
+
+        return {
+            block: 'layout',
+            mods: {section: 'p-menu'},
+            content: [
+                {
+                    block: 'left',
+                    mix: { block : 'layout', elem : 'col', mods: {type: 'left', fixed: 'yes'} },
+                    content: ['authors', 'translators'].map(function(item) {
+                        return {
+                            block: 'menu', //меню со списком авторов
+                            config: {
+                                type: item,
+                                query: {
+                                    predicate: '.' + data.req.prefLocale + '{.type === $type}',
+                                    substitution: { type: item }
+                                },
+                                sort: [{ field: 'lastName' }, { field: 'firstName' }],
+                                title: true,
+                                activeField: 'slug', //это поле по которому будет отпределяться аквтивное состояние пункта меню
+                                id: self.ctx.id
+                            }
+                        }
+                    })
+                },
+                {
+                    block: 'center',
+                    mix: { block : 'layout', elem : 'col', mods: {type: 'center'} },
+                    content: buf
+                }
+            ]
+        };
+    }
+
+    //В случае когда, отображается страница с информацией о всей команде
+    //т.е. в парамертах запроса отсутствует id автора, то отображаем контактные
+    //данные для всей команды и сетку портретов с подписями для каждого члена команды
+    authors: {
+        var buf = [], //массив вывода контента
+            data = this.data;
+
+        //собираем контент из блоков
+        buf.push({
+            block: 'authors',
+            content: leJsPath.sort(
+                    leJsPath.filter(
+                [
+                    {
+                        field: 'type',
+                        operand: '===',
+                        value: 'authors'
+                    }
+                ], data.req.prefLocale),
+                [
+                    { field: 'lastName' },
+                    { field: 'firstName' }
+                ]
+            )
+            .map(function(item) {
+                return {
+                    block: 'author',
+                    mods: { view: 'grid-cell' },
+                    id: item.slug
+                }
+            })
+        });
+
+        return buf;
+    }
+
+}

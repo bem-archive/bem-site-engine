@@ -1,0 +1,14 @@
+{
+    "app": {
+        "port": "3014",
+        "logger": {
+            "mode": "dev"
+        },
+        "workers": 1,
+        "languages": ["en", "ru"],
+        "defaultLanguage": "en"
+    },
+    "statics": {
+        "host": "localhost:8001"
+    }
+}

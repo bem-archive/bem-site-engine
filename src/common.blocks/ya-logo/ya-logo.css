@@ -1,0 +1,21 @@
+.ya-logo
+{
+    margin: auto;
+
+    text-align: center;
+}
+
+    .ya-logo__logo
+    {
+        padding: 1.15em 0 0.47em;
+    }
+
+    .ya-logo__img
+    {
+        border: 0;
+    }
+
+    .ya-logo__link[href*="com"] .ya-logo__img
+    {
+        margin-top: -0.2em;
+    }

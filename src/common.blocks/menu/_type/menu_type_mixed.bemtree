@@ -1,0 +1,105 @@
+block menu, mod type mixed {
+
+    content: {
+        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
+            config = this.ctx.config,
+            self = this;
+
+        var source = leJsPath.find(config.query.predicate, config.query.substitution);
+
+        //сортируем в алфавитном порядке
+        source = leJsPath.sort(source, [{ field: 'title' }]);
+
+        source = source.filter(function(item) {
+            return !item.root;
+        });
+
+        var categories = null,
+            url = null,
+            items = {};
+
+        this.buf = [];
+
+        //метод проверки на то, что категория - это версия библиотеки
+        //в таком случае посты относятся непосредственно к версии библиотеки
+        //и должны отображаться первыми
+        var isTag = function(a) {
+            return /\d+\.\d+\.\d+/.test(a) == true;
+        };
+
+        var isCategory = function(a) {
+            return /\d+\.\d+\.\d+/.test(a) == false;
+        };
+
+        if(this._.isArray(source)) {
+            source.forEach(function(post) {
+                categories = post.categories;
+                if(self._.isArray(categories)) {
+                    categories.forEach(function(category) {
+                        url = category['url'] || category;
+                        url = url.split('/').pop();
+                        if(!items[url]) {
+                            items[url] = category;
+                            items[url]['posts'] = [];
+                        }
+                        items[url]['posts'].push(post);
+                    });
+                }
+            });
+
+            Object.getOwnPropertyNames(items).filter(isTag).forEach(function(url) {
+                apply('drawPosts', this.ctx.category = items[url]);
+            });
+
+            Object.getOwnPropertyNames(items).filter(isCategory).sort().forEach(function(url) {
+                apply('drawGroups', this.ctx.category = items[url]);
+                apply('drawPosts', this.ctx.category = items[url]);
+            });
+        }
+
+        return this.buf;
+    }
+
+    //отрисовка категорий
+    drawGroups: {
+        this.buf.push(apply(
+            this._mode = '',
+            this.ctx = {
+                elem: 'item',
+                elemMods: {
+                    type : 'categories',
+                    complex: 'yes'
+                },
+                name: this.ctx.category.name.split('/').pop()
+            }
+        ));
+    }
+
+    //отрисовка постов
+    drawPosts: {
+        var category = this.ctx.category,
+            self = this;
+
+        category.posts.filter(function(item, index, _self){
+            return _self.indexOf(item) == index;
+        }).forEach(function(post) {
+            self.buf.push(apply(
+                this._mode = '',
+                this.ctx = {
+                    elem: 'item',
+                    elemMods: {
+                        type : 'articles',
+                        active : apply('active', this.ctx = self._.extend(self.ctx, { item : post })) },
+                    id: post.id,
+                    category: self._.isSimple(category) ? category : category.url,
+                    type: 'libs'
+                }
+            ));
+        });
+    }
+
+    //определение активного пункта меню и установка значения модификатора active
+    active: {
+        return (this.ctx.config.id && this.ctx.config.id === this.ctx.item.id) ? 'yes' : '';
+    }
+}
