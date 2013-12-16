@@ -1,0 +1,10 @@
+.layout__page
+{
+    position: relative;
+
+    display: table-cell;
+
+    padding-left: 200px;
+
+    vertical-align: top;
+}

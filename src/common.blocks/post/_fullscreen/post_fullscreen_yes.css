@@ -1,0 +1,17 @@
+.post_fullscreen_yes
+{
+    position: absolute;
+    left: 10px;
+
+    width: 100% !important;
+    min-height: 100%;
+    margin-left: 0 !important;
+    padding-right: 20px;
+
+    background-color: #fff;
+}
+
+.b-page_touch_yes .post_fullscreen_yes
+{
+    left: 0;
+}

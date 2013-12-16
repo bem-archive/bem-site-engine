@@ -1,5 +1,6 @@
 module.exports = {
     "post": {
+        "fullscreen": "Reveal the article window",
         "author": "Author",
         "authors": "Authors",
         "translator": "Translator",

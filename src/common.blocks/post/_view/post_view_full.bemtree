@@ -11,6 +11,9 @@ block post, mod view full {
             return [];
 
         return [
+
+            apply('fullscreen', this.ctx.content = source.fullscreen),
+
             apply('author', this.ctx = {
                 authors: source.authors,
                 translators: source.translators
@@ -27,6 +30,11 @@ block post, mod view full {
             apply('contentFull', this.ctx.content = source.content),
             apply('issue', this.ctx.content = source.repo)
         ];
+    }
+
+    fullscreen: {
+        elem: 'fullscreen',
+        content: this.ctx.content
     }
 
     //автор и соавторы поста
