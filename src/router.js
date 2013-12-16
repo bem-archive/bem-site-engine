@@ -42,6 +42,11 @@ router.addRoute({
 });
 
 router.addRoute({
+    name: 'jobs',
+    pattern: '/jobs(/)'
+});
+
+router.addRoute({
     name: 'acknowledgement',
     pattern: '/acknowledgement(/)'
 });
