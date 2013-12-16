@@ -28,7 +28,8 @@ VM.runInNewContext(bemtree, ctx);
 VM.runInNewContext(bemhtml, ctx);
 
 var BEMTREE = ctx.BEMTREE,
-    BEMHTML = ctx.BEMHTML;
+    BEMHTML = ctx.BEMHTML,
+    I18N = ctx.BEM.I18N;
 
 exports.apply = function(ctx, mode) {
     return BEMTREE.apply(ctx)
@@ -43,3 +44,4 @@ exports.apply = function(ctx, mode) {
 
 exports.BEMTREE = BEMTREE;
 exports.BEMHTML = BEMHTML;
+exports.I18N = I18N;

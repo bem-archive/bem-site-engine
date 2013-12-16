@@ -15,6 +15,8 @@ module.exports = function() {
             datasrc: datasrc
         };
 
+        template.I18N.lang(req.prefLocale);
+
         return template.apply(ctx, req.query['__mode'])
             .then(function(html) {
                 res.end(html);
