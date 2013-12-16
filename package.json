@@ -1,7 +1,7 @@
 {
   "name": "bem-info",
   "description": "Front-end for bem.info",
-  "version": "2.0.0",
+  "version": "3.0.0-alpha1",
   "repository": {
     "type": "git",
     "url": "git://github.yandex-team.ru/lego/bem-info.git"
