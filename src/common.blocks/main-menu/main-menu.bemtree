@@ -81,7 +81,7 @@ block main-menu {
     langSwitcher: {
         var lang = this.data.req.prefLocale == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,
-            path = this.data.req.path,
+            path = this.data.req._parsedUrl.pathname,
             shoudReturnToMainPage = apply('hiddenMap')[lang].some(function(item) {
                 return path.indexOf(item) !== -1;
             });

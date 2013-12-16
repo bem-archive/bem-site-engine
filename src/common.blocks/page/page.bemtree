@@ -172,7 +172,7 @@ block page {
     }
 
     tags: {
-        var tag = this.req.data.params.id,
+        var tag = this.data.req.params.id,
             title = apply('buildTitle', this.ctx.content = [tag, BEM.I18N('main-menu', 'tags')]);
 
         return apply('setTitleAndMeta', this.ctx = { title:  title, description: title });

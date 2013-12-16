@@ -41,4 +41,9 @@ router.addRoute({
     pattern: '/authors(/<id>)(/)'
 });
 
+router.addRoute({
+    name: 'acknowledgement',
+    pattern: '/acknowledgement(/)'
+});
+
 module.exports = router;
