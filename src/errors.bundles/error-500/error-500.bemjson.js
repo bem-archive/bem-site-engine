@@ -9,12 +9,12 @@
         [
             {
                 "elem": "css",
-                "url": "/desktop.bundles/common/_common.css",
+                "url": "{STATICS_HOST}/desktop.bundles/common/_common.css",
                 "ie": false
             },
             {
                 "elem": "css",
-                "url": "/desktop.bundles/common/_common",
+                "url": "{STATICS_HOST}/desktop.bundles/common/_common",
                 "ie": true
             }
         ],
@@ -249,7 +249,7 @@
             },
             {
                 "elem": "js",
-                "url": "/desktop.bundles/common/_common.js"
+                "url": "{STATICS_HOST}/desktop.bundles/common/_common.js"
             }
         ]
     ]
