@@ -189,13 +189,22 @@ module.exports = {
             //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
             //если находится то дополнительно прогоняем через поиск для определения категории
             if(!isRoot) {
-                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
-                if(!res) {
-                    result.error = { state: true, code: 404 };
-                }else {
-                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
-                    result.id = res.id;
-                    result.category = res.category;
+                if(data.req.params.id) {
+                    var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
+                    if(!res) {
+                        result.error = { state: true, code: 404 };
+                    } else {
+                        res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
+                        result.id = res.id;
+                        result.category = res.category;
+                    }
+                } else {
+                    var year = parseInt(data.req.params.year),
+                        month = parseInt(data.req.params.month)
+                        dateFrom = new Date(year, month ? month - 1 : 0).valueOf(),
+                        dateTo = new Date(month ? year : year + 1, month || 0).valueOf();
+
+                    result.query.predicate = '.' + data.req.prefLocale + '{.type === $type && .createDate > ' + dateFrom + ' && .createDate < ' + dateTo +'}';
                 }
             }
         }catch(e) {
