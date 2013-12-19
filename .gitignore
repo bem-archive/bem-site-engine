@@ -6,6 +6,7 @@
 .bem/snapshots
 .bem/cache
 .gitmodules
+npm-debug.log
 freeze
 node_modules
 libs
