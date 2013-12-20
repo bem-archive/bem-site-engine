@@ -13,6 +13,7 @@ module.exports = function() {
     return function(req, res) {
         return leData.getData()
             .then(function(data) {
+                leJsPath.setSource(data);
                 var ctx = {
                     req: req,
                     bundleName: BUNDLE_NAME,
