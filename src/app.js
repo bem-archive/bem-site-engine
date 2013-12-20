@@ -12,4 +12,4 @@ exports.run = function() {
         .use(middleware.page())
         .use(middleware.error())
         .listen(config.get('app:port'));
-});
+};
