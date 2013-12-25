@@ -37,11 +37,13 @@ exports.getDataFromCache = function() {
 };
 
 /**
- * Sets loaded data to memory
- * @param data - {Object} loaded and parsed data
+ * Returns cached data from memory
+ * @returns {*}
  */
-var setDataToCache = function(data) {
-    _cachedData = data;
+exports.dropCache = function() {
+    console.log('drop cache');
+    _cachedData = null;
+    return this.getData();
 };
 
 /**
@@ -68,7 +70,7 @@ exports.getData = function() {
         });
 
         res.on('end', function() {
-            setDataToCache(JSON.parse(data));
+            _cachedData = JSON.parse(data);
             promise.fulfill(self.getDataFromCache());
         });
     }).on('error', function(e) {

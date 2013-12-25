@@ -60,4 +60,9 @@ router.addRoute({
     pattern: '/acknowledgement(/)'
 });
 
+router.addRoute({
+    name: '__reload',
+    pattern: '/__reload(/)'
+});
+
 module.exports = router;
