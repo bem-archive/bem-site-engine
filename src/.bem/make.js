@@ -18,16 +18,16 @@ MAKE.decl('Arch', {
     blocksLevelsRegexp : /^.+?\.blocks$/,
     bundlesLevelsRegexp : /^.+?\.bundles$/,
 
-    // getLibraries : function() {
-    //     return this.__base();
-    // }
+    getLibraries : function() {
+        return this.__base();
+    }
 
-    libraries : [
-        'bem-core @ 8981332a71',
-        'bem-components @ v2',
-        'bem-techs-core @ v0.3.1',
-        'bem-bl @ 0.3'
-    ]
+    // libraries : [
+    //     'bem-core @ 8981332a71',
+    //     'bem-components @ v2',
+    //     'bem-techs-core @ v0.3.1',
+    //     'bem-bl @ 0.3'
+    // ]
 
 });
 

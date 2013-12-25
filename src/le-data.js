@@ -5,100 +5,75 @@ var API = require('github'),
     Vow = require('vow'),
     HTTPS = require('https'),
     UTIL = require('util'),
-    _ = require('underscore');
+    _ = require('lodash'),
+    config = require('./config');
 
-var git = null,
-    repoConf = null,
-    _cachedData = null;
-
-var getDataFromCache = function() {
-    return _cachedData;
-};
-
-var setDataToCache = function(data) {
-    _cachedData = data;
-};
-
-var clearCache = function() {
-    _cachedData = null;
-};
+var _cachedData = null,
+    gitPrivate = null,
+    gitPublic = null,
+    dataRepository = config.get('github:dataRepository');
 
 /**
  * initialize github API
  */
-(function() {
-    var commonConfig = {
-            "version": "3.0.0",
-            "debug": "true",
-            "protocol": "https",
-            "timeout": "5000"
-        },
-        publicConfig = {
-            "host": "api.github.com"
-        };
+exports.init = function() {
+    var publicConfig = _.extend(config.get('github:public'), config.get('github:common')),
+        privateConfig = _.extend(config.get('github:private'), config.get('github:common'));
 
-    git = new API(_.extend(publicConfig, commonConfig));
+    gitPublic = new API(publicConfig);
+    gitPrivate = new API(privateConfig);
 
-    git.authenticate({
-        type: "oauth",
-        token: "7a2fb4d7a380f8a20562f5fc910f35d3b1605341"
-    });
+    gitPublic.authenticate(config.get('github:auth'));
 
-    repoConf = {
-        user: 'tormozz48',
-        repo: 'bem-data',
-        ref: 'master'
-    };
-})();
+    return this;
+};
+
+/**
+ * Returns cached data from memory
+ * @returns {*}
+ */
+exports.getDataFromCache = function() {
+    return _cachedData;
+};
+
+/**
+ * Sets loaded data to memory
+ * @param data - {Object} loaded and parsed data
+ */
+var setDataToCache = function(data) {
+    _cachedData = data;
+};
 
 /**
  * Retrieve data from data file
  * @returns {Vow.promise}
  */
 exports.getData = function() {
-    var promise = Vow.promise(),
-        config = _.extend({ path: 'data.json' }, repoConf);
+    var self = this,
+        promise = Vow.promise(),
+        url = UTIL.format({
+            'public': 'https://raw.github.com/%s/%s/%s/%s',
+            'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
+        }[dataRepository.type], dataRepository.user, dataRepository.repo, dataRepository.ref, dataRepository.path);
 
-    if(getDataFromCache() !== null) {
-        promise.fulfill(getDataFromCache());
-    }else {
-        var url = UTIL.format('https://raw.github.com/%s/%s/%s/%s',
-                    config.user, config.repo, config.ref, config.path);
-        HTTPS.get(url, function(res) {
-            var data = '';
-
-            res.on('data', function(chunk) {
-                data += chunk;
-            });
-
-            res.on('end', function(){
-                data = JSON.parse(data);
-                setDataToCache(data);
-                promise.fulfill(data);
-            });
-        }).on('error', function(e) {
-            promise.reject(e);
-        });
+    if(this.getDataFromCache() !== null) {
+        return promise.fulfill(this.getDataFromCache());
     }
+
+    HTTPS.get(url, function(res) {
+        var data = '';
+
+        res.on('data', function(chunk) {
+            data += chunk;
+        });
+
+        res.on('end', function() {
+            setDataToCache(JSON.parse(data));
+            promise.fulfill(self.getDataFromCache());
+        });
+    }).on('error', function(e) {
+        promise.reject(e);
+    });
+
     return promise;
-};
-
-exports.getLibs = function() {
-    //TODO implement later
-};
-
-exports.getLibVersions = function(lib) {
-    //TODO implement later
-};
-
-exports.getLibLevels = function(lib, version) {
-    //TODO implement later
-};
-
-exports.getLibBlocks = function(lib, version, level) {
-    //TODO implement later
-};
-
-exports.getBlock = function(lib, version, level, block) {
-    //TODO implement later
 };

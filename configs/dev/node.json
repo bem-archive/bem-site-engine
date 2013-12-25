@@ -10,5 +10,31 @@
     },
     "statics": {
         "host": "localhost:8001"
+    },
+    "github": {
+        "common": {
+            "version": "3.0.0",
+            "debug": "true",
+            "protocol": "https",
+            "timeout": "5000"
+        },
+        "private": {
+            "host": "github.yandex-team.ru",
+            "url": "/api/v3"
+        },
+        "public": {
+            "host": "api.github.com"
+        },
+        "auth": {
+            "type": "oauth",
+            "token": "7a2fb4d7a380f8a20562f5fc910f35d3b1605341"
+        },
+        "dataRepository": {
+            "type": "public",
+            "user": "tormozz48",
+            "repo": "bem-data",
+            "ref": "master",
+            "path": "data.min.json"
+        }
     }
 }

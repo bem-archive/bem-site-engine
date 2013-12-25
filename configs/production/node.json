@@ -9,5 +9,29 @@
     },
     "statics": {
         "host": "/m"
+    },
+    "github": {
+        "common": {
+            "version": "3.0.0",
+            "debug": "false",
+            "protocol": "https",
+            "timeout": "5000"
+        },
+        "private": {
+            "host": "github.yandex-team.ru",
+            "url": "/api/v3"
+        },
+        "public": {
+            "host": "api.github.com",
+            "type": "oauth",
+            "token": "7a2fb4d7a380f8a20562f5fc910f35d3b1605341"
+        },
+        "repoConf": {
+            "type": "private",
+            "user": "lego",
+            "repo": "bem-info",
+            "ref": "data",
+            "path": "data.min.json"
+        }
     }
 }
