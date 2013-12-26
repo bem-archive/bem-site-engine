@@ -1,0 +1,13 @@
+{
+    "name": "bem-info",
+    "version": "3.0.0",
+    "private": true,
+    "dependencies": {
+        "bem-core": "git://github.com/bem/bem-core.git#v1.1.0"
+    },
+    "ignore": [
+        "node_modules",
+        ".enb/tmp",
+        "*.bundles"
+    ]
+}
