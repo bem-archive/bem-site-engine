@@ -1,5 +1,6 @@
 {
     "app": {
+        "socket": "/var/run/yandex/bem-info-www/bem-info-www.sock",
         "logger": {
             "mode": "default"
         },

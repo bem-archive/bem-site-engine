@@ -17,7 +17,7 @@ var createNode = function() {
                 .use(middleware.reloadCache(router))
                 .use(middleware.page())
                 .use(middleware.error())
-                .listen(config.get('app:port'));
+                .listen(config.get('app:socket') || config.get('app:port'));
         })
         .then(function() {
             process.on('message', function(message) {
