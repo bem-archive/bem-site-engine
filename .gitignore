@@ -3,15 +3,14 @@
 .settings
 .project
 
-.gitmodules
-npm-debug.log
-freeze
 node_modules
+npm-debug.log
+libs
 
+.enb/tmp
 src/*.bundles/*/*.*
 !src/desktop.bundles/*/*.bemdecl.js
 !src/errors.bundles/*/*.bemjson.js
-desktop.bundles
 
 *.deb
 *.build
