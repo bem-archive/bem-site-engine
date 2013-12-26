@@ -3,7 +3,7 @@
         "logger": {
             "mode": "default"
         },
-        "workers": "auto",
+        "workers": 4,
         "languages": ["en", "ru"],
         "defaultLanguage": "en"
     },
@@ -29,10 +29,10 @@
             "token": "7a2fb4d7a380f8a20562f5fc910f35d3b1605341"
         },
         "repoConf": {
-            "type": "private",
-            "user": "lego",
-            "repo": "bem-info",
-            "ref": "data",
+            "type": "public",
+            "user": "tormozz48",
+            "repo": "bem-data",
+            "ref": "master",
             "path": "data.min.json"
         }
     }

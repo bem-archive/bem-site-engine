@@ -4,7 +4,7 @@
         "logger": {
             "mode": "dev"
         },
-        "workers": 4,
+        "workers": 1,
         "languages": ["en", "ru"],
         "defaultLanguage": "en"
     },
