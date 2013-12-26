@@ -1,4 +1,3 @@
 debian/**
-libs/**
 node_modules/**
 src/*.bundles
