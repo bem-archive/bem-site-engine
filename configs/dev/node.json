@@ -10,7 +10,7 @@
         "defaultLanguage": "en"
     },
     "statics": {
-        "host": "localhost:8001"
+        "host": "127.0.0.1:8001"
     },
     "github": {
         "common": {

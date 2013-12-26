@@ -1,5 +1,4 @@
-var net = require('net'),
-    fs = require('fs'),	
+var fs = require('fs'),
     connect = require('connect'),
     cluster = require('cluster'),
     util = require('util'),
@@ -11,6 +10,8 @@ var net = require('net'),
 var createNode = function() {
     leData.init().getData()
         .then(function() {
+            var portOrSocket = config.get('app:socket') || config.get('app:port');
+
             var app = connect()
                 .use(connect.logger(config.get('app:logger:mode')))
                 .use(connect.query())
@@ -18,12 +19,13 @@ var createNode = function() {
                 .use(middleware.router(router))
                 .use(middleware.reloadCache(router))
                 .use(middleware.page())
-                .use(middleware.error());
-            	
-		console.log('SOCKET ' + config.get('app:socket'));
+                .use(middleware.error()).listen(portOrSocket, function() {
+                    if(isNaN(+portOrSocket)) {
+                        fs.chmod(portOrSocket, '0777');
+                    }
+                });
 
-            net.createServer(app).listen(
-                config.get('app:socket') || config.get('app:port'));
+            console.log('SOCKET ' + config.get('app:socket'));
         })
         .then(function() {
             process.on('message', function(message) {
@@ -35,15 +37,16 @@ var createNode = function() {
         });
 };
 
+
 exports.run = function() {
     var numOfWorkers = config.get('app:workers');
 
-   if(cluster.isWorker){
+    if(cluster.isWorker){
         return createNode();
-   }
+    }
 
     if(cluster.isMaster) {
-	if(config.get('app:socket')) {
+	    if(config.get('app:socket')) {
             try {
                 fs.unlinkSync(config.get('app:socket'));
             } catch(e) {}
