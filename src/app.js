@@ -1,4 +1,5 @@
-var http = require('http'),
+var net = require('net'),
+    fs = require('fs'),	
     connect = require('connect'),
     cluster = require('cluster'),
     util = require('util'),
@@ -21,7 +22,7 @@ var createNode = function() {
             	
 		console.log('SOCKET ' + config.get('app:socket'));
 
-            http.createServer(app).listen(
+            net.createServer(app).listen(
                 config.get('app:socket') || config.get('app:port'));
         })
         .then(function() {
@@ -37,11 +38,17 @@ var createNode = function() {
 exports.run = function() {
     var numOfWorkers = config.get('app:workers');
 
-    if(cluster.isWorker){
+   if(cluster.isWorker){
         return createNode();
-    }
+   }
 
     if(cluster.isMaster) {
+	if(config.get('app:socket')) {
+            try {
+                fs.unlinkSync(config.get('app:socket'));
+            } catch(e) {}
+        }
+
         cluster.on('fork', function(worker) {
             console.log(util.format("A worker %s is forked", worker.id));
         });
