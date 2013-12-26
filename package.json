@@ -19,7 +19,7 @@
     "jspath": "0.2.10",
     "ym": "0.0.11",
     "json-stringify-safe": "5.0.0",
-    "github": "*",
+    "github": "0.1.12",
     "lodash": "~2.4.1"
   },
   "devDependencies": {
