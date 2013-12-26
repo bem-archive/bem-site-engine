@@ -9,10 +9,11 @@ var VM = require('vm'),
     leStatics = new (require('../lib/Statics').Statics)(config.get('statics')),
     leBundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' }),
     commonPath = PATH.join(__dirname, 'desktop.bundles/common'),
-    code = fs.readFileSync(PATH.join(commonPath, 'common.bemtree.js')),
-    bemtree = fs.readFileSync(PATH.join(commonPath, 'common.bemtree.js')),
-    bemhtml = fs.readFileSync(PATH.join(commonPath, 'common.bemhtml.js')),
-    i18n_keys = fs.readFileSync(PATH.join(commonPath, 'common.i18n', 'all.keys.js')),
+    bemtree = fs.readFileSync(PATH.join(commonPath, '_common.bemtree.js')),
+    bemhtml = fs.readFileSync(PATH.join(commonPath, '_common.bemhtml.js')),
+    i18n = fs.readFileSync(PATH.join(commonPath, '_common.lang.all.js')),
+    i18n_ru_keys = fs.readFileSync(PATH.join(commonPath, '_common.lang.ru.js')),
+    i18n_en_keys = fs.readFileSync(PATH.join(commonPath, '_common.lang.en.js')),
     ctx = {
         Vow: Vow,
         leJsPath: leJsPath,
@@ -22,8 +23,9 @@ var VM = require('vm'),
         console: console
     };
 
-VM.runInNewContext(code, ctx);
-VM.runInNewContext(i18n_keys, ctx);
+VM.runInNewContext(i18n, ctx);
+VM.runInNewContext(i18n_ru_keys, ctx);
+VM.runInNewContext(i18n_en_keys, ctx);
 VM.runInNewContext(bemtree, ctx);
 VM.runInNewContext(bemhtml, ctx);
 
