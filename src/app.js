@@ -1,4 +1,5 @@
 var fs = require('fs'),
+    path = require('path'),
     express = require('express'),
     worker = require('luster'),
     util = require('util'),
@@ -10,16 +11,22 @@ var fs = require('fs'),
 var createWorker = function() {
     leData.init().getData()
         .then(function() {
-            var portOrSocket = config.get('app:socket') || config.get('app:port');
+            var portOrSocket = config.get('app:socket') || config.get('app:port'),
+                app = express();
 
-            var app = express()
-                .use(express.logger(config.get('app:logger:mode')))
+            if ('production' !== process.env.NODE_ENV) {
+                app.use(express.static(__dirname));
+                app.use(require('enb/lib/server/server-middleware').createMiddleware({ cdir: path.join(__dirname, '..') }));
+            }
+
+            app.use(express.logger(config.get('app:logger:mode')))
                 .use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.router(router))
                 .use(middleware.reloadCache(router))
                 .use(middleware.page())
-                .use(middleware.error()).listen(portOrSocket, function() {
+                .use(middleware.error())
+                .listen(portOrSocket, function() {
                     if(isNaN(+portOrSocket)) {
                         fs.chmod(portOrSocket, '0777');
                     }
