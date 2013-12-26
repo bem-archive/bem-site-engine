@@ -1,10 +1,11 @@
 {
     "app": {
-        "port": "3014",
+	"port": 3014,
+	"socket": "/tmp/bemer-bem-info-www.sock",
         "logger": {
             "mode": "dev"
         },
-        "workers": 1,
+        "workers": 4,
         "languages": ["en", "ru"],
         "defaultLanguage": "en"
     },
