@@ -1,4 +1,5 @@
-var connect = require('connect'),
+var http = require('http'),
+    connect = require('connect'),
     cluster = require('cluster'),
     util = require('util'),
     config = require('./config'),
@@ -9,15 +10,19 @@ var connect = require('connect'),
 var createNode = function() {
     leData.init().getData()
         .then(function() {
-            connect()
+            var app = connect()
                 .use(connect.logger(config.get('app:logger:mode')))
                 .use(connect.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.router(router))
                 .use(middleware.reloadCache(router))
                 .use(middleware.page())
-                .use(middleware.error())
-                .listen(config.get('app:socket') || config.get('app:port'));
+                .use(middleware.error());
+            	
+		console.log('SOCKET ' + config.get('app:socket'));
+
+            http.createServer(app).listen(
+                config.get('app:socket') || config.get('app:port'));
         })
         .then(function() {
             process.on('message', function(message) {
