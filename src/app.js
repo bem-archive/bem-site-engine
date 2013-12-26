@@ -29,7 +29,7 @@ var createNode = function() {
         });
 };
 
-exports.run = (function() {
+exports.run = function() {
     var numOfWorkers = config.get('app:workers');
 
     if(cluster.isWorker){
@@ -63,4 +63,4 @@ exports.run = (function() {
             });
         }
     }
-})();
+};
