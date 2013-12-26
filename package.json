@@ -10,7 +10,7 @@
     "node": ">=0.8"
   },
   "dependencies": {
-    "connect": "2.11.1",
+    "express": "3.4.7",
     "susanin": "0.1.10",
     "terror": "0.3.4",
     "nconf": "0.6.9",

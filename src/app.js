@@ -1,5 +1,5 @@
 var fs = require('fs'),
-    connect = require('connect'),
+    express = require('express'),
     worker = require('luster'),
     util = require('util'),
     config = require('./config'),
@@ -12,9 +12,9 @@ var createWorker = function() {
         .then(function() {
             var portOrSocket = config.get('app:socket') || config.get('app:port');
 
-            var app = connect()
-                .use(connect.logger(config.get('app:logger:mode')))
-                .use(connect.query())
+            var app = express()
+                .use(express.logger(config.get('app:logger:mode')))
+                .use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.router(router))
                 .use(middleware.reloadCache(router))
