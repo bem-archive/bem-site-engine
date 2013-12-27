@@ -7,13 +7,13 @@ module.exports = function(router) {
         if (route) {
             var name = route[0].getName();
             if(name === '__reload') {
-                worker.remoteCall('reload');
+                worker.remoteCall && worker.remoteCall('reload');
 
                 res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.end('Invalidate cache and reload data will be executed immediately\n');
 
             }else {
-                worker.remoteCall('request');
+                worker.remoteCall && worker.remoteCall('request');
                 return next();
             }
         } else {
