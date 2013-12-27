@@ -1,7 +1,6 @@
 {
     "app": {
-	"port": 3014,
-	"socket": "/tmp/bemer-bem-info-www.sock",
+	    "port": 3014,
         "logger": {
             "mode": "dev"
         },

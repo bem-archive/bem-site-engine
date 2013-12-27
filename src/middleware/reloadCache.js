@@ -1,3 +1,5 @@
+var worker = require('luster');
+
 module.exports = function(router) {
     return function(req, res, next) {
         var route = router.findFirst(req._parsedUrl.path);
@@ -5,13 +7,13 @@ module.exports = function(router) {
         if (route) {
             var name = route[0].getName();
             if(name === '__reload') {
-                process.send('reload');
+                worker.remoteCall('reload');
 
                 res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.end('Invalidate cache and reload data will be executed immediately\n');
 
             }else {
-                process.send('request');
+                worker.remoteCall('request');
                 return next();
             }
         } else {

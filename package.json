@@ -20,7 +20,8 @@
     "ym": "0.0.11",
     "json-stringify-safe": "5.0.0",
     "github": "0.1.12",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "luster": "git://github.com/tormozz48/luster.git"
   },
   "devDependencies": {
     "bem": "0.7.2",
