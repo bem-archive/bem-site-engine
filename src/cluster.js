@@ -25,13 +25,7 @@ if (luster.isMaster) {
 luster.configure({
     app : './app.js',
     workers : config.get('app:workers'),
-    control : {
-        forkTimeout : 1000,
-        stopTimeout : 1000,
-        exitThreshold : 3000,
-        allowedSequentialDeaths : 3
-    },
-
+    control: config.get('app:clusterSettings'),
     server : {
         port : config.get('app:socket') || config.get('app:port'),
         groups : 1
