@@ -1,5 +1,5 @@
 var VM = require('vm'),
-    fs = require('fs'),
+    VowFs = require('vow-fs'),
     Vow = require('vow'),
     PATH = require('path'),
     config = require('./config'),
@@ -7,43 +7,76 @@ var VM = require('vm'),
     leJsPath = require('./le-jspath'),
     leLogic = require('./le-logic'),
     leStatics = new (require('../lib/Statics').Statics)(config.get('statics')),
-    leBundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' }),
-    commonPath = PATH.join(__dirname, 'desktop.bundles/common'),
-    bemtree = fs.readFileSync(PATH.join(commonPath, '_common.bemtree.js')),
-    bemhtml = fs.readFileSync(PATH.join(commonPath, '_common.bemhtml.js')),
-    i18n = fs.readFileSync(PATH.join(commonPath, '_common.lang.all.js')),
-    i18n_ru_keys = fs.readFileSync(PATH.join(commonPath, '_common.lang.ru.js')),
-    i18n_en_keys = fs.readFileSync(PATH.join(commonPath, '_common.lang.en.js')),
-    ctx = {
-        Vow: Vow,
-        leJsPath: leJsPath,
-        leLogic: leLogic,
-        leStatics: leStatics,
-        leBundles: leBundles,
-        console: console
+    leBundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' });
+
+if ('production' === process.env.NODE_ENV) {
+    var ctxPromise = _compileCtx();
+
+    exports.apply = function(ctx, lang, mode) {
+        return ctxPromise
+            .then(function(templates) {
+                return _applyFunc(templates.BEMTREE, templates.BEMHTML, templates.BEM.I18N).call(null, ctx, lang, mode);
+            })
     };
+} else {
+    exports.apply = function(ctx, lang, mode) {
+        return _rebuild()
+            .then(function() {
+                return _compileCtx();
+            })
+            .then(function(templates) {
+                return _applyFunc(templates.BEMTREE, templates.BEMHTML, templates.BEM.I18N).call(null, ctx, lang, mode);
+            });
+    };
+}
 
-VM.runInNewContext(i18n, ctx);
-VM.runInNewContext(i18n_ru_keys, ctx);
-VM.runInNewContext(i18n_en_keys, ctx);
-VM.runInNewContext(bemtree, ctx);
-VM.runInNewContext(bemhtml, ctx);
+function _compileCtx() {
+    var targets = ['lang.all.js', 'lang.en.js', 'lang.ru.js', 'bemtree.js', 'bemhtml.js'],
+        ctx = {
+            Vow: Vow,
+            leJsPath: leJsPath,
+            leLogic: leLogic,
+            leStatics: leStatics,
+            leBundles: leBundles,
+            console: console
+        };
 
-var BEMTREE = ctx.BEMTREE,
-    BEMHTML = ctx.BEMHTML,
-    I18N = ctx.BEM.I18N;
+    return Vow.all(targets.map(function(target) {
+            var targetPath = PATH.join(__dirname, 'desktop.bundles', 'common', '_common.' + target);
+            return VowFs.read(targetPath, 'utf-8');
+        }))
+        .then(function(targetSources) {
+            targetSources.forEach(function(targetSource) {
+                VM.runInNewContext(targetSource, ctx);
+            });
 
-exports.apply = function(ctx, mode) {
-    return BEMTREE.apply(ctx)
-        .then(function(bemjson) {
-            if ('bemjson' === mode) {
-                return JsonStringify(bemjson, null, 2);
-            }
+            return ctx;
+        })
+}
 
-            return BEMHTML.apply(bemjson);
-        });
-};
+function _rebuild() {
+    var enbBuilder = require('enb/lib/server/server-middleware').createBuilder({ cdir: PATH.join(__dirname, '..') }),
+        commonPath = 'src/desktop.bundles/common/_common.';
 
-exports.BEMTREE = BEMTREE;
-exports.BEMHTML = BEMHTML;
-exports.I18N = I18N;
+    return Vow.all([
+        enbBuilder(commonPath + 'bemtree.js'),
+        enbBuilder(commonPath + 'bemhtml.js'),
+        enbBuilder(commonPath + 'lang.all.js'),
+        enbBuilder(commonPath + 'lang.ru.js'),
+        enbBuilder(commonPath + 'lang.en.js')
+    ]);
+}
+
+function _applyFunc(BEMTREE, BEMHTML, I18N) {
+    return function(ctx, lang, mode) {
+        I18N.lang(lang);
+        return BEMTREE.apply(ctx)
+            .then(function(bemjson) {
+                if ('bemjson' === mode) {
+                    return JsonStringify(bemjson, null, 2);
+                }
+
+                return BEMHTML.apply(bemjson);
+            });
+    };
+}
