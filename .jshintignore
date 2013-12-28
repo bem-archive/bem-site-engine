@@ -1,4 +1,5 @@
-debian/**
-libs/**
-node_modules/**
+debian
+libs
+node_modules
+.enb/tmp
 src/*.bundles

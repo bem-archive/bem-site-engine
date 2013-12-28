@@ -10,13 +10,11 @@
         "logger": {
             "mode": "dev"
         },
-        "workers": 4,
+        "workers": 1,
         "languages": ["en", "ru"],
         "defaultLanguage": "en"
     },
-    "statics": {
-        "host": "127.0.0.1:8001"
-    },
+    "statics": {},
     "github": {
         "common": {
             "version": "3.0.0",

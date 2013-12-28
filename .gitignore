@@ -3,21 +3,14 @@
 .settings
 .project
 
-.bem/snapshots
-.bem/cache
-.gitmodules
-npm-debug.log
-freeze
 node_modules
+npm-debug.log
 libs
 
-src/.bem/cache
+.enb/tmp
 src/*.bundles/*/*.*
 !src/desktop.bundles/*/*.bemdecl.js
 !src/errors.bundles/*/*.bemjson.js
-!src/*.bundles/.bem/*
-desktop.bundles
-
 
 *.deb
 *.build

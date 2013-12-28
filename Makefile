@@ -1,24 +1,28 @@
-BIN = ./node_modules/.bin
-
-.PHONY: static
-static: build
-	cd src && ../node_modules/.bin/bem server -p 8001
+NPM_BIN = node_modules/.bin
+ROOT = src
+ENB = $(NPM_BIN)/enb
+BOWER = $(NPM_BIN)/bower
 
 .PHONY: build
-build: app
+build: npm_deps bower_deps config
+	$(ENB) make --no-cache
 
-.PHONY: app
-app: node_modules libs
-	cd src && ../node_modules/.bin/bem make desktop.bundles/common
-	cd src && ../node_modules/.bin/bem make errors.bundles
+.PHONY: clean
+clean: npm_deps
+	$(ENB) make clean
 
-.PHONY: libs
-libs: node_modules
-	if [ ! -d src/libs ] ; then \
-        cd src; \
-        ../node_modules/.bin/bem make libs; \
+.PHONY: config
+config:
+	if [ $(YENV) == 'production' ]; then \
+		cd configs && ln -snf production current; \
+    else \
+		cd configs && ln -snf dev current; \
 	fi;
 
-.PHONY: node_modules
-node_modules:
+.PHONY: bower_deps
+bower_deps: npm_deps
+	$(BOWER) install
+
+.PHONY: npm_deps
+npm_deps:
 	npm install

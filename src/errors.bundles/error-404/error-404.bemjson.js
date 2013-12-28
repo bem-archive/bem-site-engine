@@ -241,16 +241,6 @@
         },
         {
             "block": "metrika"
-        },
-        [
-            {
-                "elem": "js",
-                "url": "//yandex.st/jquery/1.10.2/jquery.min.js"
-            },
-            {
-                "elem": "js",
-                "url": "{STATICS_HOST}/desktop.bundles/common/_common.js"
-            }
-        ]
+        }
     ]
 })

@@ -10,7 +10,7 @@
     "node": ">=0.8"
   },
   "dependencies": {
-    "connect": "2.11.1",
+    "express": "3.4.7",
     "susanin": "0.1.10",
     "terror": "0.3.4",
     "nconf": "0.6.9",
@@ -24,11 +24,11 @@
     "luster": "git://github.com/tormozz48/luster.git"
   },
   "devDependencies": {
-    "bem": "0.7.2",
-    "bem-environ": "1.4.0",
+    "enb": "0.8.43",
+    "enb-bemxjst": "0.2.2",
+    "enb-modules": "0.0.14",
+    "bower": "1.2.8",
     "inherit": "2.1.0",
-    "dom-js": "0.0.9",
-    "nodemon": "0.7.10",
     "jshint": "2.3.0"
   },
   "scripts": {
