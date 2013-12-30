@@ -29,6 +29,12 @@ $ npm start
 $ NODE_ENV=production npm start
 ```
 
+Если нужно запустить приложение в режиме работы кластера, то необходимо вызвать
+```sh
+$ node src/cluster.js
+```
+
+
 Чтобы заработали поддомены необходимо добавить в `/etc/hosts` записи:
 
 ```
@@ -36,3 +42,7 @@ $ NODE_ENV=production npm start
 127.0.0.1    ru.localhost
 127.0.0.1    en.localhost
 ```
+Ответственные за разработку:
+
+@bemer
+@blond

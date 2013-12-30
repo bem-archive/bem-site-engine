@@ -23,7 +23,7 @@ if (luster.isMaster) {
 }
 
 luster.configure({
-    app : './app.js',
+    app : './worker.js',
     workers : config.get('app:workers'),
     control: config.get('app:clusterSettings'),
     server : {
