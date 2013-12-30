@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 if ('production' === process.env.NODE_ENV) {
-    require('../src');
+    require('../src/cluster');
 } else {
     var nodemon = require('nodemon'),
         config = require('../nodemon');
