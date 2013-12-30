@@ -1,0 +1,5 @@
+- block: page
+  required: true
+- issue
+- issue-comments
+- issue-comment-form

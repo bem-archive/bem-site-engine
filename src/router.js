@@ -1,4 +1,5 @@
 var Susanin = require('susanin'),
+    config = require('./config'),
     router = Susanin();
 
 router.addRoute({
@@ -58,6 +59,16 @@ router.addRoute({
 router.addRoute({
     name: 'acknowledgement',
     pattern: '/acknowledgement(/)'
+});
+
+router.addRoute({
+    name: 'issues',
+    pattern: config.get('forum:route') + '(/)'
+});
+
+router.addRoute({
+    name: 'issue',
+    pattern: config.get('forum:route') + '/<issueNumber>(/)'
 });
 
 router.addRoute({

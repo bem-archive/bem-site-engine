@@ -4,6 +4,16 @@ var fs = require('fs'),
     config = require('./config'),
     router = require('./router'),
     middleware = require('./middleware'),
+    forum = require('bem-forum/src/middleware/forum'),
+    forumConfig = {
+        github: {
+            api: config.get('github:common'),
+            auth: config.get('github:auth')
+        },
+        repo: config.get('forum:repo'),
+        route: config.get('forum:route')
+    },
+    BEMHTML = require('./desktop.bundles/common/_common.bemhtml').BEMHTML,
     leData = require('./le-data');
 
 exports.run = function(worker) {
@@ -22,6 +32,7 @@ exports.run = function(worker) {
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.router(router))
                 .use(middleware.reloadCache(router, worker))
+                .use(forum(forumConfig, BEMHTML))
                 .use(middleware.page())
                 .use(middleware.error())
                 .listen(portOrSocket, function() {
