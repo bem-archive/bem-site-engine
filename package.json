@@ -30,6 +30,7 @@
     "enb-bemxjst": "0.2.2",
     "enb-modules": "0.0.14",
     "bower": "1.2.8",
+    "nodemon": "1.0.7",
     "inherit": "2.1.0",
     "jshint": "2.3.0"
   },
