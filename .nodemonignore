@@ -1,7 +1,0 @@
-# .nodemonignore file
-# ignore uncompressed files match to `bundles/page/page.js` pattern
-#:.*[^\/]+\/[^\/]+\/([^_])*.js$
-
-# игнорировать изменения в несжатых `page.node.js` файлах бандла
-:.*[^\/]+\/[^\/]+\/(?:[^_])*\.node\.js$
-
