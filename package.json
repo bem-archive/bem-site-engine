@@ -19,9 +19,10 @@
     "jspath": "0.2.10",
     "ym": "0.0.11",
     "json-stringify-safe": "5.0.0",
-    "github": "0.1.12",
+    "github": "git://github.com/mikedeboer/node-github.git",
     "lodash": "~2.4.1",
-    "luster": "git://github.com/tormozz48/luster.git"
+    "luster": "git://github.com/tormozz48/luster.git",
+    "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.2"
   },
   "devDependencies": {
     "enb": "0.8.43",
