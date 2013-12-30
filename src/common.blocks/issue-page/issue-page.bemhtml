@@ -1,0 +1,47 @@
+block('issue-page')(
+
+    def()(function () {
+        var ctx = this.ctx;
+
+        ctx.block = 'page';
+        ctx.head = [
+            { elem: 'css', url: '/desktop.bundles/common/_common.css' }
+        ];
+        ctx.mix = [{ block: this.block }];
+        ctx.content = apply('content');
+
+        return applyCtx(ctx);
+    }),
+
+    content()(function () {
+        var ctx = this.ctx,
+            theme = ctx.theme,
+            issue = ctx.issue,
+            comments = ctx.comments;
+
+        return [
+            {
+                block: 'issue',
+                view: 'full',
+                theme: theme,
+                date: issue.date,
+                author: issue.author,
+                title: issue.title,
+                body: issue.body
+            },
+            {
+                block: 'issue-comments',
+                view: 'list',
+                theme: theme,
+                items: comments
+            },
+            {
+                block: 'issue-comment-form',
+                view: 'fake',
+                theme: theme,
+                issueUrl: issue.url
+            }
+        ]
+    })
+
+)
