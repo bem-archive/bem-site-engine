@@ -1,7 +1,10 @@
 NPM_BIN = node_modules/.bin
-ROOT = src
 ENB = $(NPM_BIN)/enb
 BOWER = $(NPM_BIN)/bower
+
+ifneq ($(YENV),production)
+	YENV=dev
+endif
 
 .PHONY: build
 build: npm_deps bower_deps config
@@ -13,11 +16,7 @@ clean: npm_deps
 
 .PHONY: config
 config:
-	if [ $(YENV) == 'production' ]; then \
-		cd configs && ln -snf production current; \
-    else \
-		cd configs && ln -snf dev current; \
-	fi;
+	cd configs && ln -snf $(YENV) current
 
 .PHONY: bower_deps
 bower_deps: npm_deps

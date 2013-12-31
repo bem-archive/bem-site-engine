@@ -8,6 +8,7 @@
     },
     "ignore": [
         "node_modules",
+        "configs/current",
         ".enb/tmp",
         "*.bundles"
     ]

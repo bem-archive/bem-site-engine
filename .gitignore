@@ -3,6 +3,8 @@
 .settings
 .project
 
+configs/current
+
 node_modules
 npm-debug.log
 libs
