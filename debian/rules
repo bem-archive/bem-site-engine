@@ -2,7 +2,8 @@
 
 YENV ?= production
 NPM ?= npm --registry=http://npm.yandex-team.ru
-BEM := $(shell $(NPM) bin)/bem
+ENB := $(shell $(NPM) bin)/enb
+BOWER := $(shell $(NPM) bin)/bower
 
 WWW_DESTDIR := debian/yandex-bem-info-www/usr/lib/yandex/bem-info-www
 STATIC_DESTDIR := debian/yandex-bem-info-www/var/lib/yandex/bem-info-static
@@ -19,14 +20,15 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	$(NPM) install
-	(cd src; YENV=$(YENV) $(BEM) make libs)
-	(cd src; YENV=$(YENV) $(BEM) make desktop.bundles/common)
-	(cd src; YENV=$(YENV) $(BEM) make errors.bundles)
+	YENV=$(YENV) $(BOWER) install
+	YENV=$(YENV) $(ENB) make --no-cache
 
 override_dh_auto_install:
 	$(NPM) install --global --production --prefix=$(TMP_PREFIX)
 
 override_dh_auto_clean:
+    YENV=$(YENV) $(ENB) make clean
+
 	rm -rf node_modules \
 		src/libs \
 		freeze \
@@ -38,12 +40,6 @@ override_dh_install:
 	dh_nodeubic -n
 	dh_clearvcs
 	dh_strip
-	
-	# Удаляем статику, которая есть на yandex.st
-	find $(STATIC_DESTDIR)/libs/ \
-			-maxdepth 1 \
-			-type d \( -name "romochka" -o -name "bem-gen-doc" -o -name "bem-pr" \) \
-		| xargs rm -rf
 	
 	find $(STATIC_DESTDIR) \
 		-not \( -name "robots.txt" -o -name "humans.txt" \
@@ -58,9 +54,4 @@ override_dh_install:
 	find $(STATIC_DESTDIR) \
 		-type f \
 		\( -name "*.node.js" -o -name "*.priv.js" -o -name "*.bemtree.js" -o -name "*.bemhtml.js" \) \
-		-delete
-	
-	find $(WWW_DESTDIR)/desktop.bundles/ \
-		-not -type d \
-		-a -not \( -path "*.i18n/*" -o -name "*.priv.js" -o -name "*.node.js" -o -name "*.bemtree.js" -o -name "*.bemhtml.js" \) \
 		-delete
