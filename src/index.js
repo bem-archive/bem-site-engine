@@ -1,4 +1,6 @@
-var app = require('./app');
+var app = require('./app'),
+    util = require('./util'),
+    logger = require('./logger')(module);
 
 if ('production' === process.env.NODE_ENV) {
     var worker = require('luster'),
@@ -6,10 +8,12 @@ if ('production' === process.env.NODE_ENV) {
 
     app.run(worker).then(function() {
         worker.registerRemoteCommand('reloadCache', function(target, workerId) {
-            console.log('worker %s receive message reloadCache initialized by worker %s', target.wid, workerId);
+            logger.info('worker %s receive message reloadCache initialized by worker %s', target.wid, workerId);
             leData.dropCache();
         });
     });
 } else {
-    app.run();
+    util.createDirectory('logs').then(function() {
+        return app.run();
+    });
 }
