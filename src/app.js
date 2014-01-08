@@ -28,10 +28,11 @@ exports.run = function(worker) {
                 app.use(require('enb/lib/server/server-middleware').createMiddleware({ cdir: path.join(__dirname, '..') }));
             }
 
-            app.use(express.logger(config.get('app:logger:mode')))
-                .use(express.query())
+            app.use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
+                .use(middleware.logger.infoLogger())
                 .use(middleware.router(router))
+                //.use(middleware.logger.errorLogger())
                 .use(middleware.reloadCache(router, worker))
                 .use(forum(forumConfig, BEMHTML))
                 .use(middleware.page())
