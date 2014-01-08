@@ -27,7 +27,9 @@ module.exports = function(module) {
             new winston.transports.File({
                 level: config.get('app:logger:level'),
                 filename: config.get('app:logger:stdout'),
-                label: label
+                label: label,
+                timestamp: false,
+                json: false
             }),
             new (winston.transports.Console)({
                 level: config.get('app:logger:level'),

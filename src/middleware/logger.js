@@ -16,13 +16,16 @@ exports.infoLogger = function() {
     return expressWinston.logger({
         transports: [
             new winston.transports.File({
-                level: config.get('app:logger:level'),
-                filename: config.get('app:logger:stdout')
+                filename: config.get('app:logger:stdout'),
+                timestamp: false,
+                json: false
             }),
             new winston.transports.Console({
-                colorize: true
+                colorize: true,
+                json: false
             })
         ],
+        level: 'debug', //hardcode
         meta: false,
         msg: "HTTP {{req.method}} {{req.url}} {{res.statusCode}}"
     })
