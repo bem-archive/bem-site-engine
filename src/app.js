@@ -3,6 +3,7 @@ var fs = require('fs'),
     express = require('express'),
     config = require('./config'),
     router = require('./router'),
+    logger = require('./logger')(module),
     middleware = require('./middleware'),
     forum = require('bem-forum/src/middleware/forum'),
     forumConfig = {
@@ -40,6 +41,13 @@ exports.run = function(worker) {
                         fs.chmod(portOrSocket, '0777');
                     }
                 });
+
+            //log application initialization
+            if(worker) {
+                logger.info('start application for worker with id %s on port or socket %s', worker.wid, portOrSocket);
+            }else {
+                logger.info('start application on port or socket %s', portOrSocket);
+            }
 
             return app;
         });
