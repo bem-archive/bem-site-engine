@@ -27,8 +27,6 @@ override_dh_auto_install:
 	$(NPM) install --global --production --prefix=$(TMP_PREFIX)
 
 override_dh_auto_clean:
-    YENV=$(YENV) $(ENB) make clean
-
 	rm -rf node_modules \
 		src/libs \
 		freeze \
