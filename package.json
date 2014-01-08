@@ -22,6 +22,7 @@
     "github": "git://github.com/mikedeboer/node-github.git",
     "lodash": "~2.4.1",
     "luster": "~0.2.0-pre1",
+    "luster-log-file": "~0.1.3",
     "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.2"
   },
   "devDependencies": {
