@@ -8,7 +8,10 @@
             "allowedSequentialDeaths" : 3
         },
         "logger": {
-            "mode": "default"
+            "mode": "default",
+            "level": "info",
+            "stdout": "/var/log/yandex/bem-info-www/stdout.log",
+            "stderr": "/var/log/yandex/bem-info-www/stderr.log"
         },
         "workers": 4,
         "languages": ["en", "ru"],
