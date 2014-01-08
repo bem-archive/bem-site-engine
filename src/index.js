@@ -1,5 +1,6 @@
 var app = require('./app'),
     util = require('./util'),
+    config = require('./config'),
     logger = require('./logger')(module);
 
 if ('production' === process.env.NODE_ENV) {
@@ -13,7 +14,5 @@ if ('production' === process.env.NODE_ENV) {
         });
     });
 } else {
-    util.createDirectory('logs').then(function() {
-        return app.run();
-    });
+    util.createDirectory(config.get('app:logger:dir')).then(app.run);
 }

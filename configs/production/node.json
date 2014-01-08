@@ -10,6 +10,7 @@
         "logger": {
             "mode": "default",
             "level": "info",
+            "dir": "logs",
             "stdout": "/var/log/yandex/bem-info-www/stdout.log",
             "stderr": "/var/log/yandex/bem-info-www/stderr.log"
         },
