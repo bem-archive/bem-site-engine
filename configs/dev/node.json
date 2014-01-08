@@ -13,7 +13,7 @@
             "stdout": "logs/output.log",
             "stderr": "logs/errors.log"
         },
-        "workers": 1,
+        "workers": 4,
         "languages": ["en", "ru"],
         "defaultLanguage": "en"
     },
