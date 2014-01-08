@@ -1,7 +1,10 @@
-var HttpError = require('../errors').HttpError;
+var HttpError = require('../errors').HttpError,
+    logger = require('../logger')(module);
 
 module.exports = function(router) {
     return function(req, res, next) {
+        logger.debug('middleware execute for url %s', req._parsedUrl.path);
+
         var route = router.findFirst(req._parsedUrl.path);
 
         if (route) {
