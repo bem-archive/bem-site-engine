@@ -25,8 +25,7 @@ exports.infoLogger = function() {
                 json: false
             })
         ],
-        level: 'debug', //hardcode
-        meta: false,
-        msg: "HTTP {{req.method}} {{req.url}} {{res.statusCode}}"
+        meta: false//,
+        //msg: "HTTP {{req.method}} {{req.url}} {{res.statusCode}}"
     })
 };
