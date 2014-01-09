@@ -8,9 +8,13 @@
             "allowedSequentialDeaths" : 3
         },
         "logger": {
-            "mode": "dev"
+            "mode": "dev",
+            "level": "debug",
+            "dir": "logs",
+            "stdout": "logs/output.log",
+            "stderr": "logs/errors.log"
         },
-        "workers": 1,
+        "workers": 4,
         "languages": ["en", "ru"],
         "defaultLanguage": "en"
     },

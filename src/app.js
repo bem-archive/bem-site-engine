@@ -3,6 +3,7 @@ var fs = require('fs'),
     express = require('express'),
     config = require('./config'),
     router = require('./router'),
+    logger = require('./logger')(module),
     middleware = require('./middleware'),
     forum = require('bem-forum/src/middleware/forum'),
     forumConfig = {
@@ -27,9 +28,9 @@ exports.run = function(worker) {
                 app.use(require('enb/lib/server/server-middleware').createMiddleware({ cdir: path.join(__dirname, '..') }));
             }
 
-            app.use(express.logger(config.get('app:logger:mode')))
-                .use(express.query())
+            app.use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
+                .use(middleware.logger())
                 .use(middleware.router(router))
                 .use(middleware.reloadCache(router, worker))
                 .use(forum(forumConfig, BEMHTML))
@@ -40,6 +41,13 @@ exports.run = function(worker) {
                         fs.chmod(portOrSocket, '0777');
                     }
                 });
+
+            //log application initialization
+            if(worker) {
+                logger.info('start application for worker with id %s on port or socket %s', worker.wid, portOrSocket);
+            }else {
+                logger.info('start application on port or socket %s', portOrSocket);
+            }
 
             return app;
         });

@@ -2,11 +2,13 @@
 .idea
 .settings
 .project
+.borschik
 
 configs/current
 
 node_modules
 npm-debug.log
+logs
 libs
 
 .enb/tmp

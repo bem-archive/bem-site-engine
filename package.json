@@ -21,8 +21,9 @@
     "json-stringify-safe": "5.0.0",
     "github": "git://github.com/mikedeboer/node-github.git",
     "lodash": "~2.4.1",
-    "luster": "git://github.com/tormozz48/luster.git",
-    "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.2"
+    "luster": "~0.2.0-pre1",
+    "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.2",
+    "winston": "~0.7.2"
   },
   "devDependencies": {
     "enb": "0.8.43",

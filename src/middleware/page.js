@@ -1,5 +1,6 @@
 var Vow = require('vow'),
     config = require('../config'),
+    logger = require('../logger')(module),
     template = require('../template'),
     leData = require('../le-data'),
     BUNDLE_NAME = 'common';
