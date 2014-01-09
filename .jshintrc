@@ -1,27 +1,28 @@
 {
-  "globals"   : {
+  "globals" : {
     "modules" : false
   },
 
-  "curly"     : false,
-  "eqeqeq"    : true,
-  "forin"     : true,
-  "noarg"     : true,
-  "noempty"   : true,
-  "nonew"     : true,
-  "undef"     : true,
-  "unused"    : true,
-  "trailing"  : true,
-  "maxlen"    : 120,
+  "bitwise"       : true,
+  "curly"         : false,
+  "eqeqeq"        : true,
+  "forin"         : true,
+  "noarg"         : true,
+  "noempty"       : true,
+  "nonew"         : true,
+  "undef"         : true,
+  "unused"        : true,
+  "trailing"      : true,
+  "maxlen"        : 120,
 
-  "boss"      : true,
-  "eqnull"    : true,
-  "expr"      : true,
-  "lastsemic" : true,
-  "regexp"    : true,
-  "shadow"    : true,
-  "sub"       : true,
+  "boss"          : true,
+  "eqnull"        : true,
+  "expr"          : true,
+  "lastsemic"     : true,
+  "regexp"        : true,
+  "shadow"        : true,
+  "sub"           : true,
 
-  "browser"   : true,
-  "node"      : true
+  "browser"       : true,
+  "node"          : true
 }
