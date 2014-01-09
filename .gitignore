@@ -2,6 +2,7 @@
 .idea
 .settings
 .project
+.borschik
 
 configs/current
 
