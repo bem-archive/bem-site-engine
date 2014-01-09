@@ -30,9 +30,8 @@ exports.run = function(worker) {
 
             app.use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
-                .use(middleware.logger.infoLogger())
+                .use(middleware.logger())
                 .use(middleware.router(router))
-                //.use(middleware.logger.errorLogger())
                 .use(middleware.reloadCache(router, worker))
                 .use(forum(forumConfig, BEMHTML))
                 .use(middleware.page())

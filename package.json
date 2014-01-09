@@ -23,8 +23,7 @@
     "lodash": "~2.4.1",
     "luster": "~0.2.0-pre1",
     "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.2",
-    "winston": "~0.7.2",
-    "express-winston": "~0.2.1"
+    "winston": "~0.7.2"
   },
   "devDependencies": {
     "enb": "0.8.43",
