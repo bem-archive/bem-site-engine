@@ -14,14 +14,8 @@ TMP_PREFIX := $(CURDIR)/debian/tmp
 
 override_dh_auto_test override_dh_usrlocal:
 
-override_dh_auto_configure:
-	ln -sfn $(YENV) configs/current
-	ln -sfn configs/current/borschik .borschik
-
 override_dh_auto_build:
-	$(NPM) install
-	YENV=$(YENV) $(BOWER) install
-	YENV=$(YENV) $(ENB) make --no-cache
+	YENV=$(YENV) make
 
 override_dh_auto_install:
 	$(NPM) install --global --production --prefix=$(TMP_PREFIX)
