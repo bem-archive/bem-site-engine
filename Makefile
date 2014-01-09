@@ -1,6 +1,7 @@
 NPM_BIN = node_modules/.bin
 ENB = $(NPM_BIN)/enb
 BOWER = $(NPM_BIN)/bower
+JSHINT = $(NPM_BIN)/jshint
 
 ifneq ($(YENV),production)
 	YENV=dev
@@ -18,6 +19,10 @@ clean: npm_deps
 config:
 	cd configs && ln -snf $(YENV) current
 	ln -sfn configs/current/borschik .borschik
+
+.PHONY: lint
+lint: npm_deps
+	$(JSHINT) .
 
 .PHONY: bower_deps
 bower_deps: npm_deps

@@ -38,7 +38,7 @@
     "start": "node bin/app",
     "build": "make build",
     "static": "make static",
-    "test": "jshint ."
+    "test": "make lint"
   },
   "author": "lego-team@yandex-team.ru",
   "readmeFilename": "README.md",
