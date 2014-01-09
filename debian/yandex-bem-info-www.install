@@ -2,6 +2,7 @@ configs usr/lib/yandex/bem-info-www
 src usr/lib/yandex/bem-info-www
 lib usr/lib/yandex/bem-info-www
 lib/node_modules/bem-info/node_modules usr/lib/yandex/bem-info-www
+freeze/* var/lib/yandex/bem-info-static/_
 src/desktop.bundles var/lib/yandex/bem-info-static
 src/errors.bundles var/lib/yandex/bem-info-static
 humans.txt var/lib/yandex/bem-info-static
