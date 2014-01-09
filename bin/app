@@ -1,3 +1,16 @@
 #!/usr/bin/env node
 
-require('../src');
+if ('production' === process.env.NODE_ENV) {
+    require('../src/cluster');
+} else {
+    var nodemon = require('nodemon'),
+        config = require('../nodemon');
+
+    nodemon(config)
+        .on('start', function() {
+            console.log('nodemon started');
+        })
+        .on('crash', function() {
+            console.log('script crashed for some reason');
+        });
+}
