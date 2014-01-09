@@ -1,3 +1,21 @@
+yandex-bem-info-www (3.0.15) unstable; urgency=low
+
+  * Test rebuid. Refactoring rules and application start up.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Thu, 09 Jan 2014 18:22:39 +0400
+
+yandex-bem-info-www (3.0.14) unstable; urgency=low
+
+  * Test rebuild. Test freeze issue.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Thu, 09 Jan 2014 17:25:04 +0400
+
+yandex-bem-info-www (3.0.13) unstable; urgency=low
+
+  * Test rebuild. Fix statics issue.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Thu, 09 Jan 2014 14:32:23 +0400
+
 yandex-bem-info-www (3.0.12) unstable; urgency=low
 
   * Test rebuild. Fix statics issue
