@@ -3,14 +3,13 @@ var fs = require('fs'),
     logger = require('./logger')(module),
     config = require('./config');
 
-
 if (luster.isMaster) {
     var socket = config.get('app:socket');
 
-    if(socket) {
+    if (socket) {
         try {
             fs.unlinkSync(socket);
-        } catch(e) {}
+        } catch (e) {}
     }
 
     luster.registerRemoteCommand('reload', function(sender, value) {
@@ -27,13 +26,11 @@ if (luster.isMaster) {
 }
 
 luster.configure({
-    app : './index.js',
-    workers : config.get('app:workers'),
+    app: './index.js',
+    workers: config.get('app:workers'),
     control: config.get('app:clusterSettings'),
-    server : {
-        port : config.get('app:socket') || config.get('app:port'),
-        groups : 1
+    server: {
+        port: config.get('app:socket') || config.get('app:port'),
+        groups: 1
     }
 }, true, __dirname).run();
-
-

@@ -6,9 +6,9 @@ modules.define(
 
 BEMDOM.decl('page', {
 
-    onSetMod : {
-        'js' : {
-            'inited' : function() {
+    onSetMod: {
+        js: {
+            inited: function() {
                 !(this._isTouch()) && this._resizePostContent()
                     .bindToWin('resize', this._resizePostContent.bind(this));
             }

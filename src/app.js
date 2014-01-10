@@ -38,15 +38,15 @@ exports.run = function(worker) {
                 .use(middleware.page())
                 .use(middleware.error())
                 .listen(portOrSocket, function() {
-                    if(isNaN(+portOrSocket)) {
+                    if (isNaN(portOrSocket)) {
                         fs.chmod(portOrSocket, '0777');
                     }
                 });
 
             //log application initialization
-            if(worker) {
+            if (worker) {
                 logger.info('start application for worker with id %s on port or socket %s', worker.wid, portOrSocket);
-            }else {
+            } else {
                 logger.info('start application on port or socket %s', portOrSocket);
             }
 

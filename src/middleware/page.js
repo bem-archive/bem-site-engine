@@ -11,7 +11,7 @@ module.exports = function() {
             datasrc: leData.getDataFromCache()
         };
 
-        return template.apply(ctx, req.prefLocale, req.query['__mode'])
+        return template.apply(ctx, req.prefLocale, req.query.__mode)
             .then(function(html) {
                 res.end(html);
             });

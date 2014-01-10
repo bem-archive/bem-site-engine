@@ -46,6 +46,7 @@
         "configs/current",
         ".enb/tmp",
         "src/*.bundles",
+        "src/*.blocks/*/*.i18n",
         "src/*.blocks/*/*.deps.js",
         "src/*.blocks/*/*/*.deps.js",
         "src/*.blocks/*/*/*/*.deps.js"

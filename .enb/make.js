@@ -75,10 +75,14 @@ module.exports = function(config) {
             nodeConfig.addTechs([
                 [ borschik, { sourceTarget: '?.css', destTarget: '_?.css', minify: true, freeze: true } ],
                 [ borschik, { sourceTarget: '?.js', destTarget: '_?.js', minify: true, freeze: false } ],
-                [ borschik, { sourceTarget: '?.bemhtml.js', destTarget: '_?.bemhtml.js', minify: true, freeze: false } ],
-                [ borschik, { sourceTarget: '?.bemtree.js', destTarget: '_?.bemtree.js', minify: true, freeze: false } ],
-                [ borschik, { sourceTarget: '?.lang.{lang}.js', destTarget: '_?.lang.{lang}.js', minify: true, freeze: false } ],
-                [ borschik, { sourceTarget: '?.lang.all.js', destTarget: '_?.lang.all.js', minify: true, freeze: false  } ]
+                [ borschik, { sourceTarget: '?.bemhtml.js', destTarget: '_?.bemhtml.js',
+                    minify: true, freeze: false } ],
+                [ borschik, { sourceTarget: '?.bemtree.js', destTarget: '_?.bemtree.js',
+                    minify: true, freeze: false } ],
+                [ borschik, { sourceTarget: '?.lang.{lang}.js', destTarget: '_?.lang.{lang}.js',
+                    minify: true, freeze: false } ],
+                [ borschik, { sourceTarget: '?.lang.all.js', destTarget: '_?.lang.all.js',
+                    minify: true, freeze: false  } ]
             ]);
         });
     });
@@ -86,7 +90,7 @@ module.exports = function(config) {
 
 /**
  * Получение уровней переопределения
- * @param config
+ * @param {Object} config
  * @returns {*|Array}
  */
 function getLevels(config) {
