@@ -1,7 +1,7 @@
 'use strict';
 
 var API = require('github'),
-    Vow = require('vow'),
+    vow = require('vow'),
     HTTPS = require('https'),
     UTIL = require('util'),
     _ = require('lodash'),
@@ -51,30 +51,30 @@ exports.dropCache = function() {
  */
 exports.getData = function() {
     var self = this,
-        promise = Vow.promise(),
+        deferred = vow.defer(),
         url = UTIL.format({
             'public': 'https://raw.github.com/%s/%s/%s/%s',
             'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
         }[dataRepository.type], dataRepository.user, dataRepository.repo, dataRepository.ref, dataRepository.path);
 
     if(this.getDataFromCache() !== null) {
-        return promise.fulfill(this.getDataFromCache());
+        deferred.resolve(this.getDataFromCache());
+    } else {
+        HTTPS.get(url, function(res) {
+            var data = '';
+
+            res.on('data', function(chunk) {
+                data += chunk;
+            });
+
+            res.on('end', function() {
+                _cachedData = JSON.parse(data);
+                deferred.resolve(self.getDataFromCache());
+            });
+        }).on('error', function(e) {
+            deferred.reject(e);
+        });
     }
 
-    HTTPS.get(url, function(res) {
-        var data = '';
-
-        res.on('data', function(chunk) {
-            data += chunk;
-        });
-
-        res.on('end', function() {
-            _cachedData = JSON.parse(data);
-            promise.fulfill(self.getDataFromCache());
-        });
-    }).on('error', function(e) {
-        promise.reject(e);
-    });
-
-    return promise;
+    return deferred.promise();
 };
