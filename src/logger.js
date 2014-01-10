@@ -2,8 +2,9 @@ var winston = require('winston'),
     config = require('./config');
 
 module.exports = function(module) {
-    var label = new Date() + ' ';
-    label += module ? module.filename.split('/').slice(-2).join('/') : '';
+    var label = new Date() + ' ',
+        i = -2;
+    label += module ? module.filename.split('/').slice(i).join('/') : '';
 
     var levels = {
         levels: {

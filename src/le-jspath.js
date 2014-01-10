@@ -35,11 +35,10 @@ module.exports = {
         //выстраиваем предикат фильтрации и объект подстановок по хэшу config
         predicate += '.' + lang;
 
-
-        if(config) {
-            for(var i = 0; i < config.length; i++) {
-                if(config[i]) {
-                    predicate += '{.' + config[i]['field'] + ' ' + config[i]['operand'] + '"' + config[i].value + '"}';
+        if (config) {
+            for (var i = 0; i < config.length; i++) {
+                if (config[i]) {
+                    predicate += '{.' + config[i].field + ' ' + config[i].operand + '"' + config[i].value + '"}';
                 }
             }
         }
@@ -64,15 +63,16 @@ module.exports = {
         //это позволяет реализовать сортировку по нескольким полям
         function compare(a, b, config, index) {
             index = index || 0;
-            if(!config[index])
+            if (!config[index]) {
                 return 0;
+            }
 
-            var field = config[index]['field'], //поле, по которому производится сортировка
-                desc = config[index]['direction'] === 'desc'; //направление сортировки
+            var field = config[index].field, //поле, по которому производится сортировка
+                desc = config[index].direction === 'desc'; //направление сортировки
 
-            if(a[field] > b[field]) {
+            if (a[field] > b[field]) {
                 return desc ? -1 : 1;
-            } else if(a[field] < b[field]) {
+            } else if (a[field] < b[field]) {
                 return desc ? 1 : -1;
             } else {
                 return compare(a, b, config, ++index); //рекурсивный запуск этой же функции
@@ -106,13 +106,12 @@ module.exports = {
             arrayContains = function(arr, val, equals) {
                 var i = arr.length;
                 while (i--) {
-                    if ( equals(arr[i], val) ) {
+                    if (equals(arr[i], val)) {
                         return true;
                     }
                 }
                 return false;
             };
-
 
         arr.length = 0;
 
@@ -174,14 +173,13 @@ module.exports = {
 
     findRootPostId: function(type, lang) {
         var result = this.filter([
-            { field: 'type', operand:  '===', value: type },
-            { field: 'root', operand:  '===', value: "true" }
-        ], lang);
-
-        var rootId = null;
+                    { field: 'type', operand:  '===', value: type },
+                    { field: 'root', operand:  '===', value: true }
+                ], lang),
+            rootId = null;
 
         result.forEach(function(item) {
-            if(item.categories && item.categories.length === 0 ) {
+            if (item.categories && item.categories.length === 0) {
                 rootId = item.id;
             }
         });
@@ -222,7 +220,7 @@ module.exports = {
                 find = path.indexOf([type, category, post.slug].reduce(function(prev, item) {
                     return prev + ((item && item.length > 0) ? ('/' + item) : '');
                 }, '')) !== -1;
-                if(find) {
+                if (find) {
                     //logger.debug('find type = %s category = %s url = %s', post.type, category, post.slug);
                     result = { category: category,  id: post.id };
                 }
@@ -234,7 +232,7 @@ module.exports = {
             find = path.indexOf([type, post.slug].reduce(function(prev, item) {
                 return prev + ((item && item.length > 0) ? ('/' + item) : '');
             }, '')) !== -1;
-            if(find) {
+            if (find) {
                 //logger.debug('find type = %s url = %s ', post.type, post.slug);
                 result = { id: post.id };
             }
@@ -247,7 +245,7 @@ module.exports = {
                 find = path.indexOf([type, category].reduce(function(prev, item) {
                     return prev + ((item && item.length > 0) ? ('/' + item) : '');
                 }, '')) !== -1;
-                if(find) {
+                if (find) {
                     //logger.debug('find type = %s category = %s ', post.type, category);
                     result = { category: category };
                 }

@@ -30,7 +30,7 @@ router.addRoute({
 router.addRoute({
     name: 'news',
     pattern: '/news(/<year>)(/<month>)(/)',
-    conditions : {
+    conditions: {
         year: '\\d{4}',
         month: '0?[1-9]|1[012]'
     }

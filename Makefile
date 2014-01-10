@@ -2,6 +2,7 @@ NPM_BIN = node_modules/.bin
 ENB = $(NPM_BIN)/enb
 BOWER = $(NPM_BIN)/bower
 JSHINT = $(NPM_BIN)/jshint
+JSCS = $(NPM_BIN)/jscs
 
 ifneq ($(YENV),production)
 	YENV=dev
@@ -23,6 +24,7 @@ config:
 .PHONY: lint
 lint: npm_deps
 	$(JSHINT) .
+	$(JSCS) .
 
 .PHONY: bower_deps
 bower_deps: npm_deps

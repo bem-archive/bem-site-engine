@@ -5,9 +5,9 @@ var API = require('github'),
     HTTPS = require('https'),
     UTIL = require('util'),
     _ = require('lodash'),
-    config = require('./config');
+    config = require('./config'),
 
-var _cachedData = null,
+    _cachedData = null,
     gitPrivate = null,
     gitPublic = null,
     dataRepository = config.get('github:dataRepository');
@@ -50,14 +50,14 @@ exports.dropCache = function() {
  * @returns {Vow.promise}
  */
 exports.getData = function() {
-    var self = this,
+    var _this = this,
         deferred = vow.defer(),
         url = UTIL.format({
             'public': 'https://raw.github.com/%s/%s/%s/%s',
             'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
         }[dataRepository.type], dataRepository.user, dataRepository.repo, dataRepository.ref, dataRepository.path);
 
-    if(this.getDataFromCache() !== null) {
+    if (this.getDataFromCache() !== null) {
         deferred.resolve(this.getDataFromCache());
     } else {
         HTTPS.get(url, function(res) {
@@ -69,7 +69,7 @@ exports.getData = function() {
 
             res.on('end', function() {
                 _cachedData = JSON.parse(data);
-                deferred.resolve(self.getDataFromCache());
+                deferred.resolve(_this.getDataFromCache());
             });
         }).on('error', function(e) {
             deferred.reject(e);

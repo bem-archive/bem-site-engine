@@ -32,7 +32,8 @@
     "bower": "1.2.8",
     "nodemon": "1.0.7",
     "inherit": "2.1.0",
-    "jshint": "2.4.1"
+    "jshint": "2.4.1",
+    "jscs": "1.2.2"
   },
   "scripts": {
     "start": "node bin/app",
