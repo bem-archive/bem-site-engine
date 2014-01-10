@@ -1,3 +1,4 @@
+/* global DocumentTouch */
 modules.define(
     'i-bem__dom',
     ['jquery', 'dom', 'events'],
@@ -36,8 +37,8 @@ BEMDOM.decl('page', {
      * @returns this;
      */
     _resizePostContent: function() {
-        var windowW = BEMDOM.win.width();
-            mainMenuW = this.findBlockInside('main-menu').domElem.width();
+        var windowW = BEMDOM.win.width(),
+            mainMenuW = this.findBlockInside('main-menu').domElem.width(),
             menusW = this.findBlocksInside('menu').reduce(function(prev, item) {
                 return prev + item.domElem.width();
             }, 0),

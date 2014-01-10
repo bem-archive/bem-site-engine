@@ -1,5 +1,3 @@
-var logger = require('../logger')(module);
-
 module.exports = function(langs, def) {
     return function(req, res, next) {
         var headers = req.headers,

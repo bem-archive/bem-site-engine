@@ -1,4 +1,5 @@
-var RC_RELOAD = 'reload',
+var HttpError = require('../errors').HttpError,
+    RC_RELOAD = 'reload',
     RC_REQUEST = 'request';
 
 module.exports = function(router, worker) {

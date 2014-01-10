@@ -4,3 +4,6 @@ node_modules
 configs/current
 .enb/tmp
 src/*.bundles
+src/*.blocks/*/*.deps.js
+src/*.blocks/*/*/*.deps.js
+src/*.blocks/*/*/*/*.deps.js

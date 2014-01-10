@@ -32,13 +32,13 @@
     "bower": "1.2.8",
     "nodemon": "1.0.7",
     "inherit": "2.1.0",
-    "jshint": "2.3.0"
+    "jshint": "2.4.1"
   },
   "scripts": {
     "start": "node bin/app",
     "build": "make build",
     "static": "make static",
-    "test": "jshint ."
+    "test": "make lint"
   },
   "author": "lego-team@yandex-team.ru",
   "readmeFilename": "README.md",

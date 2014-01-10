@@ -1,5 +1,4 @@
-var HttpError = require('../errors').HttpError,
-    logger = require('../logger')(module);
+var HttpError = require('../errors').HttpError;
 
 module.exports = function(router) {
     return function(req, res, next) {

@@ -1,5 +1,4 @@
 var jspath = require('jspath'),
-    PATH = require('path'),
     JsonStringify = require('json-stringify-safe');
 
 module.exports = {
@@ -31,8 +30,7 @@ module.exports = {
      */
     filter: function(config, lang) {
         var lang = lang || 'en', //язык локализации
-            predicate = '', //предикат фильтрации
-            substitution = {}; //хэш подстановок
+            predicate = ''; //предикат фильтрации
 
         //выстраиваем предикат фильтрации и объект подстановок по хэшу config
         predicate += '.' + lang;
@@ -125,7 +123,7 @@ module.exports = {
             }
         }
 
-        return arr
+        return arr;
     },
 
     findByIdAndType: function(id, type, lang) {
@@ -183,8 +181,8 @@ module.exports = {
         var rootId = null;
 
         result.forEach(function(item) {
-            if(item.categories && item.categories.length == 0 ) {
-                rootId = item.id
+            if(item.categories && item.categories.length === 0 ) {
+                rootId = item.id;
             }
         });
 

@@ -116,7 +116,7 @@ module.exports = {
             //Делаем проверку на то, что мы находимся в корне раздела articles
             //составляем первичный объект с результатами обработки логики
             var type = data.req.route,
-                isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
+                isRoot = Object.getOwnPropertyNames(data.req.params).length === 0,
                 result = {
                     error: false,
                     type: type,
@@ -145,7 +145,7 @@ module.exports = {
         }catch(e) {
             result = {
                 error: { state: true, code: 500 }
-            }
+            };
         }finally {
             //кешируем построенный результат и возвращаем его
             this.setLogicCache(data, result);
@@ -172,18 +172,17 @@ module.exports = {
 
         try {
             var type = data.req.route,
-            isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
-
-            result = {
-                error: false,
-                type: type,
-                id: null,
-                category: null,
-                query: {
-                    predicate: '.' + data.req.prefLocale + '{.type === $type}',
-                    substitution: { type: type }
-                }
-            };
+                isRoot = Object.getOwnPropertyNames(data.req.params).length === 0,
+                result = {
+                    error: false,
+                    type: type,
+                    id: null,
+                    category: null,
+                    query: {
+                        predicate: '.' + data.req.prefLocale + '{.type === $type}',
+                        substitution: { type: type }
+                    }
+                };
 
             //Если мы не находимся в корне раздела новостей, то пытаемся найти  пост по полному совпадению
             //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
@@ -200,17 +199,19 @@ module.exports = {
                     }
                 } else {
                     var year = parseInt(data.req.params.year),
-                        month = parseInt(data.req.params.month)
+                        month = parseInt(data.req.params.month),
                         dateFrom = new Date(year, month ? month - 1 : 0).valueOf(),
                         dateTo = new Date(month ? year : year + 1, month || 0).valueOf();
 
-                    result.query.predicate = '.' + data.req.prefLocale + '{.type === $type && .createDate > ' + dateFrom + ' && .createDate < ' + dateTo +'}';
+                    result.query.predicate = '.' +
+                        data.req.prefLocale + '{.type === $type && .createDate > ' +
+                        dateFrom + ' && .createDate < ' + dateTo +'}';
                 }
             }
         }catch(e) {
             result = {
                 error: { state: true, code: 500 }
-            }
+            };
         }finally {
             //кешируем построенный результат и возвращаем его
             this.setLogicCache(data, result);
@@ -238,7 +239,7 @@ module.exports = {
 
         try {
             var type = data.req.route,
-                isRoot = Object.getOwnPropertyNames(data.req.params).length == 0,
+                isRoot = Object.getOwnPropertyNames(data.req.params).length === 0,
                 rootId = leJspath.findRootPostId(type, data.req.prefLocale),
                 result = {
                     error: false,
@@ -297,7 +298,7 @@ module.exports = {
                 //проверка на то, что для данного инструмента есть только один пост
                 //если это так, то показываем его в развернутом виде а меню постов прячем
                 var source = leJspath.find(result.query.predicate, result.query.substitution);
-                if(source.length == 1) {
+                if(source.length === 1) {
                     result.isOnlyOnePost = true;
                     result.id = source.shift().id;
                 }
