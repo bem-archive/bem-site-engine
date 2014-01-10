@@ -1,7 +1,4 @@
-var Vow = require('vow'),
-    config = require('../config'),
-    logger = require('../logger')(module),
-    template = require('../template'),
+var template = require('../template'),
     leData = require('../le-data'),
     BUNDLE_NAME = 'common';
 
@@ -18,5 +15,5 @@ module.exports = function() {
             .then(function(html) {
                 res.end(html);
             });
-    }
+    };
 };

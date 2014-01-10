@@ -6,6 +6,7 @@ var fs = require('fs'),
     logger = require('./logger')(module),
     middleware = require('./middleware'),
     forum = require('bem-forum/src/middleware/forum'),
+    enbServer = require('enb/lib/server/server-middleware'),
     forumConfig = {
         github: {
             api: config.get('github:common'),
@@ -25,7 +26,7 @@ exports.run = function(worker) {
 
             if ('production' !== process.env.NODE_ENV) {
                 app.use(express.static(__dirname));
-                app.use(require('enb/lib/server/server-middleware').createMiddleware({ cdir: path.join(__dirname, '..') }));
+                app.use(enbServer.createMiddleware({ cdir: path.join(__dirname, '..') }));
             }
 
             app.use(express.query())

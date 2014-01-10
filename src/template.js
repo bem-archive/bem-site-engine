@@ -16,7 +16,7 @@ if ('production' === process.env.NODE_ENV) {
         return ctxPromise
             .then(function(templates) {
                 return _applyFunc(templates.BEMTREE, templates.BEMHTML, templates.BEM.I18N).call(null, ctx, lang, mode);
-            })
+            });
     };
 } else {
     exports.apply = function(ctx, lang, mode) {
@@ -51,7 +51,7 @@ function _compileCtx() {
             });
 
             return ctx;
-        })
+        });
 }
 
 function _rebuild() {

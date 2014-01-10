@@ -1,7 +1,6 @@
 var fs = require('fs'),
     luster = require('luster'),
     logger = require('./logger')(module),
-    util = require('./util'),
     config = require('./config');
 
 

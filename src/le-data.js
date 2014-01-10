@@ -1,4 +1,3 @@
-/* global toString: false */
 'use strict';
 
 var API = require('github'),
