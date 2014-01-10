@@ -17,7 +17,7 @@ clean: npm_deps
 .PHONY: config
 config:
 	cd configs && ln -snf $(YENV) current
-	ln -sfn configs/current/borschik .borschik
+	if [ -f configs/current/borschik ]; then ln -sfn configs/current/borschik .borschik; fi;
 
 .PHONY: bower_deps
 bower_deps: npm_deps
