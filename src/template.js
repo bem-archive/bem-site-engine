@@ -1,6 +1,6 @@
 var VM = require('vm'),
     VowFs = require('vow-fs'),
-    Vow = require('vow'),
+    vow = require('vow'),
     PATH = require('path'),
     config = require('./config'),
     JsonStringify = require('json-stringify-safe'),
@@ -33,7 +33,7 @@ if ('production' === process.env.NODE_ENV) {
 function _compileCtx() {
     var targets = ['lang.all.js', 'lang.en.js', 'lang.ru.js', 'bemtree.js', 'bemhtml.js'],
         ctx = {
-            Vow: Vow,
+            Vow: vow,
             leJsPath: leJsPath,
             leLogic: leLogic,
             leStatics: leStatics,
@@ -41,7 +41,7 @@ function _compileCtx() {
             console: console
         };
 
-    return Vow.all(targets.map(function(target) {
+    return vow.all(targets.map(function(target) {
             var targetPath = PATH.join(__dirname, 'desktop.bundles', 'common', '_common.' + target);
             return VowFs.read(targetPath, 'utf-8');
         }))
@@ -58,7 +58,7 @@ function _rebuild() {
     var enbBuilder = require('enb/lib/server/server-middleware').createBuilder({ cdir: PATH.join(__dirname, '..') }),
         commonPath = 'src/desktop.bundles/common/_common.';
 
-    return Vow.all([
+    return vow.all([
         enbBuilder(commonPath + 'bemtree.js'),
         enbBuilder(commonPath + 'bemhtml.js'),
         enbBuilder(commonPath + 'lang.all.js'),
