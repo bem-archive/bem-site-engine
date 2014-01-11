@@ -24,7 +24,7 @@ exports.run = function(worker) {
             var portOrSocket = config.get('app:socket') || config.get('app:port'),
                 app = express();
 
-            if ('production' !== process.env.NODE_ENV) {
+            if (process.env.NODE_ENV !== 'production') {
                 app.use(express.static(__dirname));
                 app.use(enbServer.createMiddleware({ cdir: path.join(__dirname, '..') }));
             }
