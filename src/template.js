@@ -9,7 +9,7 @@ var VM = require('vm'),
     leStatics = new (require('../lib/Statics').Statics)(config.get('statics')),
     leBundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' });
 
-if ('production' === process.env.NODE_ENV) {
+if (process.env.NODE_ENV === 'production') {
     var ctxPromise = _compileCtx();
 
     exports.apply = function(ctx, lang, mode) {
@@ -72,7 +72,7 @@ function _applyFunc(BEMTREE, BEMHTML, I18N) {
         I18N.lang(lang);
         return BEMTREE.apply(ctx)
             .then(function(bemjson) {
-                if ('bemjson' === mode) {
+                if (mode === 'bemjson') {
                     return JsonStringify(bemjson, null, 2);
                 }
 

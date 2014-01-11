@@ -26,7 +26,7 @@ module.exports = function() {
         promise.then(function() {
             res.statusCode = err.code || 500;
 
-            res.end(pages[req.prefLocale][404 === res.statusCode ? 'error404' : 'error500']);
+            res.end(pages[req.prefLocale][res.statusCode === 404 ? 'error404' : 'error500']);
         });
     };
 };

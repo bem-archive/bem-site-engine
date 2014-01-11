@@ -3,7 +3,7 @@ var app = require('./app'),
     config = require('./config'),
     logger = require('./logger')(module);
 
-if ('production' === process.env.NODE_ENV) {
+if (process.env.NODE_ENV === 'production') {
     var worker = require('luster'),
         leData = require('./le-data');
 
