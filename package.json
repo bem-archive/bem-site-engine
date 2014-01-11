@@ -17,20 +17,20 @@
     "vow": "0.4.1",
     "vow-fs": "0.3.0",
     "jspath": "0.2.10",
-    "ym": "0.0.11",
+    "ym": "0.0.12",
     "json-stringify-safe": "5.0.0",
     "github": "git://github.com/mikedeboer/node-github.git",
-    "lodash": "~2.4.1",
-    "luster": "~0.2.0-pre1",
+    "lodash": "2.4.1",
+    "luster": "0.2.0",
     "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.3",
-    "winston": "~0.7.2"
+    "winston": "0.7.2"
   },
   "devDependencies": {
     "enb": "0.8.43",
     "enb-bemxjst": "0.2.2",
     "enb-modules": "0.0.14",
     "bower": "1.2.8",
-    "nodemon": "1.0.7",
+    "nodemon": "1.0.8",
     "inherit": "2.1.0",
     "jshint": "2.4.1",
     "jscs": "1.2.2"
