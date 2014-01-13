@@ -1,29 +1,36 @@
 var winston = require('winston'),
     config = require('./config');
 
+var levels = {
+    levels: {
+        debug: 0,
+        info: 1,
+        warn: 2,
+        error: 3
+    },
+    colors: {
+        debug: 'blue',
+        info: 'green',
+        warn: 'orange',
+        error: 'red'
+    }
+},
+container = new winston.Container({
+    exceptionHandlers: [
+        new winston.transports.File({ filename: config.get('app:logger:stderr') })
+    ],
+    levels: levels.levels,
+    exitOnError: false
+});
+
 module.exports = function(module) {
     var label = new Date() + ' ';
 
     label += module ? module.filename.split('/').slice(-2).join('/') : '';
 
-    var levels = {
-        levels: {
-            debug: 0,
-            info: 1,
-            warn: 2,
-            error: 3
-        },
-        colors: {
-            debug: 'blue',
-            info: 'green',
-            warn: 'orange',
-            error: 'red'
-        }
-    };
-
     winston.addColors(levels.colors);
 
-    return new (winston.Logger)({
+    container.add(module.filename, {
         transports: [
             new winston.transports.File({
                 level: config.get('app:logger:level'),
@@ -38,11 +45,8 @@ module.exports = function(module) {
                 colorize: true,
                 label: label
             })
-        ],
-        exceptionHandlers: [
-            new winston.transports.File({ filename: config.get('app:logger:stderr') })
-        ],
-        levels: levels.levels,
-        exitOnError: false
+        ]
     });
+
+    return container.get(module.filename);
 };
