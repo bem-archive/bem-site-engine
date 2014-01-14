@@ -99,7 +99,7 @@ function getLevels(config) {
         { path: 'libs/bem-core/desktop.blocks', check: false },
         { path: 'libs/bem-forum/src/views/common.blocks', check: false },
         { path: 'libs/bem-forum/src/themes/bem-www/common.blocks', check: false },
-        'src/common.blocks'
+        'src/blocks/common.blocks'
     ].map(function(level) {
         return config.resolvePath(level);
     });
