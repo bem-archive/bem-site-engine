@@ -8,11 +8,9 @@ block author {
                       leJsPath.findById(id, data.req.prefLocale) ||
                       id;
 
-        if(author.avatar.indexOf(leStatics._parsedUrl.host) == -1)
-          author.avatar = leStatics.getUrl(author.avatar);
+//        if(author.avatar.indexOf(leStatics._parsedUrl.host) == -1)
+//          author.avatar = leStatics.getUrl(author.avatar);
 
-          //TODO remove it for prod
-          //author.avatar = this.data.yaApiHosts.static.host + '/datasrc/images/' + author.avatar;
         return author;
     }
 }
