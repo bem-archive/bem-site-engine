@@ -1,11 +1,11 @@
 var fs = require('fs'),
-    commonBundleMask = /src\/desktop\.bundles\/common/,
-    errorBundlesMask = /src\/errors\.bundles\/.*/,
-    bundlesMask = /src\/.*\.bundles\/.*/;
+    commonBundleMask = /src\/bundles\/desktop\.bundles\/common/,
+    errorBundlesMask = /src\/bundles\/errors\.bundles\/.*/,
+    bundlesMask = /src\/bundles\/.*\.bundles/;
 
 module.exports = function(config) {
     config.setLanguages(['ru', 'en']);
-    config.nodes('src/*.bundles/*');
+    config.nodes('src/bundles/*.bundles/*');
 
     // Сборка страниц ошибок
     config.nodeMask(errorBundlesMask, function(nodeConfig) {

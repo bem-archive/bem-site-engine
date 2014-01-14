@@ -14,7 +14,7 @@ var fs = require('fs'),
         repo: config.get('forum:repo'),
         route: config.get('forum:route')
     },
-    BEMHTML = require('./desktop.bundles/common/_common.bemhtml').BEMHTML,
+    BEMHTML = require('./bundles/desktop.bundles/common/_common.bemhtml').BEMHTML,
     leData = require('./le-modules').leData;
 
 exports.run = function(worker) {

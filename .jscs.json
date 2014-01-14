@@ -5,7 +5,7 @@
         "node_modules/**",
         "configs/current/**",
         ".enb/tmp/**",
-        "src/*.bundles/**",
+        "src/bundles/**",
         "src/blocks/*.blocks/*/*.i18n",
         "src/blocks/*.blocks/*/*.deps.js",
         "src/blocks/*.blocks/*/*/*.deps.js",

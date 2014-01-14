@@ -12,9 +12,9 @@ logs
 libs
 
 .enb/tmp
-src/*.bundles/*/*.*
-!src/desktop.bundles/*/*.bemdecl.js
-!src/errors.bundles/*/*.bemjson.js
+src/bundles/*.bundles/*/*.*
+!src/bundles/desktop.bundles/*/*.bemdecl.js
+!src/bundles/errors.bundles/*/*.bemjson.js
 
 *.deb
 *.build

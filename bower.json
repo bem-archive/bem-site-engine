@@ -10,6 +10,6 @@
         "node_modules",
         "configs/current",
         ".enb/tmp",
-        "*.bundles"
+        "src/bundles"
     ]
 }
