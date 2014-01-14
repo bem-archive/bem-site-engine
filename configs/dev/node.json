@@ -47,10 +47,10 @@
             "token": "7a2fb4d7a380f8a20562f5fc910f35d3b1605341"
         },
         "dataRepository": {
-            "type": "public",
-            "user": "tormozz48",
-            "repo": "bem-data",
-            "ref": "master",
+            "type": "private",
+            "user": "lego",
+            "repo": "bem-info",
+            "ref": "data",
             "path": "data.min.json"
         }
     }
