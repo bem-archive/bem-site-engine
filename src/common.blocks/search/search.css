@@ -3,11 +3,12 @@
     position: absolute;
     bottom: 5px;
     left: 10px;
+    right: 10px;
 }
 
-.search .input__control
+.search .input
 {
-    width: 178px;
+    width: 174px;
     height: 16px;
 }
 
