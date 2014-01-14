@@ -15,7 +15,7 @@ var fs = require('fs'),
         route: config.get('forum:route')
     },
     BEMHTML = require('./desktop.bundles/common/_common.bemhtml').BEMHTML,
-    leData = require('./le-data');
+    leData = require('./le-modules').leData;
 
 exports.run = function(worker) {
     return leData.init().getData()

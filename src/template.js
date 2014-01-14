@@ -4,8 +4,8 @@ var VM = require('vm'),
     PATH = require('path'),
     config = require('./config'),
     JsonStringify = require('json-stringify-safe'),
-    leJsPath = require('./le-jspath'),
-    leLogic = require('./le-logic'),
+    leJsPath = require('./le-modules').leJSPath,
+    leLogic = require('./le-modules').leLogic,
     leStatics = new (require('../lib/Statics').Statics)(config.get('statics')),
     leBundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' });
 
