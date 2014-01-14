@@ -1,7 +1,8 @@
 ({
     mustDeps : [
         { block : 'i-bem', elems : ['i18n'] },
-        { block : 'headline' }
+        { block : 'headline' },
+        { block: 'layout', elem: 'page' }
     ],
     shouldDeps: [
         { elem: 'logo', mods: { theme: ['batman', 'breaks', 'captain-america',
