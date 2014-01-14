@@ -5,6 +5,7 @@ var API = require('github'),
     HTTPS = require('https'),
     UTIL = require('util'),
     _ = require('lodash'),
+    logger = require('./logger')(module),
     config = require('./config'),
 
     _cachedData = null,
@@ -40,7 +41,7 @@ exports.getDataFromCache = function() {
  * @returns {*}
  */
 exports.dropCache = function() {
-    console.log('drop cache');
+    logger.info('drop cached data');
     _cachedData = null;
     return this.getData();
 };
@@ -60,6 +61,7 @@ exports.getData = function() {
     if (this.getDataFromCache() !== null) {
         deferred.resolve(this.getDataFromCache());
     } else {
+        logger.debug('load data from: %s', url);
         HTTPS.get(url, function(res) {
             var data = '';
 
