@@ -25,7 +25,9 @@
             "name": "bem-talk"
         }
     },
-    "statics": {},
+    "statics": {
+        "pathname": "/src"
+    },
     "github": {
         "common": {
             "version": "3.0.0",
