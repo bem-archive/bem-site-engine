@@ -12,6 +12,7 @@
     vertical-align: top;
 
     background: #000;
+    z-index: 1000;
 }
 
 .main-menu__wrapper
