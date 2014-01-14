@@ -22,11 +22,12 @@ exports.run = function(worker) {
     return leData.init().getData()
         .then(function() {
             var portOrSocket = config.get('app:socket') || config.get('app:port'),
-                app = express();
+                app = express(),
+                rootPath = path.resolve(__dirname, '..');
 
             if (process.env.NODE_ENV !== 'production') {
-                app.use(express.static(__dirname));
-                app.use(enbServer.createMiddleware({ cdir: path.join(__dirname, '..') }));
+                app.use(enbServer.createMiddleware({ cdir: rootPath }));
+                app.use(express.static(rootPath));
             }
 
             app.use(express.query())
