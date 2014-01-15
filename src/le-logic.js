@@ -1,4 +1,5 @@
-var leJspath = require('./le-jspath');
+var leJspath = require('./le-jspath'),
+    HttpError = require('./errors').HttpError;
 
 module.exports = {
 
@@ -50,51 +51,44 @@ module.exports = {
             return result;
         }
 
-        try {
-            //type устанавливаем по data.page
-            //достаем корневой пост по значению type и текущей локали
-            //берем slug для поста из параметров запроса
-            var type = data.req.route,
-                rootId = leJspath.findRootPostId(type, data.req.prefLocale),
-                id = data.req.params.id;
+        //type устанавливаем по data.page
+        //достаем корневой пост по значению type и текущей локали
+        //берем slug для поста из параметров запроса
+        var type = data.req.route,
+            rootId = leJspath.findRootPostId(type, data.req.prefLocale),
+            id = data.req.params.id;
 
-            result = {
-                error: false,
-                type: type,
-                category: null,
-                query: {
-                    predicate: '.' + data.req.prefLocale + '{.type === $type}{.id !== $rootId}',
-                    substitution: { type: type, rootId: rootId }
-                }
-            };
-
-            //если в запросе был передан slug поста, то пробуем найти пост по чатичному совпадению
-            //его полного url-а c адрестной строкой в браузере
-            //если пост не был найден то показываем 404 ошибку
-            //если в запросе не был передан slug поста то показываем корневой пост
-            if (id) {
-                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
-
-                if (!res) {
-                    result.error = { state: true, code: 404 };
-                } else {
-                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
-                    result.id = res.id;
-                    result.category = res.category;
-                }
-            } else {
-                result.id = rootId;
+        result = {
+            error: false,
+            type: type,
+            category: null,
+            query: {
+                predicate: '.' + data.req.prefLocale + '{.type === $type}{.id !== $rootId}',
+                substitution: { type: type, rootId: rootId }
             }
+        };
 
-        } catch (e) {
-            result = {
-                error: { state: true, code: 500 }
-            };
-        } finally {
-            //кешируем построенный результат и возвращаем его
-            this.setLogicCache(data, result);
-            return result;
+        //если в запросе был передан slug поста, то пробуем найти пост по чатичному совпадению
+        //его полного url-а c адрестной строкой в браузере
+        //если пост не был найден то показываем 404 ошибку
+        //если в запросе не был передан slug поста то показываем корневой пост
+        if (id) {
+            var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
+
+            if (!res) {
+                throw new HttpError(HttpError.CODES.NOT_FOUND);
+            } else {
+                res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
+                result.id = res.id;
+                result.category = res.category;
+            }
+        } else {
+            result.id = rootId;
         }
+
+        //кешируем построенный результат и возвращаем его
+        this.setLogicCache(data, result);
+        return result;
     },
 
     /**
@@ -116,45 +110,38 @@ module.exports = {
             return result;
         }
 
-        try {
-            //Делаем проверку на то, что мы находимся в корне раздела articles
-            //составляем первичный объект с результатами обработки логики
-            var type = data.req.route,
-                isRoot = Object.getOwnPropertyNames(data.req.params).length === 0,
-                result = {
-                    error: false,
-                    type: type,
-                    id: null,
-                    category: null,
-                    query: {
-                        predicate: '.' + data.req.prefLocale + '{.type === $type}',
-                        substitution: { type: type }
-                    }
-                };
-
-            //Если мы не находимся в корне раздела статей, то пытаемся найти  пост по полному совпадению
-            //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
-            //если находится то дополнительно прогоняем через поиск для определения категории
-            if (!isRoot) {
-                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
-                if (!res) {
-                    result.error = { state: true, code: 404 };
-                } else {
-                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
-                    result.id = res.id;
-                    result.category = res.category;
-                }
-            }
-
-        } catch (e) {
+        //Делаем проверку на то, что мы находимся в корне раздела articles
+        //составляем первичный объект с результатами обработки логики
+        var type = data.req.route,
+            isRoot = Object.getOwnPropertyNames(data.req.params).length === 0,
             result = {
-                error: { state: true, code: 500 }
+                error: false,
+                type: type,
+                id: null,
+                category: null,
+                query: {
+                    predicate: '.' + data.req.prefLocale + '{.type === $type}',
+                    substitution: { type: type }
+                }
             };
-        } finally {
-            //кешируем построенный результат и возвращаем его
-            this.setLogicCache(data, result);
-            return result;
+
+        //Если мы не находимся в корне раздела статей, то пытаемся найти  пост по полному совпадению
+        //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
+        //если находится то дополнительно прогоняем через поиск для определения категории
+        if (!isRoot) {
+            var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
+            if (!res) {
+                throw new HttpError(HttpError.CODES.NOT_FOUND);
+            } else {
+                res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
+                result.id = res.id;
+                result.category = res.category;
+            }
         }
+
+        //кешируем построенный результат и возвращаем его
+        this.setLogicCache(data, result);
+        return result;
     },
 
     /**
@@ -176,53 +163,47 @@ module.exports = {
             return result;
         }
 
-        try {
-            var type = data.req.route,
-                isRoot = Object.getOwnPropertyNames(data.req.params).length === 0,
-                result = {
-                    error: false,
-                    type: type,
-                    id: null,
-                    category: null,
-                    query: {
-                        predicate: '.' + data.req.prefLocale + '{.type === $type}',
-                        substitution: { type: type }
-                    }
-                };
-
-            //Если мы не находимся в корне раздела новостей, то пытаемся найти  пост по полному совпадению
-            //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
-            //если находится то дополнительно прогоняем через поиск для определения категории
-            if (!isRoot) {
-                if (data.req.params.id) {
-                    var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
-                    if (!res) {
-                        result.error = { state: true, code: 404 };
-                    } else {
-                        res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
-                        result.id = res.id;
-                        result.category = res.category;
-                    }
-                } else {
-                    var year = parseInt(data.req.params.year),
-                        month = parseInt(data.req.params.month),
-                        dateFrom = new Date(year, month ? month - 1 : 0).valueOf(),
-                        dateTo = new Date(month ? year : year + 1, month || 0).valueOf();
-
-                    result.query.predicate = '.' +
-                        data.req.prefLocale + '{.type === $type && .createDate > ' +
-                        dateFrom + ' && .createDate < ' + dateTo + '}';
-                }
-            }
-        } catch (e) {
+        var type = data.req.route,
+            isRoot = Object.getOwnPropertyNames(data.req.params).length === 0,
             result = {
-                error: { state: true, code: 500 }
+                error: false,
+                type: type,
+                id: null,
+                category: null,
+                query: {
+                    predicate: '.' + data.req.prefLocale + '{.type === $type}',
+                    substitution: { type: type }
+                }
             };
-        } finally {
-            //кешируем построенный результат и возвращаем его
-            this.setLogicCache(data, result);
-            return result;
+
+        //Если мы не находимся в корне раздела новостей, то пытаемся найти  пост по полному совпадению
+        //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
+        //если находится то дополнительно прогоняем через поиск для определения категории
+        if (!isRoot) {
+            if (data.req.params.id) {
+                var res = leJspath.findByUrl(data.req._parsedUrl.pathname, data.req.prefLocale);
+                if (!res) {
+                    throw new HttpError(HttpError.CODES.NOT_FOUND);
+                } else {
+                    res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
+                    result.id = res.id;
+                    result.category = res.category;
+                }
+            } else {
+                var year = parseInt(data.req.params.year),
+                    month = parseInt(data.req.params.month),
+                    dateFrom = new Date(year, month ? month - 1 : 0).valueOf(),
+                    dateTo = new Date(month ? year : year + 1, month || 0).valueOf();
+
+                result.query.predicate = '.' +
+                    data.req.prefLocale + '{.type === $type && .createDate > ' +
+                    dateFrom + ' && .createDate < ' + dateTo + '}';
+            }
         }
+
+        //кешируем построенный результат и возвращаем его
+        this.setLogicCache(data, result);
+        return result;
     },
 
     /**
@@ -245,82 +226,75 @@ module.exports = {
             return result;
         }
 
-        try {
-            var type = data.req.route,
-                isRoot = Object.getOwnPropertyNames(data.req.params).length === 0,
-                rootId = leJspath.findRootPostId(type, data.req.prefLocale),
-                result = {
-                    error: false,
-                    type: type,
-                    id: rootId,
-                    category: null,
-                    query: {
-                        predicate: '.' + data.req.prefLocale + '{.type === $type}',
-                        substitution: { type: type }
-                    },
-                    isOnlyOnePost: false
-                };
-
-            //Если у нас корневой пост, то дальне ничего не нужно делать
-            //возвращаем результат
-            if (isRoot) {
-                return result;
-            }
-
-            //запускаем мега-метод по поиску id и категории по url
-            var res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
-
-            //если ничего не найдено, то возвращаем 404 ошибку
-            //тут есть упячка про то что этот метод срабатывает на частичное совпадение
-            //т.е. если дописать к урлу разное то статья тоже найдется
-            //но с другой стороны если что-то в середине будет неправильно то 404 выдастся
-            if (!res) {
-                result.error = { state: true, code: 404 };
-            }
-
-            result.category = res && res.category;
-            result.id = res && res.id;
-
-            //если была найдена категория, то нужно дополнительное исследование
-            //составляем query постов для выбранной категории
-            if (result.category) {
-                var predicate = '.' + data.req.prefLocale + '{.type === $type}' +
-                    '{.categories === $category || .categories.url === $category}';
-
-                //находим корневой пост для выбранной категории
-                //если id еще не был установлен и есть корневой пост то показываем его
-                rootId = leJspath.findRootPostIdByCategory(type, result.category, data.req.prefLocale);
-                if (rootId) {
-                    predicate +=  '{.id !== "' + rootId + '"}';
-                }
-
-                if (!result.id && rootId) {
-                    result.id = rootId;
-                }
-
-                result.query = {
-                    predicate: predicate,
-                    substitution: { type: type, category: result.category }
-                };
-
-                //проверка на то, что для данного инструмента есть только один пост
-                //если это так, то показываем его в развернутом виде а меню постов прячем
-                var source = leJspath.find(result.query.predicate, result.query.substitution);
-                if (source.length === 1) {
-                    result.isOnlyOnePost = true;
-                    result.id = source.shift().id;
-                }
-            }
-
-        } catch (e) {
+        var type = data.req.route,
+            isRoot = Object.getOwnPropertyNames(data.req.params).length === 0,
+            rootId = leJspath.findRootPostId(type, data.req.prefLocale),
             result = {
-                error: { state: true, code: 500 }
+                error: false,
+                type: type,
+                id: rootId,
+                category: null,
+                query: {
+                    predicate: '.' + data.req.prefLocale + '{.type === $type}',
+                    substitution: { type: type }
+                },
+                isOnlyOnePost: false
             };
-        } finally {
-            //кешируем построенный результат и возвращаем его
-            this.setLogicCache(data, result);
+
+        //Если у нас корневой пост, то дальне ничего не нужно делать
+        //возвращаем результат
+        if (isRoot) {
             return result;
         }
+
+        //запускаем мега-метод по поиску id и категории по url
+        var res = leJspath.findCategoryAndIdByUrl(data.req._parsedUrl.pathname, type, data.req.prefLocale);
+
+        //если ничего не найдено, то возвращаем 404 ошибку
+        //тут есть упячка про то что этот метод срабатывает на частичное совпадение
+        //т.е. если дописать к урлу разное то статья тоже найдется
+        //но с другой стороны если что-то в середине будет неправильно то 404 выдастся
+        if (!res) {
+            throw new HttpError(HttpError.CODES.NOT_FOUND);
+        }
+
+        result.category = res && res.category;
+        result.id = res && res.id;
+
+        //если была найдена категория, то нужно дополнительное исследование
+        //составляем query постов для выбранной категории
+        if (result.category) {
+            var predicate = '.' + data.req.prefLocale + '{.type === $type}' +
+                '{.categories === $category || .categories.url === $category}';
+
+            //находим корневой пост для выбранной категории
+            //если id еще не был установлен и есть корневой пост то показываем его
+            rootId = leJspath.findRootPostIdByCategory(type, result.category, data.req.prefLocale);
+            if (rootId) {
+                predicate +=  '{.id !== "' + rootId + '"}';
+            }
+
+            if (!result.id && rootId) {
+                result.id = rootId;
+            }
+
+            result.query = {
+                predicate: predicate,
+                substitution: { type: type, category: result.category }
+            };
+
+            //проверка на то, что для данного инструмента есть только один пост
+            //если это так, то показываем его в развернутом виде а меню постов прячем
+            var source = leJspath.find(result.query.predicate, result.query.substitution);
+            if (source.length === 1) {
+                result.isOnlyOnePost = true;
+                result.id = source.shift().id;
+            }
+        }
+
+        //кешируем построенный результат и возвращаем его
+        this.setLogicCache(data, result);
+        return result;
     },
 
     resolveLibraries: function(data) {
@@ -330,66 +304,59 @@ module.exports = {
             return result;
         }
 
-        try {
 
-            var type = data.req.route,
-                lib = data.req.params.lib || null,
-                version = data.req.params.version || null,
-                category = data.req.params.category || null,
-                id = data.req.params.id,
+        var type = data.req.route,
+            lib = data.req.params.lib || null,
+            version = data.req.params.version || null,
+            category = data.req.params.category || null,
+            id = data.req.params.id,
 
-                predicate = '.' + data.req.prefLocale + '{ .type == $type }',
-                substitution = { type: type },
-                query = null,
+            predicate = '.' + data.req.prefLocale + '{ .type == $type }',
+            substitution = { type: type },
+            query = null,
 
-                path = data.req._parsedUrl.pathname.split('/').reduce(function(prev, item) {
-                    return item.length > 0 ? (prev + '/' + item) : (prev.toString());
-                }, '');
+            path = data.req._parsedUrl.pathname.split('/').reduce(function(prev, item) {
+                return item.length > 0 ? (prev + '/' + item) : (prev.toString());
+            }, '');
 
-            id = leJspath.findByUrl(path, data.req.prefLocale);
+        id = leJspath.findByUrl(path, data.req.prefLocale);
 
-            id = id && id.id;
+        id = id && id.id;
 
-            if (lib) {
-                predicate += '{.categories ^== $category || .categories.url ^== $category }';
-                substitution.category = lib;
+        if (lib) {
+            predicate += '{.categories ^== $category || .categories.url ^== $category }';
+            substitution.category = lib;
 
-                if (version){
-                    substitution.category = lib + '/' + version ;
-                }
-
-                //поиск корневой статьи для библиотеки и показ ее если не указан id другого поста для библиотеки явно
-                var rootId = leJspath.find(predicate + '{.root == "true"}.id', substitution);
-                rootId = rootId.length > 0 ? rootId[0] : null;
-
-                if (rootId) {
-                    predicate += '{.id !== $rootId}';
-                    substitution.rootId = rootId;
-                    id = id || rootId;
-                }
+            if (version){
+                substitution.category = lib + '/' + version ;
             }
 
-            query = { predicate: predicate, substitution: substitution };
+            //поиск корневой статьи для библиотеки и показ ее если не указан id другого поста для библиотеки явно
+            var rootId = leJspath.find(predicate + '{.root == "true"}.id', substitution);
+            rootId = rootId.length > 0 ? rootId[0] : null;
 
-            result = {
-                type: type,
-                id: id,
-                category: category,
-                query: query,
-
-                lib: lib,
-                version: version
-            };
-
-        } catch (e) {
-            result = {
-                error: { state: true, code: 500 }
-            };
-        } finally {
-            //кешируем построенный результат и возвращаем его
-            this.setLogicCache(data, result);
-            return result;
+            if (rootId) {
+                predicate += '{.id !== $rootId}';
+                substitution.rootId = rootId;
+                id = id || rootId;
+            }
         }
+
+        query = { predicate: predicate, substitution: substitution };
+
+        result = {
+            type: type,
+            id: id,
+            category: category,
+            query: query,
+
+            lib: lib,
+            version: version
+        };
+
+        //кешируем построенный результат и возвращаем его
+        this.setLogicCache(data, result);
+        return result;
     },
 
     /**
@@ -411,42 +378,36 @@ module.exports = {
             return result;
         }
 
-        try {
-            var type = 'page',
-                path = '/' + type + data.req._parsedUrl.pathname;
 
-            result = {
-                error: false,
-                type: type,
-                id: null,
-                category: null,
-                query: {
-                    predicate: '.' + data.req.prefLocale + '{.type === $type}',
-                    substitution: { type: type }
-                }
-            };
+        var type = 'page',
+            path = '/' + type + data.req._parsedUrl.pathname;
 
-            //Пытаемся найти  пост по полному совпадению
-            //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
-            //если находится то дополнительно прогоняем через поиск для определения категории
-            var res = leJspath.findByUrl(path, data.req.prefLocale);
-            if (!res) {
-                result.error = { state: true, code: 404 };
-            } else {
-                res = leJspath.findCategoryAndIdByUrl(path, type, data.req.prefLocale);
-                result.id = res.id;
-                result.category = res.category;
+        result = {
+            error: false,
+            type: type,
+            id: null,
+            category: null,
+            query: {
+                predicate: '.' + data.req.prefLocale + '{.type === $type}',
+                substitution: { type: type }
             }
+        };
 
-        } catch (e) {
-            result = {
-                error: { state: true, code: 500 }
-            };
-        } finally {
-            //кешируем построенный результат и возвращаем его
-            this.setLogicCache(data, result);
-            return result;
+        //Пытаемся найти  пост по полному совпадению
+        //его полного url с data.req._parsedUrl.pathname. Если пост не находится то показываем 404 ошибку
+        //если находится то дополнительно прогоняем через поиск для определения категории
+        var res = leJspath.findByUrl(path, data.req.prefLocale);
+        if (!res) {
+            throw new HttpError(HttpError.CODES.NOT_FOUND);
+        } else {
+            res = leJspath.findCategoryAndIdByUrl(path, type, data.req.prefLocale);
+            result.id = res.id;
+            result.category = res.category;
         }
+
+        //кешируем построенный результат и возвращаем его
+        this.setLogicCache(data, result);
+        return result;
     }
 
 };
