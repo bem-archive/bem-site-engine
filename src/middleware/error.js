@@ -5,6 +5,8 @@ var PATH = require('path'),
     config = require('../config'),
     langs = config.get('app:languages'),
     pages = {},
+    terror = require('terror'),
+    logger = require('../logger')(module),
     errorBundlesPath = PATH.join(__dirname, '..', 'errors.bundles'),
     promise = vow.all(langs.map(function(lang) {
         return vow.all([
@@ -21,11 +23,19 @@ var PATH = require('path'),
     }));
 
 module.exports = function() {
-    /*jshint unused:false */
     return function(err, req, res, next) {
+        /*jshint unused:false */
         promise.then(function() {
-            res.statusCode = err.code || 500;
+            var code = err.code || 500,
+                terr = terror.ensureError(err);
 
+            if (terr) {
+                logger.error('%s %s', code, terr.message);
+            } else {
+                logger.error(err);
+            }
+
+            res.statusCode = code;
             res.end(pages[req.prefLocale][res.statusCode === 404 ? 'error404' : 'error500']);
         });
     };
