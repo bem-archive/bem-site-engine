@@ -1,8 +1,11 @@
 var nconf = require('nconf'),
-    PATH = require('path');
+    path = require('path'),
+    configsDir = path.resolve(__dirname, '../configs');
 
-nconf.argv()
+nconf
+    .argv()
     .env()
-    .file({ file: PATH.join(__dirname, '..', 'configs', 'current', 'node.json') });
+    .add('common', { type: 'file', file: path.resolve(configsDir, 'common/node.json')})
+    .add('current', { type: 'file', file: path.resolve(configsDir, 'current/node.json')});
 
 module.exports = nconf;
