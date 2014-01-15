@@ -2,28 +2,12 @@
     "NODE_ENV": "development",
     "app": {
 	    "port": 3014,
-        "clusterSettings" : {
-            "forkTimeout" : 1000,
-            "stopTimeout" : 1000,
-            "exitThreshold" : 3000,
-            "allowedSequentialDeaths" : 3
-        },
         "logger": {
             "mode": "dev",
             "level": "debug",
             "dir": "logs",
             "stdout": "logs/output.log",
             "stderr": "logs/errors.log"
-        },
-        "workers": 4,
-        "languages": ["en", "ru"],
-        "defaultLanguage": "en"
-    },
-    "forum": {
-        "route": "/forum",
-        "repo": {
-            "owner": "bem",
-            "name": "bem-talk"
         }
     },
     "statics": {
@@ -31,28 +15,7 @@
     },
     "github": {
         "common": {
-            "version": "3.0.0",
-            "debug": "true",
-            "protocol": "https",
-            "timeout": "5000"
-        },
-        "private": {
-            "host": "github.yandex-team.ru",
-            "url": "/api/v3"
-        },
-        "public": {
-            "host": "api.github.com"
-        },
-        "auth": {
-            "type": "oauth",
-            "token": "7a2fb4d7a380f8a20562f5fc910f35d3b1605341"
-        },
-        "dataRepository": {
-            "type": "private",
-            "user": "lego",
-            "repo": "bem-info",
-            "ref": "data",
-            "path": "data.min.json"
+            "debug": "true"
         }
     }
 }
