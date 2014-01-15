@@ -22,11 +22,7 @@ $ YENV=production make
 ------
 
 ```sh
-# Запускаем приложение в dev-режиме
 $ npm start
-
-# Запускаем приложение в production-режиме
-$ NODE_ENV=production npm start
 ```
 
 Чтобы заработали поддомены необходимо добавить в `/etc/hosts` записи:
