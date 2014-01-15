@@ -1,4 +1,5 @@
 {
+    "NODE_ENV": "development",
     "app": {
 	    "port": 3014,
         "clusterSettings" : {
