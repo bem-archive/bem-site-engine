@@ -4,8 +4,8 @@ var VM = require('vm'),
     PATH = require('path'),
     config = require('./config'),
     JsonStringify = require('json-stringify-safe'),
-    leJsPath = require('./le-jspath'),
-    leLogic = require('./le-logic'),
+    leJsPath = require('./le-modules').leJSPath,
+    leLogic = require('./le-modules').leLogic,
     leStatics = new (require('../lib/Statics').Statics)(config.get('statics')),
     leBundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' });
 
@@ -42,7 +42,7 @@ function _compileCtx() {
         };
 
     return vow.all(targets.map(function(target) {
-            var targetPath = PATH.join(__dirname, 'desktop.bundles', 'common', '_common.' + target);
+            var targetPath = PATH.join(__dirname, 'bundles', 'desktop.bundles', 'common', '_common.' + target);
             return VowFs.read(targetPath, 'utf-8');
         }))
         .then(function(targetSources) {
@@ -56,7 +56,7 @@ function _compileCtx() {
 
 function _rebuild() {
     var enbBuilder = require('enb/lib/server/server-middleware').createBuilder({ cdir: PATH.join(__dirname, '..') }),
-        commonPath = 'src/desktop.bundles/common/_common.';
+        commonPath = 'src/bundles/desktop.bundles/common/_common.';
 
     return vow.all([
         enbBuilder(commonPath + 'bemtree.js'),

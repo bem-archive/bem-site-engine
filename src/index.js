@@ -5,7 +5,7 @@ var app = require('./app'),
 
 if (process.env.NODE_ENV === 'production') {
     var worker = require('luster'),
-        leData = require('./le-data');
+        leData = require('./le-modules').leData;
 
     app.run(worker).then(function() {
         worker.registerRemoteCommand('reloadCache', function(target, workerId) {

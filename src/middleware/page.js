@@ -1,5 +1,5 @@
 var template = require('../template'),
-    leData = require('../le-data'),
+    leData = require('../le-modules').leData,
     BUNDLE_NAME = 'common';
 
 module.exports = function() {

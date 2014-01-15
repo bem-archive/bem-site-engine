@@ -3,7 +3,7 @@ libs
 node_modules
 configs/current
 .enb/tmp
-src/*.bundles
-src/*.blocks/*/*.deps.js
-src/*.blocks/*/*/*.deps.js
-src/*.blocks/*/*/*/*.deps.js
+src/bundles
+src/blocks.blocks/*/*/*.deps.js
+src/blocks.blocks/*/*/*/*.deps.js
+src/blocks.blocks/*/*/*/*/*.deps.js

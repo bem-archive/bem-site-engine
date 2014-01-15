@@ -1,11 +1,11 @@
 var fs = require('fs'),
-    commonBundleMask = /src\/desktop\.bundles\/common/,
-    errorBundlesMask = /src\/errors\.bundles\/.*/,
-    bundlesMask = /src\/.*\.bundles\/.*/;
+    commonBundleMask = /src\/bundles\/desktop\.bundles\/common/,
+    errorBundlesMask = /src\/bundles\/errors\.bundles\/.*/,
+    bundlesMask = /src\/bundles\/.*\.bundles/;
 
 module.exports = function(config) {
     config.setLanguages(['ru', 'en']);
-    config.nodes('src/*.bundles/*');
+    config.nodes('src/bundles/*.bundles/*');
 
     // Сборка страниц ошибок
     config.nodeMask(errorBundlesMask, function(nodeConfig) {
@@ -99,7 +99,7 @@ function getLevels(config) {
         { path: 'libs/bem-core/desktop.blocks', check: false },
         { path: 'libs/bem-forum/src/views/common.blocks', check: false },
         { path: 'libs/bem-forum/src/themes/bem-www/common.blocks', check: false },
-        'src/common.blocks'
+        'src/blocks/common.blocks'
     ].map(function(level) {
         return config.resolvePath(level);
     });
