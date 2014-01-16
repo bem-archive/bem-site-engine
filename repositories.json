@@ -50,7 +50,9 @@
                     ],
                     "tags": {
                         "include": [],
-                        "exclude": []
+                        "exclude": [
+                            "1.1.1"
+                        ]
                     },
                     "branches": {
                         "include": [
@@ -293,6 +295,35 @@
                         ]
                     },
                     "tags": []
+                }
+            ]
+        },
+        {
+            "user": "tormozz48",
+            "repositories": [
+                {
+                    "name": "bem-core",
+                    "targetDir": "bem-core",
+                    "type": [
+                        "docs"
+                    ],
+                    "docDirs": [
+                        "common.docs"
+                    ],
+                    "tags": {
+                        "include": [
+                            "1.1.1"
+                        ],
+                        "exclude": [
+                            "1.1.1"
+                        ]
+                    },
+                    "branches": {
+                        "include": [],
+                        "exclude": [
+                            "v1"
+                        ]
+                    }
                 }
             ]
         }
