@@ -1,8 +1,3 @@
-.author_view_full
-{
-
-}
-
 .author__avatar-wrapper,
 .author__data-wrapper
 {
@@ -52,12 +47,6 @@
 .author_view_full .author__value
 {
     display: inline-block;
-}
-
-.author_view_full .author__label
-{
-    width: 20px;
-    height: 20px;
 }
 
 .author_view_full .author__value
