@@ -3,8 +3,8 @@ src usr/lib/yandex/bem-info-www
 lib usr/lib/yandex/bem-info-www
 lib/node_modules/bem-info/node_modules usr/lib/yandex/bem-info-www
 freeze/* var/lib/yandex/bem-info-static/_
-src/bundles/desktop.bundles var/lib/yandex/bem-info-static
-src/bundles/errors.bundles var/lib/yandex/bem-info-static
+src/bundles/desktop.bundles var/lib/yandex/bem-info-static/bundles
+src/bundles/errors.bundles var/lib/yandex/bem-info-static/bundles
 www/humans.txt var/lib/yandex/bem-info-static
 www/robots.txt var/lib/yandex/bem-info-static
 www/favicon.ico var/lib/yandex/bem-info-static
