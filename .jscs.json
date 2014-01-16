@@ -6,10 +6,7 @@
         "configs/current/**",
         ".enb/tmp/**",
         "src/bundles/**",
-        "src/blocks/*.blocks/*/*.i18n",
-        "src/blocks/*.blocks/*/*.deps.js",
-        "src/blocks/*.blocks/*/*/*.deps.js",
-        "src/blocks/*.blocks/*/*/*/*.deps.js"
+        "src/blocks/*.blocks/*/*.i18n"
     ],
     "requireCurlyBraces": [
         "if",

@@ -1,0 +1,11 @@
+- mods:
+    view: [full, menu-item, simple, grid-cell]
+
+- elems:
+    - avatar
+    - name
+    - e-mail
+    - github
+    - twitter
+    - skype
+    - info
