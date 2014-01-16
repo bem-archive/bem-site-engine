@@ -40,30 +40,6 @@
                     }
                 },
                 {
-                    "name": "bem-core",
-                    "targetDir": "bem-core",
-                    "type": [
-                        "docs"
-                    ],
-                    "docDirs": [
-                        "common.docs"
-                    ],
-                    "tags": {
-                        "include": [],
-                        "exclude": [
-                            "1.1.1"
-                        ]
-                    },
-                    "branches": {
-                        "include": [
-                            "v1"
-                        ],
-                        "exclude": [
-                            "v1"
-                        ]
-                    }
-                },
-                {
                     "name": "bem-components",
                     "targetDir": "bem-components",
                     "type": [
@@ -311,17 +287,17 @@
                         "common.docs"
                     ],
                     "tags": {
-                        "include": [
-                            "1.1.1"
-                        ],
-                        "exclude": [
-                            "1.1.1"
-                        ]
+                        "include": [],
+                        "exclude": []
                     },
                     "branches": {
-                        "include": [],
+                        "include": [
+                            "b1.0.0",
+                            "b1.1.0"
+                        ],
                         "exclude": [
-                            "v1"
+                            "b1.0.0",
+                            "b1.1.0"
                         ]
                     }
                 }
