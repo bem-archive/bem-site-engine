@@ -6,6 +6,7 @@ block page {
             title : apply('title'),
             mods : this.ctx.mods,
             head : apply('head'),
+            favicon : '/www/favicon.ico',
             content : this.ctx.content
         });
     }
