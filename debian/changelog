@@ -1,3 +1,9 @@
+yandex-bem-info-www (3.0.20) unstable; urgency=low
+
+  *  Test rebuild. Implement test stabilization.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Thu, 16 Jan 2014 18:28:04 +0400
+
 yandex-bem-info-www (3.0.19) unstable; urgency=low
 
   * Test rebuild. Fix testing build.
