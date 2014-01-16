@@ -1,5 +1,5 @@
 var leJspath = require('./le-jspath'),
-    HttpError = require('./errors').HttpError;
+    HttpError = require('../errors').HttpError;
 
 module.exports = {
 
