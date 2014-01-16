@@ -1,0 +1,106 @@
+[
+    {
+        "name": "Methodology",
+        "url": "/method",
+        "id": "https://github.com/bem/bem-method/tree/bem-info-data/method/index",
+        "items": [
+            {
+                "name": "definitions",
+                "url": "/definitions",
+                "id": "https://github.com/bem/bem-method/tree/bem-info-data/method/definitions"
+            },
+            {
+                "name": "filesystem",
+                "url": "/filesystem",
+                "id": "https://github.com/bem/bem-method/tree/bem-info-data/method/filesystem"
+            },
+            {
+                "name": "history",
+                "url": "/history",
+                "id": "https://github.com/bem/bem-method/tree/bem-info-data/method/history"
+            }
+        ]
+    },
+    {
+        "name": "Tools",
+        "url": "/tools",
+        "id": "https://github.com/bem/bem-method/tree/bem-info-data/tools/index",
+        "items": [
+            {
+                "name": "BEM",
+                "items": [
+                    {
+                        "name": "bem-tools",
+                        "url": "/bem-tools",
+                        "id": "https://github.com/bem/bem-tools/tree/dev/docs/index",
+                        "items": [
+                            {
+                                "name": "Installation",
+                                "url": "/installation",
+                                "id": "https://github.com/bem/bem-tools/tree/dev/docs/installation"
+                            },
+                            {
+                                "name": "Commands",
+                                "url": "/commands",
+                                "id": "https://github.com/bem/bem-tools/tree/dev/docs/commands"
+                            },
+                            {
+                                "name": "Levels",
+                                "url": "/levels",
+                                "id": "https://github.com/bem/bem-tools/tree/dev/docs/levels"
+                            },
+                            {
+                                "name": "Dependencies",
+                                "url": "/depsjs",
+                                "id": "https://github.com/bem/bem-tools/tree/dev/docs/depsjs"
+                            },
+                            {
+                                "name": "Customization",
+                                "url": "/customization"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "OPTIMIZERS",
+                "items": [
+                    {
+                        "name": "borschik",
+                        "url": "/borschik"
+                    },
+                    {
+                        "name": "CSSO",
+                        "url": "/csso"
+                    },
+                    {
+                        "name": "SVGO",
+                        "url": "/svgo"
+                    },
+                    {
+                        "name": "setochka",
+                        "url": "/setochka"
+                    }
+                ]
+            },
+            {
+                "name": "TEMPLATING ENGINES",
+                "items": [
+                    {
+                        "name": "xjst",
+                        "url": "/xjst"
+                    }
+                ]
+            },
+            {
+                "name": "PARSERS",
+                "items": [
+                    {
+                        "name": "gonsales",
+                        "url": "/gonsales"
+                    }
+                ]
+            }
+        ]
+    }
+]
