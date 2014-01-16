@@ -7,7 +7,7 @@ var PATH = require('path'),
     pages = {},
     terror = require('terror'),
     logger = require('../logger')(module),
-    errorBundlesPath = PATH.join(__dirname, '..', 'errors.bundles'),
+    errorBundlesPath = PATH.join(__dirname, '..', 'bundles', 'errors.bundles'),
     promise = vow.all(langs.map(function(lang) {
         return vow.all([
                 VowFs.read(PATH.join(errorBundlesPath, 'error-404', 'error-404.' + lang + '.html'), 'utf-8'),
@@ -26,6 +26,7 @@ module.exports = function() {
     return function(err, req, res, next) {
         /*jshint unused:false */
         promise.then(function() {
+
             var code = err.code || 500,
                 terr = terror.ensureError(err);
 
