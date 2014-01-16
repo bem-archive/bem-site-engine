@@ -1,0 +1,11 @@
+- block: i-bem
+  required: true
+  elems: [html, tree]
+- block: i-global
+  required: true
+
+- block: page
+  mods: { page: error }
+- block: b-index
+  elems: [logo]
+- block: link

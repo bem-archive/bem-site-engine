@@ -1,0 +1,5 @@
+- block: i-bem
+  required: true
+  elems: [html]
+
+- mods: { type: block }

@@ -1,0 +1,7 @@
+- block: i-bem
+  required: true
+  elem: dom
+
+- block: input
+- block: button
+  elems: [icon]

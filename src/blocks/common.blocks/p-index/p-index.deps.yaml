@@ -1,0 +1,28 @@
+- block: i-bem
+  required: true
+  elems: [i18n]
+- block: headline
+  required: true
+
+- elem: logo
+  mods:
+    theme:
+      - batman
+      - breaks
+      - captain-america
+      - generated
+      - ironman
+      - motion
+      - robin
+      - scheme
+      - spots
+      - stripe
+      - waves
+- elem: title
+- elem: phrase
+- elem: link
+- elem: ya
+
+- block: ya-logo
+- block: layout
+  elem: page

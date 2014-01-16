@@ -1,0 +1,6 @@
+- block: i-bem
+  required: true
+  elem: [html, i18n]
+
+- block: i-services
+  required: true
