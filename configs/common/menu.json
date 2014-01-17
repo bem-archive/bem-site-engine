@@ -1,28 +1,43 @@
 [
     {
-        "name": "Methodology",
+        "name": {
+            "en": "Methodology",
+            "ru": "Методология"
+        },
         "url": "/method",
         "id": "https://github.com/bem/bem-method/tree/bem-info-data/method/index",
         "items": [
             {
-                "name": "definitions",
+                "name": {
+                    "en": "Definitions",
+                    "ru": "Определения"
+                },
                 "url": "/definitions",
                 "id": "https://github.com/bem/bem-method/tree/bem-info-data/method/definitions"
             },
             {
-                "name": "filesystem",
+                "name": {
+                    "en": "Filesystem",
+                    "ru": "Организация файловой системы"
+                },
                 "url": "/filesystem",
                 "id": "https://github.com/bem/bem-method/tree/bem-info-data/method/filesystem"
             },
             {
-                "name": "history",
+                "name": {
+                    "en": "History",
+                    "ru": "История создания"
+                },
                 "url": "/history",
                 "id": "https://github.com/bem/bem-method/tree/bem-info-data/method/history"
             }
         ]
     },
     {
-        "name": "Tools",
+        "name": {
+            "en": "Tools",
+            "ru": "Инструменты"
+        },
         "url": "/tools",
         "id": "https://github.com/bem/bem-method/tree/bem-info-data/tools/index",
         "items": [
@@ -35,28 +50,76 @@
                         "id": "https://github.com/bem/bem-tools/tree/dev/docs/index",
                         "items": [
                             {
-                                "name": "Installation",
+                                "name": {
+                                    "en": "Installation",
+                                    "ru": "Установка"
+                                },
                                 "url": "/installation",
                                 "id": "https://github.com/bem/bem-tools/tree/dev/docs/installation"
                             },
                             {
-                                "name": "Commands",
+                                "name": {
+                                    "en": "Commands",
+                                    "ru": "Команды"
+                                },
                                 "url": "/commands",
                                 "id": "https://github.com/bem/bem-tools/tree/dev/docs/commands"
                             },
                             {
-                                "name": "Levels",
+                                "name": {
+                                    "en": "Levels",
+                                    "ru": "Уровни переопределения"
+                                },
                                 "url": "/levels",
                                 "id": "https://github.com/bem/bem-tools/tree/dev/docs/levels"
                             },
                             {
-                                "name": "Dependencies",
+                                "name": {
+                                    "en": "Dependencies",
+                                    "ru": "Зависимости"
+                                },
                                 "url": "/depsjs",
                                 "id": "https://github.com/bem/bem-tools/tree/dev/docs/depsjs"
                             },
                             {
-                                "name": "Customization",
-                                "url": "/customization"
+                                "name": {
+                                    "en": "Customization",
+                                    "ru": "Настройка"
+                                },
+                                "url": "/customization",
+                                "id": "https://github.com/bem/bem-tools/tree/dev/docs/customization"
+                            },
+                            {
+                                "name": {
+                                    "en": "Tech Modules",
+                                    "ru": "Модули технологий"
+                                },
+                                "url": "/tech-modules",
+                                "id": "https://github.com/bem/bem-tools/tree/dev/docs/tech-modules"
+                            },
+                            {
+                                "name": {
+                                    "en": "API usage",
+                                    "ru": "Использование через API"
+                                },
+                                "url": "/api",
+                                "id": "https://github.com/bem/bem-tools/tree/dev/docs/api"
+                            },
+                            {
+                                "name": {
+                                    "en": "Creating subcommands",
+                                    "ru": "Создание подкоманд"
+                                },
+                                "url": "/creating-subcommands",
+                                "id": "https://github.com/bem/bem-tools/tree/dev/docs/creating-subcommands"
+                            },
+                            {
+                                "name": {
+                                    "en": "Contribute to development",
+                                    "ru": "Участие в разработке"
+                                },
+                                "url": "/contribute",
+                                "id": "https://github.com/bem/bem-tools/tree/dev/docs/contribute"
                             }
                         ]
                     }
