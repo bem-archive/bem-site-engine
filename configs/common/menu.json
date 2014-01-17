@@ -177,7 +177,34 @@
                     },
                     {
                         "name": "CSSO",
-                        "url": "/csso"
+                        "url": "/csso",
+                        "id": "https://github.com/css/csso/tree/master/docs/index",
+                        "items": [
+                            {
+                                "name": {
+                                    "en": "Description",
+                                    "ru": "Описание"
+                                },
+                                "url": "/description",
+                                "id": "https://github.com/css/csso/tree/master/docs/description"
+                            },
+                            {
+                                "name": {
+                                    "en": "Installation",
+                                    "ru": "Установка"
+                                },
+                                "url": "/install",
+                                "id": "https://github.com/css/csso/tree/master/docs/install"
+                            },
+                            {
+                                "name": {
+                                    "en": "Usage",
+                                    "ru": "Использование"
+                                },
+                                "url": "/usage",
+                                "id": "https://github.com/css/csso/tree/master/docs/usage"
+                            }
+                        ]
                     },
                     {
                         "name": "SVGO",
