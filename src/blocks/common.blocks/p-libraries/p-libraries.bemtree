@@ -51,6 +51,7 @@ block p-libraries {
                 block: 'center',
                 mix: LAYOUT_CENTER,
                 content: [
+                    _q.lib ?
                     {
                         block: 'layout',
                         mods: { section: 'p-menu' },
@@ -58,7 +59,8 @@ block p-libraries {
                             gPostsMenu,
                             _q.id  ? gPost : gPosts
                         ]
-                    }
+                    } :
+                    gPost
                 ]
             };
 

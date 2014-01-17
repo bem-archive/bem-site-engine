@@ -323,13 +323,6 @@ module.exports = {
 
         id = id && id.id;
 
-        //Ужасный костыль!
-        if(!lib) {
-            lib = 'bem-core';
-            version = '1.1.1';
-            data.req._parsedUrl.pathname = '/libs/bem-core/1.1.1';
-        }
-
         if (lib) {
             predicate += '{.categories ^== $category || .categories.url ^== $category }';
             substitution.category = lib;
@@ -347,6 +340,9 @@ module.exports = {
                 substitution.rootId = rootId;
                 id = id || rootId;
             }
+        }else {
+            var rootId = leJspath.findRootPostId(type, data.req.prefLocale);
+            id = id || rootId;
         }
 
         query = { predicate: predicate, substitution: substitution };
