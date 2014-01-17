@@ -126,11 +126,54 @@
                 ]
             },
             {
-                "name": "OPTIMIZERS",
+                "name": {
+                    "en": "OPTIMIZERS",
+                    "ru": "ОПТИМИЗАТОРЫ"
+                },
                 "items": [
                     {
                         "name": "borschik",
-                        "url": "/borschik"
+                        "url": "/borschik",
+                        "id": "https://github.com/bem/borschik/tree/master/docs/index",
+                        "items": [
+                            {
+                                "name": {
+                                    "en": "Static resources \"freeze\"",
+                                    "ru": "\"Заморозка\" статических ресурсов (freeze)"
+                                },
+                                "url": "/freeze",
+                                "id": "https://github.com/bem/borschik/tree/master/docs/freeze"
+                            },
+                            {
+                                "name": {
+                                    "en": "Where Is My Tech",
+                                    "ru": "borschik и технологии"
+                                },
+                                "url": "/freeze",
+                                "id": "https://github.com/bem/borschik/tree/master/docs/where-is-my-tech"
+                            },
+                            {
+                                "name": "borschik-server",
+                                "url": "/borschik-server",
+                                "id": "https://github.com/bem/borschik-server/tree/master/docs/borschik-server"
+                            },
+                            {
+                                "name": {
+                                    "en": "Changelog",
+                                    "ru": "История изменений"
+                                },
+                                "url": "/changelog",
+                                "id": "https://github.com/bem/borschik/tree/master/docs/changelog"
+                            },
+                            {
+                                "name": {
+                                    "en": "JS Include Notations",
+                                    "ru": "Нотация для JS include"
+                                },
+                                "url": "/js-include",
+                                "id": "https://github.com/bem/borschik/tree/master/docs/freeze"
+                            }
+                        ]
                     },
                     {
                         "name": "CSSO",
