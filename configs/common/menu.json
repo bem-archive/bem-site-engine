@@ -208,11 +208,27 @@
                     },
                     {
                         "name": "SVGO",
-                        "url": "/svgo"
+                        "url": "/svgo",
+                        "items": [
+                            {
+                                "name": {
+                                    "en": "How SVGO Works",
+                                    "ru": "Как работает SVGO"
+                                },
+                                "url": "/how-it-works",
+                                "id": "https://github.com/svg/svgo/tree/beminfo/docs/how-it-works"
+                            },
+                            {
+                                "name": "SVG Optimizer",
+                                "url": "/svgo",
+                                "id": "https://github.com/svg/svgo/tree/beminfo/docs/svgo"
+                            }
+                        ]
                     },
                     {
                         "name": "setochka",
-                        "url": "/setochka"
+                        "url": "/setochka",
+                        "id": "https://github.com/afelix/setochka/tree/master/doc/setochka"
                     }
                 ]
             },
