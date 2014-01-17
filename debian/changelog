@@ -1,3 +1,9 @@
+yandex-bem-info-www (3.0.22) unstable; urgency=low
+
+  * Test rebuild. Fix __reload issue
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Fri, 17 Jan 2014 14:28:03 +0400
+
 yandex-bem-info-www (3.0.21) unstable; urgency=low
 
   * Test rebuild. Fix statics loading
