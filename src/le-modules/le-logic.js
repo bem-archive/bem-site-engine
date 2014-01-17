@@ -357,8 +357,6 @@ module.exports = {
             version: version
         };
 
-        leJspath.stringify(result);
-
         //кешируем построенный результат и возвращаем его
         this.setLogicCache(data, result);
         return result;
