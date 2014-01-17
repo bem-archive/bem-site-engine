@@ -25,19 +25,23 @@ function buildErrorPage(code, lang) {
 
 function loadErrorPages() {
     var langs = config.get('app:languages'),
-        errorBundlesPath = path.join(__dirname, '..', 'bundles', 'errors.bundles');
+        errorBundlesPath = path.join(__dirname, '..', 'bundles', 'errors.bundles'),
+        errorPages = {};
 
     return vow.all(langs.map(function(lang) {
         return vow.all([
                 VowFs.read(path.join(errorBundlesPath, 'error-404', 'error-404.' + lang + '.html'), 'utf-8'),
                 VowFs.read(path.join(errorBundlesPath, 'error-500', 'error-500.' + lang + '.html'), 'utf-8')
             ]).spread(function(error404, error500) {
-                return {
+                errorPages[lang] = {
                     error404: error404.replace(/\{STATICS_HOST\}/g, staticsUrl),
                     error500: error500.replace(/\{STATICS_HOST\}/g, staticsUrl)
                 };
             });
-    }));
+        }))
+        .then(function() {
+            return errorPages;
+        });
 }
 
 function preparation(err, req, res) {
@@ -54,13 +58,14 @@ function preparation(err, req, res) {
 }
 
 function prodMiddleware() {
-    loadErrorPages().then(function(errorPages) {
-        return function(err, req, res, next) {
-            /*jshint unused:false */
-            preparation(err, req, res);
-            res.end(errorPages[req.prefLocale][res.statusCode === 404 ? 'error404' : 'error500']);
-        };
-    });
+    return function(err, req, res, next) {
+        /*jshint unused:false */
+        loadErrorPages()
+            .then(function(errorPages) {
+                preparation(err, req, res);
+                res.end(errorPages[req.prefLocale][res.statusCode === 404 ? 'error404' : 'error500']);
+            });
+    };
 }
 
 function devMiddleware() {
