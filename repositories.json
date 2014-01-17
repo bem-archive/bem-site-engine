@@ -12,6 +12,7 @@
                         "docs"
                     ],
                     "docDirs": [
+                        "method",
                         "platform",
                         "tools",
                         "libs",
