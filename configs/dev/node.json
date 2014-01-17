@@ -10,6 +10,13 @@
             "stderr": "logs/errors.log"
         }
     },
+    "forum": {
+        "route": "/forum",
+        "repo": {
+            "owner": "bem",
+            "name": "bem-talk"
+        }
+    },
     "statics": {
         "pathname": "/src"
     },

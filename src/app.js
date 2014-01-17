@@ -6,7 +6,7 @@ var fs = require('fs'),
     logger = require('./logger')(module),
     middleware = require('./middleware'),
     forum = require('bem-forum/src/middleware/forum'),
-    forumConfig = {
+    forumConfig = config.get('forum') && {
         github: {
             api: config.get('github:common'),
             auth: config.get('github:auth')
@@ -33,9 +33,13 @@ exports.run = function(worker) {
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.logger())
                 .use(middleware.router(router))
-                .use(middleware.reloadCache(router, worker))
-                .use(forum(forumConfig, BEMHTML))
-                .use(middleware.page())
+                .use(middleware.reloadCache(router, worker));
+
+            if (forumConfig) {
+                app.use(forum(forumConfig, BEMHTML));
+            }
+
+            app.use(middleware.page())
                 .use(middleware.error())
                 .listen(portOrSocket, function() {
                     if (isNaN(portOrSocket)) {

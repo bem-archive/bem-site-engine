@@ -3,13 +3,6 @@
         "languages": ["en", "ru"],
         "defaultLanguage": "en"
     },
-    "forum": {
-        "route": "/forum",
-        "repo": {
-            "owner": "bem",
-            "name": "bem-talk"
-        }
-    },
     "github": {
         "common": {
             "version": "3.0.0",
