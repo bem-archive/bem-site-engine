@@ -7,12 +7,14 @@ if (process.env.NODE_ENV === 'production') {
     var worker = require('luster'),
         leData = require('./le-modules').leData;
 
-    app.run(worker).then(function() {
-        worker.registerRemoteCommand('reloadCache', function(target, workerId) {
-            logger.info('worker %s receive message reloadCache initialized by worker %s', target.wid, workerId);
-            leData.dropCache();
+    if (worker.isWorker) {
+        app.run(worker).then(function() {
+            worker.registerRemoteCommand('reloadCache', function(target, workerId) {
+                logger.info('worker %s receive message reloadCache initialized by worker %s', target.wid, workerId);
+                leData.dropCache();
+            });
         });
-    });
+    }
 } else {
     util.createDirectory(config.get('app:logger:dir')).then(app.run);
 }

@@ -62,12 +62,8 @@ block page {
 
 block page {
 
-    !leJsPath.getSource(), default: {
-        leJsPath.setSource(this.data.datasrc); //кеширование данных
-        return applyNext();
-    }
-
-    leJsPath.getSource(), default: {
+    default: {
+        leJsPath.setSource(this.data.datasrc);
         apply('route');
         this.ctx.mods = this._.extend({ theme : 'normal', page : this.data.req.route }, this.ctx.mods);
         return applyCtx(this.ctx);
