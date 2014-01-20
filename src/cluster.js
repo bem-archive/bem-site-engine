@@ -27,10 +27,7 @@ if (luster.isMaster) {
 
 luster.configure({
     app: './index.js',
-    workers: config.get('app:workers'),
-    control: config.get('app:clusterSettings'),
-    server: {
-        port: config.get('app:socket') || config.get('app:port'),
-        groups: 1
-    }
+    workers: config.get('luster:workers'),
+    control: config.get('luster:control'),
+    server: config.get('luster:server')
 }, true, __dirname).run();
