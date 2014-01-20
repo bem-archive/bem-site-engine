@@ -18,7 +18,7 @@ var fs = require('fs'),
     leData = require('./le-modules').leData;
 
 exports.run = function(worker) {
-    return leData.init().getData()
+    return leData.initSiteStructureAndLoadData()
         .then(function() {
             logger.info('-- app run start --');
             logger.info('app run step 1');
