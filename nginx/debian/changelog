@@ -1,0 +1,85 @@
+yandex-bem-info-nginx-conf (2.13) unstable; urgency=low
+
+  * Test rebuild. Redirect from blog to news has been added.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 19 Nov 2013 20:07:52 +0400
+
+yandex-bem-info-nginx-conf (2.12) unstable; urgency=low
+
+  * Test rebuild. Remove default forwarding for 404 errors.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 19 Nov 2013 16:00:33 +0400
+
+yandex-bem-info-nginx-conf (2.11) unstable; urgency=low
+
+  * Test rebuild. Change some redirects
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 19 Nov 2013 13:22:57 +0400
+
+yandex-bem-info-nginx-conf (2.10) unstable; urgency=low
+
+  * bugfix нет listen в блоке server с перенаправлением
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Thu, 14 Nov 2013 18:55:33 +0400
+
+yandex-bem-info-nginx-conf (2.9) unstable; urgency=low
+
+  * Зафиксированы для продакшен домены bem.info ru.bem.info
+  * Перенаправление с доменов en.bem.info, www.bem.info на bem.info
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Thu, 14 Nov 2013 13:55:32 +0400
+
+yandex-bem-info-nginx-conf (2.8) unstable; urgency=low
+
+  * Поправил redirect со статьи /articles/deps-js-syntax/
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Wed, 13 Nov 2013 22:13:10 +0400
+
+yandex-bem-info-nginx-conf (2.7) unstable; urgency=low
+
+  * Починил магию с редиректами старого bem.info для bem-core
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Wed, 13 Nov 2013 19:44:30 +0400
+
+yandex-bem-info-nginx-conf (2.6) unstable; urgency=low
+
+  * Уменьшено кол-во Regexp в путях до максимально-безопасного кол-ва
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Wed, 13 Nov 2013 19:26:55 +0400
+
+yandex-bem-info-nginx-conf (2.5) unstable; urgency=low
+
+  * Убрано зацикливание в пути URL
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Wed, 13 Nov 2013 18:57:16 +0400
+
+yandex-bem-info-nginx-conf (2.4) unstable; urgency=low
+
+  * Test release
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Wed, 13 Nov 2013 18:17:45 +0400
+
+yandex-bem-info-nginx-conf (2.3) unstable; urgency=low
+
+  * Проект конфига с дебианизацией перенесен в проек bem-info
+  * Конфиг переименован из 90-bem-www.conf в 90-bem-info.conf
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Fri, 08 Nov 2013 17:03:02 +0400
+
+yandex-bem-info-nginx-conf (2.2) unstable; urgency=low
+
+  * Cleaning
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Fri, 11 Oct 2013 16:53:32 +0400
+
+yandex-bem-info-nginx-conf (2.1) unstable; urgency=low
+
+  * Some pre-testing fixes.
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Fri, 11 Oct 2013 16:13:14 +0400
+
+yandex-bem-info-nginx-conf (2.0) unstable; urgency=low
+
+  * Initial release for new bem.info.
+
+ -- Pavel Bashinsky <pbashinsky@yandex-team.ru>  Thu, 10 Oct 2013 19:10:24 +0400
