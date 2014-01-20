@@ -4,7 +4,7 @@
 	    "port": 3014,
         "logger": {
             "mode": "dev",
-            "level": "silly",
+            "level": "debug",
             "dir": "logs",
             "stdout": "logs/output.log",
             "stderr": "logs/errors.log"
@@ -22,7 +22,7 @@
     },
     "github": {
         "common": {
-            "debug": "true"
+            "debug": "false"
         }
     }
 }
