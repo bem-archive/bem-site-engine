@@ -17,7 +17,7 @@ var levels = {
 },
 container = new winston.Container({
     exceptionHandlers: [
-        new winston.transports.File({ filename: config.get('app:logger:stderr') })
+        new winston.transports.File({ filename: config.get('logger:stderr') })
     ],
     levels: levels.levels,
     exitOnError: false
@@ -33,14 +33,14 @@ module.exports = function(module) {
     container.add(module.filename, {
         transports: [
             new winston.transports.File({
-                level: config.get('app:logger:level'),
-                filename: config.get('app:logger:stdout'),
+                level: config.get('logger:level'),
+                filename: config.get('logger:stdout'),
                 label: label,
                 timestamp: false,
                 json: false
             }),
             new (winston.transports.Console)({
-                level: config.get('app:logger:level'),
+                level: config.get('logger:level'),
                 handleExceptions: true,
                 colorize: true,
                 label: label
