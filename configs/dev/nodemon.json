@@ -1,5 +1,4 @@
 {
-    "script": "./src",
     "verbose": true,
     "watch": [
         ".js$"
