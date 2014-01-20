@@ -264,47 +264,40 @@
                     "en": "Full stack quick start",
                     "ru": "Попробуй БЭМ на вкус"
                 },
-                "route": "/",
-                "source": ""
+                "route": "/"
             },
             {
                 "title": {
                     "en": "Yandex.Maps API and BEM",
                     "ru": "API Яндекс Карт и БЭМ"
                 },
-                "route": "/",
-                "source": ""
+                "route": "/"
             },
             {
                 "title": {
                     "en": "BEM application on Leaflet and 2GIS API",
                     "ru": "БЭМ-приложение на Leaflet и API 2GIS"
                 },
-                "route": "/",
-                "source": ""
+                "route": "/"
             },
             {
                 "title": "borschik",
-                "route": "/",
-                "source": ""
+                "route": "/"
             },
             {
                 "title": {
                     "en": "smartcd: how to launch tools locally",
                     "ru": "smartcd: локальный запуск инструментов"
                 },
-                "route": "/",
-                "source": ""
+                "route": "/"
             },
             {
                 "title": "What you can borrow from Yandex frontend dev",
-                "route": "/",
-                "source": ""
+                "route": "/"
             },
             {
                 "title": "Bemhtml cache experimental",
-                "route": "/",
-                "source": ""
+                "route": "/"
             }
         ]
     }
