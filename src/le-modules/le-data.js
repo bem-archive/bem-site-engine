@@ -1,15 +1,17 @@
 'use strict';
 
 var https = require('https'),
-    util = require('util'),
+    u = require('util'),
     path = require('path'),
 
     api = require('github'),
     vow = require('vow'),
+    q = require('q'),
     fs = require('vow-fs'),
     _ = require('lodash'),
     sha = require('sha1'),
 
+    util = require('../util'),
     logger = require('../logger')(module),
     config = require('../config'),
 
@@ -84,8 +86,6 @@ var sitemap,
 var init = function() {
     logger.debug('Init');
 
-    //var def = vow.defer();
-
     var publicConfig = _.extend(config.get('github:public'), config.get('github:common')),
         privateConfig = _.extend(config.get('github:private'), config.get('github:common'));
 
@@ -94,9 +94,6 @@ var init = function() {
 
     gitPublic.authenticate(config.get('github:auth'));
 
-    //def.resolve();
-
-    //return def.promise;
     return this;
 };
 
@@ -122,7 +119,7 @@ var parseSiteMap = function(data) {
         def.resolve(sitemap);
     } catch(err) {
         logger.error('Site map parsed with error %s', err.message);
-        def.reject(sitemap);
+        def.reject(err);
     }
 
     return def.promise();
@@ -139,7 +136,7 @@ var processSiteMap = function(sitemap) {
 
         if(_.has(node, 'source')) {
             idSourceMap[node.id] = node.source;
-        };
+        }
 
         if(_.has(node, 'url')) {
             //TODO implement url building
@@ -159,29 +156,146 @@ var processSiteMap = function(sitemap) {
     return def.resolve(sitemap);
 };
 
+var getDataByGithubAPI = function(repository) {
+    var def = vow.defer();
+    gitPublic.repos.getContent(repository, function(err, res) {
+        if (err || !res) {
+            def.reject({res: null, repo: repository});
+        }else {
+            def.resolve({res: res, repo: repository});
+        }
+    });
+    return def.promise();
+};
+
 var loadSources = function() {
+    logger.debug('Load resources');
+
     var def = vow.defer();
     if(!idSourceMap) {
         return def.reject()
     }
 
-    var re = /^https:\/\/github.com\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+?)\/(.+?)$/i,
-        promises = _.keys(idSourceMap).map(function(id) {
+    var promises = _.keys(idSourceMap).map(function(id) {
             logger.silly('source map id: %s source: %s', id, idSourceMap[id]);
 
-            var source = idSourceMap[id],
-                parsedSource = source.match(re),
-                repoData = {
-                    user: parsedSource[1],
-                    repo: parsedSource[2],
-                    ref: parsedSource[3],
-                    path: parsedSource.slice(4).join('/'),
-                    block: parsedSource[parsedSource.length - 1]
-                };
+            var source = idSourceMap[id];
+            //return getDataByGithubAPI(getRepoFromSource(source, 'en.meta.json'));
+            return vow
+                .allResolved({
+                    metaEn: getDataByGithubAPI(getRepoFromSource(source, 'en.meta.json')),
+                    mdEn: getDataByGithubAPI(getRepoFromSource(source, 'en.md')),
+                    metaRu: getDataByGithubAPI(getRepoFromSource(source, 'ru.meta.json')),
+                    mdRu: getDataByGithubAPI(getRepoFromSource(source, 'ru.md'))
+                })
+                .then(function(value) {
+                    var _def = vow.defer();
+                    idSourceMap[id] = {
+                        en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value),
+                        ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value)
+                    };
+                    _def.resolve(idSourceMap[id]);
+                    return _def.promise();
+                });
+    });
 
-                logger.silly('repo data user: %s repo: %s ref: %s path: %s block: %s',
-                    repoData.user, repoData.repo, repoData.ref, repoData.path, repoData.block);
-        });
+    return vow.allResolved(promises);
+};
+
+var getRepoFromSource = function(source, extention) {
+    var re = /^https:\/\/github.com\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+?)\/(.+?)$/i,
+        parsedSource = source.match(re),
+        path = parsedSource.slice(4).join('/'),
+        block = parsedSource[parsedSource.length - 1],
+        repoData = {
+            user: parsedSource[1],
+            repo: parsedSource[2],
+            ref: parsedSource[3],
+            path: u.format('%s/%s.%s', path, block, extention)
+        }
+
+    logger.silly('repo meta user: %s repo: %s ref: %s path: %s',
+        repoData.user, repoData.repo, repoData.ref, repoData.path);
+
+    return repoData;
+};
+
+var getSourceFromMetaAndMd = function(meta, md) {
+    try {
+        var repo = meta.repo;
+
+        meta = (new Buffer(meta.res.content, 'base64')).toString();
+        meta = JSON.parse(meta);
+
+        try {
+            md = (new Buffer(md.res.content, 'base64')).toString();
+            md = util.mdToHtml(md);
+        } catch(err) {
+            md = null;
+        }
+
+        meta.content = md;
+
+        //parse date from dd-mm-yyyy format into milliseconds
+        if(meta.createDate) {
+            meta.createDate = util.dateToMilliseconds(meta.createDate);
+        }
+
+        //parse date from dd-mm-yyyy format into milliseconds
+        if(meta.editDate) {
+            meta.editDate = util.dateToMilliseconds(meta.editDate);
+        }
+
+        //remove empty strings from authors array
+        if(meta.authors && _.isArray(meta.authors)) {
+            meta.authors = _.compact(meta.authors);
+        }
+
+        //remove empty strings from translators array
+        if(meta.translators && _.isArray(meta.translators)) {
+            meta.translators = _.compact(meta.translators);
+        }
+
+        //TODO  remove this type hack later after sources meta refactoring!
+        if(_.isArray(meta.type)) {
+            if(meta.type.indexOf('authors') !== -1 || meta.type.indexOf('translators') !== -1) {
+                meta.type = 'people';
+            }else if(meta.type.indexOf('page') !== -1) {
+                meta.type = 'page';
+            }else {
+                meta.type = 'post';
+            }
+        }else if(_.isString(meta.type)){
+            if(meta.type === 'authors' || meta.type === 'translators') {
+                meta.type = 'people';
+            }else if(meta.type === 'page') {
+                meta.type = 'page';
+            }else {
+                meta.type = 'post';
+            }
+        }
+
+        //TODO  remove this root hack later after sources meta refactoring!
+        //TODO  remove this categories hack later after sources meta refactoring!
+        //TODO  remove this order hack later after sources meta refactoring!
+        //TODO  remove this url hack later after sources meta refactoring!
+        meta.root && delete meta.root;
+        meta.categories && delete meta.categories;
+        meta.order && delete meta.order;
+        meta.url && delete meta.url;
+
+
+        //set repo information
+        //meta.repo = {
+            //url: target.source.url,
+            //treeish: target.type === 'branches' ? target.ref : 'master'
+        //};
+
+    } catch(err) {
+        return null;
+    }
+
+    return meta;
 };
 
 exports.initSiteStructureAndLoadData = function() {
@@ -190,10 +304,13 @@ exports.initSiteStructureAndLoadData = function() {
     init();
 
     return loadSiteMap()
-        //.then(loadSiteMap)
         .then(parseSiteMap)
         .then(processSiteMap)
-        .then(loadSources);
+        .then(loadSources)
+        .then(
+            function() {
+                logger.debug('All data has been loaded');
+            });
 };
 
 
