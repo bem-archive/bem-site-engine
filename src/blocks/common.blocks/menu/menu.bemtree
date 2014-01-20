@@ -45,7 +45,7 @@ block menu {
             //текущего значения для выделения активного пункта меню
             source = source.map(function(item) {
                 var nc = config;
-                nc.item = { item: item };
+                nc.item = item;
                 //console.debug('item =%s=', item);
                 return apply(
                     this._mode = '',
