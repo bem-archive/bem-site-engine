@@ -43,8 +43,8 @@ exports.run = function(worker) {
             app.use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.logger())
-                .use(middleware.router(router.router))
-                .use(middleware.reloadCache(router.router, worker));
+                .use(middleware.router(router))
+                .use(middleware.reloadCache());
 
             logger.info('app run step 4');
 
