@@ -27,6 +27,7 @@ exports.run = function(worker) {
             if (process.env.NODE_ENV !== 'production') {
                 app.use(require('enb/lib/server/server-middleware').createMiddleware({ cdir: rootPath }));
                 app.use(express.static(rootPath));
+                app.use(express.favicon(path.resolve(rootPath, 'www/favicon.ico')));
             }
 
             app.use(express.query())
