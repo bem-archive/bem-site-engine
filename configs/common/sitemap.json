@@ -1,0 +1,311 @@
+[
+    {
+        "title": {
+            "en": "Methodology",
+            "ru": "Методология"
+        },
+        "route": "/method",
+        "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/index",
+        "items": [
+            {
+                "title": {
+                    "en": "Definitions",
+                    "ru": "Определения"
+                },
+                "route": "/definitions",
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/definitions"
+            },
+            {
+                "title": {
+                    "en": "Filesystem",
+                    "ru": "Организация файловой системы"
+                },
+                "route": "/filesystem",
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/filesystem"
+            },
+            {
+                "title": {
+                    "en": "History",
+                    "ru": "История создания"
+                },
+                "route": "/history",
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/history"
+            }
+        ]
+    },
+    {
+        "title": {
+            "en": "Tools",
+            "ru": "Инструменты"
+        },
+        "route": "/tools",
+        "source": "https://github.com/bem/bem-method/tree/bem-info-data/tools/index",
+        "items": [
+            {
+                "title": "BEM",
+                "items": [
+                    {
+                        "title": "bem-tools",
+                        "route": "/bem-tools",
+                        "source": "https://github.com/bem/bem-tools/tree/dev/docs/index",
+                        "items": [
+                            {
+                                "title": {
+                                    "en": "Installation",
+                                    "ru": "Установка"
+                                },
+                                "route": "/installation",
+                                "source": "https://github.com/bem/bem-tools/tree/dev/docs/installation"
+                            },
+                            {
+                                "title": {
+                                    "en": "Commands",
+                                    "ru": "Команды"
+                                },
+                                "route": "/commands",
+                                "source": "https://github.com/bem/bem-tools/tree/dev/docs/commands"
+                            },
+                            {
+                                "title": {
+                                    "en": "Levels",
+                                    "ru": "Уровни переопределения"
+                                },
+                                "route": "/levels",
+                                "source": "https://github.com/bem/bem-tools/tree/dev/docs/levels"
+                            },
+                            {
+                                "title": {
+                                    "en": "Dependencies",
+                                    "ru": "Зависимости"
+                                },
+                                "route": "/depsjs",
+                                "source": "https://github.com/bem/bem-tools/tree/dev/docs/depsjs"
+                            },
+                            {
+                                "title": {
+                                    "en": "Customization",
+                                    "ru": "Настройка"
+                                },
+                                "route": "/customization",
+                                "source": "https://github.com/bem/bem-tools/tree/dev/docs/customization"
+                            },
+                            {
+                                "title": {
+                                    "en": "Tech Modules",
+                                    "ru": "Модули технологий"
+                                },
+                                "route": "/tech-modules",
+                                "source": "https://github.com/bem/bem-tools/tree/dev/docs/tech-modules"
+                            },
+                            {
+                                "title": {
+                                    "en": "API usage",
+                                    "ru": "Использование через API"
+                                },
+                                "route": "/api",
+                                "source": "https://github.com/bem/bem-tools/tree/dev/docs/api"
+                            },
+                            {
+                                "title": {
+                                    "en": "Creating subcommands",
+                                    "ru": "Создание подкоманд"
+                                },
+                                "route": "/creating-subcommands",
+                                "source": "https://github.com/bem/bem-tools/tree/dev/docs/creating-subcommands"
+                            },
+                            {
+                                "title": {
+                                    "en": "Contribute to development",
+                                    "ru": "Участие в разработке"
+                                },
+                                "route": "/contribute",
+                                "source": "https://github.com/bem/bem-tools/tree/dev/docs/contribute"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "OPTIMIZERS",
+                    "ru": "ОПТИМИЗАТОРЫ"
+                },
+                "items": [
+                    {
+                        "title": "borschik",
+                        "route": "/borschik",
+                        "source": "https://github.com/bem/borschik/tree/master/docs/index",
+                        "items": [
+                            {
+                                "title": {
+                                    "en": "Static resources \"freeze\"",
+                                    "ru": "\"Заморозка\" статических ресурсов (freeze)"
+                                },
+                                "route": "/freeze",
+                                "source": "https://github.com/bem/borschik/tree/master/docs/freeze"
+                            },
+                            {
+                                "title": {
+                                    "en": "Where Is My Tech",
+                                    "ru": "borschik и технологии"
+                                },
+                                "route": "/freeze",
+                                "source": "https://github.com/bem/borschik/tree/master/docs/where-is-my-tech"
+                            },
+                            {
+                                "title": "borschik-server",
+                                "route": "/borschik-server",
+                                "source": "https://github.com/bem/borschik-server/tree/master/docs/borschik-server"
+                            },
+                            {
+                                "title": {
+                                    "en": "Changelog",
+                                    "ru": "История изменений"
+                                },
+                                "route": "/changelog",
+                                "source": "https://github.com/bem/borschik/tree/master/docs/changelog"
+                            },
+                            {
+                                "title": {
+                                    "en": "JS Include Notations",
+                                    "ru": "Нотация для JS include"
+                                },
+                                "route": "/js-include",
+                                "source": "https://github.com/bem/borschik/tree/master/docs/freeze"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "CSSO",
+                        "route": "/csso",
+                        "source": "https://github.com/css/csso/tree/master/docs/index",
+                        "items": [
+                            {
+                                "title": {
+                                    "en": "Description",
+                                    "ru": "Описание"
+                                },
+                                "route": "/description",
+                                "source": "https://github.com/css/csso/tree/master/docs/description"
+                            },
+                            {
+                                "title": {
+                                    "en": "Installation",
+                                    "ru": "Установка"
+                                },
+                                "route": "/install",
+                                "source": "https://github.com/css/csso/tree/master/docs/install"
+                            },
+                            {
+                                "title": {
+                                    "en": "Usage",
+                                    "ru": "Использование"
+                                },
+                                "route": "/usage",
+                                "source": "https://github.com/css/csso/tree/master/docs/usage"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "SVGO",
+                        "route": "/svgo",
+                        "items": [
+                            {
+                                "title": {
+                                    "en": "How SVGO Works",
+                                    "ru": "Как работает SVGO"
+                                },
+                                "route": "/how-it-works",
+                                "source": "https://github.com/svg/svgo/tree/beminfo/docs/how-it-works"
+                            },
+                            {
+                                "title": "SVG Optimizer",
+                                "route": "/svgo",
+                                "source": "https://github.com/svg/svgo/tree/beminfo/docs/svgo"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "setochka",
+                        "route": "/setochka",
+                        "source": "https://github.com/afelix/setochka/tree/master/doc/setochka"
+                    }
+                ]
+            },
+            {
+                "title": "TEMPLATING ENGINES",
+                "items": [
+                    {
+                        "title": "xjst",
+                        "route": "/xjst"
+                    }
+                ]
+            },
+            {
+                "title": "PARSERS",
+                "items": [
+                    {
+                        "title": "gonsales",
+                        "route": "/gonsales"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": {
+            "en": "Articles",
+            "ru": "Статьи"
+        },
+        "route": "/articles",
+        "items": [
+            {
+                "title": {
+                    "en": "Full stack quick start",
+                    "ru": "Попробуй БЭМ на вкус"
+                },
+                "route": "/",
+                "source": ""
+            },
+            {
+                "title": {
+                    "en": "Yandex.Maps API and BEM",
+                    "ru": "API Яндекс Карт и БЭМ"
+                },
+                "route": "/",
+                "source": ""
+            },
+            {
+                "title": {
+                    "en": "BEM application on Leaflet and 2GIS API",
+                    "ru": "БЭМ-приложение на Leaflet и API 2GIS"
+                },
+                "route": "/",
+                "source": ""
+            },
+            {
+                "title": "borschik",
+                "route": "/",
+                "source": ""
+            },
+            {
+                "title": {
+                    "en": "smartcd: how to launch tools locally",
+                    "ru": "smartcd: локальный запуск инструментов"
+                },
+                "route": "/",
+                "source": ""
+            },
+            {
+                "title": "What you can borrow from Yandex frontend dev",
+                "route": "/",
+                "source": ""
+            },
+            {
+                "title": "Bemhtml cache experimental",
+                "route": "/",
+                "source": ""
+            }
+        ]
+    }
+]
