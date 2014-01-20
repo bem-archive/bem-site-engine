@@ -9,7 +9,7 @@ ifneq ($(YENV),production)
 endif
 
 .PHONY: build
-build: npm_deps bower_deps config
+build: npm_deps bower_deps config logs
 	$(ENB) make --no-cache
 
 .PHONY: clean
@@ -20,6 +20,10 @@ clean: npm_deps
 config:
 	cd configs && ln -snf $(YENV) current
 	if [ -f configs/current/borschik ]; then ln -sfn configs/current/borschik .borschik; fi;
+
+.PHONY: logs
+logs:
+	if [ ! -d logs ]; then mkdir logs; fi;
 
 .PHONY: lint
 lint: npm_deps

@@ -1,13 +1,5 @@
-var vowFs = require('vow-fs'),
-    md = require('marked'),
-    hl = require('highlight.js'),
-    logger = require('./logger')(module);
-
-exports.createDirectory = function(dirName) {
-    return vowFs.makeDir(dirName, false).fail(function(err) {
-        logger.error('%s directory creation failed with error', dirName, err.message);
-    });
-};
+var md = require('marked'),
+    hl = require('highlight.js');
 
 exports.mdToHtml = function(content) {
     var languages = {};

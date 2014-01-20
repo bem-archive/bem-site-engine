@@ -16,5 +16,5 @@ if (process.env.NODE_ENV === 'production') {
         });
     }
 } else {
-    util.createDirectory(config.get('app:logger:dir')).then(app.run);
+    app.run();
 }
