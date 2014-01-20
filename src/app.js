@@ -1,76 +1,83 @@
-var fs = require('fs'),
-    path = require('path'),
+var path = require('path'),
+    vow = require('vow'),
+    fs = require('fs'),
     express = require('express'),
     config = require('./config'),
-    router = require('./router'),
     logger = require('./logger')(module),
+    router = require('./router'),
     middleware = require('./middleware'),
-    forum = require('bem-forum/src/middleware/forum'),
-    forumConfig = config.get('forum') && {
-        github: {
-            api: config.get('github:common'),
-            auth: config.get('github:auth')
-        },
-        repo: config.get('forum:repo'),
-        route: config.get('forum:route')
-    },
-    BEMHTML = require('./bundles/desktop.bundles/common/_common.bemhtml').BEMHTML,
-    leApp = require('./le-modules').leApp;
+    app = express(),
+    socket = config.get('app:socket'),
+    port = config.get('app:port') || process.env.port || 8080;
 
-exports.run = function(worker) {
+function run() {
+    var leApp = require('./le-modules').leApp,
+        deferred = vow.defer();
+
     return leApp.run()
         .then(function() {
-            logger.info('-- app run start --');
-            logger.info('app run step 1');
-
-            var portOrSocket = config.get('app:socket') || config.get('app:port'),
-                app = express(),
-                rootPath = path.resolve(__dirname, '..');
-
-            //init application routes
             router.init();
 
-            logger.info('port or socket: %s', portOrSocket);
-            logger.info('app run step 2');
-
             if (process.env.NODE_ENV !== 'production') {
-                app.use(require('enb/lib/server/server-middleware').createMiddleware({ cdir: rootPath }));
+                var enbServer = require('enb/lib/server/server-middleware'),
+                    rootPath = path.resolve(__dirname, '..');
+
+                app.use(enbServer.createMiddleware({ cdir: rootPath }));
                 app.use(express.static(rootPath));
                 app.use(express.favicon(path.resolve(rootPath, 'www/favicon.ico')));
             }
-            logger.info('app run step 3');
 
             app.use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.logger())
-                .use(middleware.router(router))
-                .use(middleware.reloadCache());
+                .use(middleware.router(router.router))
+                .use(middleware.reloadCache())
+                .use(middleware.page());
 
-            logger.info('app run step 4');
+            if (config.get('forum')) {
+                var forum = require('bem-forum/src/middleware/forum'),
+                    forumConfig = {
+                        github: {
+                            api: config.get('github:common'),
+                            auth: config.get('github:auth')
+                        },
+                        repo: config.get('forum:repo'),
+                        route: config.get('forum:route')
+                    },
+                    BEMHTML = require('./bundles/desktop.bundles/common/_common.bemhtml').BEMHTML;
 
-            if (forumConfig) {
                 app.use(forum(forumConfig, BEMHTML));
             }
 
-            logger.info('app run step 5');
+            app.use(middleware.error());
 
-            app.use(middleware.page())
-                .use(middleware.error())
-                .listen(portOrSocket, function() {
-                    if (isNaN(+portOrSocket)) {
-                        fs.chmod(portOrSocket, '0777');
-                    }
-                });
+            app.listen(port || socket, function(err) {
+                if (err) {
+                    deferred.reject(err);
+                    return;
+                }
 
-            logger.info('app run step 6');
+                if (socket) {
+                    try {
+                        fs.chmod(socket, '0777');
+                    } catch(e) {}
+                }
 
-            //log application initialization
-            if (worker) {
-                logger.info('start application for worker with id %s on port or socket %s', worker.wid, portOrSocket);
-            } else {
-                logger.info('start application on port or socket %s', portOrSocket);
-            }
+                deferred.resolve();
+            });
 
-            return app;
+            return deferred.promise();
         });
-};
+}
+
+exports.run = run;
+
+if (!module.parent) {
+    run()
+        .then(function() {
+            logger.info('start application on %s %s', socket && 'socket' || port && 'port', socket || port);
+        })
+        .fail(function(err) {
+            logger.error(err);
+        });
+}

@@ -9,6 +9,9 @@ if (worker.isWorker) {
     });
 
     app.run()
+        .then(function() {
+            logger.info('start application for worker with id %s on port %s', worker.wid, process.env.port);
+        })
         .fail(function(err) {
             logger.error(err);
         });
