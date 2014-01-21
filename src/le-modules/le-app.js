@@ -9,7 +9,8 @@ var u = require('util'),
     util = require('../util'),
     logger = require('../logger')(module),
     config = require('../config'),
-    leData = require('./le-data');
+    leData = require('./le-data'),
+    leRoute = require('./le-route');
 
 var sitemap;
 
@@ -21,6 +22,7 @@ exports.run = function() {
     return load()
         .then(parse)
         .then(process)
+        .then(leRoute.init)
         .then(leData.loadAll)
 };
 
@@ -66,10 +68,6 @@ var process = function(sitemap) {
                 idSourceMap[node.id] = node.source;
             }
 
-            if(_.has(node, 'url')) {
-                //TODO implement url building
-            }
-
             if(_.has(node, 'items')) {
                 node.items.forEach(function(item) {
                     nodeR(item, node);
@@ -82,5 +80,7 @@ var process = function(sitemap) {
     });
 
     leData.setIdHash(idSourceMap);
-    return def.resolve(sitemap);
+    def.resolve(sitemap);
+
+    return def.promise();
 };
