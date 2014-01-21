@@ -20,9 +20,13 @@ var fs = require('fs'),
 exports.run = function(worker) {
     return leData.init().getData()
         .then(function() {
+            logger.info('-- app run start --');
+
             var portOrSocket = config.get('app:socket') || config.get('app:port'),
                 app = express(),
                 rootPath = path.resolve(__dirname, '..');
+
+            logger.info('port or socket: %s', portOrSocket);
 
             if (process.env.NODE_ENV !== 'production') {
                 app.use(require('enb/lib/server/server-middleware').createMiddleware({ cdir: rootPath }));
@@ -43,7 +47,7 @@ exports.run = function(worker) {
             app.use(middleware.page())
                 .use(middleware.error())
                 .listen(portOrSocket, function() {
-                    if (isNaN(portOrSocket)) {
+                    if (isNaN(+portOrSocket)) {
                         fs.chmod(portOrSocket, '0777');
                     }
                 });
