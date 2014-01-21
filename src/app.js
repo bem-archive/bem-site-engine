@@ -15,10 +15,10 @@ var fs = require('fs'),
         route: config.get('forum:route')
     },
     BEMHTML = require('./bundles/desktop.bundles/common/_common.bemhtml').BEMHTML,
-    leData = require('./le-modules').leData;
+    leApp = require('./le-modules').leApp;
 
 exports.run = function(worker) {
-    return leData.initSiteStructureAndLoadData()
+    return leApp.run()
         .then(function() {
             logger.info('-- app run start --');
             logger.info('app run step 1');

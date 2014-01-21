@@ -6,156 +6,141 @@ var https = require('https'),
 
     api = require('github'),
     vow = require('vow'),
-    q = require('q'),
     fs = require('vow-fs'),
     _ = require('lodash'),
-    sha = require('sha1'),
 
     util = require('../util'),
     logger = require('../logger')(module),
     config = require('../config'),
 
-    _cachedData = null,
     gitPrivate = null,
-    gitPublic = null,
-    dataRepository = config.get('github:dataRepository');
+    gitPublic = null;
 
-/**
- * Returns cached data from memory
- * @returns {*}
- */
-//exports.getDataFromCache = function() {
-//    return _cachedData;
-//};
+var idHash = {}, //hash {key: -> sha of node, value: -> "https://github.com/user/repo/tree/branch/path...."}
+    dataHash = {}; //has {key: -> sha of node, value: -> "meta.json merged with md" }
 
-/**
- * Returns cached data from memory
- * @returns {*}
- */
-//exports.dropCache = function() {
-//    logger.info('drop cached data');
-//    _cachedData = null;
-//    return this.getData();
-//};
+module.exports = {
 
-/**
- * Retrieve data from data file
- * @returns {Vow.promise}
- */
-//exports.getData = function() {
-//    var _this = this,
-//        deferred = vow.defer(),
-//        url = util.format({
-//            'public': 'https://raw.github.com/%s/%s/%s/%s',
-//            'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
-//        }[dataRepository.type], dataRepository.user, dataRepository.repo, dataRepository.ref, dataRepository.path);
-//
-//    if (this.getDataFromCache() !== null) {
-//        deferred.resolve(this.getDataFromCache());
-//    } else {
-//        logger.debug('load data from: %s', url);
-//        https.get(url, function(res) {
-//            var data = '';
-//
-//            res.on('data', function(chunk) {
-//                data += chunk;
-//            });
-//
-//            res.on('end', function() {
-//                _cachedData = JSON.parse(data);
-//                deferred.resolve(_this.getDataFromCache());
-//            });
-//        }).on('error', function(e) {
-//            deferred.reject(e);
-//        });
-//    }
-//
-//    return deferred.promise();
-//};
+    /**
+     * initialize github API
+     */
+    init: function() {
+        logger.info('Init');
 
-//----- new beautiful world ------//
+        var publicConfig = _.extend(config.get('github:public'), config.get('github:common')),
+            privateConfig = _.extend(config.get('github:private'), config.get('github:common'));
 
-var sitemap,
-    routes,
-    idSourceMap = {},
-    urlIdMap = {};
+        gitPublic = new api(publicConfig);
+        gitPrivate = new api(privateConfig);
 
-/**
- * initialize github API
- */
-var init = function() {
-    logger.debug('Init');
+        gitPublic.authenticate(config.get('github:auth'));
 
-    var publicConfig = _.extend(config.get('github:public'), config.get('github:common')),
-        privateConfig = _.extend(config.get('github:private'), config.get('github:common'));
+        return this;
+    },
 
-    gitPublic = new api(publicConfig);
-    gitPrivate = new api(privateConfig);
+    /**
+     * Loads all resources by values of idHash
+     * @returns {*}
+     */
+    loadAll: function() {
+        logger.info('Load all resources start');
 
-    gitPublic.authenticate(config.get('github:auth'));
+        var promises = _.keys(idHash).map(function(id) {
+            logger.silly('source map id: %s source: %s', id, idHash[id]);
 
-    return this;
-};
+            var source = idHash[id];
 
-var loadSiteMap = function() {
-    logger.debug('Load site map');
+            return vow
+                .allResolved({
+                    metaEn: getDataByGithubAPI(getRepoFromSource(source, 'en.meta.json')),
+                    mdEn: getDataByGithubAPI(getRepoFromSource(source, 'en.md')),
+                    metaRu: getDataByGithubAPI(getRepoFromSource(source, 'ru.meta.json')),
+                    mdRu: getDataByGithubAPI(getRepoFromSource(source, 'ru.md'))
+                })
+                .then(function(value) {
+                    var _def = vow.defer();
 
-    return fs
-        .read(path.join('configs', 'common', 'sitemap.json'), 'utf-8')
-        .fail(
-            function(err) {
-                logger.error('Site map loading failed with error %s', err.message);
-            }
-        );
-};
+                    dataHash[id] = {
+                        en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value),
+                        ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value)
+                    };
 
-var parseSiteMap = function(data) {
-    logger.debug('Parse site map');
+                    _def.resolve(dataHash[id]);
+                    return _def.promise();
+                });
+        });
 
-    var def = vow.defer();
+        return vow.allResolved(promises);
+    },
 
-    try {
-        sitemap = JSON.parse(data);
-        def.resolve(sitemap);
-    } catch(err) {
-        logger.error('Site map parsed with error %s', err.message);
-        def.reject(err);
+    reloadAll: function() {
+        logger.info('Reload all resources start');
+        //TODO implement this
+    },
+
+    reload: function(source) {
+        logger.info('Reload resource %s start', source);
+        //TODO implement this
+    },
+
+    /**
+     * Sets idHash
+     * @param _idHash
+     */
+    setIdHash: function(_idHash) {
+        idHash = _idHash;
+    },
+
+    /**
+     * Returns data hash
+     * @returns {Object}
+     */
+    getData: function() {
+        return dataHash;
     }
-
-    return def.promise();
 };
 
-var processSiteMap = function(sitemap) {
-    logger.debug('Process site map');
+/**
+ * Transform https url of source into repo object suitable for github api using
+ * @param source - {String} https url of source block on github
+ * @param extension - {String} file extension
+ * @returns {Object} with fields:
+ * - user {String} name of user or organization which this repository is belong to
+ * - repo {String} name of repository
+ * - ref {String} name of branch
+ * - path {String} relative path from the root of repository
+ * - block {String} name of block
+ */
+var getRepoFromSource = function(source, extention) {
 
-    var def = vow.defer(),
-        nodeR = function(node, parent) {
+    var repoData = (function(_source) {
+        var re = /^https:\/\/github.com\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+?)\/(.+?)$/i,
+            parsedSource = _source.match(re);
+            return {
+                user: parsedSource[1],
+                repo: parsedSource[2],
+                ref: parsedSource[3],
+                path: parsedSource.slice(4).join('/'),
+                block: parsedSource[parsedSource.length - 1]
+            };
+    })(source);
 
-        node.id = sha(JSON.stringify(node));
-        node.parent = parent;
+    var result = _.extend(repoData, {path: u.format('%s/%s.%s', repoData.path, repoData.block, extention)});
 
-        if(_.has(node, 'source')) {
-            idSourceMap[node.id] = node.source;
-        }
+    logger.silly('repo meta user: %s repo: %s ref: %s path: %s', result.user, result.repo, result.ref, result.path);
 
-        if(_.has(node, 'url')) {
-            //TODO implement url building
-        }
-
-        if(_.has(node, 'items')) {
-            node.items.forEach(function(item) {
-               nodeR(item, node);
-            });
-        }
-    };
-
-    sitemap.forEach(function(item) {
-        nodeR(item, null);
-    });
-
-    return def.resolve(sitemap);
+    return result;
 };
 
+/**
+ * Returns content of repository directory
+ * @param repository - {Object} with fields:
+ * - user {String} name of user or organization which this repository is belong to
+ * - repo {String} name of repository
+ * - ref {String} name of branch
+ * - path {String} relative path from the root of repository
+ * @returns {*}
+ */
 var getDataByGithubAPI = function(repository) {
     var def = vow.defer();
     gitPublic.repos.getContent(repository, function(err, res) {
@@ -166,58 +151,6 @@ var getDataByGithubAPI = function(repository) {
         }
     });
     return def.promise();
-};
-
-var loadSources = function() {
-    logger.debug('Load resources');
-
-    var def = vow.defer();
-    if(!idSourceMap) {
-        return def.reject()
-    }
-
-    var promises = _.keys(idSourceMap).map(function(id) {
-            logger.silly('source map id: %s source: %s', id, idSourceMap[id]);
-
-            var source = idSourceMap[id];
-            //return getDataByGithubAPI(getRepoFromSource(source, 'en.meta.json'));
-            return vow
-                .allResolved({
-                    metaEn: getDataByGithubAPI(getRepoFromSource(source, 'en.meta.json')),
-                    mdEn: getDataByGithubAPI(getRepoFromSource(source, 'en.md')),
-                    metaRu: getDataByGithubAPI(getRepoFromSource(source, 'ru.meta.json')),
-                    mdRu: getDataByGithubAPI(getRepoFromSource(source, 'ru.md'))
-                })
-                .then(function(value) {
-                    var _def = vow.defer();
-                    idSourceMap[id] = {
-                        en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value),
-                        ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value)
-                    };
-                    _def.resolve(idSourceMap[id]);
-                    return _def.promise();
-                });
-    });
-
-    return vow.allResolved(promises);
-};
-
-var getRepoFromSource = function(source, extention) {
-    var re = /^https:\/\/github.com\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+?)\/(.+?)$/i,
-        parsedSource = source.match(re),
-        path = parsedSource.slice(4).join('/'),
-        block = parsedSource[parsedSource.length - 1],
-        repoData = {
-            user: parsedSource[1],
-            repo: parsedSource[2],
-            ref: parsedSource[3],
-            path: u.format('%s/%s.%s', path, block, extention)
-        }
-
-    logger.silly('repo meta user: %s repo: %s ref: %s path: %s',
-        repoData.user, repoData.repo, repoData.ref, repoData.path);
-
-    return repoData;
 };
 
 var getSourceFromMetaAndMd = function(meta, md) {
@@ -256,6 +189,8 @@ var getSourceFromMetaAndMd = function(meta, md) {
             meta.translators = _.compact(meta.translators);
         }
 
+        /** fallbacks **/
+
         //TODO  remove this type hack later after sources meta refactoring!
         if(_.isArray(meta.type)) {
             if(meta.type.indexOf('authors') !== -1 || meta.type.indexOf('translators') !== -1) {
@@ -284,6 +219,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
         meta.order && delete meta.order;
         meta.url && delete meta.url;
 
+        /** end of fallbacks **/
 
         //set repo information
         //meta.repo = {
@@ -298,20 +234,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
     return meta;
 };
 
-exports.initSiteStructureAndLoadData = function() {
-    logger.info('Init site structure and load data');
 
-    init();
-
-    return loadSiteMap()
-        .then(parseSiteMap)
-        .then(processSiteMap)
-        .then(loadSources)
-        .then(
-            function() {
-                logger.debug('All data has been loaded');
-            });
-};
 
 
 
