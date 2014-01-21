@@ -70,10 +70,12 @@ exports.getData = function() {
             });
 
             res.on('end', function() {
+                logger.debug('load data successfully finished');
                 _cachedData = JSON.parse(data);
                 deferred.resolve(_this.getDataFromCache());
             });
         }).on('error', function(e) {
+            logger.error('load data failed with error %s', e.message);
             deferred.reject(e);
         });
     }
