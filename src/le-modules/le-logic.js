@@ -339,6 +339,8 @@ module.exports = {
                 predicate += '{.id !== $rootId}';
                 substitution.rootId = rootId;
                 id = id || rootId;
+            } else {
+                throw new HttpError(HttpError.CODES.NOT_FOUND);
             }
         }else {
             var rootId = leJspath.findRootPostId(type, data.req.prefLocale);
