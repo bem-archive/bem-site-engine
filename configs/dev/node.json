@@ -4,7 +4,7 @@
 	    "port": 3014,
         "logger": {
             "mode": "dev",
-            "level": "debug",
+            "level": "silly",
             "dir": "logs",
             "stdout": "logs/output.log",
             "stderr": "logs/errors.log"
