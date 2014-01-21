@@ -1,3 +1,9 @@
+yandex-bem-info-nginx-conf (3.0) unstable; urgency=low
+
+  * Test rebuld. Moce post about i-bem-js to articles
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 21 Jan 2014 12:42:48 +0400
+
 yandex-bem-info-nginx-conf (2.13) unstable; urgency=low
 
   * Test rebuild. Redirect from blog to news has been added.
