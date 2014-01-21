@@ -4,7 +4,10 @@
             "en": "Methodology",
             "ru": "Методология"
         },
-        "route": "/method",
+        "route": {
+            "name": "method",
+            "pattern": "/method(/<id>)(/)"
+        },
         "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/index",
         "items": [
             {
@@ -12,7 +15,11 @@
                     "en": "Definitions",
                     "ru": "Определения"
                 },
-                "route": "/definitions",
+                "route": {
+                    "conditions" : {
+                        "id" : "definitions"
+                    }
+                },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/definitions"
             },
             {
@@ -20,7 +27,11 @@
                     "en": "Filesystem",
                     "ru": "Организация файловой системы"
                 },
-                "route": "/filesystem",
+                "route": {
+                    "conditions" : {
+                        "id" : "filesystem"
+                    }
+                },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/filesystem"
             },
             {
@@ -28,7 +39,11 @@
                     "en": "History",
                     "ru": "История создания"
                 },
-                "route": "/history",
+                "route": {
+                    "conditions" : {
+                        "id" : "history"
+                    }
+                },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/history"
             }
         ]
@@ -38,7 +53,10 @@
             "en": "Tools",
             "ru": "Инструменты"
         },
-        "route": "/tools",
+        "route": {
+            "name": "tools",
+            "pattern": "/tools(/<lib>)(/<version>)(/<id>)(/)"
+        },
         "source": "https://github.com/bem/bem-method/tree/bem-info-data/tools/index",
         "items": [
             {
@@ -46,7 +64,11 @@
                 "items": [
                     {
                         "title": "bem-tools",
-                        "route": "/bem-tools",
+                        "route": {
+                            "conditions" : {
+                                "lib" : "bem-tools"
+                            }
+                        },
                         "source": "https://github.com/bem/bem-tools/tree/dev/docs/index",
                         "items": [
                             {
@@ -54,7 +76,11 @@
                                     "en": "Installation",
                                     "ru": "Установка"
                                 },
-                                "route": "/installation",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "installation"
+                                    }
+                                },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/installation"
                             },
                             {
@@ -62,7 +88,11 @@
                                     "en": "Commands",
                                     "ru": "Команды"
                                 },
-                                "route": "/commands",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "commands"
+                                    }
+                                },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/commands"
                             },
                             {
@@ -70,7 +100,11 @@
                                     "en": "Levels",
                                     "ru": "Уровни переопределения"
                                 },
-                                "route": "/levels",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "levels"
+                                    }
+                                },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/levels"
                             },
                             {
@@ -78,7 +112,11 @@
                                     "en": "Dependencies",
                                     "ru": "Зависимости"
                                 },
-                                "route": "/depsjs",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "depsjs"
+                                    }
+                                },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/depsjs"
                             },
                             {
@@ -86,7 +124,11 @@
                                     "en": "Customization",
                                     "ru": "Настройка"
                                 },
-                                "route": "/customization",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "customization"
+                                    }
+                                },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/customization"
                             },
                             {
@@ -94,7 +136,11 @@
                                     "en": "Tech Modules",
                                     "ru": "Модули технологий"
                                 },
-                                "route": "/tech-modules",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "tech-modules"
+                                    }
+                                },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/tech-modules"
                             },
                             {
@@ -102,7 +148,11 @@
                                     "en": "API usage",
                                     "ru": "Использование через API"
                                 },
-                                "route": "/api",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "api"
+                                    }
+                                },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/api"
                             },
                             {
@@ -110,7 +160,11 @@
                                     "en": "Creating subcommands",
                                     "ru": "Создание подкоманд"
                                 },
-                                "route": "/creating-subcommands",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "creating-subcommands"
+                                    }
+                                },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/creating-subcommands"
                             },
                             {
@@ -118,7 +172,11 @@
                                     "en": "Contribute to development",
                                     "ru": "Участие в разработке"
                                 },
-                                "route": "/contribute",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "contribute"
+                                    }
+                                },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/contribute"
                             }
                         ]
