@@ -191,7 +191,11 @@
                 "items": [
                     {
                         "title": "borschik",
-                        "route": "/borschik",
+                        "route": {
+                            "conditions" : {
+                                "lib": "borschik"
+                            }
+                        },
                         "source": "https://github.com/bem/borschik/tree/master/docs/index",
                         "items": [
                             {
@@ -199,7 +203,11 @@
                                     "en": "Static resources \"freeze\"",
                                     "ru": "\"Заморозка\" статических ресурсов (freeze)"
                                 },
-                                "route": "/freeze",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "freeze"
+                                    }
+                                },
                                 "source": "https://github.com/bem/borschik/tree/master/docs/freeze"
                             },
                             {
@@ -207,12 +215,20 @@
                                     "en": "Where Is My Tech",
                                     "ru": "borschik и технологии"
                                 },
-                                "route": "/freeze",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "where-is-my-tech"
+                                    }
+                                },
                                 "source": "https://github.com/bem/borschik/tree/master/docs/where-is-my-tech"
                             },
                             {
                                 "title": "borschik-server",
-                                "route": "/borschik-server",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "borschik-server"
+                                    }
+                                },
                                 "source": "https://github.com/bem/borschik-server/tree/master/docs/borschik-server"
                             },
                             {
@@ -220,7 +236,11 @@
                                     "en": "Changelog",
                                     "ru": "История изменений"
                                 },
-                                "route": "/changelog",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "changelog"
+                                    }
+                                },
                                 "source": "https://github.com/bem/borschik/tree/master/docs/changelog"
                             },
                             {
@@ -228,14 +248,22 @@
                                     "en": "JS Include Notations",
                                     "ru": "Нотация для JS include"
                                 },
-                                "route": "/js-include",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "js-include"
+                                    }
+                                },
                                 "source": "https://github.com/bem/borschik/tree/master/docs/freeze"
                             }
                         ]
                     },
                     {
                         "title": "CSSO",
-                        "route": "/csso",
+                        "route": {
+                            "conditions" : {
+                                "lib" : "csso"
+                            }
+                        },
                         "source": "https://github.com/css/csso/tree/master/docs/index",
                         "items": [
                             {
@@ -243,7 +271,11 @@
                                     "en": "Description",
                                     "ru": "Описание"
                                 },
-                                "route": "/description",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "description"
+                                    }
+                                },
                                 "source": "https://github.com/css/csso/tree/master/docs/description"
                             },
                             {
@@ -251,7 +283,11 @@
                                     "en": "Installation",
                                     "ru": "Установка"
                                 },
-                                "route": "/install",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "install"
+                                    }
+                                },
                                 "source": "https://github.com/css/csso/tree/master/docs/install"
                             },
                             {
@@ -259,33 +295,53 @@
                                     "en": "Usage",
                                     "ru": "Использование"
                                 },
-                                "route": "/usage",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "usage"
+                                    }
+                                },
                                 "source": "https://github.com/css/csso/tree/master/docs/usage"
                             }
                         ]
                     },
                     {
                         "title": "SVGO",
-                        "route": "/svgo",
+                        "route": {
+                            "conditions" : {
+                                "lib" : "svgo"
+                            }
+                        },
                         "items": [
                             {
                                 "title": {
                                     "en": "How SVGO Works",
                                     "ru": "Как работает SVGO"
                                 },
-                                "route": "/how-it-works",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "how-it-works"
+                                    }
+                                },
                                 "source": "https://github.com/svg/svgo/tree/beminfo/docs/how-it-works"
                             },
                             {
                                 "title": "SVG Optimizer",
-                                "route": "/svgo",
+                                "route": {
+                                    "conditions" : {
+                                        "id" : "svgo"
+                                    }
+                                },
                                 "source": "https://github.com/svg/svgo/tree/beminfo/docs/svgo"
                             }
                         ]
                     },
                     {
                         "title": "setochka",
-                        "route": "/setochka",
+                        "route": {
+                            "conditions" : {
+                                "lib" : "setochka"
+                            }
+                        },
                         "source": "https://github.com/afelix/setochka/tree/master/doc/setochka"
                     }
                 ]
