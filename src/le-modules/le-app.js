@@ -9,21 +9,30 @@ var u = require('util'),
     util = require('../util'),
     logger = require('../logger')(module),
     config = require('../config'),
-    leData = require('./le-data'),
-    leRoute = require('./le-route');
+    leData = require('./le-data');
 
-var sitemap;
+var sitemap,
+    routes = {};
 
-exports.run = function() {
-    logger.info('Init site structure and load data');
+module.exports = {
+    run: function() {
+        logger.info('Init site structure and load data');
 
-    leData.init();
+        leData.init();
 
-    return load()
-        .then(parse)
-        .then(process)
-        .then(leRoute.init)
-        .then(leData.loadAll)
+        return load()
+            .then(parse)
+            .then(process)
+            .then(leData.loadAll)
+    },
+
+    getRoutes: function() {
+        return _.values(routes);
+    },
+
+    getSitemap: function() {
+        return sitemap;
+    }
 };
 
 var load = function() {
@@ -64,6 +73,27 @@ var process = function(sitemap) {
             node.id = sha(JSON.stringify(node));
             node.parent = parent;
 
+            if(_.has(node, 'route') && _.isObject(node.route)) {
+                if(_.has(node.route, 'name')) {
+                    routes[node.route.name] = node.route;
+                }else {
+                    node.route.name = parent.route.name;
+
+                    var r = node.route;
+
+                    if(_.has(r, 'conditions')) {
+                        routes[r.name]['conditions'] = routes[r.name]['conditions'] || {};
+
+                        _.keys(r.conditions).forEach(function(key) {
+                            routes[r.name].conditions[key] = routes[r.name].conditions[key] || [];
+                            routes[r.name].conditions[key].push(r.conditions[key]);
+                        });
+                    }
+                }
+            }else {
+                node.route = parent.route;
+            }
+
             if(_.has(node, 'source')) {
                 idSourceMap[node.id] = node.source;
             }
@@ -75,12 +105,17 @@ var process = function(sitemap) {
             }
         };
 
-    sitemap.forEach(function(item) {
-        nodeR(item, null);
-    });
+    try {
+        sitemap.forEach(function(item) {
+            nodeR(item, {route: {name: null}});
+        });
 
-    leData.setIdHash(idSourceMap);
-    def.resolve(sitemap);
+        leData.setIdHash(idSourceMap);
+        def.resolve(sitemap);
+    } catch(e) {
+        logger.error(e.message);
+        def.reject(e);
+    }
 
     return def.promise();
 };

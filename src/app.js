@@ -27,6 +27,9 @@ exports.run = function(worker) {
                 app = express(),
                 rootPath = path.resolve(__dirname, '..');
 
+            //init application routes
+            router.init();
+
             logger.info('port or socket: %s', portOrSocket);
             logger.info('app run step 2');
 
@@ -40,7 +43,7 @@ exports.run = function(worker) {
             app.use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.logger())
-                .use(middleware.router(router))
+                .use(middleware.router(router.router))
                 .use(middleware.reloadCache(router, worker));
 
             logger.info('app run step 4');
