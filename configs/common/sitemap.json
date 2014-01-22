@@ -55,7 +55,7 @@
         },
         "route": {
             "name": "tools",
-            "pattern": "/tools(/<lib>)(/<version>)(/<id>)(/)"
+            "pattern": "/tools(/<lib>)(/<id>)(/)"
         },
         "source": "https://github.com/bem/bem-method/tree/bem-info-data/tools/index",
         "items": [
@@ -345,24 +345,6 @@
                         "source": "https://github.com/afelix/setochka/tree/master/doc/setochka"
                     }
                 ]
-            },
-            {
-                "title": "TEMPLATING ENGINES",
-                "items": [
-                    {
-                        "title": "xjst",
-                        "route": "/xjst"
-                    }
-                ]
-            },
-            {
-                "title": "PARSERS",
-                "items": [
-                    {
-                        "title": "gonsales",
-                        "route": "/gonsales"
-                    }
-                ]
             }
         ]
     },
@@ -371,7 +353,10 @@
             "en": "Articles",
             "ru": "Статьи"
         },
-        "route": "/articles",
+        "route": {
+            "name": "articles",
+            "pattern": "/articles(/<id>)(/)"
+        },
         "items": [
             {
                 "title": {

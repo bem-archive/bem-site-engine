@@ -10,17 +10,10 @@ this._mode === '', !this.data {
         );
     }
 
-    // this.ctx.page === 'error': {
-    //     this.data = this.ctx;
-    //     return apply('error', this.ctx = this.data.params);
-    // }
-
     BEM && BEM.I18N: {
         var lang = this.ctx.lang;
 
         BEM.I18N.lang(lang);
-//        console.debug('Language is exposed to "%s"', lang);
-
         return applyNext();
     }
 

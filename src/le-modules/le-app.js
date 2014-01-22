@@ -74,30 +74,42 @@ var process = function(sitemap) {
             node.parent = parent;
 
             if(_.has(node, 'route') && _.isObject(node.route)) {
-                if(_.has(node.route, 'name')) {
-                    routes[node.route.name] = node.route;
+                var r = node.route;
+
+                if(_.has(r, 'name')) {
+                    routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
                 }else {
-                    node.route.name = parent.route.name;
+                    r.name = parent.route.name;
+                    //r.pattern = parent.route.pattern;
+                }
 
-                    var r = node.route;
+                ['defaults', 'conditions', 'data'].forEach(function(item) {
+                    routes[r.name][item] = routes[r.name][item] || {};
 
-                    if(_.has(r, 'conditions')) {
-                        routes[r.name]['conditions'] = routes[r.name]['conditions'] || {};
+                    if(_.has(r, item)) {
+                        _.keys(r[item]).forEach(function(key) {
+                            if(item === 'conditions') {
+                                routes[r.name][item][key] = routes[r.name][item][key] || [];
+                                routes[r.name][item][key].push(r[item][key]);
 
-                        _.keys(r.conditions).forEach(function(key) {
-                            routes[r.name].conditions[key] = routes[r.name].conditions[key] || [];
-                            routes[r.name].conditions[key].push(r.conditions[key]);
+                                //r[item] = _.extend(r[item], parent.route[item]);
+                            }else {
+                                routes[r.name][item][key] = r[item][key];
+                            }
                         });
                     }
-                }
+                });
+
             }else {
                 node.route = parent.route;
             }
 
+            //create hash unique id of node -> source
             if(_.has(node, 'source')) {
                 idSourceMap[node.id] = node.source;
             }
 
+            //deep into node items
             if(_.has(node, 'items')) {
                 node.items.forEach(function(item) {
                     nodeR(item, node);

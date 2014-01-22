@@ -44,7 +44,7 @@ exports.run = function(worker) {
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.logger())
                 .use(middleware.router(router.router))
-                .use(middleware.reloadCache(router, worker));
+                .use(middleware.reloadCache(router.router, worker));
 
             logger.info('app run step 4');
 

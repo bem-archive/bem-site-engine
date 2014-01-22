@@ -1,14 +1,17 @@
 var template = require('../template'),
-    leData = require('../le-modules').leData,
+    leLogic = require('../le-modules').leLogic,
     BUNDLE_NAME = 'common';
 
 module.exports = function() {
     return function(req, res, next) {
-        var ctx = {
-            req: req,
-            bundleName: BUNDLE_NAME,
-            datasrc: leData.getDataFromCache()
-        };
+
+        var node = leLogic.getNodeByRequest(req),
+            ctx = {
+                req: req,
+                bundleName: BUNDLE_NAME,
+                meta: leLogic.getMetaByNode(req, node),
+                node: node
+            };
 
         return template.apply(ctx, req.prefLocale, req.query.__mode)
             .then(function(html) {

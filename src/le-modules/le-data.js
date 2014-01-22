@@ -17,7 +17,7 @@ var https = require('https'),
     gitPublic = null;
 
 var idHash = {}, //hash {key: -> sha of node, value: -> "https://github.com/user/repo/tree/branch/path...."}
-    dataHash = {}; //has {key: -> sha of node, value: -> "meta.json merged with md" }
+    dataHash = {}; //has {key: -> sha of node, value: -> {en: "en.meta.json merged with en.md", ru: "ru.meta.json merged with ru.md"}
 
 module.exports = {
 
