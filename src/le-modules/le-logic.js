@@ -1,5 +1,4 @@
 var _ = require('lodash'),
-    Susanin = require('susanin'),
     logger = require('../logger')(module),
     HttpError = require('../errors').HttpError,
     leData = require('./le-data'),
@@ -13,7 +12,6 @@ module.exports = {
 
         var name = req.route,
             params = req.params,
-            sitemap = leApp.getSitemap(),
             result,
             nodeR = function(node, parent) {
 
@@ -49,7 +47,7 @@ module.exports = {
             };
 
         try {
-            sitemap.forEach(function(item) {
+            leApp.getSitemap().forEach(function(item) {
                 nodeR(item, null);
 
                 if(!_.isUndefined(result)) {
@@ -134,5 +132,18 @@ module.exports = {
         }
 
         return meta;
+    },
+
+    getMenuByNode: function(req, node) {
+        var result = [],
+            sitemap = leApp.getSitemap();
+
+
+        var nodeR = function(node) {
+
+            return _.has(node, 'parent') ? nodeR(node.parent): null;
+        };
+
+        return result;
     }
 };
