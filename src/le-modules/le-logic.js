@@ -23,6 +23,10 @@ module.exports = {
                         return;
                     }
 
+                    if(_.has(node.route, 'pattern')) {
+                        result = node;
+                    }
+
                     ['conditions'].forEach(function(item) {
                         if(_.has(node.route, item)) {
                             if(_.keys(params).some(function(paramKey) {
@@ -53,7 +57,7 @@ module.exports = {
                 }
             });
         }catch(e) {
-            console.error(e)
+            logger.error(e)
         }
 
         if(!_.isUndefined(result)) {

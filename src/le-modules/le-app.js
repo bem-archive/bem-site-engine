@@ -101,7 +101,7 @@ var process = function(sitemap) {
                 });
 
             }else {
-                node.route = parent.route;
+                node.route = {name: parent.route.name};
             }
 
             //create hash unique id of node -> source
