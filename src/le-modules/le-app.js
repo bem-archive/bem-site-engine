@@ -80,7 +80,6 @@ var process = function(sitemap) {
                     routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
                 }else {
                     r.name = parent.route.name;
-                    //r.pattern = parent.route.pattern;
                 }
 
                 ['defaults', 'conditions', 'data'].forEach(function(item) {
@@ -91,14 +90,16 @@ var process = function(sitemap) {
                             if(item === 'conditions') {
                                 routes[r.name][item][key] = routes[r.name][item][key] || [];
                                 routes[r.name][item][key].push(r[item][key]);
-
-                                //r[item] = _.extend(r[item], parent.route[item]);
                             }else {
                                 routes[r.name][item][key] = r[item][key];
                             }
                         });
                     }
                 });
+
+                if(!_.has(node, 'view')) {
+                    node.view = _.has(node, 'source') ? 'post' : 'posts'
+                }
 
             }else {
                 node.route = {name: parent.route.name};

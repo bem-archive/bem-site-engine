@@ -1,11 +1,8 @@
 block post, mod view full {
 
     content: {
-        var id = this.ctx.id,
-            data = this.data;
 
-        //находим полную информацию о посте по его id
-        var source = leJsPath.findByIdAndType(id, null, data.req.prefLocale);
+        var source = leData.getData()[this.data.node.id][this.data.req.prefLocale];
 
         if(!source)
             return [];
@@ -27,8 +24,8 @@ block post, mod view full {
             }),
 
             apply('title', this.ctx.content = source),
-            apply('contentFull', this.ctx.content = source.content),
-            apply('issue', this.ctx.content = source.repo)
+            apply('contentFull', this.ctx.content = source.content)
+            //apply('issue', this.ctx.content = source.repo)
         ];
     }
 

@@ -6,6 +6,7 @@ var VM = require('vm'),
     JsonStringify = require('json-stringify-safe'),
     leJsPath = require('./le-modules').leJSPath,
     leLogic = require('./le-modules').leLogic,
+    leData = require('./le-modules').leData,
     leStatics = new (require('../lib/Statics').Statics)(config.get('statics')),
     leBundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' });
 
@@ -36,6 +37,7 @@ function _compileCtx() {
             Vow: vow,
             leJsPath: leJsPath,
             leLogic: leLogic,
+            leData: leData,
             leStatics: leStatics,
             leBundles: leBundles,
             console: console
