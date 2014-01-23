@@ -13,7 +13,4 @@
     active: 'yes'
     complex: 'yes'
 
-- elem: title
-- elem: list
-
-- mods: { type: [tools, libs, mixed] }
+- block: menu-list

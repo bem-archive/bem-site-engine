@@ -2,15 +2,8 @@
   required: true
   elems: [dom, html, tree]
 
-- body
-- main-menu
-- p-error
-- p-index
-- p-articles
-- p-news
-- p-tools
-- p-tags
-- p-authors
-- p-method
-- p-libraries
-- p-page
+- block: menu
+- elems: [content-area]
+- mods:
+    view:
+      - post

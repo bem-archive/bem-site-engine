@@ -1,13 +1,13 @@
-block menu {
-
-    content: [
-        {
-            elem: 'list',
-            content: applyNext()
-        }
-    ]
-}
-
-block menu, elem list {
-    tag: 'ul'
-}
+//block menu {
+//
+//    content: [
+//        {
+//            elem: 'list',
+//            content: applyNext()
+//        }
+//    ]
+//}
+//
+//block menu, elem list {
+//    tag: 'ul'
+//}

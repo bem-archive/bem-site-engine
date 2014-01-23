@@ -1,39 +1,6 @@
 block content {
 
-    default: {
-        return applyCtx(this._.extend(this.ctx, {
-            layout: {
-                block : 'layout',
-                elem : 'col',
-                mods: { type: 'center' }
-            }
-        }));
-    }
-
     content: [
-        apply(this._mode = '', this.ctx = { block: 'main-menu' }),
-        this.data._r[this.data.req.route].call(this)
+        { block: 'menu' }
     ]
-
-    p-block: { block: this.ctx.name, mix: [this.ctx.layout, { block: 'layout', elem: 'page' }] }
-
-    method:     apply('p-block', this.ctx.name = 'p-method')
-
-    libs:       apply('p-block', this.ctx.name = 'p-libraries')
-
-    articles:   apply('p-block', this.ctx.name = 'p-articles')
-
-    tools:      apply('p-block', this.ctx.name = 'p-tools')
-
-    news:       apply('p-block', this.ctx.name = 'p-news')
-
-    authors:    apply('p-block', this.ctx.name = 'p-authors')
-
-    tags:       apply('p-block', this.ctx.name = 'p-tags')
-
-    index:      apply('p-block', this.ctx.name = 'p-index')
-
-    page:       apply('p-block', this.ctx.name = 'p-page')
-
-    error:      apply('p-block', this.ctx.name = 'p-error')
 }

@@ -1,5 +1,9 @@
-.content
-{
+.content{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    box-sizing: border-box;
+    overflow: hidden;
     height: 100%;
-    /*padding-top: 30px;*/
+    min-width: 960px;
 }
