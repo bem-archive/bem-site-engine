@@ -1,0 +1,11 @@
+.content__content-area
+{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow: scroll;
+}
+
+.content-wrapper {
+    flex: 0 4 62%;
+}

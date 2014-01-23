@@ -1,0 +1,13 @@
+.menu-list {
+    flex-basis: 100px;
+    flex-grow: 1.5;
+    flex-shrink: 0;
+}
+
+.menu-list_main {
+    background: black;
+    color: #ffffff;
+    flex-basis: 200px;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
