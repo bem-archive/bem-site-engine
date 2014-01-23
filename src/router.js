@@ -11,11 +11,6 @@ module.exports = {
 
         this.router = Susanin();
 
-        this.router.addRoute({
-            name: 'index',
-            pattern: '/'
-        });
-
         leApp.getRoutes().forEach(function(route) {
             self.router.addRoute(route);
         });

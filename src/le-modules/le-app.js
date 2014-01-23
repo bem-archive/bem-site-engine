@@ -104,6 +104,16 @@ var process = function(sitemap) {
                 node.route = {name: parent.route.name};
             }
 
+            //make title consistent
+            if(_.has(node, 'title')) {
+                if(_.isString(node.title)) {
+                    node.title = {
+                        en: node.title,
+                        ru: node.title
+                    }
+                }
+            }
+
             //create hash unique id of node -> source
             if(_.has(node, 'source')) {
                 idSourceMap[node.id] = node.source;

@@ -69,6 +69,45 @@ module.exports = {
         return result;
     },
 
+    /**
+     * Returns title for request by request and current node
+     * @param req - {Object} http request object
+     * @param node - {Object} node from sitemap model
+     * @returns {String} page title
+     */
+    getTitleByNode: function(req, node) {
+        var title;
+
+        if(_.has(node, 'title')) {
+            title = node.title[req.prefLocale];
+        }
+
+        var nodeR = function(node) {
+            if(_.has(node, 'route') && _.has(node.route, 'pattern')) {
+                return '/' + node.title[req.prefLocale];
+            }
+
+            return _.has(node, 'parent') ? nodeR(node.parent) : '';
+        };
+
+        title += nodeR(node.parent) + '/BEM';
+
+        return title;
+    },
+
+    /**
+     * Retrieves meta-information for request by request and current node
+     * @param req - {Object} http request object
+     * @param node - {Object} node from sitemap model
+     * @returns {Object} object with fields:
+     * description - {String} meta-description attribute
+     * ogDescription - {String} og:description attribute
+     * keywords - {String} keywords for source
+     * ogKeywords - {String} keywords for source, og:keywords attribute
+     * image - {String}
+     * ogType - {String}
+     * ogUrl - {String} url of source
+     */
     getMetaByNode: function(req, node) {
         var source,
             meta = {};
@@ -77,8 +116,6 @@ module.exports = {
             source = leData.getData()[node.id][req.prefLocale];
 
             if(source) {
-                //title = apply('buildTitle', this.ctx.content = [source.title, BEM.I18N('main-menu', this.data.req.route)]);
-
                 meta['description'] = meta['ogDescription'] = source.summary;
                 meta['keywords'] = meta['ogKeywords'] = source.tags ? source.tags.join(', ') : '';
 
@@ -89,10 +126,11 @@ module.exports = {
                 }
 
                 meta['ogType'] = source.type === 'post' ? 'article': null;
-                meta['ogUrl'] = req;
+                meta['ogUrl'] = req.url;
             }
         }else{
-
+            meta['description'] = node.title[req.prefLocale];
+            meta['ogUrl'] = req.url;
         }
 
         return meta;

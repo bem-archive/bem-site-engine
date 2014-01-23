@@ -1,6 +1,16 @@
 [
     {
         "title": {
+            "en": "Main",
+            "ru": "Главная"
+        },
+        "route": {
+            "name": "index",
+            "pattern": "/"
+        }
+    },
+    {
+        "title": {
             "en": "Methodology",
             "ru": "Методология"
         },

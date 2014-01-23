@@ -9,6 +9,7 @@ module.exports = function() {
             ctx = {
                 req: req,
                 bundleName: BUNDLE_NAME,
+                pageTitle: leLogic.getTitleByNode(req, node),
                 meta: leLogic.getMetaByNode(req, node),
                 node: node
             };
