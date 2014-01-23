@@ -30,7 +30,7 @@
     "highlight.js": "7"
   },
   "devDependencies": {
-    "enb": "0.8.43",
+    "enb": "0.8.46",
     "enb-bemxjst": "0.2.2",
     "enb-modules": "0.0.14",
     "bower": "1.2.8",
