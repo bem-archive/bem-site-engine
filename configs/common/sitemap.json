@@ -365,9 +365,22 @@
                 },
                 "route": {
                     "conditions" : {
-                        "id" : "svgo"
+                        "id" : "start-with-project-stub"
                     }
-                }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/start-with-project-stub"
+            },
+            {
+                "title": {
+                    "en": "JavaScript for BEM: The Main Terms",
+                    "ru": "JavaScript по БЭМ: основные понятия"
+                },
+                "route": {
+                    "conditions" : {
+                        "id" : "bem-js-main-terms"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/bem-js-main-terms"
             },
             {
                 "title": {
@@ -376,9 +389,10 @@
                 },
                 "route": {
                     "conditions" : {
-                        "id" : "svgo"
+                        "id" : "yamapsbem"
                     }
-                }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/yamapsbem"
             },
             {
                 "title": {
@@ -387,17 +401,19 @@
                 },
                 "route": {
                     "conditions" : {
-                        "id" : "svgo"
+                        "id" : "firm-card-story"
                     }
-                }
+                },
+                "source": "https://github.com/AndreyGeonya/firmCardStory/tree/master/docs/firm-card-story"
             },
             {
                 "title": "borschik",
                 "route": {
                     "conditions" : {
-                        "id" : "svgo"
+                        "id" : "borschik"
                     }
-                }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/borschik"
             },
             {
                 "title": {
@@ -406,25 +422,19 @@
                 },
                 "route": {
                     "conditions" : {
-                        "id" : "svgo"
+                        "id" : "smartcd"
                     }
-                }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/smartcd"
             },
             {
                 "title": "What you can borrow from Yandex frontend dev",
                 "route": {
                     "conditions" : {
-                        "id" : "svgo"
+                        "id" : "yandex-frontend-dev"
                     }
-                }
-            },
-            {
-                "title": "Bemhtml cache experimental",
-                "route": {
-                    "conditions" : {
-                        "id" : "svgo"
-                    }
-                }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/yandex-frontend-dev"
             }
         ]
     }
