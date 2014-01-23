@@ -363,40 +363,68 @@
                     "en": "Full stack quick start",
                     "ru": "Попробуй БЭМ на вкус"
                 },
-                "route": "/"
+                "route": {
+                    "conditions" : {
+                        "id" : "svgo"
+                    }
+                }
             },
             {
                 "title": {
                     "en": "Yandex.Maps API and BEM",
                     "ru": "API Яндекс Карт и БЭМ"
                 },
-                "route": "/"
+                "route": {
+                    "conditions" : {
+                        "id" : "svgo"
+                    }
+                }
             },
             {
                 "title": {
                     "en": "BEM application on Leaflet and 2GIS API",
                     "ru": "БЭМ-приложение на Leaflet и API 2GIS"
                 },
-                "route": "/"
+                "route": {
+                    "conditions" : {
+                        "id" : "svgo"
+                    }
+                }
             },
             {
                 "title": "borschik",
-                "route": "/"
+                "route": {
+                    "conditions" : {
+                        "id" : "svgo"
+                    }
+                }
             },
             {
                 "title": {
                     "en": "smartcd: how to launch tools locally",
                     "ru": "smartcd: локальный запуск инструментов"
                 },
-                "route": "/"
+                "route": {
+                    "conditions" : {
+                        "id" : "svgo"
+                    }
+                }
             },
             {
                 "title": "What you can borrow from Yandex frontend dev",
-                "route": "/"
+                "route": {
+                    "conditions" : {
+                        "id" : "svgo"
+                    }
+                }
             },
             {
                 "title": "Bemhtml cache experimental",
-                "route": "/"
+                "route": {
+                    "conditions" : {
+                        "id" : "svgo"
+                    }
+                }
             }
         ]
     }
