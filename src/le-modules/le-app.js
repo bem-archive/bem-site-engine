@@ -134,6 +134,7 @@ var process = function(sitemap) {
 
                 if(_.has(r, 'name')) {
                     routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
+                    node.url = susanin.Route(routes[r.name]).build(node.params);
                 }else {
                     r.name = node.parent.route.name;
                 }
@@ -148,13 +149,14 @@ var process = function(sitemap) {
                                 routes[r.name][item][key].push(r[item][key]);
 
                                 node.url = susanin.Route(routes[r.name]).build(_.extend(node.params, r[item]));
-                                logger.silly('url = %s', node.url);
                             }else {
                                 routes[r.name][item][key] = r[item][key];
                             }
                         });
                     }
                 });
+
+                logger.silly('url = %s', node.url);
 
                 processView(node);
             }else {
