@@ -3,6 +3,7 @@ var VM = require('vm'),
     vow = require('vow'),
     PATH = require('path'),
     config = require('./config'),
+    logger = require('./logger')(module),
     JsonStringify = require('json-stringify-safe'),
     leJsPath = require('./le-modules').leJSPath,
     leLogic = require('./le-modules').leLogic,
@@ -40,7 +41,7 @@ function _compileCtx() {
             leData: leData,
             leStatics: leStatics,
             leBundles: leBundles,
-            console: console
+            logger: logger
         };
 
     return vow.all(targets.map(function(target) {
