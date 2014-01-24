@@ -5,6 +5,7 @@ var u = require('util'),
     fs = require('vow-fs'),
     _ = require('lodash'),
     sha = require('sha1'),
+    susanin = require('susanin'),
 
     util = require('../util'),
     logger = require('../logger')(module),
@@ -112,10 +113,22 @@ var process = function(sitemap) {
         },
 
         /**
+         * Select view for node
+         * @param node {Object} - single node of sitemap model
+         */
+        processView = function(node) {
+            if(!_.has(node, 'view')) {
+                node.view = _.has(node, 'source') ? 'post' : 'posts'
+            }
+        },
+
+        /**
          * Collects routes rules for nodes
          * @param node {Object} - single node of sitemap model
          */
         processRoute = function(node) {
+            node.params = node.parent.params;
+
             if(_.has(node, 'route') && _.isObject(node.route)) {
                 var r = node.route;
 
@@ -133,6 +146,9 @@ var process = function(sitemap) {
                             if(item === 'conditions') {
                                 routes[r.name][item][key] = routes[r.name][item][key] || [];
                                 routes[r.name][item][key].push(r[item][key]);
+
+                                node.url = susanin.Route(routes[r.name]).build(_.extend(node.params, r[item]));
+                                logger.silly('url = %s', node.url);
                             }else {
                                 routes[r.name][item][key] = r[item][key];
                             }
@@ -140,10 +156,7 @@ var process = function(sitemap) {
                     }
                 });
 
-                if(!_.has(node, 'view')) {
-                    node.view = _.has(node, 'source') ? 'post' : 'posts'
-                }
-
+                processView(node);
             }else {
                 node.route = {name: node.parent.route.name};
             }
@@ -173,7 +186,10 @@ var process = function(sitemap) {
 
     try {
         sitemap.forEach(function(item) {
-            nodeR(item, {route: {name: null}});
+            nodeR(item, {
+                route: {name: null},
+                params: {}
+            });
         });
 
         leData.setIdHash(idSourceMap);
