@@ -74,6 +74,8 @@ module.exports = {
      * @returns {String} page title
      */
     getTitleByNode: function(req, node) {
+        logger.debug('get title by request %s and node %s', req.url, node.id);
+
         var title;
 
         if(_.has(node, 'title')) {
@@ -84,12 +86,12 @@ module.exports = {
             if(_.has(node, 'route') && _.has(node.route, 'pattern')) {
                 return '/' + node.title[req.prefLocale];
             }
-
             return _.has(node, 'parent') ? nodeR(node.parent) : '';
         };
 
         title += nodeR(node.parent) + '/BEM';
 
+        logger.debug('page title: %s', title);
         return title;
     },
 
@@ -107,6 +109,8 @@ module.exports = {
      * ogUrl - {String} url of source
      */
     getMetaByNode: function(req, node) {
+        logger.debug('get meta by request %s and node %s', req.url, node.id);
+
         var source,
             meta = {};
 
@@ -135,14 +139,42 @@ module.exports = {
     },
 
     getMenuByNode: function(req, node) {
+        logger.debug('get menu by request %s and node %s', req.url, node.id);
+
         var result = [],
-            sitemap = leApp.getSitemap();
+            activeIds = [],
+            nodeRP = function(_node) {
+                activeIds.push(_node.id);
+                if(_.has(_node, 'parent') && _.has(_node.parent, 'id')) {
+                    nodeRP(_node.parent);
+                }
+            },
+            nodeRC = function(_node) {
+                result[_node.level] = result[_node.level] || [];
 
+                if(_node.level <= node.level) {
+                    result[_node.level].push({
+                        title: _node.title[req.prefLocale],
+                        url: _node.url,
+                        active: _.indexOf(activeIds, _node.id) !== -1,
+                        type: _node.type
+                    });
 
-        var nodeR = function(node) {
+                    if(_.has(_node, 'items') && (_node.type == 'group' || _.indexOf(activeIds, _node.id) !== -1)) {
+                        _node.items.forEach(function(item) {
+                            nodeRC(item);
+                        });
+                    }
+                }
 
-            return _.has(node, 'parent') ? nodeR(node.parent): null;
-        };
+            };
+
+        nodeRP(node);
+        logger.silly('active ids %s', activeIds.join(', '));
+
+        leApp.getSitemap().forEach(function(item) {
+            nodeRC(item);
+        });
 
         return result;
     }

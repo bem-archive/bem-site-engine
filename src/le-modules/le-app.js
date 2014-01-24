@@ -12,6 +12,23 @@ var u = require('util'),
     config = require('../config'),
     leData = require('./le-data');
 
+var ROUTE = {
+    NAME: 'name',
+    CONDITIONS: 'conditions',
+    DEFAULTS: 'defaults',
+    DATA: 'data'
+},
+NODE = {
+    VIEW: {
+        POST: 'post',
+        POSTS: 'posts'
+    },
+    TYPE: {
+        SIMPLE: 'simple',
+        GROUP: 'group'
+    }
+};
+
 var sitemap,
     routes = {};
 
@@ -118,33 +135,35 @@ var process = function(sitemap) {
          */
         processView = function(node) {
             if(!_.has(node, 'view')) {
-                node.view = _.has(node, 'source') ? 'post' : 'posts'
+                node.view = _.has(node, 'source') ? NODE.VIEW.POST : NODE.VIEW.POSTS;
             }
         },
 
         /**
          * Collects routes rules for nodes
          * @param node {Object} - single node of sitemap model
+         * @param level {Number} - menu deep level
          */
-        processRoute = function(node) {
-            node.params = node.parent.params;
+        processRoute = function(node, level) {
+            node.params = _.extend({}, node.parent.params);
+            node.level = level;
 
             if(_.has(node, 'route') && _.isObject(node.route)) {
                 var r = node.route;
 
-                if(_.has(r, 'name')) {
+                if(_.has(r, ROUTE.NAME)) {
                     routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
                     node.url = susanin.Route(routes[r.name]).build(node.params);
                 }else {
                     r.name = node.parent.route.name;
                 }
 
-                ['defaults', 'conditions', 'data'].forEach(function(item) {
+                [ROUTE.DEFAULTS, ROUTE.CONDITIONS, ROUTE.DATA].forEach(function(item) {
                     routes[r.name][item] = routes[r.name][item] || {};
 
                     if(_.has(r, item)) {
                         _.keys(r[item]).forEach(function(key) {
-                            if(item === 'conditions') {
+                            if(item === ROUTE.CONDITIONS) {
                                 routes[r.name][item][key] = routes[r.name][item][key] || [];
                                 routes[r.name][item][key].push(r[item][key]);
 
@@ -156,11 +175,13 @@ var process = function(sitemap) {
                     }
                 });
 
-                logger.silly('url = %s', node.url);
-
+                node.type = NODE.TYPE.SIMPLE;
                 processView(node);
             }else {
-                node.route = {name: node.parent.route.name};
+                node.route = {
+                    name: node.parent.route.name
+                };
+                node.type = NODE.TYPE.GROUP;
             }
         },
 
@@ -168,20 +189,24 @@ var process = function(sitemap) {
          * Recursive function for traversing tree model
          * @param node {Object} - single node of sitemap model
          * @param parent {Object} - parent for current node
+         * @param level {Number} - menu deep level
          */
-        nodeR = function(node, parent) {
+        nodeR = function(node, parent, level) {
 
             node.id = sha(JSON.stringify(node)); //generate unique id for node as sha sum of node object
             node.parent = parent; //set parent for current node
 
-            processRoute(node);
+            processRoute(node, level);
             processTitle(node);
             processSource(node);
+
+            logger.silly('id = %s level = %s url = %s source = %s',
+                    node.id, node.level, node.url, node.source);
 
             //deep into node items
             if(_.has(node, 'items')) {
                 node.items.forEach(function(item) {
-                    nodeR(item, node);
+                    nodeR(item, node, node.type === NODE.TYPE.GROUP ? level : level + 1);
                 });
             }
         };
@@ -191,7 +216,7 @@ var process = function(sitemap) {
             nodeR(item, {
                 route: {name: null},
                 params: {}
-            });
+            }, 0);
         });
 
         leData.setIdHash(idSourceMap);
