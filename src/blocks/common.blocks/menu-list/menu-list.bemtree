@@ -1,0 +1,19 @@
+block menu-list {
+
+    this.ctx.content, content: {
+
+        return this.ctx.content.map(function(item) {
+            logger.debug('title %s type %s active %s', item.title, item.type, item.active);
+
+            return {
+                elem: 'item',
+                title: item.title,
+                url: item.url,
+                elemMods: {
+                    active: item.active,
+                    type: item.type
+                }
+            };
+        });
+    }
+}

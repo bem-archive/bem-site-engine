@@ -2,12 +2,15 @@
     flex-basis: 100px;
     flex-grow: 1.5;
     flex-shrink: 0;
-}
 
-.menu-list_main {
-    background: black;
-    color: #ffffff;
-    flex-basis: 200px;
-    flex-grow: 0;
-    flex-shrink: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    border-right: 1px solid rgba(0,0,0,.2);
+
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+
 }

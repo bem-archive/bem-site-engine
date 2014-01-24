@@ -4,17 +4,26 @@ block post, mod view full {
 
         var source = leData.getData()[this.data.node.id][this.data.req.prefLocale];
 
-        if(!source)
+        if(!source) {
+            logger.error('source not found');
             return [];
+        }
+
+        logger.silly('source found by id %s and locale %s', this.data.node.id, this.data.req.prefLocale);
+        logger.silly('source title = %s', source.title);
+        logger.silly('source create date = %s', source.createDate);
+        logger.silly('source edit date = %s', source.editDate);
+
+        //leJsPath.stringify(source);
 
         return [
 
             apply('fullscreen', this.ctx.content = source.fullscreen),
 
-            apply('author', this.ctx = {
-                authors: source.authors,
-                translators: source.translators
-            }),
+//            apply('author', this.ctx = {
+//                authors: source.authors,
+//                translators: source.translators
+//            }),
 
             apply('tags', this.ctx.content = source.tags),
 
@@ -25,7 +34,7 @@ block post, mod view full {
 
             apply('title', this.ctx.content = source),
             apply('contentFull', this.ctx.content = source.content)
-            //apply('issue', this.ctx.content = source.repo)
+//            apply('issue', this.ctx.content = source.repo)
         ];
     }
 

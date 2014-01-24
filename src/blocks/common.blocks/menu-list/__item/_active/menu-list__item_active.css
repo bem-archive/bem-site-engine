@@ -1,0 +1,5 @@
+.menu-list__item_active
+{
+    background: #ffeba0;
+    cursor: default;
+}

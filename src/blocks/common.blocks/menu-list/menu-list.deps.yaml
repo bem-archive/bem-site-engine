@@ -1,1 +1,5 @@
-- mods: { main: yes }
+- mods: { main: true }
+- elem: item
+  mods:
+    type: [simple, group]
+    active: true
