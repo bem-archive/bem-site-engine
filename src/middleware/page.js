@@ -11,6 +11,7 @@ module.exports = function() {
                 bundleName: BUNDLE_NAME,
                 pageTitle: leLogic.getTitleByNode(req, node),
                 meta: leLogic.getMetaByNode(req, node),
+                menu: leLogic.getMenuByNode(req, node),
                 node: node
             };
 
