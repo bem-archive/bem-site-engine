@@ -152,19 +152,20 @@ module.exports = {
             nodeRC = function(_node) {
                 result[_node.level] = result[_node.level] || [];
 
-                if(_node.level <= node.level) {
-                    result[_node.level].push({
-                        title: _node.title[req.prefLocale],
-                        url: _node.url,
-                        active: _.indexOf(activeIds, _node.id) !== -1,
-                        type: _node.type
-                    });
+                result[_node.level].push({
+                    title: _node.title[req.prefLocale],
+                    url: _node.url,
+                    active: _.indexOf(activeIds, _node.id) !== -1,
+                    type: _node.type
+                });
 
-                    if(_.has(_node, 'items') && (_node.type == 'group' || _.indexOf(activeIds, _node.id) !== -1)) {
-                        _node.items.forEach(function(item) {
-                            nodeRC(item);
-                        });
-                    }
+                var isNeedToDraw = _.has(_node, 'items') &&
+                    (_node.type === 'group' || (_node.level <= node.level && _.indexOf(activeIds, _node.id) !== -1));
+
+                if(isNeedToDraw) {
+                    _node.items.forEach(function(item) {
+                        nodeRC(item);
+                    });
                 }
 
             };
