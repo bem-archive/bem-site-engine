@@ -5,7 +5,8 @@
 - block: author
   mods: { view: [full, menu-item, simple, avatar-only] }
 
-- mods: { view: [full, menu-item, articles] }
+- mods: { view: [full, list-item] }
+- mods: { fullscreen: yes }
 
 - elem: title
 - elem: date

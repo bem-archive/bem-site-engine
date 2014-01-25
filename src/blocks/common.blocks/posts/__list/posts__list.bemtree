@@ -1,19 +1,13 @@
 block posts, elem list {
 
-    content {
+    (this.ctx.content && this._.isArray(this.ctx.content)), content: {
 
-        this._.isArray(this.ctx.source): {
-
-            var self = this;
-
-            return this.ctx.source.map(function(item){
-                return {
-                    block: 'post',
-                    mods: self.mods,
-                    source: item.id,
-                    category: self.ctx.category
-                }
-            });
-        }
+        return this.ctx.content.map(function(item){
+            return {
+                block: 'post',
+                mods: { view: 'list-item' },
+                node: item
+            }
+        });
     }
 }

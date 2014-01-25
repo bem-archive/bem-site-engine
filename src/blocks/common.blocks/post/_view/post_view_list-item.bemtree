@@ -1,19 +1,21 @@
-    block post, mod view articles {
+block post, mod view list-item {
 
     content: {
-        var id = this.ctx.source,
-            data = this.data;
+        var source = leData.getData()[this.ctx.node.id][this.data.req.prefLocale];
 
-        var source = leJsPath.findByIdAndType(id, null, data.req.prefLocale);
-
-        if(!source)
+        if(!source) {
+            logger.error('source not found for node %s and locale %s', this.ctx.node.id, this.data.req.prefLocale);
             return [];
+        }
 
         return [
+            /*
             apply('author', this.ctx = {
                 authors: source.authors,
                 translators: source.translators
             }),
+            */
+
             apply('tags', this.ctx.content = source.tags),
             apply('categories', this.ctx = {
                 content: source.categories,

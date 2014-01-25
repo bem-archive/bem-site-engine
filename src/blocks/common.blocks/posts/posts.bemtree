@@ -1,35 +1,15 @@
- block posts {
+block posts {
 
     content: {
+        var node = this.data.node;
 
-        var data = this.data, //объект, хранящий всю информацию о request, response и.т.д.
-            config = this.ctx.config, //конфиг для фильтрации, сортировки и пагинации
-            buf = [];
-
-        var source = config['query'] ?
-                leJsPath.find(config['query'].predicate, config['query'].substitution) :
-                leJsPath.filter(config['filter'], data.req.prefLocale);
-
-        //сортировка данных
-        // source = config['sort'] ?
-        //     leJspath.sort(source, config['sort']) : source;
-
-        if(config.sort) {
-            if(this._.isArray(config.sort)) {
-                source = leJsPath.sort(source, config.sort);
-            } else {
-                source = source.sort(config.sort);
-            }
+        if(!node.items) {
+            return [];
         }
 
-        source.length > 0 &&
-            buf.push({
-                elem: 'list',
-                mods: this.mods,
-                source: source,
-                category: config.category
-            });
-
-        return buf;
+        return {
+            elem: 'list',
+            content: node.items
+        };
     }
 }

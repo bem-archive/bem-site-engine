@@ -5,16 +5,14 @@ block post, mod view full {
         var source = leData.getData()[this.data.node.id][this.data.req.prefLocale];
 
         if(!source) {
-            logger.error('source not found');
+            logger.error('source not found for node %s and locale %s', this.ctx.node.id, this.data.req.prefLocale);
             return [];
         }
 
-        logger.silly('source found by id %s and locale %s', this.data.node.id, this.data.req.prefLocale);
-        logger.silly('source title = %s', source.title);
-        logger.silly('source create date = %s', source.createDate);
-        logger.silly('source edit date = %s', source.editDate);
-
-        //leJsPath.stringify(source);
+        //logger.silly('source found by id %s and locale %s', this.data.node.id, this.data.req.prefLocale);
+        //logger.silly('source title = %s', source.title);
+        //logger.silly('source create date = %s', source.createDate);
+        //logger.silly('source edit date = %s', source.editDate);
 
         return [
 

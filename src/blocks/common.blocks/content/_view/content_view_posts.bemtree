@@ -1,0 +1,12 @@
+block content, mod view posts {
+
+    content: [
+        applyNext(),
+        {
+            elem: 'content-area',
+            content: [
+                { block: 'posts' }
+            ]
+        }
+    ]
+}
