@@ -5,8 +5,6 @@
     -ms-transition: background .4s ease;
     -o-transition: background .4s ease;
     transition: background .4s ease;
-
-
 }
 
 .menu-list__item:hover

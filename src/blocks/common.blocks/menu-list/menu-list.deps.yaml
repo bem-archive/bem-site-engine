@@ -1,4 +1,5 @@
-- mods: { main: true }
+- mods:
+    main: yes
 - elem: item
   mods:
     type: [simple, group]
