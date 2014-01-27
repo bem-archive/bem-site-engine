@@ -1,1 +1,1 @@
-block menu-list, elem item, elemMod type group, content: []
+block menu-list, elem item, elemMod type delimeter, content: []
