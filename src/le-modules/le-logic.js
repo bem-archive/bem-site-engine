@@ -2,7 +2,6 @@ var _ = require('lodash'),
     logger = require('../logger')(module),
     HttpError = require('../errors').HttpError,
     leData = require('./le-data'),
-    leJspath = require('./le-jspath'),
     leApp = require('./le-app');
 
 module.exports = {

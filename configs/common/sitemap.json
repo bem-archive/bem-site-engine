@@ -483,7 +483,8 @@
         "route":{
             "name": "tags",
             "pattern": "/tags(/<id>)(/)"
-        }
+        },
+        "dynamic": "tags"
     },
     {
         "title": {
@@ -493,7 +494,24 @@
         "route":{
             "name": "authors",
             "pattern": "/authors(/<id>)(/)"
-        }
+        },
+        "view": "authors",
+        "items": [
+            {
+                "title": {
+                    "en": "AUTHORS",
+                    "ru": "АВТОРЫ"
+                },
+                "dynamic": "authors"
+            },
+            {
+                "title": {
+                    "en": "TRANSLATORS",
+                    "ru": "ПЕРЕВОДЧИКИ"
+                },
+                "dynamic": "translators"
+            }
+        ]
     },
     {
         "title": {

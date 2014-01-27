@@ -21,7 +21,9 @@ var ROUTE = {
 NODE = {
     VIEW: {
         POST: 'post',
-        POSTS: 'posts'
+        POSTS: 'posts',
+        AUTHOR: 'author',
+        TAG: 'tag'
     },
     TYPE: {
         SIMPLE: 'simple',
@@ -45,6 +47,8 @@ module.exports = {
             .then(parse)
             .then(process)
             .then(leData.loadAll)
+            .then(addPeopleNodes)
+            .then(addTagNodes)
     },
 
     /**
@@ -232,4 +236,97 @@ var process = function(sitemap) {
     }
 
     return def.promise();
+};
+
+var addPeopleNodes = function() {
+    logger.debug('add people nodes');
+
+    var f = {
+        authors: leData.getAuthors,
+        translators: leData.getTranslators
+    };
+
+    ['authors', 'translators'].forEach(function(key) {
+        var targetNode = findNodeByCriteria('dynamic', key);
+
+        if(!targetNode) {
+            return;
+        }
+
+        var nodeRP = function(node) {
+                if(_.has(node , 'route') && _.has(node.route, 'pattern')) {
+                    return node.route;
+                }
+
+                if(_.has(node, 'parent')) {
+                    return nodeRP(node.parent);
+                }
+            },
+            baseRoute = nodeRP(targetNode);
+
+        if(!_.has(targetNode, 'items')) {
+            targetNode.items = [];
+        }
+
+        try {
+            f[key].apply(null).forEach(function(item) {
+                var people = leData.getPeople()[item],
+                    conditions = {
+                        conditions: {
+                            id: item
+                        }
+                    },
+                    route = _.extend({}, baseRoute, conditions),
+                    //url = susanin.Route(route).build(conditions.conditions),
+                    url = '/authors/' + item,
+                    _node = {
+                        title: {
+                            en: u.format('%s %s', people.en.firstName, people.en.lastName),
+                            ru: u.format('%s %s', people.ru.firstName, people.ru.lastName)
+                        },
+                        route: conditions,
+                        url: url,
+                        type: NODE.TYPE.SIMPLE,
+                        view: NODE.VIEW.AUTHOR,
+                        level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
+                    };
+
+                targetNode.items.push(_.extend(_node, {
+                    id: sha(JSON.stringify(_node)),
+                    parent: targetNode
+                }));
+            });
+        }catch(e) {
+            logger.error(e.message);
+        }
+    });
+};
+
+var addTagNodes = function() {
+    logger.debug('add tag nodes');
+};
+
+var findNodeByCriteria = function(field, value) {
+
+    var result = null,
+        nodeR = function(node) {
+            if(_.has(node, field) && node[field] === value) {
+                result = node;
+            }
+
+            if(!result && _.has(node, 'items')) {
+                node.items.forEach(function(item) {
+                    nodeR(item);
+                })
+            }
+        };
+
+    sitemap.forEach(function(node) {
+        if(result) {
+            return;
+        }
+        nodeR(node);
+    });
+
+    return result;
 };

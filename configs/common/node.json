@@ -26,6 +26,13 @@
             "repo": "bem-data",
             "ref": "master",
             "path": "data.min.json"
+        },
+        "peopleRepository": {
+            "type": "public",
+            "user": "bem",
+            "repo": "bem-method",
+            "ref": "bem-info-data",
+            "path": "people"
         }
     }
 }

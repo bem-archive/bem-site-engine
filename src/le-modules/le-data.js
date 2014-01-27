@@ -17,7 +17,11 @@ var https = require('https'),
     gitPublic = null;
 
 var idHash = {}, //hash {key: -> sha of node, value: -> "https://github.com/user/repo/tree/branch/path...."}
-    dataHash = {}; //has {key: -> sha of node, value: -> {en: "en.meta.json merged with en.md", ru: "ru.meta.json merged with ru.md"}
+    dataHash = {}, //has {key: -> sha of node, value: -> {en: "en.meta.json merged with en.md", ru: "ru.meta.json merged with ru.md"}
+    peopleHash = {},
+    collectedAuthors = [],
+    collectedTranslators = [],
+    collectedTags = [];
 
 module.exports = {
 
@@ -70,7 +74,7 @@ module.exports = {
                 });
         });
 
-        return vow.allResolved(promises);
+        return vow.allResolved(promises).then(loadPeople);
     },
 
     reloadAll: function() {
@@ -97,6 +101,22 @@ module.exports = {
      */
     getData: function() {
         return dataHash;
+    },
+
+    getPeople: function() {
+        return peopleHash;
+    },
+
+    getTags: function() {
+        return collectedTags;
+    },
+
+    getAuthors: function() {
+        return collectedAuthors;
+    },
+
+    getTranslators: function() {
+        return collectedTranslators;
     }
 };
 
@@ -182,11 +202,17 @@ var getSourceFromMetaAndMd = function(meta, md) {
         //remove empty strings from authors array
         if(meta.authors && _.isArray(meta.authors)) {
             meta.authors = _.compact(meta.authors);
+            collectedAuthors = _.union(collectedAuthors, meta.authors);
         }
 
         //remove empty strings from translators array
         if(meta.translators && _.isArray(meta.translators)) {
             meta.translators = _.compact(meta.translators);
+            collectedTranslators = _.union(collectedTranslators, meta.translators);
+        }
+
+        if(_.has(meta, 'tags')) {
+            collectedTags = _.union(collectedTags, meta.tags);
         }
 
         /** fallbacks **/
@@ -232,6 +258,48 @@ var getSourceFromMetaAndMd = function(meta, md) {
     }
 
     return meta;
+};
+
+/**
+ * Loads people data from configured people repository
+ * for all unique names of people blocks
+ * @returns {*}
+ */
+var loadPeople = function() {
+    logger.info('Load all people start');
+
+    var peopleRepository = config.get('github:peopleRepository');
+
+    return getDataByGithubAPI(peopleRepository).then(function(result) {
+        var promises = result.res.map(function(people) {
+            return vow
+                .allResolved({
+                    metaEn: getDataByGithubAPI(_.extend({}, peopleRepository,
+                        { path: path.join(people.path, people.name + '.en.meta.json') })),
+                    metaRu: getDataByGithubAPI(_.extend({}, peopleRepository,
+                        { path: path.join(people.path, people.name + '.ru.meta.json') }))
+                })
+                .then(function(value) {
+                    var _def = vow.defer(),
+                        getPeopleFromMeta = function(meta) {
+                            meta = (new Buffer(meta.res.content, 'base64')).toString();
+                            meta = JSON.parse(meta);
+
+                            return meta;
+                        };
+
+                    peopleHash[people.name] = {
+                        en: getPeopleFromMeta(value.metaEn._value),
+                        ru: getPeopleFromMeta(value.metaRu._value)
+                    };
+
+                    _def.resolve(peopleHash[people.name]);
+                    return _def.promise();
+                });
+        });
+
+        return vow.allResolved(promises);
+    });
 };
 
 
