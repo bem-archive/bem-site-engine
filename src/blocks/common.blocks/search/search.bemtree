@@ -7,12 +7,16 @@ block search {
     content: [
         {
             block : 'input',
-            name : 'text',
-            val : ''
+            attrs: {
+                type: 'text',
+                name: 'text'
+            }
         },
         {
-            block : 'button',
-            type: 'submit'
+            block: 'button',
+            attrs: {
+                type: 'submit'
+            }
         }
     ]
 
