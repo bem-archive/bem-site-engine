@@ -360,6 +360,19 @@
     },
     {
         "title": {
+            "en": "Libraries",
+            "ru": "Библиотеки"
+        },
+        "route": {
+            "name": "libs",
+            "pattern": "/libs(/<lib>)(/<version>)(/<category>)(/<id>)(/)"
+        }
+    },
+    {
+        "type": "delimeter"
+    },
+    {
+        "title": {
             "en": "Articles",
             "ru": "Статьи"
         },
@@ -447,5 +460,83 @@
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/yandex-frontend-dev"
             }
         ]
+    },
+    {
+        "title": {
+            "en": "Blog",
+            "ru": "Блог"
+        },
+        "route":{
+            "name": "news",
+            "pattern": "/news(/<year>)(/<month>)(/)",
+            "conditions": {
+                "year": "\\d{4}",
+                "month": "0?[1-9]|1[012]"
+            }
+        }
+    },
+    {
+        "title": {
+            "en": "Tags",
+            "ru": "Теги"
+        },
+        "route":{
+            "name": "tags",
+            "pattern": "/tags(/<id>)(/)"
+        }
+    },
+    {
+        "title": {
+            "en": "Authors",
+            "ru": "Авторы"
+        },
+        "route":{
+            "name": "authors",
+            "pattern": "/authors(/<id>)(/)"
+        }
+    },
+    {
+        "title": {
+            "ru": "Работа"
+        },
+        "route":{
+            "name": "jobs",
+            "pattern": "/jobs(/)"
+        }
+    },
+    {
+        "type": "delimeter"
+    },
+    {
+        "title": {
+            "ru": "Я.ру"
+        },
+        "url": "http://clubs.ya.ru/bem/",
+        "size": "small"
+    },
+    {
+        "title": "Facebook",
+        "url": "http://www.facebook.com/#!/groups/209713935765634/",
+        "size": "small"
+    },
+    {
+        "title": "Twitter",
+        "url": {
+            "en": "https://twitter.com/bem_en",
+            "ru": "https://twitter.com/bem_ru"
+        },
+        "size": "small"
+    },
+    {
+        "title": {
+            "en": "Acknowledgements",
+            "ru": "Благодарности"
+        },
+        "route": {
+            "name": "acknowledgements",
+            "pattern": "/acknowledgement(/)"
+        },
+        "source": "https://github.com/bem/bem-method/tree/bem-info-data/pages/acknowledgement",
+        "size": "small"
     }
 ]

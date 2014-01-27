@@ -1,4 +1,0 @@
-block menu, elem title {
-
-    content, this.ctx.type: BEM.I18N('menu', this.ctx.type)
-}

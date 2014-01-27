@@ -2,5 +2,7 @@
     main: yes
 - elem: item
   mods:
-    type: [simple, group]
+    type: [simple, group, delimeter]
+    size: [small, normal]
     active: true
+    main: true

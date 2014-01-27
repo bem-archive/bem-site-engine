@@ -26,6 +26,9 @@ NODE = {
     TYPE: {
         SIMPLE: 'simple',
         GROUP: 'group'
+    },
+    SIZE: {
+        NORMAL: 'normal'
     }
 };
 
@@ -175,13 +178,14 @@ var process = function(sitemap) {
                     }
                 });
 
-                node.type = NODE.TYPE.SIMPLE;
+                node.type = node.type || NODE.TYPE.SIMPLE;
                 processView(node);
             }else {
                 node.route = {
                     name: node.parent.route.name
                 };
-                node.type = NODE.TYPE.GROUP;
+                node.type = node.type ||
+                    (_.has(node, 'url') ? NODE.TYPE.SIMPLE : NODE.TYPE.GROUP);
             }
         },
 
@@ -195,6 +199,7 @@ var process = function(sitemap) {
 
             node.id = sha(JSON.stringify(node)); //generate unique id for node as sha sum of node object
             node.parent = parent; //set parent for current node
+            node.size = node.size || NODE.SIZE.NORMAL;
 
             processRoute(node, level);
             processTitle(node);

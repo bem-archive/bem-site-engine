@@ -1,0 +1,33 @@
+block menu-list, mod main true{
+
+    this.ctx.content, content: {
+        var _content = this.ctx.content.map(function(item, index) {
+            if(index === 0) {
+                return apply('logo');
+            }
+
+            return apply('item', this.ctx = item);
+        });
+
+        _content.push({ block: 'search' });
+
+        return _content;
+    }
+
+    logo: {
+        block: 'logobem',
+        url: this.ctx.url
+    }
+
+    item: {
+        elem: 'item',
+        title: this.ctx.title,
+        url: this.ctx.url,
+        elemMods: {
+            main: true,
+            active: this.ctx.active,
+            type: this.ctx.type,
+            size: this.ctx.size
+        }
+    }
+}

@@ -152,11 +152,16 @@ module.exports = {
             nodeRC = function(_node) {
                 result[_node.level] = result[_node.level] || [];
 
+                if(_node.type === 'delimeter') {
+                    logger.info('');
+                }
+
                 result[_node.level].push({
-                    title: _node.title[req.prefLocale],
+                    title: _node.title ? _node.title[req.prefLocale]: '',
                     url: _node.url,
                     active: _.indexOf(activeIds, _node.id) !== -1,
-                    type: _node.type
+                    type: _node.type,
+                    size: _node.size
                 });
 
                 var isNeedToDraw = _.has(_node, 'items') &&

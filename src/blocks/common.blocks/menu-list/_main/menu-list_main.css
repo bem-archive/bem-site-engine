@@ -1,0 +1,45 @@
+.menu-list_main
+{
+    background: black;
+    color: #FFFFFF;
+
+    flex-basis: 200px;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    padding-top: 20px;
+    vertical-align: top;
+}
+
+.menu-list_main .menu-list__item
+{
+    -webkit-transition: .3s color;
+    -moz-transition: .3s color;
+    -ms-transition: .3s color;
+    -o-transition: .3s color;
+    transition: .3s color;
+}
+
+.menu-list_main .menu-list__item:hover
+{
+    color: #FFD94D;
+}
+
+.menu-list_main .menu-list__item_active
+{
+    
+}
+
+.menu-list_main .menu-list__item_type_group,
+.menu-list_main .menu-list__item_type_simple > .link
+{
+    font-size: 1.1em;
+    line-height: 1.4em;
+
+    display: block;
+    padding: 7px 5px 7px 12px;
+
+    text-decoration: none;
+
+    color: #ffffff;
+}
