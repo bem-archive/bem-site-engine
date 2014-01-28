@@ -1,4 +1,4 @@
 block content, elem content-area, default: applyCtx ({
     block: 'content-wrapper',
-    content: this.ctx
+    content: this.ctx.content
 })

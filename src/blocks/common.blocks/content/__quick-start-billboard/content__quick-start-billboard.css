@@ -1,0 +1,13 @@
+.content__quick-start-billboard {
+    position: absolute;
+    display: -webkit-flex;
+    display: flex;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 200px;
+}
+
+.quick-start-billboard {
+    margin: auto;
+}
