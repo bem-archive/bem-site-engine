@@ -268,6 +268,8 @@ var addPeopleNodes = function() {
             targetNode.items = [];
         }
 
+        routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
         try {
             f[key].apply(null).forEach(function(item) {
                 var people = leData.getPeople()[item],
@@ -275,17 +277,20 @@ var addPeopleNodes = function() {
                         conditions: {
                             id: item
                         }
-                    },
-                    route = _.extend({}, baseRoute, conditions),
-                    //url = susanin.Route(route).build(conditions.conditions),
-                    url = '/authors/' + item,
-                    _node = {
+                    };
+
+                _.keys(conditions.conditions).forEach(function(key) {
+                    routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
+                    routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
+                });
+
+                var _node = {
                         title: {
                             en: u.format('%s %s', people.en.firstName, people.en.lastName),
                             ru: u.format('%s %s', people.ru.firstName, people.ru.lastName)
                         },
-                        route: conditions,
-                        url: url,
+                        route: _.extend({}, { name: baseRoute.name }, conditions),
+                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
                         type: NODE.TYPE.SIMPLE,
                         view: NODE.VIEW.AUTHOR,
                         level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
