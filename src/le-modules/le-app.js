@@ -36,6 +36,7 @@ NODE = {
 
 var sitemap,
     peopleUrls = {},
+    tagUrls = {},
     routes = {};
 
 module.exports = {
@@ -330,6 +331,74 @@ var addPeopleNodes = function() {
 
 var addTagNodes = function() {
     logger.debug('add tag nodes');
+
+    //find node with attribute dynamic and value equal to key
+    var targetNode = findNodeByCriteria('dynamic', 'tags');
+
+    if(!targetNode) {
+        return;
+    }
+
+    //find base route (route with pattern) for target node
+    var nodeRP = function(node) {
+            if(_.has(node , 'route') && _.has(node.route, 'pattern')) {
+                return node.route;
+            }
+
+            if(_.has(node, 'parent')) {
+                return nodeRP(node.parent);
+            }
+        },
+        baseRoute = nodeRP(targetNode);
+
+    //create empty items array if it not exist yet
+    if(!_.has(targetNode, 'items')) {
+        targetNode.items = [];
+    }
+
+    routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
+    try {
+        leData.getTags().forEach(function(item) {
+            var conditions = {
+                    conditions: {
+                        id: item
+                    }
+                };
+
+            //collect conditions for base route in routes map
+            _.keys(conditions.conditions).forEach(function(key) {
+                routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
+                routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
+            });
+
+            //create node for author or translator
+            var _node = {
+                title: {
+                    en: item,
+                    ru: item
+                },
+                route: _.extend({}, { name: baseRoute.name }, conditions),
+                url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
+                type: NODE.TYPE.SIMPLE,
+                view: NODE.VIEW.TAG,
+                size: NODE.SIZE.NORMAL,
+                level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
+            };
+
+            tagUrls[item] = _node.url;
+
+            //generate unique id for node
+            //set target node as parent
+            // put node to the items array of target node
+            targetNode.items.push(_.extend(_node, {
+                id: sha(JSON.stringify(_node)),
+                parent: targetNode
+            }));
+        });
+    } catch(e) {
+        logger.error(e.message);
+    }
 };
 
 /**
