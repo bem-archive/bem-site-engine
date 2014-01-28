@@ -10,59 +10,39 @@ block post, elem author {
                     content: ', '
                 };
 
-            this.ctx.authors.filter(function(item) {
-                    return item.length > 0;
-                }).forEach(function(item, index){
+            logger.silly('block post elem author');
 
+            this.ctx.authors.forEach(function(item, index){
+                logger.silly('author: %s', item)
                 index++ > 0 && buf.push(splitter);
 
-                buf.push(apply(
-                    this._mode = '',
-                    this.ctx = {
-                        block: 'author',
-                        mods: { view: 'simple' },
-                        id: item
-                    }
-                ));
+
+                buf.push({
+                    block: 'author',
+                    mods: { view: 'simple' },
+                    id: item
+                });
+
             });
 
             if(this._.isArray(this.ctx.translators) && this.ctx.translators.length > 0) {
 
                 this.ctx.translators.filter(function(item) {
-                    return self.ctx.authors.indexOf(item) == -1 && item.length > 0;
+                    return self.ctx.authors.indexOf(item) == -1;
                 }).forEach(function(item, index) {
 
                     buf.push(splitter);
 
-                    buf.push(apply(
-                        this._mode = '',
-                        this.ctx = {
-                            block: 'author',
-                            mods: { view: 'simple' },
-                            id: item
-                        }
-                    ));
+                    buf.push({
+                        block: 'author',
+                        mods: { view: 'simple' },
+                        id: item
+                    });
 
-                    // buf.push({
-                    //     tag: 'span',
-                    //     cls: 'translate',
-                    //     content: ' ' + BEM.I18N('post', 'translate')
-                    // });
                 });
             }
 
             return buf;
-        }
-
-        !this._.isArray(this.ctx.authors): {
-            return apply(
-                this._mode = '',
-                this.ctx = {
-                    block: 'author',
-                    mods: { view: 'simple' },
-                    id: this.ctx.authors
-                }
-            );
         }
     }
 }

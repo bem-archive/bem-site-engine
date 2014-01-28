@@ -177,6 +177,8 @@ var getSourceFromMetaAndMd = function(meta, md) {
     try {
         var repo = meta.repo;
 
+        logger.silly('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
+
         meta = (new Buffer(meta.res.content, 'base64')).toString();
         meta = JSON.parse(meta);
 
@@ -200,13 +202,21 @@ var getSourceFromMetaAndMd = function(meta, md) {
         }
 
         //remove empty strings from authors array
-        if(meta.authors && _.isArray(meta.authors)) {
+        if(_.has(meta, 'authors')) {
+            if(_.isString(meta.authors)) {
+                meta.authors = [meta.authors];
+            }
+
             meta.authors = _.compact(meta.authors);
             collectedAuthors = _.union(collectedAuthors, meta.authors);
         }
 
         //remove empty strings from translators array
-        if(meta.translators && _.isArray(meta.translators)) {
+        if(_.has(meta, 'translators')) {
+            if(_.isString(meta.translators)) {
+                meta.translators = [meta.translators];
+            }
+
             meta.translators = _.compact(meta.translators);
             collectedTranslators = _.union(collectedTranslators, meta.translators);
         }
@@ -284,6 +294,8 @@ var loadPeople = function() {
                         getPeopleFromMeta = function(meta) {
                             meta = (new Buffer(meta.res.content, 'base64')).toString();
                             meta = JSON.parse(meta);
+
+                            //TODO can make some post-load operations here
 
                             return meta;
                         };

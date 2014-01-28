@@ -35,6 +35,7 @@ NODE = {
 };
 
 var sitemap,
+    peopleUrls = {},
     routes = {};
 
 module.exports = {
@@ -65,6 +66,10 @@ module.exports = {
      */
     getSitemap: function() {
         return sitemap;
+    },
+
+    getPeopleUrls: function() {
+        return peopleUrls;
     }
 };
 
@@ -306,6 +311,8 @@ var addPeopleNodes = function() {
                     size: NODE.SIZE.NORMAL,
                     level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
                 };
+
+                peopleUrls[item] = _node.url;
 
                 //generate unique id for node
                 //set target node as parent

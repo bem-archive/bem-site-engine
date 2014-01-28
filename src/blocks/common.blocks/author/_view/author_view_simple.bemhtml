@@ -6,13 +6,11 @@ block author, mod view simple {
 
     attrs: { href : this.ctx.content.url }
 
-    content: [
-        {
-            block: 'author',
-            elem: 'name',
-            content: this.ctx.content
-        }
-    ]
+    content: {
+        block: 'author',
+        elem: 'name',
+        content: this.ctx.content
+    }
 
     this._.isSimple(this.ctx.content), content: this.ctx.content
 }
