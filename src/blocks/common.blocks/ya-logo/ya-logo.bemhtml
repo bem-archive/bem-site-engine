@@ -1,44 +1,7 @@
 block ya-logo {
 
-    attrs: { role: 'header' }
+    content: BEM.I18N('ya-logo', 'yandex')
 
-    !this.ctx.content, content: {
-        elem: 'logo',
-        content: {
-            elem: 'link',
-            content: {
-                elem: 'img'
-            }
-        }
-    }
-
-    elem link {
-        tag: 'a'
-        attrs: { href: this.ctx.url }
-    }
-
-    elem img {
-        tag: 'img'
-
-        attrs: {
-            var a = {},
-                ctx = this.ctx;
-
-            a.src = ctx.url || apply('attrs-src');
-            a.alt = ctx.alt || apply('attrs-alt');
-
-            return a;
-        }
-
-        this._mode === 'attrs-src': '//yandex.st/lego/_/X31pO5JJJKEifJ7sfvuf3mGeD_8.png'
-        this._mode === 'attrs-alt': BEM.I18N('ya-logo', 'yandex')
-
-        ~['en', 'tr'].indexOf(this['i-global'].lang) {
-
-            this._mode === 'attrs-src': '//yandex.st/lego/_/w3fZdbIEslxR_9CQRR-ezRNUZ_Q.png'
-            
-        }
-
-    }
+    mix: [{ mods: { lang: this.ctx.lang || 'en' } }]
 
 }

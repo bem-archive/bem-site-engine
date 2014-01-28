@@ -2,5 +2,4 @@
   required: true
   elem: [html, i18n]
 
-- block: i-services
-  required: true
+- mods: { lang: [en, ru] }
