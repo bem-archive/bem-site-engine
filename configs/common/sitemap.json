@@ -485,7 +485,16 @@
             "name": "tags",
             "pattern": "/tags(/<id>)(/)"
         },
-        "dynamic": "tags"
+        "view": "tags",
+        "items": [
+            {
+                "title": {
+                    "en": "TAGS",
+                    "ru": "ТЕГИ"
+                },
+                "dynamic": "tags"
+            }
+        ]
     },
     {
         "title": {
