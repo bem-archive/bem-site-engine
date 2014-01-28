@@ -1,4 +1,4 @@
-block('ya-logo')(
+block('yandex-logo')(
 
     def()(function () {
         var ctx = this.ctx;

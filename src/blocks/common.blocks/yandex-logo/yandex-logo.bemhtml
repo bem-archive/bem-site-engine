@@ -1,4 +1,4 @@
-block ya-logo {
+block yandex-logo {
 
     content: BEM.I18N('ya-logo', 'yandex')
 

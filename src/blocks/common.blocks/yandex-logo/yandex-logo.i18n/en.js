@@ -1,5 +1,5 @@
 module.exports = {
-    "ya-logo": {
+    "yandex-logo": {
         "yandex": "Yandex"
     }
 };
