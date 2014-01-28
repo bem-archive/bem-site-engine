@@ -1,0 +1,16 @@
+block content, mod view authors {
+
+    content: [
+        applyNext(),
+        {
+            elem: 'content-area',
+            content: leData.getAuthors().map(function(author) {
+                return {
+                    block: 'author',
+                    mods: { view: 'grid-cell' },
+                    id: author
+                }
+            })
+        }
+    ]
+}
