@@ -12,7 +12,8 @@ module.exports = function() {
                 pageTitle: leLogic.getTitleByNode(req, node),
                 meta: leLogic.getMetaByNode(req, node),
                 menu: leLogic.getMenuByNode(req, node),
-                node: node
+                node: node,
+                lang: req.prefLocale
             };
 
         return template.apply(ctx, req.prefLocale, req.query.__mode)

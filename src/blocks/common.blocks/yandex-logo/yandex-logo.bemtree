@@ -1,0 +1,11 @@
+block('yandex-logo')(
+
+    def()(function () {
+        var ctx = this.ctx;
+
+        ctx.lang = this.data.lang;
+
+        return ctx;
+    })
+
+)

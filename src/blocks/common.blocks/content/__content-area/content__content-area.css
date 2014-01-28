@@ -4,8 +4,10 @@
     top: 0;
     bottom: 0;
     overflow: scroll;
+    height: 100%;
 }
 
 .content-wrapper {
     flex: 0 4 62%;
+    height: 100%;
 }
