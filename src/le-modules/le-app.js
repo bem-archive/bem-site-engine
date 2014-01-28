@@ -303,6 +303,7 @@ var addPeopleNodes = function() {
                     url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
                     type: NODE.TYPE.SIMPLE,
                     view: NODE.VIEW.AUTHOR,
+                    size: NODE.SIZE.NORMAL,
                     level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
                 };
 
@@ -324,6 +325,12 @@ var addTagNodes = function() {
     logger.debug('add tag nodes');
 };
 
+/**
+ * Finds node by attribute and its value
+ * @param field - {Stirng} name of attribute
+ * @param value - {String} value of attribute
+ * @returns {Object} node
+ */
 var findNodeByCriteria = function(field, value) {
 
     var result = null,
