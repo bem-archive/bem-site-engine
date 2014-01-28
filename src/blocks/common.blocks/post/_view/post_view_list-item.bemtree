@@ -9,12 +9,11 @@ block post, mod view list-item {
         }
 
         return [
-            /*
+
             apply('author', this.ctx = {
                 authors: source.authors,
                 translators: source.translators
             }),
-            */
 
             apply('tags', this.ctx.content = source.tags),
             apply('categories', this.ctx = {
@@ -28,22 +27,22 @@ block post, mod view list-item {
             }),
 
             apply('title', this.ctx = {
-                content: source,
-                category: this.ctx.category
+                node: this.ctx.node,
+                content: source
             }),
 
             apply('summary', this.ctx.content = source.summary)
         ]
     }
 
-    //автор и соавторы поста
+    //authors of post
     author: {
         elem: 'author',
         authors: this.ctx.authors,
         translators: this.ctx.translators
     }
 
-    //дата изменения или создания поста
+    //date of creation or last modification of post
     date: {
         elem: 'date',
         elemMods: { type: 'human' },
@@ -51,26 +50,27 @@ block post, mod view list-item {
         editDate: this.ctx.editDate
     }
 
-    //массив тегов для поста
+    //tags array of post
     tags: {
         elem: 'tags',
         content: this.ctx.content
     }
 
+    //post categories
     categories: {
         elem: 'categories',
         type: this.ctx.type,
         content: this.ctx.content
     }
 
-    //заголовок поста
+    //title of post
     title: {
         elem: 'title',
-        url: this.ctx.content.url,
+        url: this.ctx.node.url,
         title: this.ctx.content.longTitle || this.ctx.content.title
     }
 
-    //краткое содержание (summary) для поста
+    //summary of post
     summary: {
         elem: 'summary',
         content: this.ctx.content

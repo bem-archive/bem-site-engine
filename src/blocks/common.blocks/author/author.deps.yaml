@@ -1,5 +1,5 @@
 - mods:
-    view: [full, menu-item, simple, grid-cell]
+    view: [full, simple, grid-cell]
 
 - elems:
     - avatar

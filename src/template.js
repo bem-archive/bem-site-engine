@@ -5,8 +5,11 @@ var VM = require('vm'),
     config = require('./config'),
     logger = require('./logger')(module),
     JsonStringify = require('json-stringify-safe'),
+
+    leApp = require('./le-modules').leApp,
     leLogic = require('./le-modules').leLogic,
     leData = require('./le-modules').leData,
+
     leStatics = new (require('../lib/Statics').Statics)(config.get('statics')),
     leBundles = new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' });
 
@@ -35,6 +38,7 @@ function _compileCtx() {
     var targets = ['lang.all.js', 'lang.en.js', 'lang.ru.js', 'bemtree.js', 'bemhtml.js'],
         ctx = {
             Vow: vow,
+            leApp: leApp,
             leLogic: leLogic,
             leData: leData,
             leStatics: leStatics,

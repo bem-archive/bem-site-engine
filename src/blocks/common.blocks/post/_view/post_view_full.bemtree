@@ -1,27 +1,21 @@
 block post, mod view full {
 
     content: {
-
         var source = leData.getData()[this.data.node.id][this.data.req.prefLocale];
 
         if(!source) {
-            logger.error('source not found for node %s and locale %s', this.ctx.node.id, this.data.req.prefLocale);
+            logger.error('source not found for node %s and locale %s', this.data.node.id, this.data.req.prefLocale);
             return [];
         }
-
-        //logger.silly('source found by id %s and locale %s', this.data.node.id, this.data.req.prefLocale);
-        //logger.silly('source title = %s', source.title);
-        //logger.silly('source create date = %s', source.createDate);
-        //logger.silly('source edit date = %s', source.editDate);
 
         return [
 
             apply('fullscreen', this.ctx.content = source.fullscreen),
 
-//            apply('author', this.ctx = {
-//                authors: source.authors,
-//                translators: source.translators
-//            }),
+            apply('author', this.ctx = {
+                authors: source.authors,
+                translators: source.translators
+            }),
 
             apply('tags', this.ctx.content = source.tags),
 
@@ -41,13 +35,14 @@ block post, mod view full {
         content: this.ctx.content
     }
 
-    //автор и соавторы поста
+    //authors of post
     author: {
         elem: 'author',
         authors: this.ctx.authors,
         translators: this.ctx.translators
     }
 
+    //date of creation and last modification
     date: {
         elem: 'date',
         elemMods: { type: 'human' },
@@ -55,22 +50,20 @@ block post, mod view full {
         editDate: this.ctx.editDate
     }
 
-    //массив тегов для поста
+    //tags array of post
     tags: {
         elem: 'tags',
         content: this.ctx.content
     }
 
-    //заголовок поста
+    //post title
     title: {
         elem: 'title',
-        id: this.ctx.content.id,
-        type: this.ctx.content.type,
-        title: this.ctx.content.longTitle || this.ctx.content.title,
-        category: this.ctx.category || this.ctx.content.categories
+        url: null,
+        title: this.ctx.content.longTitle || this.ctx.content.title
     }
 
-    //содержимое поста
+    //post content
     contentFull: {
         elem: 'content',
         url: apply('getUrl'),
@@ -116,3 +109,4 @@ block post, mod view full {
                 (host.indexOf(this.data.req.prefLocale) == 0 ? host.slice(host.indexOf('.')) : ('.' + host)) + path;
     }
 }
+
