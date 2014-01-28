@@ -238,6 +238,10 @@ var process = function(sitemap) {
     return def.promise();
 };
 
+/**
+ * Dynamic addition of people nodes for authors and translators
+ * grouped menu items
+ */
 var addPeopleNodes = function() {
     logger.debug('add people nodes');
 
@@ -247,12 +251,15 @@ var addPeopleNodes = function() {
     };
 
     ['authors', 'translators'].forEach(function(key) {
+
+        //find node with attribute dynamic and value equal to key
         var targetNode = findNodeByCriteria('dynamic', key);
 
         if(!targetNode) {
             return;
         }
 
+        //find base route (route with pattern) for target node
         var nodeRP = function(node) {
                 if(_.has(node , 'route') && _.has(node.route, 'pattern')) {
                     return node.route;
@@ -264,6 +271,7 @@ var addPeopleNodes = function() {
             },
             baseRoute = nodeRP(targetNode);
 
+        //create empty items array if it not exist yet
         if(!_.has(targetNode, 'items')) {
             targetNode.items = [];
         }
@@ -279,23 +287,28 @@ var addPeopleNodes = function() {
                         }
                     };
 
+                //collect conditions for base route in routes map
                 _.keys(conditions.conditions).forEach(function(key) {
                     routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
                     routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
                 });
 
+                //create node for author or translator
                 var _node = {
-                        title: {
-                            en: u.format('%s %s', people.en.firstName, people.en.lastName),
-                            ru: u.format('%s %s', people.ru.firstName, people.ru.lastName)
-                        },
-                        route: _.extend({}, { name: baseRoute.name }, conditions),
-                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
-                        type: NODE.TYPE.SIMPLE,
-                        view: NODE.VIEW.AUTHOR,
-                        level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
-                    };
+                    title: {
+                        en: u.format('%s %s', people.en.firstName, people.en.lastName),
+                        ru: u.format('%s %s', people.ru.firstName, people.ru.lastName)
+                    },
+                    route: _.extend({}, { name: baseRoute.name }, conditions),
+                    url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
+                    type: NODE.TYPE.SIMPLE,
+                    view: NODE.VIEW.AUTHOR,
+                    level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
+                };
 
+                //generate unique id for node
+                //set target node as parent
+                // put node to the items array of target node
                 targetNode.items.push(_.extend(_node, {
                     id: sha(JSON.stringify(_node)),
                     parent: targetNode
