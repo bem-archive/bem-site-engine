@@ -1,0 +1,31 @@
+block quick-start-billboard {
+
+    content: [
+        {
+            elem: 'logo'
+        },
+        {
+            elem: 'title',
+            content: BEM.I18N('quick-start-billboard', 'title')
+        },
+        {
+            elem: 'subtitle',
+            content: BEM.I18N('quick-start-billboard', 'subtitle')
+        },
+        {
+            block : 'link',
+            mix: [{ block: 'quick-start-billboard', elem: 'link' }],
+            url: this.ctx.url,
+            content: BEM.I18N('quick-start-billboard', 'project-stub')
+        },
+        {
+            block: 'link',
+            url: BEM.I18N('quick-start-billboard', 'url'),
+            content: {
+                block: 'yandex-logo',
+                mix: [{ block: 'quick-start-billboard', elem: 'yandex-logo' }]
+            }
+        }
+    ]
+}
+

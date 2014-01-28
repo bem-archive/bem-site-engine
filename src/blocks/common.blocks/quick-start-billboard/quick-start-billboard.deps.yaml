@@ -1,0 +1,10 @@
+- block: i-bem
+  required: true
+  elems: [i18n]
+
+- elems:
+    - logo
+    - title
+    - subtitle
+    - link
+    - yandex-logo

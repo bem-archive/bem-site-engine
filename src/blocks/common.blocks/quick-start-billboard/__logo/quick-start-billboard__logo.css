@@ -1,0 +1,10 @@
+.quick-start-billboard__logo
+{
+    margin: 0 auto;
+
+    height: 300px;
+    width: 500px;
+
+    background-size: auto 300px;
+    background: no-repeat center;
+}

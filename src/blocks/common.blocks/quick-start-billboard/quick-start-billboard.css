@@ -1,0 +1,9 @@
+.quick-start-billboard
+{
+    position: relative;
+
+    min-height: 550px;
+    padding: 23px 0 105px;
+
+    text-align: center;
+}
