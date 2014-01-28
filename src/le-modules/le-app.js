@@ -250,110 +250,100 @@ var process = function(sitemap) {
 var addDynamicNodes = function() {
     logger.debug('add dynamic nodes');
 
-    var f = {
-        authors: leData.getAuthors,
-        translators: leData.getTranslators,
-        tags: leData.getTags
+    var basePeopleConfig = {
+        title: function(item){
+            var people = leData.getPeople()[item];
+            return {
+                en: u.format('%s %s', people.en.firstName, people.en.lastName),
+                ru: u.format('%s %s', people.ru.firstName, people.ru.lastName)
+            };
+        },
+        view: NODE.VIEW.AUTHOR,
+        urlHash: peopleUrls
     };
 
-    ['authors', 'translators', 'tags'].forEach(function(key) {
+    addDynamicNodesFor(_.extend({ key: 'authors', data: leData.getAuthors }, basePeopleConfig));
+    addDynamicNodesFor(_.extend({ key: 'translators', data: leData.getTranslators }, basePeopleConfig));
 
-        //find node with attribute dynamic and value equal to key
-        var targetNode = findNodeByCriteria('dynamic', key);
-
-        if(!targetNode) {
-            return;
-        }
-
-        //find base route (route with pattern) for target node
-        var nodeRP = function(node) {
-                if(_.has(node , 'route') && _.has(node.route, 'pattern')) {
-                    return node.route;
-                }
-
-                if(_.has(node, 'parent')) {
-                    return nodeRP(node.parent);
-                }
-            },
-            baseRoute = nodeRP(targetNode);
-
-        //create empty items array if it not exist yet
-        if(!_.has(targetNode, 'items')) {
-            targetNode.items = [];
-        }
-
-        routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
-
-        try {
-            f[key].apply(null).forEach(function(item) {
-
-                var title,
-                    view,
-                    urlHash;
-
-                if(key === 'authors' || key === 'translators') {
-
-                    title = function(item){
-                        var people = leData.getPeople()[item];
-
-                        return {
-                            en: u.format('%s %s', people.en.firstName, people.en.lastName),
-                            ru: u.format('%s %s', people.ru.firstName, people.ru.lastName)
-                        };
-                    };
-
-                    view = NODE.VIEW.AUTHOR;
-                    urlHash = peopleUrls;
-                }
-
-                if(key === 'tags') {
-                    title = function(item) {
-                        return {
-                            en: item,
-                            ru: item
-                        };
-                    },
-                    view = NODE.VIEW.TAG;
-                    urlHash = tagUrls;
-                }
-
-                var conditions = {
-                    conditions: {
-                        id: item
-                    }
-                };
-
-                //collect conditions for base route in routes map
-                _.keys(conditions.conditions).forEach(function(key) {
-                    routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
-                    routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
-                });
-
-                //create node
-                var _node = {
-                    title: title.call(null, item),
-                    route: _.extend({}, { name: baseRoute.name }, conditions),
-                    url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
-                    type: NODE.TYPE.SIMPLE,
-                    size: NODE.SIZE.NORMAL,
-                    view: view,
-                    level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
-                };
-
-                urlHash[item] = _node.url;
-
-                //generate unique id for node
-                //set target node as parent
-                //put node to the items array of target node
-                targetNode.items.push(_.extend(_node, {
-                    id: sha(JSON.stringify(_node)),
-                    parent: targetNode
-                }));
-            });
-        }catch(e) {
-            logger.error(e.message);
-        }
+    addDynamicNodesFor({
+        key: 'tags',
+        data: leData.getTags,
+        title: function(item) {
+            return {
+                en: item,
+                ru: item
+            };
+        },
+        view: NODE.VIEW.TAG,
+        urlHash: tagUrls
     });
+};
+
+var addDynamicNodesFor = function(config) {
+    //find node with attribute dynamic and value equal to key
+    var targetNode = findNodeByCriteria('dynamic', config.key);
+
+    if(!targetNode) {
+        return;
+    }
+
+    //find base route (route with pattern) for target node
+    var nodeRP = function(node) {
+            if(_.has(node , 'route') && _.has(node.route, 'pattern')) {
+                return node.route;
+            }
+
+            if(_.has(node, 'parent')) {
+                return nodeRP(node.parent);
+            }
+        },
+        baseRoute = nodeRP(targetNode);
+
+    //create empty items array if it not exist yet
+    if(!_.has(targetNode, 'items')) {
+        targetNode.items = [];
+    }
+
+    routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
+    try {
+        config.data.apply(null).forEach(function(item) {
+            var conditions = {
+                conditions: {
+                    id: item
+                }
+            };
+
+            //collect conditions for base route in routes map
+            _.keys(conditions.conditions).forEach(function(key) {
+                routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
+                routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
+            });
+
+            //create node
+            var _node = {
+                title: config.title.call(null, item),
+                route: _.extend({}, { name: baseRoute.name }, conditions),
+                url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
+                type: NODE.TYPE.SIMPLE,
+                size: NODE.SIZE.NORMAL,
+                view: config.view,
+                level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
+            };
+
+            config.urlHash[item] = _node.url;
+
+            //generate unique id for node
+            //set target node as parent
+            //put node to the items array of target node
+            targetNode.items.push(_.extend(_node, {
+                id: sha(JSON.stringify(_node)),
+                parent: targetNode
+            }));
+        });
+    }catch(e) {
+        logger.error(e.message);
+    }
 };
 
 /**
