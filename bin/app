@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 if ('production' === process.env.NODE_ENV) {
-    require('../src/cluster');
+    require('../src/cluster').run();
 } else {
     var nodemon = require('nodemon'),
-        config = require('../nodemon');
+        config = require('../configs/current/nodemon');
+
+    config.script = require.resolve('../src/app'),
 
     nodemon(config)
         .on('start', function() {

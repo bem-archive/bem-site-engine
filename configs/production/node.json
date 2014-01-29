@@ -1,22 +1,25 @@
 {
     "NODE_ENV": "production",
-    "app": {
-        "socket": "/var/run/yandex/bem-info-www/bem-info-www.sock",
-        "clusterSettings": {
+    "luster": {
+        "workers": 4,
+        "control": {
             "forkTimeout": 1000,
             "stopTimeout": 1000,
             "exitThreshold": 3000,
             "allowedSequentialDeaths": 3
         },
-        "logger": {
-            "mode": "default",
-            "level": "debug",
-            "dir": "logs",
-            "stdout": "/var/log/yandex/bem-info-www/stdout.log",
-            "stderr": "/var/log/yandex/bem-info-www/stderr.log"
-        },
-        "workers": 4
+        "server": {
+            "port": "/var/run/yandex/bem-info-www/bem-info-www.sock",
+            "groups": 1
+        }
     },
+    "logger": {
+        "mode": "default",
+        "level": "debug",
+        "dir": "logs",
+        "stdout": "/var/log/yandex/bem-info-www/stdout.log",
+        "stderr": "/var/log/yandex/bem-info-www/stderr.log"
+    }
     "statics": {
         "pathname": "/m"
     },

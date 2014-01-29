@@ -1,14 +1,14 @@
 {
     "NODE_ENV": "development",
     "app": {
-	    "port": 3014,
-        "logger": {
-            "mode": "dev",
-            "level": "silly",
-            "dir": "logs",
-            "stdout": "logs/output.log",
-            "stderr": "logs/errors.log"
-        }
+	    "port": 3014
+    },
+    "logger": {
+        "mode": "dev",
+        "level": "silly",
+        "dir": "logs",
+        "stdout": "logs/output.log",
+        "stderr": "logs/errors.log"
     },
     "forum": {
         "route": "/forum",
