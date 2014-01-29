@@ -23,7 +23,7 @@ NODE = {
         POST: 'post',
         POSTS: 'posts',
         AUTHOR: 'author',
-        TAG: 'tag'
+        TAGS: 'tags'
     },
     TYPE: {
         SIMPLE: 'simple',
@@ -274,7 +274,7 @@ var addDynamicNodes = function() {
                 ru: item
             };
         },
-        view: NODE.VIEW.TAG,
+        view: NODE.VIEW.TAGS,
         urlHash: tagUrls
     });
 };
