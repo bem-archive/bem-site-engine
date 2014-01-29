@@ -1,5 +1,6 @@
 var worker = require('luster'),
     logger = require('./../logger')(module),
+    leData = require('../le-modules').leData,
     app = require('./../app');
 
 if (worker.isWorker) {
