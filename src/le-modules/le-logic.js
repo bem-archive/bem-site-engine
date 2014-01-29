@@ -184,6 +184,15 @@ module.exports = {
         return result;
     },
 
+    /**
+     * Returns array of pseudo-nodes with title attribute
+     * and pseudo-node items with id and url attributes which
+     * is necessary to build posts block
+     * @param lang - {String} lang
+     * @param field - {Array|String} array or string with criteria source field
+     * @param value - {Array|String} array or string with search value
+     * @returns {Array}
+     */
     getNodeIdsByCriteria: function(lang, field, value) {
         logger.silly('get node ids by criteria start');
 
@@ -207,16 +216,30 @@ module.exports = {
                 }
             };
 
+        /*
+            Recursive sitemap iteration and creating
+            pseudo node representation of site sections
+            with corresponded posts
+        */
         leApp.getSitemap().forEach(function(node) {
             nodeR(node);
         });
 
+        //if value is not present show all-pseudo nodes
+        if(_.isUndefined(value) || _.isNull(value)) {
+            return _.values(result).filter(function(item) {
+                return _.has(item, 'items') && item.items.length > 0;
+            });
+        }
+
+        /*
+            Filter all resources by lang, and filter criteria
+            of field <-> value equality with all possible accepted
+            types of field and values
+        */
         var validIdSet = _.keys(leData.getData()).filter(function(id) {
             var data = leData.getData()[id][lang];
 
-            if(_.isUndefined(value) || _.isNull(value)) {
-                return true;
-            }
 
             if(_.isArray(field) && _.isArray(value)) {
                 return field.filter(function(f) {
@@ -252,6 +275,7 @@ module.exports = {
 
         logger.silly('validIdSet: %s', validIdSet.join(', '));
 
+        //filter pseudo-nodes by validIdSet criteria
         result = _.values(result)
             .filter(function(item) {
                 return _.has(item, 'items');
