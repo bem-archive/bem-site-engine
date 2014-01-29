@@ -1,7 +1,7 @@
 block posts {
 
     content: {
-        var node = this.data.node;
+        var node = this.ctx.node;
 
         if(!node.items) {
             return [];

@@ -1,0 +1,38 @@
+block content, mod view author {
+
+    content: [
+        applyNext(),
+        {
+            elem: 'content-area',
+            content: [
+                {
+                    block: 'author',
+                    mods: { view: 'full' },
+                    id: this.data.req.params.id
+                },
+                apply('authorPosts')
+            ]
+        }
+    ]
+
+    authorPosts: {
+        logger.silly('authorPosts lang: %s id: %s', this.data.lang, this.data.req.params.id);
+
+        var posts = leLogic.getNodeIdsByCriteria(
+                this.data.lang, ['authors', 'translators'], this.data.req.params.id);
+
+        logger.silly('posts length %s', posts.length);
+
+        return {
+            block: this.block,
+            elem: 'author-posts',
+            content: posts.map(function(node) {
+                return {
+                    block: 'posts',
+                    title: node.title,
+                    node: node
+                }
+            })
+        };
+    }
+}

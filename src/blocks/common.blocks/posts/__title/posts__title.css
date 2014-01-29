@@ -8,5 +8,6 @@
     border-top: 1px solid #AAAAAA;
     border-bottom: 1px solid #AAAAAA;
 
+    text-transform: uppercase;
     letter-spacing: 2px;
 }

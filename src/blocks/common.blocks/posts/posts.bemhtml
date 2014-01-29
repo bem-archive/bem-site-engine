@@ -1,14 +1,14 @@
-//block posts {
-//
-//    default, (this.ctx.content && this.ctx.content.length == 0): {
-//        return false;
-//    }
-//
-//    content, (this.ctx.config && this.ctx.config.title): [
-//        {
-//            elem: 'title',
-//            content: this.ctx.config.title
-//        },
-//        applyNext()
-//    ]
-//}
+block posts {
+
+    default, (this.ctx.content && this.ctx.content.length == 0): {
+        return false;
+    }
+
+    this.ctx.title, content: [
+        {
+            elem: 'title',
+            content: this.ctx.title
+        },
+        applyNext()
+    ]
+}
