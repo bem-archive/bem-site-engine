@@ -3,7 +3,7 @@ block menu-list, mod main true{
     this.ctx.content, content: {
         var _content = this.ctx.content.map(function(item, index) {
             if(index === 0) {
-                return apply('logo');
+                return apply('logo', this.ctx = item);
             }
 
             return apply('item', this.ctx = item);
