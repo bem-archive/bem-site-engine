@@ -1,4 +1,4 @@
-block content, mod view tag {
+block content, mod view tags {
 
     content: [
         applyNext(),
