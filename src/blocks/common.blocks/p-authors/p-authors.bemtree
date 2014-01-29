@@ -16,11 +16,7 @@ block p-authors {
             self = this;
 
         //блок персональной информации об авторе
-        buf.push({
-            block: 'author',
-            mods: { view: 'full' },
-            id: this.ctx.id
-        });
+        buf.push();
 
         //для каждого из типов постов отображаем блоки posts
         //c постами соответствующего типа для которых автором

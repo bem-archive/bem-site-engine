@@ -182,5 +182,87 @@ module.exports = {
         });
 
         return result;
+    },
+
+    getNodeIdsByCriteria: function(lang, field, value) {
+        logger.silly('get node ids by criteria start');
+
+        var result = {},
+            nodeR = function(node) {
+                if(_.has(node.route, 'pattern')) {
+                    result[node.route.name] = {
+                        title: node.title[lang]
+                    }
+                }
+
+                if(_.has(node, 'source')) {
+                    result[node.route.name].items = result[node.route.name].items || [];
+                    result[node.route.name].items.push(_.pick(node, 'id', 'url'));
+                }
+
+                if(_.has(node, 'items')) {
+                    node.items.forEach(function(item) {
+                        nodeR(item);
+                    })
+                }
+            };
+
+        leApp.getSitemap().forEach(function(node) {
+            nodeR(node);
+        });
+
+        var validIdSet = _.keys(leData.getData()).filter(function(id) {
+            var data = leData.getData()[id][lang];
+
+            if(_.isArray(field) && _.isArray(value)) {
+                return field.filter(function(f) {
+                    if(_.isArray(data[f])) {
+                        return _.intersection(data[f], value).length > 0;
+                    }else {
+                        return _.indexOf(value, data[f]) !== -1;
+                    }
+                }).length > 0;
+            } else if(_.isArray(field)) {
+                return field.filter(function(f) {
+                    if(_.isArray(data[f])) {
+                        return _.indexOf(data[f], value) !== -1;
+                    }else {
+                        return data[f] === value;
+                    }
+                }).length > 0;
+            } else if(_.isArray(value)) {
+                if(_.isArray(data[field])) {
+                    return _.intersection(data[field], value).length > 0;
+                }else {
+                    return _.indexOf(value, data[field]) !== -1;
+                }
+            } else {
+                if(_.isArray(data[field])) {
+                    return _.indexOf(data[field], value) !== -1;
+                }else {
+                    return data[field] === value;
+                }
+            }
+
+        });
+
+        logger.silly('validIdSet: %s', validIdSet.join(', '));
+
+        result = _.values(result)
+            .filter(function(item) {
+                return _.has(item, 'items');
+            })
+            .map(function(item) {
+                item.items = item.items.filter(function(_item) {
+                    return _.indexOf(validIdSet, _item.id) !== -1;
+                });
+
+                return item;
+            })
+            .filter(function(item) {
+                return item.items.length > 0;
+            });
+
+        return result;
     }
 };

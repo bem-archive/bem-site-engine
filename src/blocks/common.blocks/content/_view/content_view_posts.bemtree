@@ -5,7 +5,10 @@ block content, mod view posts {
         {
             elem: 'content-area',
             content: [
-                { block: 'posts' }
+                {
+                    block: 'posts',
+                    node: this.data.node
+                }
             ]
         }
     ]

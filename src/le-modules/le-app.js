@@ -49,7 +49,7 @@ module.exports = {
             .then(parse)
             .then(process)
             .then(leData.loadAll)
-            .then(addDynamicNodes)
+            .then(addDynamicNodes);
     },
 
     /**
