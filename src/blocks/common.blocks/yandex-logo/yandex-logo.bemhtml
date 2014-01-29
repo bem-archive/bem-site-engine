@@ -1,7 +1,7 @@
 block yandex-logo {
 
-    content: BEM.I18N('ya-logo', 'yandex')
+    content: this.ctx.content || BEM.I18N('yandex-logo', 'yandex')
 
-    mix: [{ mods: { lang: this.ctx.lang || 'en' } }]
+    mix: [{ mods: { lang: this.ctx.lang || BEM.I18N.lang() || 'en' } }]
 
 }
