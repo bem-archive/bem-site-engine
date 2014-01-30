@@ -2,6 +2,9 @@ block menu-list, mod main true{
 
     this.ctx.content, content: {
         var _content = this.ctx.content.map(function(item, index) {
+            logger.silly('menu item: title: %s url: %s type: %s active: %s size: %s hidden: %s',
+                                    item.title, item.url, item.type, item.active, item.size, item.hidden);
+
             if(index === 0) {
                 return apply('logo', this.ctx = item);
             }
@@ -27,7 +30,8 @@ block menu-list, mod main true{
             main: true,
             active: this.ctx.active,
             type: this.ctx.type,
-            size: this.ctx.size
+            size: this.ctx.size,
+            hidden: this.ctx.hidden
         }
     }
 }

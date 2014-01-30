@@ -152,6 +152,29 @@ var process = function(sitemap) {
         },
 
         /**
+         * Set hidden state for node
+         * @param node {Object} - single node of sitemap model
+         */
+        processHidden = function(node) {
+            if(_.has(node, 'hidden') && _.isArray(node.hidden)) {
+                node.hidden = {
+                    en: _.indexOf(node.hidden, 'en') !== -1,
+                    ru: _.indexOf(node.hidden, 'ru') !== -1
+                };
+            }else if(_.has(node, 'hidden') && node.hidden === true) {
+                node.hidden = {
+                    en: true,
+                    ru: true
+                };
+            }else {
+                node.hidden = {
+                    en: false,
+                    ru: false
+                };
+            }
+        },
+
+        /**
          * Collects routes rules for nodes
          * @param node {Object} - single node of sitemap model
          * @param level {Number} - menu deep level
@@ -213,6 +236,7 @@ var process = function(sitemap) {
             processRoute(node, level);
             processTitle(node);
             processSource(node);
+            processHidden(node);
 
             logger.silly('id = %s level = %s url = %s source = %s',
                     node.id, node.level, node.url, node.source);

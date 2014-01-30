@@ -160,7 +160,8 @@ module.exports = {
                     url: _node.url,
                     active: _.indexOf(activeIds, _node.id) !== -1,
                     type: _node.type,
-                    size: _node.size
+                    size: _node.size,
+                    hidden: _node.hidden[req.prefLocale]
                 });
 
                 var isNeedToDraw = _.has(_node, 'items') &&
