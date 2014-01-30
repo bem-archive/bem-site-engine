@@ -1,0 +1,9 @@
+block lang-switch {
+    tag: 'li'
+
+    content: {
+        block: 'link',
+        url: '/',
+        content: BEM.I18N('lang-switch', 'name')
+    }
+}
