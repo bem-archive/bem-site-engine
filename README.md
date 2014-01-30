@@ -32,6 +32,7 @@ $ npm start
 127.0.0.1    ru.localhost
 127.0.0.1    en.localhost
 ```
+
 Ответственные за разработку:
 
 @bemer
