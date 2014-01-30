@@ -530,7 +530,8 @@
         "route":{
             "name": "jobs",
             "pattern": "/jobs(/)"
-        }
+        },
+        "hidden": ["en"]    
     },
     {
         "type": "delimeter"
@@ -540,7 +541,8 @@
             "ru": "Я.ру"
         },
         "url": "http://clubs.ya.ru/bem/",
-        "size": "small"
+        "size": "small",
+        "hidden": ["en"]
     },
     {
         "title": "Facebook",
