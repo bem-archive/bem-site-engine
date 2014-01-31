@@ -3,8 +3,8 @@ block menu-list {
     this.ctx.content, content: {
 
         return this.ctx.content.map(function(item) {
-            logger.silly('menu item: title: %s url: %s type: %s active: %s size: %s hidden: %s',
-                        item.title, item.url, item.type, item.active, item.size, item.hidden);
+            logger.silly('menu item: title: %s url: %s type: %s active: %s size: %s',
+                        item.title, item.url, item.type, item.active, item.size);
 
             return {
                 elem: 'item',
@@ -12,8 +12,7 @@ block menu-list {
                 url: item.url,
                 elemMods: {
                     active: item.active,
-                    type: item.type,
-                    hidden: item.hidden
+                    type: item.type
                 }
             };
         });

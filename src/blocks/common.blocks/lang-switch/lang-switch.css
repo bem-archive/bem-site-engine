@@ -1,0 +1,33 @@
+.lang-switch,
+.lang-switch .link
+{
+    color: #FFFFFF;
+
+    -webkit-transition: .3s color;
+    -moz-transition: .3s color;
+    -ms-transition: .3s color;
+    -o-transition: .3s color;
+    transition: .3s color;
+
+    font-size: 1.1em;
+    padding: 0px 0 0px 20px;
+    letter-spacing: 1px;
+}
+
+.lang-switch:hover {
+    background: #000000;
+}
+
+.lang-switch .link:hover {
+    color: #FFD94D;
+}
+
+.lang-switch
+{
+    padding-top: 20px;
+}
+
+.lang-switch .link
+{
+    padding: 7px 5px 7px 12px;
+}

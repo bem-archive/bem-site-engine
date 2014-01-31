@@ -486,6 +486,7 @@
             "pattern": "/tags(/<id>)(/)"
         },
         "view": "tags",
+        "source": "https://github.com/bem/bem-method/tree/bem-info-data/pages/dummy",
         "items": [
             {
                 "title": {
@@ -531,6 +532,7 @@
             "name": "jobs",
             "pattern": "/jobs(/)"
         },
+        "source": "https://github.com/bem/bem-method/tree/bem-info-data/pages/jobs",
         "hidden": ["en"]    
     },
     {

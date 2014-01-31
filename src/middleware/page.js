@@ -4,8 +4,10 @@ var template = require('../template'),
 
 module.exports = function() {
     return function(req, res, next) {
+        var node, ctx;
 
-        var node = leLogic.getNodeByRequest(req),
+        try {
+            node = leLogic.getNodeByRequest(req);
             ctx = {
                 req: req,
                 bundleName: BUNDLE_NAME,
@@ -16,12 +18,15 @@ module.exports = function() {
                 lang: req.prefLocale
             };
 
-        return template.apply(ctx, req.prefLocale, req.query.__mode)
-            .then(function(html) {
-                res.end(html);
-            })
-            .fail(function(err) {
-                next(err);
-            });
+            return template.apply(ctx, req.prefLocale, req.query.__mode)
+                .then(function(html) {
+                    res.end(html);
+                })
+                .fail(function(err) {
+                    next(err);
+                });
+        }catch(err) {
+            return next(err);
+        }
     };
 };
