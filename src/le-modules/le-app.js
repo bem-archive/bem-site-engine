@@ -349,10 +349,11 @@ var addDynamicNodesFor = function(config) {
                 title: config.title.call(null, item),
                 route: _.extend({}, { name: baseRoute.name }, conditions),
                 url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
+                level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
                 type: NODE.TYPE.SIMPLE,
                 size: NODE.SIZE.NORMAL,
                 view: config.view,
-                level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1
+                hidden: {en: false, ru: false}
             };
 
             config.urlHash[item] = _node.url;

@@ -7,64 +7,52 @@ var u = require('util'),
 
 module.exports = {
 
+    /**
+     * Returns node by request
+     * @param req - {Object} http request object
+     * @returns {Object} founded node
+     */
     getNodeByRequest: function(req) {
-        logger.debug('get node by request %s', req.url);
+        logger.debug('get node by request %s', req._parsedUrl.pathname);
 
-        var name = req.route,
-            params = req.params,
-            result,
-            nodeR = function(node, parent) {
+        var result,
+            url = req._parsedUrl.pathname,
+            nodeR = function(node) {
 
-                if(_.has(node, 'route') && _.isObject(node.route)) {
-
-                    if(node.route.name !== name) {
-                        return;
+                if(node.url === url) {
+                    if(node.hidden[req.prefLocale]) {
+                        throw HttpError.createError(404);
                     }
-
-                    if(_.has(node.route, 'pattern')) {
-                        result = node;
-                    }
-
-                    ['conditions'].forEach(function(item) {
-                        if(_.has(node.route, item)) {
-                            if(_.keys(params).some(function(paramKey) {
-                                return _.has(node.route[item], paramKey) &&
-                                    params[paramKey] === node.route[item][paramKey];
-                            })) {
-                                result = node;
-                            };
-                        }
-                    });
-
+                    result = node;
+                    return result;
                 }
 
                 //deep into node items
-                if(_.has(node, 'items')) {
-                    node.items.forEach(function(item) {
-                        nodeR(item, node);
+                if(!result && _.has(node, 'items')) {
+                    node.items.some(function(item) {
+                        nodeR(item);
+                        return result;
                     });
                 }
             };
 
-        try {
-            leApp.getSitemap().forEach(function(item) {
-                nodeR(item, null);
-
-                if(!_.isUndefined(result)) {
-                    return;
-                }
-            });
-        }catch(e) {
-            logger.error(e)
+        //if not index page then remove possible multiple trailing slashes
+        if(!/\//.test(url)) {
+            url = url.replace(/(\/)+$/, '');
         }
 
-        if(!_.isUndefined(result)) {
+        leApp.getSitemap().some(function(item) {
+            nodeR(item);
+            return result;
+        });
+
+        if(result) {
             logger.debug('find node %s %s', result.id, result.source);
+            return result;
         }else {
-            logger.error('cannot find node by url %s', req.url);
+            logger.error('cannot find node by url %s', req._parsedUrl.pathname);
+            throw HttpError.createError(404);
         }
-
-        return result;
     },
 
     /**
@@ -152,19 +140,19 @@ module.exports = {
             nodeRC = function(_node) {
                 result[_node.level] = result[_node.level] || [];
 
-                if(_node.type === 'delimeter') {
-                    logger.info('');
+                //if node is not hidden for current selected locale
+                //then we should draw it corresponded menu item
+                if(!_node.hidden[req.prefLocale]) {
+                    result[_node.level].push({
+                        title: _node.title ? _node.title[req.prefLocale]: '',
+                        url: _node.url,
+                        active: _.indexOf(activeIds, _node.id) !== -1,
+                        type: _node.type,
+                        size: _node.size
+                    });
                 }
 
-                result[_node.level].push({
-                    title: _node.title ? _node.title[req.prefLocale]: '',
-                    url: _node.url,
-                    active: _.indexOf(activeIds, _node.id) !== -1,
-                    type: _node.type,
-                    size: _node.size,
-                    hidden: _node.hidden[req.prefLocale]
-                });
-
+                //TODO change this logic
                 var isNeedToDraw = _.has(_node, 'items') &&
                     (_node.type === 'group' || (_node.level <= node.level && _.indexOf(activeIds, _node.id) !== -1));
 

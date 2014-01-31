@@ -11,7 +11,7 @@ function buildErrorPage(code, lang) {
     var enbBuilder = require('enb/lib/server/server-middleware').createBuilder({
             cdir: path.join(__dirname, '..', '..')
         }),
-        targetName = code ? 'error-404' : 'error-500',
+        targetName = (code && code === 404) ? 'error-404' : 'error-500',
         target = targetName + '/' + targetName + '.' + lang + '.html';
 
     return enbBuilder('src/bundles/errors.bundles/' + target)
