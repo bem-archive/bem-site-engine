@@ -11,7 +11,7 @@ block menu-list, mod main true{
 
             return apply('item', this.ctx = item);
         });
-        _content.push({ block: 'lang-switch' });
+        _content.push({ block: 'lang-switch', url: leLogic.getLangSwitchUrlByNode(this.data.req, this.data.node) });
         _content.push({ block: 'search' });
 
         return _content;

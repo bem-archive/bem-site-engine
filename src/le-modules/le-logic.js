@@ -1,4 +1,5 @@
-var _ = require('lodash'),
+var u = require('util'),
+    _ = require('lodash'),
     logger = require('../logger')(module),
     HttpError = require('../errors').HttpError,
     leData = require('./le-data'),
@@ -293,5 +294,25 @@ module.exports = {
             });
 
         return result;
+    },
+
+    /**
+     * Returns url for lang-switch block link
+     * @param req - {Object} http request object
+     * @param node - {Object} node from sitemap model
+     * @returns {String} compiled url
+     */
+    getLangSwitchUrlByNode: function(req, node) {
+        var currentLang = req.prefLocale,
+            targetLang = {
+                en: 'ru',
+                ru: 'en'
+            }[currentLang],
+            host = req.headers.host.replace(u.format('%s.', currentLang), ''),
+            url = u.format('http://%s.%s', targetLang, host);
+
+        url += node.hidden[targetLang] ? '/' : req._parsedUrl.pathname;
+
+        return url;
     }
 };
