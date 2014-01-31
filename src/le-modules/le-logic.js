@@ -30,8 +30,7 @@ module.exports = {
                 //deep into node items
                 if(!result && _.has(node, 'items')) {
                     node.items.some(function(item) {
-                        nodeR(item);
-                        return result;
+                        return nodeR(item);
                     });
                 }
             };
@@ -42,8 +41,7 @@ module.exports = {
         }
 
         leApp.getSitemap().some(function(item) {
-            nodeR(item);
-            return result;
+            return nodeR(item);
         });
 
         if(result) {
