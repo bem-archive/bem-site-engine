@@ -10,10 +10,10 @@ block post, elem author {
                     content: ', '
                 };
 
-            logger.silly('block post elem author');
+            //logger.silly('block post elem author');
 
             this.ctx.authors.forEach(function(item, index){
-                logger.silly('author: %s', item)
+                //logger.silly('author: %s', item)
                 index++ > 0 && buf.push(splitter);
 
 
