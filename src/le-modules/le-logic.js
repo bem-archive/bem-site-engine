@@ -36,7 +36,7 @@ module.exports = {
             };
 
         //if not index page then remove possible multiple trailing slashes
-        if(!/\//.test(url)) {
+        if(!/^\/$/.test(url)) {
             url = url.replace(/(\/)+$/, '');
         }
 
