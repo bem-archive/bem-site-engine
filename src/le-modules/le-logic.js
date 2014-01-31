@@ -150,11 +150,15 @@ module.exports = {
                     });
                 }
 
-                //TODO change this logic
-                var isNeedToDraw = _.has(_node, 'items') &&
-                    (_node.type === 'group' || (_node.level <= node.level && _.indexOf(activeIds, _node.id) !== -1));
+                var hasSource = _.has(_node, 'source'),
+                    hasItems = _.has(_node, 'items'),
+                    isTargetNode = _node.id === node.id,
+                    isActive = _.indexOf(activeIds, _node.id) !== -1,
+                    isGroup = _node.type === 'group',
 
-                if(isNeedToDraw) {
+                    isNeedToDrawChildNodes = isGroup || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
+
+                if(isNeedToDrawChildNodes) {
                     _node.items.forEach(function(item) {
                         nodeRC(item);
                     });

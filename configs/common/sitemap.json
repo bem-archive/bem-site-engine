@@ -486,6 +486,7 @@
             "pattern": "/tags(/<id>)(/)"
         },
         "view": "tags",
+        "source": "https://github.com/bem/bem-method/tree/bem-info-data/pages/dummy",
         "items": [
             {
                 "title": {
