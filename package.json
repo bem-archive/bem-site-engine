@@ -26,7 +26,7 @@
     "winston": "0.7.2",
     "sha1": "1.0.0",
     "ometajs": "3.1.4",
-    "marked": "0.2.5",
+    "marked": "git://github.com/dab/marked.git",
     "highlight.js": "7"
   },
   "devDependencies": {
