@@ -176,7 +176,7 @@ var getDataByGithubAPI = function(repository) {
 
 var getSourceFromMetaAndMd = function(meta, md) {
     try {
-        var repo = _.extend({ url: md.res.html_url }, meta.repo);
+        var repo = _.extend(meta.repo, { path: md.res.path });
 
         logger.silly('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
 
@@ -259,9 +259,10 @@ var getSourceFromMetaAndMd = function(meta, md) {
 
         //set repo information
         meta.repo = {
-            original: repo.url,
-            pr: u.format('https://%s/%s/%s/tree/%s', repo.host, repo.user, repo.repo, repo.ref),
-            issues: u.format('https://%s/%s/%s/issues', repo.host, repo.user, repo.repo)
+            issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
+                repo.host, repo.user, repo.repo, meta.title),
+            prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",
+                repo.user, repo.repo, repo.ref, repo.path)
         };
 
     } catch(err) {

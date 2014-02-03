@@ -74,33 +74,33 @@ block post, mod view full {
     issue: {
         var repo = this.ctx.content;
 
-        return [
-            {
-                elem: 'originalLink',
-                content: {
+        return {
+            elem: 'issue',
+            content: [
+                {
+                    tag: 'span',
+                    content: BEM.I18N('post', 'repo-1')
+                },
+                {
                     block: 'link',
-                    url: repo.original,
-                    content: BEM.I18N('post', 'repo-original')
+                    url: repo.issue,
+                    content: BEM.I18N('post', 'repo-issue')
+                },
+                {
+                    tag: 'span',
+                    content: BEM.I18N('post', 'repo-2')
+                },
+                {
+                    block: 'link',
+                    url: repo.prose,
+                    content: BEM.I18N('post', 'repo-prose')
+                },
+                {
+                    tag: 'span',
+                    content: BEM.I18N('post', 'repo-3')
                 }
-            },
-            {
-                elem: 'issueLink',
-                content: [
-                    BEM.I18N('post', 'repo-pr'),
-                    {
-                        block: 'link',
-                        url: repo.pr,
-                        content: ' pull request '
-                    },
-                    BEM.I18N('post', 'repo-issues'),
-                    {
-                        block: 'link',
-                        url: repo.issues,
-                        content: ' issue '
-                    }
-                ]
-            }
-        ]
+            ]
+        }
     }
 
     getUrl: {
