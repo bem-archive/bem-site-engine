@@ -27,8 +27,8 @@
                     "ru": "Определения"
                 },
                 "route": {
-                    "conditions" : {
-                        "id" : "definitions"
+                    "conditions": {
+                        "id": "definitions"
                     }
                 },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/definitions"
@@ -39,8 +39,8 @@
                     "ru": "Организация файловой системы"
                 },
                 "route": {
-                    "conditions" : {
-                        "id" : "filesystem"
+                    "conditions": {
+                        "id": "filesystem"
                     }
                 },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/filesystem"
@@ -51,8 +51,8 @@
                     "ru": "История создания"
                 },
                 "route": {
-                    "conditions" : {
-                        "id" : "history"
+                    "conditions": {
+                        "id": "history"
                     }
                 },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/method/history"
@@ -76,8 +76,8 @@
                     {
                         "title": "bem-tools",
                         "route": {
-                            "conditions" : {
-                                "lib" : "bem-tools"
+                            "conditions": {
+                                "lib": "bem-tools"
                             }
                         },
                         "source": "https://github.com/bem/bem-tools/tree/dev/docs/index",
@@ -88,8 +88,8 @@
                                     "ru": "Установка"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "installation"
+                                    "conditions": {
+                                        "id": "installation"
                                     }
                                 },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/installation"
@@ -100,8 +100,8 @@
                                     "ru": "Команды"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "commands"
+                                    "conditions": {
+                                        "id": "commands"
                                     }
                                 },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/commands"
@@ -112,8 +112,8 @@
                                     "ru": "Уровни переопределения"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "levels"
+                                    "conditions": {
+                                        "id": "levels"
                                     }
                                 },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/levels"
@@ -124,8 +124,8 @@
                                     "ru": "Зависимости"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "depsjs"
+                                    "conditions": {
+                                        "id": "depsjs"
                                     }
                                 },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/depsjs"
@@ -136,8 +136,8 @@
                                     "ru": "Настройка"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "customization"
+                                    "conditions": {
+                                        "id": "customization"
                                     }
                                 },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/customization"
@@ -148,8 +148,8 @@
                                     "ru": "Модули технологий"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "tech-modules"
+                                    "conditions": {
+                                        "id": "tech-modules"
                                     }
                                 },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/tech-modules"
@@ -160,8 +160,8 @@
                                     "ru": "Использование через API"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "api"
+                                    "conditions": {
+                                        "id": "api"
                                     }
                                 },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/api"
@@ -172,8 +172,8 @@
                                     "ru": "Создание подкоманд"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "creating-subcommands"
+                                    "conditions": {
+                                        "id": "creating-subcommands"
                                     }
                                 },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/creating-subcommands"
@@ -184,8 +184,8 @@
                                     "ru": "Участие в разработке"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "contribute"
+                                    "conditions": {
+                                        "id": "contribute"
                                     }
                                 },
                                 "source": "https://github.com/bem/bem-tools/tree/dev/docs/contribute"
@@ -203,7 +203,7 @@
                     {
                         "title": "borschik",
                         "route": {
-                            "conditions" : {
+                            "conditions": {
                                 "lib": "borschik"
                             }
                         },
@@ -215,8 +215,8 @@
                                     "ru": "\"Заморозка\" статических ресурсов (freeze)"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "freeze"
+                                    "conditions": {
+                                        "id": "freeze"
                                     }
                                 },
                                 "source": "https://github.com/bem/borschik/tree/master/docs/freeze"
@@ -227,8 +227,8 @@
                                     "ru": "borschik и технологии"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "where-is-my-tech"
+                                    "conditions": {
+                                        "id": "where-is-my-tech"
                                     }
                                 },
                                 "source": "https://github.com/bem/borschik/tree/master/docs/where-is-my-tech"
@@ -236,8 +236,8 @@
                             {
                                 "title": "borschik-server",
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "borschik-server"
+                                    "conditions": {
+                                        "id": "borschik-server"
                                     }
                                 },
                                 "source": "https://github.com/bem/borschik-server/tree/master/docs/borschik-server"
@@ -248,8 +248,8 @@
                                     "ru": "История изменений"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "changelog"
+                                    "conditions": {
+                                        "id": "changelog"
                                     }
                                 },
                                 "source": "https://github.com/bem/borschik/tree/master/docs/changelog"
@@ -260,8 +260,8 @@
                                     "ru": "Нотация для JS include"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "js-include"
+                                    "conditions": {
+                                        "id": "js-include"
                                     }
                                 },
                                 "source": "https://github.com/bem/borschik/tree/master/docs/freeze"
@@ -271,8 +271,8 @@
                     {
                         "title": "CSSO",
                         "route": {
-                            "conditions" : {
-                                "lib" : "csso"
+                            "conditions": {
+                                "lib": "csso"
                             }
                         },
                         "source": "https://github.com/css/csso/tree/master/docs/index",
@@ -283,8 +283,8 @@
                                     "ru": "Описание"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "description"
+                                    "conditions": {
+                                        "id": "description"
                                     }
                                 },
                                 "source": "https://github.com/css/csso/tree/master/docs/description"
@@ -295,8 +295,8 @@
                                     "ru": "Установка"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "install"
+                                    "conditions": {
+                                        "id": "install"
                                     }
                                 },
                                 "source": "https://github.com/css/csso/tree/master/docs/install"
@@ -307,8 +307,8 @@
                                     "ru": "Использование"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "usage"
+                                    "conditions": {
+                                        "id": "usage"
                                     }
                                 },
                                 "source": "https://github.com/css/csso/tree/master/docs/usage"
@@ -318,8 +318,8 @@
                     {
                         "title": "SVGO",
                         "route": {
-                            "conditions" : {
-                                "lib" : "svgo"
+                            "conditions": {
+                                "lib": "svgo"
                             }
                         },
                         "items": [
@@ -329,8 +329,8 @@
                                     "ru": "Как работает SVGO"
                                 },
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "how-it-works"
+                                    "conditions": {
+                                        "id": "how-it-works"
                                     }
                                 },
                                 "source": "https://github.com/svg/svgo/tree/beminfo/docs/how-it-works"
@@ -338,8 +338,8 @@
                             {
                                 "title": "SVG Optimizer",
                                 "route": {
-                                    "conditions" : {
-                                        "id" : "svgo"
+                                    "conditions": {
+                                        "id": "svgo"
                                     }
                                 },
                                 "source": "https://github.com/svg/svgo/tree/beminfo/docs/svgo"
@@ -349,11 +349,103 @@
                     {
                         "title": "setochka",
                         "route": {
-                            "conditions" : {
-                                "lib" : "setochka"
+                            "conditions": {
+                                "lib": "setochka"
                             }
                         },
                         "source": "https://github.com/afelix/setochka/tree/master/doc/setochka"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "TEMPLATING ENGINES",
+                    "ru": "ШАБЛОНИЗАТОРЫ"
+                },
+                "items": [
+                    {
+                        "title": "BEMHTML",
+                        "route": {
+                            "conditions": {
+                                "lib": "BEMHTML"
+                            }
+                        },
+                        "items": [
+                            {
+                                "title": {
+                                    "en": "BEMHTML-Reference",
+                                    "ru": "BEMHTML: шаблонизатор для БЭМ"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "reference"
+                                    }
+                                },
+                                "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/reference"
+                            },
+                            {
+                                "title": {
+                                    "en": "BEMHTML-Reference",
+                                    "ru": "BEMHTML: шаблонизатор для БЭМ"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "reference"
+                                    }
+                                },
+                                "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/reference"
+                            },
+                            {
+                                "title": {
+                                    "en": "BEMHTML: Template Engine for BEM",
+                                    "ru": "Референс по BEMHTML"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "rationale"
+                                    }
+                                },
+                                "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/rationale"
+                            },
+                            {
+                                "title": {
+                                    "en": "BEMHTML: Template Engine for BEM",
+                                    "ru": "Референс по BEMHTML"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "rationale"
+                                    }
+                                },
+                                "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/rationale"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "XJST",
+                        "route": {
+                            "conditions": {
+                                "lib": "xjst"
+                            }
+                        },
+                        "source": "https://github.com/veged/xjst/tree/master/doc/index"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "PARSERS",
+                    "ru": "ПАРСЕРЫ"
+                },
+                "items": [
+                    {
+                        "title": "Gonzales",
+                        "route": {
+                            "conditions": {
+                                "lib": "gonzales"
+                            }
+                        },
+                        "source": "https://github.com/lesanra/gonzales/tree/bem-info-data/doc/gonzales"
                     }
                 ]
             }
@@ -366,8 +458,203 @@
         },
         "route": {
             "name": "libs",
-            "pattern": "/libs(/<lib>)(/<version>)(/<category>)(/<id>)(/)"
-        }
+            "pattern": "/libs(/<lib>)(/<version>)(/<id>)(/)"
+        },
+        "source": "https://github.com/bem/bem-method/tree/bem-info-data/libs/index",
+        "items": [
+            {
+                "title": "BEM-CORE",
+                "route": {
+                    "conditions": {
+                        "lib": "bem-core"
+                    }
+                },
+                "items": [
+                    {
+                        "title": "1.0.0",
+                        "route": {
+                            "conditions": {
+                                "version": "1.0.0"
+                            }
+                        },
+                        "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/bem-core",
+                        "items": [
+                            {
+                                "title": {
+                                    "en": "Changelog",
+                                    "ru": "История изменений"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "changelog"
+                                    }
+                                },
+                                "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/changelog"
+                            },
+                            {
+                                "title": {
+                                    "en": "Migration",
+                                    "ru": "Миграция"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "migration"
+                                    }
+                                },
+                                "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/migration"
+                            },
+                            {
+                                "title": "BEMHTML",
+                                "items": [
+                                    {
+                                        "title": "Hello, BEMHTML!",
+                                        "route": {
+                                            "conditions": {
+                                                "id": "intro"
+                                            }
+                                        },
+                                        "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/migration"
+                                    },
+                                    {
+                                        "title": {
+                                            "en": "BEMHTML-Reference",
+                                            "ru": "Референс по BEMHTML"
+                                        },
+                                        "route": {
+                                            "conditions": {
+                                                "id": "reference"
+                                            }
+                                        },
+                                        "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/reference"
+                                    },
+                                    {
+                                        "title": {
+                                            "en": "BEMHTML: Template Engine for BEM",
+                                            "ru": "BEMHTML: шаблонизатор для БЭМ"
+                                        },
+                                        "route": {
+                                            "conditions": {
+                                                "id": "rationale"
+                                            }
+                                        },
+                                        "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/rationale"
+                                    }
+
+                                ]
+                            },
+                            {
+                                "title": "I-BEM.JS",
+                                "items": [
+                                    {
+                                        "title": {
+                                            "en": "i-bem.js Guide Book",
+                                            "ru": "i-bem.js: Руководство пользователя"
+                                        },
+                                        "route": {
+                                            "conditions": {
+                                                "id": "i-bem-js"
+                                            }
+                                        },
+                                        "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/i-bem-js"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "title": "1.1.0",
+                        "route": {
+                            "conditions": {
+                                "version": "1.1.0"
+                            }
+                        },
+                        "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/bem-core",
+                        "items": [
+                            {
+                                "title": {
+                                    "en": "Changelog",
+                                    "ru": "История изменений"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "changelog"
+                                    }
+                                },
+                                "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/changelog"
+                            },
+                            {
+                                "title": {
+                                    "en": "Migration",
+                                    "ru": "Миграция"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "migration"
+                                    }
+                                },
+                                "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/migration"
+                            },
+                            {
+                                "title": "BEMHTML",
+                                "items": [
+                                    {
+                                        "title": "Hello, BEMHTML!",
+                                        "route": {
+                                            "conditions": {
+                                                "id": "intro"
+                                            }
+                                        },
+                                        "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/migration"
+                                    },
+                                    {
+                                        "title": {
+                                            "en": "BEMHTML-Reference",
+                                            "ru": "Референс по BEMHTML"
+                                        },
+                                        "route": {
+                                            "conditions": {
+                                                "id": "reference"
+                                            }
+                                        },
+                                        "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/reference"
+                                    },
+                                    {
+                                        "title": {
+                                            "en": "BEMHTML: Template Engine for BEM",
+                                            "ru": "BEMHTML: шаблонизатор для БЭМ"
+                                        },
+                                        "route": {
+                                            "conditions": {
+                                                "id": "rationale"
+                                            }
+                                        },
+                                        "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/rationale"
+                                    }
+
+                                ]
+                            },
+                            {
+                                "title": "I-BEM.JS",
+                                "items": [
+                                    {
+                                        "title": {
+                                            "en": "i-bem.js Guide Book",
+                                            "ru": "i-bem.js: Руководство пользователя"
+                                        },
+                                        "route": {
+                                            "conditions": {
+                                                "id": "i-bem-js"
+                                            }
+                                        },
+                                        "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/i-bem-js"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     },
     {
         "type": "delimeter"
@@ -388,8 +675,8 @@
                     "ru": "Попробуй БЭМ на вкус"
                 },
                 "route": {
-                    "conditions" : {
-                        "id" : "start-with-project-stub"
+                    "conditions": {
+                        "id": "start-with-project-stub"
                     }
                 },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/start-with-project-stub"
@@ -400,8 +687,8 @@
                     "ru": "JavaScript по БЭМ: основные понятия"
                 },
                 "route": {
-                    "conditions" : {
-                        "id" : "bem-js-main-terms"
+                    "conditions": {
+                        "id": "bem-js-main-terms"
                     }
                 },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/bem-js-main-terms"
@@ -412,8 +699,8 @@
                     "ru": "API Яндекс Карт и БЭМ"
                 },
                 "route": {
-                    "conditions" : {
-                        "id" : "yamapsbem"
+                    "conditions": {
+                        "id": "yamapsbem"
                     }
                 },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/yamapsbem"
@@ -424,8 +711,8 @@
                     "ru": "БЭМ-приложение на Leaflet и API 2GIS"
                 },
                 "route": {
-                    "conditions" : {
-                        "id" : "firm-card-story"
+                    "conditions": {
+                        "id": "firm-card-story"
                     }
                 },
                 "source": "https://github.com/AndreyGeonya/firmCardStory/tree/master/docs/firm-card-story"
@@ -433,8 +720,8 @@
             {
                 "title": "borschik",
                 "route": {
-                    "conditions" : {
-                        "id" : "borschik"
+                    "conditions": {
+                        "id": "borschik"
                     }
                 },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/borschik"
@@ -445,8 +732,8 @@
                     "ru": "smartcd: локальный запуск инструментов"
                 },
                 "route": {
-                    "conditions" : {
-                        "id" : "smartcd"
+                    "conditions": {
+                        "id": "smartcd"
                     }
                 },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/smartcd"
@@ -454,11 +741,21 @@
             {
                 "title": "What you can borrow from Yandex frontend dev",
                 "route": {
-                    "conditions" : {
-                        "id" : "yandex-frontend-dev"
+                    "conditions": {
+                        "id": "yandex-frontend-dev"
                     }
                 },
                 "source": "https://github.com/bem/bem-method/tree/bem-info-data/articles/yandex-frontend-dev"
+            },
+            {
+                "title": "Bemhtml cache experimental",
+                "route": {
+                    "conditions": {
+                        "id": "bemhtml-cache-experimental"
+                    }
+                },
+                "hidden": ["ru"],
+                "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/bemhtml-cache-experimental"
             }
         ]
     },
@@ -467,14 +764,156 @@
             "en": "Blog",
             "ru": "Блог"
         },
-        "route":{
+        "route": {
             "name": "news",
-            "pattern": "/news(/<year>)(/<month>)(/)",
-            "conditions": {
-                "year": "\\d{4}",
-                "month": "0?[1-9]|1[012]"
+            "pattern": "/news(/<id>)(/)"
+        },
+        "items": [
+            {
+                "title": {
+                    "en": "New bem.info",
+                    "ru": "Новый bem.info"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "new-beminfo-site"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/new-beminfo-site"
+            },
+            {
+                "title": {
+                    "en": "Announcement of Second BEM Meetup!",
+                    "ru": "Анонс: Второй BEMup — в рамках YaC 2013"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "bemup-yac2013"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/bemup-yac2013"
+            },
+            {
+                "title": {
+                    "en": "bem-tools v0.6.4",
+                    "ru": "Версия bem-tools 0.6.4"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "bem-tools-0-6-4"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/bem-tools-0-6-4"
+            },
+            {
+                "title": {
+                    "en": "First BEMup Talks Archive",
+                    "ru": "Видео докладов первого BEMup'а"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "bemup-talks"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/bemup-talks"
+            },
+            {
+                "title": {
+                    "en": "BEMup — Watch It, Feel It!",
+                    "ru": "BEMup — как это было"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "bemup-promo"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/bemup-promo"
+            },
+            {
+                "title": {
+                    "en": "Rename of 'bem-controls' to 'bem-components'",
+                    "ru": "Переименование bem-controls в bem-components"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "bem-components"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/bem-components"
+            },
+            {
+                "title": {
+                    "en": "Announcement of First BEM Meetup!",
+                    "ru": "Анонс: BEMup — первый митап по БЭМ!"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "bemup"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/bemup"
+            },
+            {
+                "title": {
+                    "en": "bem-cli: Launch bem-tools Locally",
+                    "ru": "bem-cli: запусти bem-tools локально"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "bem-cli"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/bem-cli"
+            },
+            {
+                "title": {
+                    "en": "bem-tools v0.5.33",
+                    "ru": "Версия bem-tools 0.5.33"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "bem-tools-0-5-33"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/bem-tools-0-5-33"
+            },
+            {
+                "title": {
+                    "en": "AnyGrid – CSS Grids Generator that Uses BEM-Notations and etc!",
+                    "ru": "Генератор сеток AnyGrid для CSS в БЭМ-нотациях и многого другого!"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "anygrid-bem-notations"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/anygrid-bem-notations"
+            },
+            {
+                "title": {
+                    "en": "BEM at MetaRefresh 2013",
+                    "ru": "БЭМ на MetaRefresh 2013"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "2013-02-maintainable-frontend-dev-with-bem"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/2013-02-maintainable-frontend-dev-with-bem"
+            },
+            {
+                "title": {
+                    "en": "BEM goes to India",
+                    "ru": "БЭМ едет в Индию"
+                },
+                "route": {
+                    "conditions": {
+                        "id": "2013-02-bem-goes-to-india"
+                    }
+                },
+                "source": "https://github.com/bem/bem-method/tree/bem-info-data/news/2013-02-bem-goes-to-india"
             }
-        }
+        ]
     },
     {
         "title": {
@@ -533,7 +972,7 @@
             "pattern": "/jobs(/)"
         },
         "source": "https://github.com/bem/bem-method/tree/bem-info-data/pages/jobs",
-        "hidden": ["en"]    
+        "hidden": ["en"]
     },
     {
         "type": "delimeter"
