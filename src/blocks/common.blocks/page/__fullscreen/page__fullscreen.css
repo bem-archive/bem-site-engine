@@ -1,0 +1,14 @@
+.page__fullscreen 
+{
+	display: inline-block;
+	background: gold;
+	padding: 10px;
+	cursor: pointer;
+	position: fixed;
+	margin-left: -10px;
+}
+
+.page_fullscreen .page__fullscreen 
+{
+	background: red;
+}

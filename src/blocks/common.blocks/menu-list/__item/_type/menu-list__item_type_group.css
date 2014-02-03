@@ -1,16 +1,16 @@
-.menu-list__item_type_group {
-    font-size: 0.9em;
-
+.menu-list__item_type_group, 
+.menu-list__item_type_group.menu-list__item_active 
+{
     margin: 0;
-
-    background: #F6F5F3;
+    background: #f6f5f3;
     border-top: 1px solid rgba(0,0,0,.2);
     border-bottom: 1px solid rgba(0,0,0,.2);
-
     letter-spacing: 2px;
     text-transform: uppercase;
+    line-height: 1.2em;
 }
 
-.menu-list__item_type_group:hover {
-    background: #EEEEEE;
+.menu-list__item_type_group:hover 
+{
+    background: #eee;
 }

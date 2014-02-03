@@ -1,6 +1,14 @@
 .menu-list__item_size_normal
 {
     font-size: 1.3em;
+    line-height: 1.4em;
     padding: 0 0 0 20px;
     letter-spacing: 1px;
+}
+
+@media screen and (max-height:700px) {
+    .menu-list__item_size_normal {
+        font-size: 1em;
+        line-height: 1em;
+    }
 }

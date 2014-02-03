@@ -5,6 +5,8 @@
     -ms-transition: background .4s ease;
     -o-transition: background .4s ease;
     transition: background .4s ease;
+    font-size: 1.1em;
+    padding-right: 10px;
 }
 
 .menu-list__item:hover
@@ -16,13 +18,17 @@
 .menu-list__item_type_simple > .link,
 .menu-list__item_type_static > .link
 {
-    font-size: 1.1em;
+    font-size: 1em;
     line-height: 1.4em;
-
     display: block;
-    padding: 7px 5px 7px 12px;
-
+    padding: 8px 12px 7px 12px;
     text-decoration: none;
-
     color: #000000;
+}
+
+@media screen and (max-height:700px) {
+    .menu-list__item {
+        font-size: 0.9em;
+        line-height: 0.8em;
+    }
 }

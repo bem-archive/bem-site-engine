@@ -1,4 +1,0 @@
-block main-menu, elem item, mod type delimeter {
-
-    content: []
-}

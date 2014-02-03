@@ -1,15 +1,30 @@
-.menu-list {
-    flex-basis: 100px;
-    flex-grow: 1.5;
-    flex-shrink: 0;
+.menu-list 
+{
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+
+    max-width: 200px;
 
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
     border-right: 1px solid rgba(0,0,0,.2);
-
+    position: relative;
     list-style-type: none;
     padding: 0px;
     margin: 0px;
 }
+
+.page_fullscreen .menu-list 
+{
+    display: none;
+}
+
+.page_fullscreen .menu-list_main 
+{
+    display: block;
+}
+

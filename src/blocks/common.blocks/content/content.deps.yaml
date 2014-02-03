@@ -2,8 +2,7 @@
   required: true
   elems: [dom, html, tree]
 
-- block: menu
-- elems: [content-area]
+- elems: [content-area, fullscreen]
 - mods:
     view:
       - post

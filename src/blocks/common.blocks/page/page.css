@@ -18,4 +18,6 @@ html
     min-height: 700px;
 
     color: #000000;
+    display: -webkit-flex;
+    display: flex;
 }

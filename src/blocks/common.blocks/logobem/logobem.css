@@ -1,9 +1,15 @@
 .logobem
 {
     display: block;
-
     height: 50px;
     margin: 0 0 20px 30px;
-
     background: url('logobem.png') no-repeat;
+}
+
+@media screen and (max-height:700px) {
+    .logobem
+    {
+        height: 20px;
+        background-size: contain;
+    }
 }

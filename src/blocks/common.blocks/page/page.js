@@ -14,7 +14,9 @@ BEMDOM.decl('page', {
             }
         }
     },
-
+    _onClick: function() {
+        this.toggleMod('fullscreen');
+    },
     /*
      * Проверка тач-устройств (при обнаружении добавляется модификатор _touch_yes)
      * @private
@@ -29,24 +31,10 @@ BEMDOM.decl('page', {
             return true;
         }
         return false;
-    },
-
-    /*
-     * Рассчет свободного места для контента поста
-     * @private
-     * @returns this;
-     */
-    _resizePostContent: function() {
-        var windowW = BEMDOM.win.width(),
-            mainMenuW = this.findBlockInside('main-menu').domElem.width(),
-            menusW = this.findBlocksInside('menu').reduce(function(prev, item) {
-                return prev + item.domElem.width();
-            }, 0),
-            post = this.findBlockInside({ block: 'post', modName: 'view', modVal: 'full' });
-
-            post && post.domElem.width(windowW - mainMenuW - menusW - 30);
-
-        return this;
+    }
+    },{
+    live: function() {
+        this.liveBindTo('fullscreen', 'click', function() { this._onClick() });
     }
 });
 
