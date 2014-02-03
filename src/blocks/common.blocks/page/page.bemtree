@@ -52,7 +52,8 @@ block page {
     }
 
     content: [
-        { block : 'content', mods: { view: this.data.node.view } },
+        { block: 'menu' },
+        { block : 'content', mods: { view: this.data.node.view }, js: true },
         { block : 'metrika' },
         { elem : 'js' }
     ]

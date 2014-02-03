@@ -1,5 +1,4 @@
 block menu-list, elem item {
-    tag: 'li'
 
     content: {
         block: 'link',

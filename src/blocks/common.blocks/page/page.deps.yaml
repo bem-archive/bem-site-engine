@@ -2,7 +2,7 @@
   required: true
   elems: [dom, html, tree]
 
-- elems: [css, js]
+- elems: [css, js, fullscreen]
 - mods: { theme: white }
 - mods: { page: error }
 - mods: { touch: yes }
@@ -13,5 +13,6 @@
   mods: { type: serp }
 - block: layout
   mods: { section: 100 }
+- menu
 - content
 - metrika

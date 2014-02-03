@@ -1,13 +1,9 @@
-block menu {
-
-    this.data.menu, content: {
-
-        return this.data.menu.map(function(column, index) {
-            return {
-                block: 'menu-list',
-                mods: { main: index === 0 },
-                content: column
-            }
-        });
-    }
-}
+block menu, this.data.menu, default: applyCtx(
+	this.data.menu.map(function(column, index) {
+        return {
+            block: 'menu-list',
+            mods: { main: index === 0 },
+            content: column
+        }
+    })
+)

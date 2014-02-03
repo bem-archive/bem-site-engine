@@ -1,9 +1,10 @@
-.content{
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: stretch;
+.content
+{
     box-sizing: border-box;
-    overflow: hidden;
+    overflow-y: scroll;
     height: 100%;
-    min-width: 960px;
+    -webkit-flex: auto;
+    -moz-flex: auto;
+    -ms-flex: auto;
+    flex: auto;
 }

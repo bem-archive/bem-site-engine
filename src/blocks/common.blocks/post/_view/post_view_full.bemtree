@@ -31,8 +31,9 @@ block post, mod view full {
     }
 
     fullscreen: {
+        block: 'page',
         elem: 'fullscreen',
-        content: this.ctx.content
+        js: true
     }
 
     //authors of post

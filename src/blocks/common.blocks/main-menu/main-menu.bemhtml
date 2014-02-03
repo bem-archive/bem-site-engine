@@ -1,4 +1,0 @@
- /*block main-menu {
-
-   mix: { block : 'layout', elem : 'col', mods: {type: 'left'} }
-} */

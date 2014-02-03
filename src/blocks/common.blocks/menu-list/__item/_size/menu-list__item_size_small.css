@@ -4,3 +4,13 @@
     padding: 0px 0 0px 20px;
     letter-spacing: 1px;
 }
+
+.menu-list_main .menu-list__item_size_small > .link {
+    padding: 7px 10px 7px;
+}
+@media screen and (max-height:700px) {
+    .menu-list__item_size_small {
+        font-size: 0.8em;
+        line-height: 1em;
+    }
+}
