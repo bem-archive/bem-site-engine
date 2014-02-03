@@ -25,8 +25,8 @@ block post, mod view full {
             }),
 
             apply('title', this.ctx.content = source),
-            apply('contentFull', this.ctx.content = source.content)
-//            apply('issue', this.ctx.content = source.repo)
+            apply('contentFull', this.ctx.content = source.content),
+            apply('issue', this.ctx.content = source.repo)
         ];
     }
 
@@ -72,33 +72,35 @@ block post, mod view full {
     }
 
     issue: {
-        var repo = this.ctx.content,
-            url = repo.url,
-            treeish = repo.treeish;
+        var repo = this.ctx.content;
 
-        url = url.replace('git://', 'https://');
-        url = url.replace('.git', '');
-
-        var pRequestUrl = url + '/tree/' + treeish,
-            issueUrl = url + '/issues';
-
-        return {
-            elem: 'issueLink',
-            content: [
-                BEM.I18N('post', 'issue1'),
-                {
+        return [
+            {
+                elem: 'originalLink',
+                content: {
                     block: 'link',
-                    url: pRequestUrl,
-                    content: ' pull request '
-                },
-                BEM.I18N('post', 'issue2'),
-                {
-                    block: 'link',
-                    url: issueUrl,
-                    content: ' issue '
+                    url: repo.original,
+                    content: BEM.I18N('post', 'repo-original')
                 }
-            ]
-        }
+            },
+            {
+                elem: 'issueLink',
+                content: [
+                    BEM.I18N('post', 'repo-pr'),
+                    {
+                        block: 'link',
+                        url: repo.pr,
+                        content: ' pull request '
+                    },
+                    BEM.I18N('post', 'repo-issues'),
+                    {
+                        block: 'link',
+                        url: repo.issues,
+                        content: ' issue '
+                    }
+                ]
+            }
+        ]
     }
 
     getUrl: {

@@ -134,13 +134,14 @@ module.exports = {
 var getRepoFromSource = function(source, extention) {
 
     var repoData = (function(_source) {
-        var re = /^https:\/\/github.com\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+?)\/(.+?)$/i,
+        var re = /^https:\/\/(.+?)\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+?)\/(.+?)$/i,
             parsedSource = _source.match(re);
             return {
-                user: parsedSource[1],
-                repo: parsedSource[2],
-                ref: parsedSource[3],
-                path: parsedSource.slice(4).join('/'),
+                host: parsedSource[1],
+                user: parsedSource[2],
+                repo: parsedSource[3],
+                ref: parsedSource[4],
+                path: parsedSource.slice(5).join('/'),
                 block: parsedSource[parsedSource.length - 1]
             };
     })(source);
@@ -175,7 +176,7 @@ var getDataByGithubAPI = function(repository) {
 
 var getSourceFromMetaAndMd = function(meta, md) {
     try {
-        var repo = meta.repo;
+        var repo = _.extend({ url: md.res.html_url }, meta.repo);
 
         logger.silly('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
 
@@ -254,14 +255,14 @@ var getSourceFromMetaAndMd = function(meta, md) {
         meta.categories && delete meta.categories;
         meta.order && delete meta.order;
         meta.url && delete meta.url;
-
         /** end of fallbacks **/
 
         //set repo information
-        //meta.repo = {
-            //url: target.source.url,
-            //treeish: target.type === 'branches' ? target.ref : 'master'
-        //};
+        meta.repo = {
+            original: repo.url,
+            pr: u.format('https://%s/%s/%s/tree/%s', repo.host, repo.user, repo.repo, repo.ref),
+            issues: u.format('https://%s/%s/%s/issues', repo.host, repo.user, repo.repo)
+        };
 
     } catch(err) {
         return null;
@@ -313,7 +314,6 @@ var loadPeople = function() {
         return vow.allResolved(promises);
     });
 };
-
 
 
 

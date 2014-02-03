@@ -35,7 +35,8 @@ module.exports = {
 
         "translate": "translate",
 
-        "issue1": "If you found a bug please send ",
-        "issue2": " or submit an "
+        "repo-original": "Original text ",
+        "repo-pr": "If you found a bug please send ",
+        "repo-issues": " or submit an "
     }
 };

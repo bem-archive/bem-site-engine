@@ -33,6 +33,11 @@
     color: #555;
 }
 
+.post_view_full .post__originalLink
+{
+    margin-bottom: 20px;
+}
+
 .post_view_full .post__issueLink
 {
     color: #555;
