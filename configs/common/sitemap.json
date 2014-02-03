@@ -469,6 +469,7 @@
                         "lib": "bem-core"
                     }
                 },
+                "type": "group",
                 "items": [
                     {
                         "title": "1.0.0",
