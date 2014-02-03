@@ -79,7 +79,7 @@ block post, mod view full {
             content: [
                 {
                     tag: 'span',
-                    content: BEM.I18N('post', 'repo-1')
+                    content: BEM.I18N('post', 'repo-text')
                 },
                 {
                     block: 'link',
@@ -88,7 +88,7 @@ block post, mod view full {
                 },
                 {
                     tag: 'span',
-                    content: BEM.I18N('post', 'repo-2')
+                    content: BEM.I18N('post', 'repo-on-github')
                 },
                 {
                     block: 'link',
@@ -97,7 +97,7 @@ block post, mod view full {
                 },
                 {
                     tag: 'span',
-                    content: BEM.I18N('post', 'repo-3')
+                    content: BEM.I18N('post', 'repo-with-prose')
                 }
             ]
         }
