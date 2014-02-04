@@ -1,4 +1,5 @@
-var master = require('.master'),
+var luster = require('luster'),
+    master = require('./master'),
     config = require('../config');
 
 luster.configure({

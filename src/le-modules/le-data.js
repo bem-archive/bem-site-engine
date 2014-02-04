@@ -184,11 +184,11 @@ var getSourceFromMetaAndMd = function(meta, md) {
         meta = JSON.parse(meta);
 
         try {
+            _.extend(repo, { path: md.res.path });
             md = (new Buffer(md.res.content, 'base64')).toString();
             md = util.mdToHtml(md);
-
-            _.extend(repo, { path: md.res.path });
         } catch(err) {
+            logger.error('md content loading error user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
             md = null;
         }
 
@@ -268,7 +268,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
         };
 
     } catch(err) {
-        logger.error('loading error user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
+        logger.error('meta information loading error user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
         return null;
     }
 
