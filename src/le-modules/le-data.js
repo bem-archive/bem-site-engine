@@ -176,7 +176,7 @@ var getDataByGithubAPI = function(repository) {
 
 var getSourceFromMetaAndMd = function(meta, md) {
     try {
-        var repo = _.extend(meta.repo, { path: md.res.path });
+        var repo = meta.repo;
 
         logger.silly('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
 
@@ -186,6 +186,8 @@ var getSourceFromMetaAndMd = function(meta, md) {
         try {
             md = (new Buffer(md.res.content, 'base64')).toString();
             md = util.mdToHtml(md);
+
+            _.extend(repo, { path: md.res.path });
         } catch(err) {
             md = null;
         }
@@ -266,6 +268,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
         };
 
     } catch(err) {
+        logger.error('loading error user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
         return null;
     }
 
