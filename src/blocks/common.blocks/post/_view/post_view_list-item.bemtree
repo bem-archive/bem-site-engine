@@ -21,10 +21,10 @@ block post, mod view list-item {
                 type: source.type
             }),
 
-            apply('date', this.ctx = {
-                createDate: source.createDate,
-                editDate: source.editDate
-            }),
+//            apply('date', this.ctx = {
+//                createDate: source.createDate,
+//                editDate: source.editDate
+//            }),
 
             apply('title', this.ctx = {
                 node: this.ctx.node,

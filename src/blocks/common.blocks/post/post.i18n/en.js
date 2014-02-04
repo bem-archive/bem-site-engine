@@ -35,7 +35,10 @@ module.exports = {
 
         "translate": "translate",
 
-        "issue1": "If you found a bug please send ",
-        "issue2": " or submit an "
+        "repo-text": "If you've spotted a typo or a mistake, or wish to add something on, you could either ",
+        "repo-on-github": " on GitHub, either ",
+        "repo-with-prose": " with prose.io.",
+        "repo-issue": "write about this",
+        "repo-prose": "edit this article"
     }
 };
