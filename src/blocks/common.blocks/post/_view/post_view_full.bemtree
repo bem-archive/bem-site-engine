@@ -10,8 +10,6 @@ block post, mod view full {
 
         return [
 
-            apply('fullscreen', this.ctx.content = source.fullscreen),
-
             apply('author', this.ctx = {
                 authors: source.authors,
                 translators: source.translators
@@ -28,12 +26,6 @@ block post, mod view full {
             apply('contentFull', this.ctx.content = source.content),
             apply('issue', this.ctx.content = source.repo)
         ];
-    }
-
-    fullscreen: {
-        block: 'page',
-        elem: 'fullscreen',
-        js: true
     }
 
     //authors of post

@@ -1,11 +1,14 @@
 .page__fullscreen 
 {
-	display: inline-block;
 	background: gold;
-	padding: 10px;
+    width: 20px;
+    height: 20px;
+    -webkit-flex: 0 0 20px;
+    -moz-flex: 0 0 20px;
+    -ms-flex: 0 0 20px;
+    flex: 0 0 20px;
 	cursor: pointer;
-	position: fixed;
-	margin-left: -10px;
+    z-index: 1000;
 }
 
 .page_fullscreen .page__fullscreen 
