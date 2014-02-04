@@ -1,7 +1,7 @@
 .content
 {
     box-sizing: border-box;
-    overflow-y: scroll;
+    position: relative;
     height: 100%;
     -webkit-flex: auto;
     -moz-flex: auto;

@@ -3,10 +3,8 @@
     font-size: 16px;
     line-height: 1.4;
 
-    overflow: auto;
-
     max-width: 1050px;
-    padding: 5px 19px 24px;
+    padding: 5px 19px 24px 0;
 
     color: #586e75;
 }

@@ -1,6 +1,7 @@
 .content__content-area 
 {
-    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    overflow: auto;
     height: 100%;
     position: relative;
 }
