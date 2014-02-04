@@ -232,6 +232,9 @@ module.exports = {
         var validIdSet = _.keys(leData.getData()).filter(function(id) {
             var data = leData.getData()[id][lang];
 
+            if(!data) {
+                return false;
+            }
 
             if(_.isArray(field) && _.isArray(value)) {
                 return field.filter(function(f) {
