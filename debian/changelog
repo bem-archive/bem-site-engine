@@ -1,3 +1,9 @@
+yandex-bem-info-www (3.1.1) unstable; urgency=low
+
+  * Test rebuld. Fix start script name.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 04 Feb 2014 16:15:48 +0400
+
 yandex-bem-info-www (3.1.0) precise; urgency=low
 
   * Test rebuild. Test new logic and data loading.
