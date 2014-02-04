@@ -1,15 +1,15 @@
 {
-    "name": "bem-info",
-    "version": "3.0.0",
-    "private": true,
-    "dependencies": {
-        "bem-core": "git://github.com/bem/bem-core.git#v1.1.0",
-        "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.3"
-    },
-    "ignore": [
-        "node_modules",
-        "configs/current",
-        ".enb/tmp",
-        "src/bundles"
-    ]
+  "name": "bem-info",
+  "version": "3.0.0",
+  "private": true,
+  "dependencies": {
+    "bem-core": "git://github.com/bem/bem-core.git#v1.1.0",
+    "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.3"
+  },
+  "ignore": [
+    "node_modules",
+    "configs/current",
+    ".enb/tmp",
+    "src/bundles"
+  ]
 }
