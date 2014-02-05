@@ -1,7 +1,6 @@
 block content, mod view post {
 
     content: [
-        applyNext(),
         {
             elem: 'content-area',
             content: [

@@ -7,9 +7,9 @@ block menu, this.data.menu, default: applyCtx(
                 content: column
             }
         }),
-        {
+        this.data.menu.length > 1 ? {
             block: 'page',
             elem: 'fullscreen'
-        }
+        } : ''
     ]
 )
