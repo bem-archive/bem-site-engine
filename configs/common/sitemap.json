@@ -690,6 +690,83 @@
     },
     {
         "title": {
+            "en": "Study materials",
+            "ru": "Учебные материалы"
+        },
+        "route": {
+            "name": "tutorials",
+            "pattern": "/tutorials(/<tutorial>)(/<category>)(/<id>)(/)"
+        },
+        "source": "https://github.com/bem/bem-method/tree/bem-info-data/tutorials/index",
+        "items": [
+            {
+                "title": {
+                    "en": "Articles",
+                    "ru": "Статьи"
+                },
+                "route": {
+                    "conditions": {
+                        "tutorial": "articles"
+                    }
+                },
+                "type": "group",
+                "items": [
+                    {
+                        "title": {
+                            "en": "BEM-JS TUTORIAL",
+                            "ru": "BEM-JS ТУТОРИАЛ"
+                        },
+                        "route": {
+                            "conditions": {
+                                "category": "bem-js-tutorial"
+                            }
+                        },
+                        "source": "https://github.com/bem/bem-method/tree/bem-info-data/tutorials/bem-js-tutorial/00-Intro",
+                        "items": [
+                            {
+                                "title": {
+                                    "en": "Block structure",
+                                    "ru": "Структура блока"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "01-block-structure"
+                                    }
+                                },
+                                "source": "https://github.com/bem/bem-method/tree/bem-info-data/tutorials/bem-js-tutorial/01-Block-structure"
+                            },
+                            {
+                                "title": {
+                                    "en": "Modifiers",
+                                    "ru": "Модификаторы"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "02-modifiers"
+                                    }
+                                },
+                                "source": "https://github.com/bem/bem-method/tree/bem-info-data/tutorials/bem-js-tutorial/02-Modifiers"
+                            },
+                            {
+                                "title": {
+                                    "en": "Live-initialization",
+                                    "ru": "Живая(ленивая) инициализация"
+                                },
+                                "route": {
+                                    "conditions": {
+                                        "id": "03-live-initialization"
+                                    }
+                                },
+                                "source": "https://github.com/bem/bem-method/tree/bem-info-data/tutorials/bem-js-tutorial/03-Live-initialization"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": {
             "en": "Articles",
             "ru": "Статьи"
         },
