@@ -4,7 +4,7 @@
     position: relative;
     height: 100%;
     -webkit-flex: auto;
-    -moz-flex: auto;
-    -ms-flex: auto;
-    flex: auto;
+       -moz-flex: auto;
+        -ms-flex: auto;
+            flex: auto;
 }

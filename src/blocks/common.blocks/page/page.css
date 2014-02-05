@@ -21,3 +21,9 @@ html
     display: -webkit-flex;
     display: flex;
 }
+
+.page_page_tags .page__fullscreen,
+.page_page_authors .page__fullscreen
+{
+    display: none;
+}
