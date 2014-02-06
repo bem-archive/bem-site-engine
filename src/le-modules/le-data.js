@@ -134,15 +134,15 @@ module.exports = {
 var getRepoFromSource = function(source, extention) {
 
     var repoData = (function(_source) {
-        var re = /^https:\/\/(.+?)\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+?)\/(.+?)$/i,
+        var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+\/(.+))/,
             parsedSource = _source.match(re);
             return {
                 host: parsedSource[1],
                 user: parsedSource[2],
                 repo: parsedSource[3],
                 ref: parsedSource[4],
-                path: parsedSource.slice(5).join('/'),
-                block: parsedSource[parsedSource.length - 1]
+                path: parsedSource[5],
+                block: parsedSource[6]
             };
     })(source);
 
