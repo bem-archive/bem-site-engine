@@ -71,7 +71,7 @@
         "source": "https://github.com/bem/bem-method/tree/bem-info-data/tools/index",
         "items": [
             {
-                "title": "BEM",
+                "title": "Bem",
                 "items": [
                     {
                         "title": "bem-tools",
@@ -196,8 +196,8 @@
             },
             {
                 "title": {
-                    "en": "OPTIMIZERS",
-                    "ru": "ОПТИМИЗАТОРЫ"
+                    "en": "Optimizers",
+                    "ru": "Оптимизаторы"
                 },
                 "items": [
                     {
@@ -359,8 +359,8 @@
             },
             {
                 "title": {
-                    "en": "TEMPLATING ENGINES",
-                    "ru": "ШАБЛОНИЗАТОРЫ"
+                    "en": "Templating engines",
+                    "ru": "Шаблонизаторы"
                 },
                 "items": [
                     {
@@ -434,8 +434,8 @@
             },
             {
                 "title": {
-                    "en": "PARSERS",
-                    "ru": "ПАРСЕРЫ"
+                    "en": "Parsers",
+                    "ru": "Парсеры"
                 },
                 "items": [
                     {
@@ -463,7 +463,7 @@
         "source": "https://github.com/bem/bem-method/tree/bem-info-data/libs/index",
         "items": [
             {
-                "title": "BEM-CORE",
+                "title": "Bem-core",
                 "route": {
                     "conditions": {
                         "lib": "bem-core"
@@ -505,7 +505,7 @@
                                 "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/migration"
                             },
                             {
-                                "title": "BEMHTML",
+                                "title": "Bemhtml",
                                 "items": [
                                     {
                                         "title": "Hello, BEMHTML!",
@@ -544,7 +544,7 @@
                                 ]
                             },
                             {
-                                "title": "I-BEM.JS",
+                                "title": "i-bem.js",
                                 "items": [
                                     {
                                         "title": {
@@ -596,7 +596,7 @@
                                 "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/migration"
                             },
                             {
-                                "title": "BEMHTML",
+                                "title": "Bemhtml",
                                 "items": [
                                     {
                                         "title": "Hello, BEMHTML!",
@@ -635,7 +635,7 @@
                                 ]
                             },
                             {
-                                "title": "I-BEM.JS",
+                                "title": "i-bem.js",
                                 "items": [
                                     {
                                         "title": {
