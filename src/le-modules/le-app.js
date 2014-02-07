@@ -121,7 +121,7 @@ var process = function(sitemap) {
          * @param node {Object} - single node of sitemap model
          */
         processSource = function(node) {
-            if(_.has(node, 'source')) {
+            if(node.source) {
                 idSourceMap[node.id] = node.source;
             }
         },
@@ -131,7 +131,7 @@ var process = function(sitemap) {
          * @param node {Object} - single node of sitemap model
          */
         processTitle = function(node) {
-            if(_.has(node, 'title')) {
+            if(node.title) {
                 if(_.isString(node.title)) {
                     node.title = {
                         en: node.title,
@@ -146,8 +146,8 @@ var process = function(sitemap) {
          * @param node {Object} - single node of sitemap model
          */
         processView = function(node) {
-            if(!_.has(node, 'view')) {
-                node.view = _.has(node, 'source') ? NODE.VIEW.POST : NODE.VIEW.POSTS;
+            if(!node.view) {
+                node.view = node.source ? NODE.VIEW.POST : NODE.VIEW.POSTS;
             }
         },
 
@@ -156,12 +156,12 @@ var process = function(sitemap) {
          * @param node {Object} - single node of sitemap model
          */
         processHidden = function(node) {
-            if(_.has(node, 'hidden') && _.isArray(node.hidden)) {
+            if(node.hidden && _.isArray(node.hidden)) {
                 node.hidden = {
-                    en: _.indexOf(node.hidden, 'en') !== -1,
-                    ru: _.indexOf(node.hidden, 'ru') !== -1
+                    en: node.hidden.indexOf('en') !== -1,
+                    ru: node.hidden.indexOf('ru') !== -1
                 };
-            }else if(_.has(node, 'hidden') && node.hidden === true) {
+            }else if(node.hidden && node.hidden === true) {
                 node.hidden = {
                     en: true,
                     ru: true
@@ -183,10 +183,10 @@ var process = function(sitemap) {
             node.params = _.extend({}, node.parent.params);
             node.level = level;
 
-            if(_.has(node, 'route') && _.isObject(node.route)) {
+            if(node.route && _.isObject(node.route)) {
                 var r = node.route;
 
-                if(_.has(r, ROUTE.NAME)) {
+                if(r[ROUTE.NAME]) {
                     routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
                     node.url = susanin.Route(routes[r.name]).build(node.params);
                 }else {
@@ -196,8 +196,8 @@ var process = function(sitemap) {
                 [ROUTE.DEFAULTS, ROUTE.CONDITIONS, ROUTE.DATA].forEach(function(item) {
                     routes[r.name][item] = routes[r.name][item] || {};
 
-                    if(_.has(r, item)) {
-                        _.keys(r[item]).forEach(function(key) {
+                    if(r[item]) {
+                        Object.keys(r[item]).forEach(function(key) {
                             if(item === ROUTE.CONDITIONS) {
                                 routes[r.name][item][key] = routes[r.name][item][key] || [];
                                 routes[r.name][item][key].push(r[item][key]);
@@ -216,8 +216,7 @@ var process = function(sitemap) {
                 node.route = {
                     name: node.parent.route.name
                 };
-                node.type = node.type ||
-                    (_.has(node, 'url') ? NODE.TYPE.SIMPLE : NODE.TYPE.GROUP);
+                node.type = node.type || (node.url ? NODE.TYPE.SIMPLE : NODE.TYPE.GROUP);
             }
         },
 
@@ -242,7 +241,7 @@ var process = function(sitemap) {
                     node.id, node.level, node.url, node.source);
 
             //deep into node items
-            if(_.has(node, 'items')) {
+            if(node.items) {
                 node.items.forEach(function(item) {
                     nodeR(item, node, node.type === NODE.TYPE.GROUP ? level : level + 1);
                 });
@@ -313,18 +312,18 @@ var addDynamicNodesFor = function(config) {
 
     //find base route (route with pattern) for target node
     var nodeRP = function(node) {
-            if(_.has(node , 'route') && _.has(node.route, 'pattern')) {
+            if(node.route && node.route.pattern) {
                 return node.route;
             }
 
-            if(_.has(node, 'parent')) {
+            if(node.parent) {
                 return nodeRP(node.parent);
             }
         },
         baseRoute = nodeRP(targetNode);
 
     //create empty items array if it not exist yet
-    if(!_.has(targetNode, 'items')) {
+    if(!targetNode.items) {
         targetNode.items = [];
     }
 
@@ -339,7 +338,7 @@ var addDynamicNodesFor = function(config) {
             };
 
             //collect conditions for base route in routes map
-            _.keys(conditions.conditions).forEach(function(key) {
+            Object.keys(conditions.conditions).forEach(function(key) {
                 routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
                 routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
             });
@@ -381,11 +380,11 @@ var findNodeByCriteria = function(field, value) {
 
     var result = null,
         nodeR = function(node) {
-            if(_.has(node, field) && node[field] === value) {
+            if(node[field] && node[field] === value) {
                 result = node;
             }
 
-            if(!result && _.has(node, 'items')) {
+            if(!result && node.items) {
                 node.items.forEach(function(item) {
                     nodeR(item);
                 })
