@@ -50,7 +50,7 @@ module.exports = {
             .then(process)
             .then(function(nodesWithSource) {
                 return vow.all([
-                    leData.loadDataForNodes(nodesWithSource),
+                    leData.loadDocs(nodesWithSource),
                     leData.loadPeople()
                 ])
             })

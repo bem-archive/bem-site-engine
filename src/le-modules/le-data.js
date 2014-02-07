@@ -54,7 +54,7 @@ module.exports = {
      * Loads all resources by values of idHash
      * @returns {*}
      */
-    loadDataForNodes: function(nodesWithSource) {
+    loadDocs: function(nodesWithSource) {
         logger.info('Load all resources start');
 
         var promises = nodesWithSource.map(function(node){
