@@ -107,7 +107,7 @@ module.exports = {
             return meta;
         }
 
-        source = leData.getData()[node.id][req.prefLocale];
+        source = node.source[req.prefLocale];
 
         if(source) {
             meta.description = meta.ogDescription = source.summary;
@@ -185,7 +185,7 @@ module.exports = {
      * @param value - {Array|String} array or string with search value
      * @returns {Array}
      */
-    getNodeIdsByCriteria: function(lang, field, value) {
+    getNodesBySourceCriteria: function(lang, field, value) {
         logger.silly('get node ids by criteria start');
 
         var result = {},
@@ -198,7 +198,10 @@ module.exports = {
 
                 if(node.source) {
                     result[node.route.name].items = result[node.route.name].items || [];
-                    result[node.route.name].items.push(_.pick(node, 'id', 'url'));
+
+                    if(sourceOfNodeSatisfyCriteria(node.source[lang], field, value)) {
+                        result[node.route.name].items.push(node);
+                    }
                 }
 
                 if(node.items) {
@@ -208,85 +211,13 @@ module.exports = {
                 }
             };
 
-        /*
-            Recursive sitemap iteration and creating
-            pseudo node representation of site sections
-            with corresponded posts
-        */
         leApp.getSitemap().forEach(function(node) {
             traverseTreeNodes(node);
         });
 
-        //if value is not present show all-pseudo nodes
-        if(_.isUndefined(value) || _.isNull(value)) {
-            return _.values(result).filter(function(item) {
-                return item.items && item.items.length > 0;
-            });
-        }
-
-        /*
-            Filter all resources by lang, and filter criteria
-            of field <-> value equality with all possible accepted
-            types of field and values
-        */
-        var validIdSet = _.keys(leData.getData()).filter(function(id) {
-            var data = leData.getData()[id][lang];
-
-            if(!data) {
-                return false;
-            }
-
-            if(_.isArray(field) && _.isArray(value)) {
-                return field.filter(function(f) {
-                    if(_.isArray(data[f])) {
-                        return _.intersection(data[f], value).length > 0;
-                    }else {
-                        return value.indexOf(data[f]) !== -1;
-                    }
-                }).length > 0;
-            } else if(_.isArray(field)) {
-                return field.filter(function(f) {
-                    if(_.isArray(data[f])) {
-                        return data[f].indexOf(value) !== -1;
-                    }else {
-                        return data[f] === value;
-                    }
-                }).length > 0;
-            } else if(_.isArray(value)) {
-                if(_.isArray(data[field])) {
-                    return _.intersection(data[field], value).length > 0;
-                }else {
-                    return value.indexOf(data[field]) !== -1;
-                }
-            } else {
-                if(_.isArray(data[field])) {
-                    return data[field].indexOf(value) !== -1;
-                }else {
-                    return data[field] === value;
-                }
-            }
-
+        return _.values(result).filter(function(item) {
+            return item.items && item.items.length > 0;
         });
-
-        logger.silly('validIdSet: %s', validIdSet.join(', '));
-
-        //filter pseudo-nodes by validIdSet criteria
-        result = _.values(result)
-            .filter(function(item) {
-                return item.items;
-            })
-            .map(function(item) {
-                item.items = item.items.filter(function(_item) {
-                    return validIdSet.indexOf(_item.id) !== -1;
-                });
-
-                return item;
-            })
-            .filter(function(item) {
-                return item.items.length > 0;
-            });
-
-        return result;
     },
 
     /**
@@ -307,5 +238,46 @@ module.exports = {
         url += node.hidden[targetLang] ? '/' : req._parsedUrl.pathname;
 
         return url;
+    }
+};
+
+var sourceOfNodeSatisfyCriteria = function(data, field, value) {
+
+    if(!data) {
+        return false;
+    }
+
+    if(_.isUndefined(value) || _.isNull(value)) {
+        return true;
+    }
+
+    if(_.isArray(field) && _.isArray(value)) {
+        return field.filter(function(f) {
+            if(_.isArray(data[f])) {
+                return _.intersection(data[f], value).length > 0;
+            }else {
+                return value.indexOf(data[f]) !== -1;
+            }
+        }).length > 0;
+    } else if(_.isArray(field)) {
+        return field.filter(function(f) {
+            if(_.isArray(data[f])) {
+                return data[f].indexOf(value) !== -1;
+            }else {
+                return data[f] === value;
+            }
+        }).length > 0;
+    } else if(_.isArray(value)) {
+        if(_.isArray(data[field])) {
+            return _.intersection(data[field], value).length > 0;
+        }else {
+            return value.indexOf(data[field]) !== -1;
+        }
+    } else {
+        if(_.isArray(data[field])) {
+            return data[field].indexOf(value) !== -1;
+        }else {
+            return data[field] === value;
+        }
     }
 };

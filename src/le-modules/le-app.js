@@ -48,7 +48,7 @@ module.exports = {
         return load()
             .then(parse)
             .then(process)
-            .then(leData.loadAll)
+            .then(leData.loadDataForNodes)
             .then(addDynamicNodes);
     },
 
@@ -114,7 +114,7 @@ var process = function(sitemap) {
     logger.debug('Process site map');
 
     var def = vow.defer(),
-        idSourceMap = {},
+        nodesWithSource = [],
 
         /**
          * Creates hash unique id of node -> source
@@ -122,7 +122,7 @@ var process = function(sitemap) {
          */
         processSource = function(node) {
             if(node.source) {
-                idSourceMap[node.id] = node.source;
+                nodesWithSource.push(node);
             }
         },
 
@@ -261,8 +261,7 @@ var process = function(sitemap) {
             }, 0);
         });
 
-        leData.setIdHash(idSourceMap);
-        def.resolve(sitemap);
+        def.resolve(nodesWithSource);
     } catch(e) {
         logger.error(e.message);
         def.reject(e);

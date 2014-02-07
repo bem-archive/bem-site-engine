@@ -13,7 +13,7 @@ block content, mod view tags {
     tagPosts: {
         logger.silly('tagPosts lang: %s id: %s', this.data.lang, this.data.req.params.id);
 
-        var posts = leLogic.getNodeIdsByCriteria(
+        var posts = leLogic.getNodesBySourceCriteria(
                 this.data.lang, 'tags', this.data.req.params.id);
 
         return {

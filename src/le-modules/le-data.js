@@ -16,9 +16,7 @@ var https = require('https'),
     gitPrivate = null,
     gitPublic = null;
 
-var idHash = {}, //hash {key: -> sha of node, value: -> "https://github.com/user/repo/tree/branch/path...."}
-    dataHash = {}, //has {key: -> sha of node, value: -> {en: "en.meta.json merged with en.md", ru: "ru.meta.json merged with ru.md"}
-    peopleHash = {},
+var peopleHash = {},
     collectedAuthors = [],
     collectedTranslators = [],
     collectedTags = [];
@@ -46,30 +44,28 @@ module.exports = {
      * Loads all resources by values of idHash
      * @returns {*}
      */
-    loadAll: function() {
+    loadDataForNodes: function(nodesWithSource) {
         logger.info('Load all resources start');
 
-        var promises = _.keys(idHash).map(function(id) {
-            logger.silly('source map id: %s source: %s', id, idHash[id]);
-
-            var source = idHash[id];
+        var promises = nodesWithSource.map(function(node){
+            logger.silly('Load source for node with url %s %s', node.url, node.source);
 
             return vow
                 .allResolved({
-                    metaEn: getDataByGithubAPI(getRepoFromSource(source, 'en.meta.json')),
-                    mdEn: getDataByGithubAPI(getRepoFromSource(source, 'en.md')),
-                    metaRu: getDataByGithubAPI(getRepoFromSource(source, 'ru.meta.json')),
-                    mdRu: getDataByGithubAPI(getRepoFromSource(source, 'ru.md'))
+                    metaEn: getDataByGithubAPI(getRepoFromSource(node.source, 'en.meta.json')),
+                    mdEn: getDataByGithubAPI(getRepoFromSource(node.source, 'en.md')),
+                    metaRu: getDataByGithubAPI(getRepoFromSource(node.source, 'ru.meta.json')),
+                    mdRu: getDataByGithubAPI(getRepoFromSource(node.source, 'ru.md'))
                 })
                 .then(function(value) {
                     var _def = vow.defer();
 
-                    dataHash[id] = {
+                    node.source = {
                         en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value),
                         ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value)
                     };
 
-                    _def.resolve(dataHash[id]);
+                    _def.resolve(node);
                     return _def.promise();
                 });
         });
@@ -87,28 +83,8 @@ module.exports = {
         //TODO implement this
     },
 
-    /**
-     * Sets idHash
-     * @param _idHash
-     */
-    setIdHash: function(_idHash) {
-        idHash = _idHash;
-    },
-
-    /**
-     * Returns data hash
-     * @returns {Object}
-     */
-    getData: function() {
-        return dataHash;
-    },
-
     getPeople: function() {
         return peopleHash;
-    },
-
-    getTags: function() {
-        return collectedTags;
     },
 
     getAuthors: function() {
@@ -117,6 +93,10 @@ module.exports = {
 
     getTranslators: function() {
         return collectedTranslators;
+    },
+
+    getTags: function() {
+        return collectedTags;
     }
 };
 
@@ -172,6 +152,50 @@ var getDataByGithubAPI = function(repository) {
         }
     });
     return def.promise();
+};
+
+/**
+ * Loads people data from configured people repository
+ * for all unique names of people blocks
+ * @returns {*}
+ */
+var loadPeople = function() {
+    logger.info('Load all people start');
+
+    var peopleRepository = config.get('github:peopleRepository');
+
+    return getDataByGithubAPI(peopleRepository).then(function(result) {
+        var promises = result.res.map(function(people) {
+            return vow
+                .allResolved({
+                    metaEn: getDataByGithubAPI(_.extend({}, peopleRepository,
+                        { path: path.join(people.path, people.name + '.en.meta.json') })),
+                    metaRu: getDataByGithubAPI(_.extend({}, peopleRepository,
+                        { path: path.join(people.path, people.name + '.ru.meta.json') }))
+                })
+                .then(function(value) {
+                    var _def = vow.defer(),
+                        getPeopleFromMeta = function(meta) {
+                            meta = (new Buffer(meta.res.content, 'base64')).toString();
+                            meta = JSON.parse(meta);
+
+                            //TODO can make some post-load operations here
+
+                            return meta;
+                        };
+
+                    peopleHash[people.name] = {
+                        en: getPeopleFromMeta(value.metaEn._value),
+                        ru: getPeopleFromMeta(value.metaRu._value)
+                    };
+
+                    _def.resolve(peopleHash[people.name]);
+                    return _def.promise();
+                });
+        });
+
+        return vow.allResolved(promises);
+    });
 };
 
 var getSourceFromMetaAndMd = function(meta, md) {
@@ -259,7 +283,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
         meta.url && delete meta.url;
         /** end of fallbacks **/
 
-        //set repo information
+            //set repo information
         meta.repo = {
             issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
                 repo.host, repo.user, repo.repo, meta.title),
@@ -273,50 +297,6 @@ var getSourceFromMetaAndMd = function(meta, md) {
     }
 
     return meta;
-};
-
-/**
- * Loads people data from configured people repository
- * for all unique names of people blocks
- * @returns {*}
- */
-var loadPeople = function() {
-    logger.info('Load all people start');
-
-    var peopleRepository = config.get('github:peopleRepository');
-
-    return getDataByGithubAPI(peopleRepository).then(function(result) {
-        var promises = result.res.map(function(people) {
-            return vow
-                .allResolved({
-                    metaEn: getDataByGithubAPI(_.extend({}, peopleRepository,
-                        { path: path.join(people.path, people.name + '.en.meta.json') })),
-                    metaRu: getDataByGithubAPI(_.extend({}, peopleRepository,
-                        { path: path.join(people.path, people.name + '.ru.meta.json') }))
-                })
-                .then(function(value) {
-                    var _def = vow.defer(),
-                        getPeopleFromMeta = function(meta) {
-                            meta = (new Buffer(meta.res.content, 'base64')).toString();
-                            meta = JSON.parse(meta);
-
-                            //TODO can make some post-load operations here
-
-                            return meta;
-                        };
-
-                    peopleHash[people.name] = {
-                        en: getPeopleFromMeta(value.metaEn._value),
-                        ru: getPeopleFromMeta(value.metaRu._value)
-                    };
-
-                    _def.resolve(peopleHash[people.name]);
-                    return _def.promise();
-                });
-        });
-
-        return vow.allResolved(promises);
-    });
 };
 
 
