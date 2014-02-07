@@ -48,7 +48,12 @@ module.exports = {
         return load()
             .then(parse)
             .then(process)
-            .then(leData.loadDataForNodes)
+            .then(function(nodesWithSource) {
+                return vow.all([
+                    leData.loadDataForNodes(nodesWithSource),
+                    leData.loadPeople()
+                ])
+            })
             .then(addDynamicNodes);
     },
 

@@ -21,6 +21,16 @@ var peopleHash = {},
     collectedTranslators = [],
     collectedTags = [];
 
+var MSG = {
+    ERR: {
+        NOT_EXIST: '%s file does not exist for source user: %s repo: %s ref: %s path: %s',
+        PARSING_ERROR: '%s file parsed with error for source user: %s repo: %s ref: %s path: %s'
+    },
+    WARN: {
+        DEPRECATED: 'remove deprecated field %s for source user: %s repo: %s ref: %s path: %s'
+    }
+}
+
 module.exports = {
 
     /**
@@ -70,7 +80,51 @@ module.exports = {
                 });
         });
 
-        return vow.allResolved(promises).then(loadPeople);
+        return vow.allResolved(promises);
+    },
+
+    /**
+     * Loads people data from configured people repository
+     * for all unique names of people blocks
+     * @returns {*}
+     */
+    loadPeople: function() {
+        logger.info('Load all people start');
+
+        var peopleRepository = config.get('github:peopleRepository');
+
+        return getDataByGithubAPI(peopleRepository).then(function(result) {
+            var promises = result.res.map(function(people) {
+                return vow
+                    .allResolved({
+                        metaEn: getDataByGithubAPI(_.extend({}, peopleRepository,
+                            { path: path.join(people.path, people.name + '.en.meta.json') })),
+                        metaRu: getDataByGithubAPI(_.extend({}, peopleRepository,
+                            { path: path.join(people.path, people.name + '.ru.meta.json') }))
+                    })
+                    .then(function(value) {
+                        var _def = vow.defer(),
+                            getPeopleFromMeta = function(meta) {
+                                meta = (new Buffer(meta.res.content, 'base64')).toString();
+                                meta = JSON.parse(meta);
+
+                                //TODO can make some post-load operations here
+
+                                return meta;
+                            };
+
+                        peopleHash[people.name] = {
+                            en: getPeopleFromMeta(value.metaEn._value),
+                            ru: getPeopleFromMeta(value.metaRu._value)
+                        };
+
+                        _def.resolve(peopleHash[people.name]);
+                        return _def.promise();
+                    });
+            });
+
+            return vow.allResolved(promises);
+        });
     },
 
     reloadAll: function() {
@@ -154,147 +208,84 @@ var getDataByGithubAPI = function(repository) {
     return def.promise();
 };
 
-/**
- * Loads people data from configured people repository
- * for all unique names of people blocks
- * @returns {*}
- */
-var loadPeople = function() {
-    logger.info('Load all people start');
-
-    var peopleRepository = config.get('github:peopleRepository');
-
-    return getDataByGithubAPI(peopleRepository).then(function(result) {
-        var promises = result.res.map(function(people) {
-            return vow
-                .allResolved({
-                    metaEn: getDataByGithubAPI(_.extend({}, peopleRepository,
-                        { path: path.join(people.path, people.name + '.en.meta.json') })),
-                    metaRu: getDataByGithubAPI(_.extend({}, peopleRepository,
-                        { path: path.join(people.path, people.name + '.ru.meta.json') }))
-                })
-                .then(function(value) {
-                    var _def = vow.defer(),
-                        getPeopleFromMeta = function(meta) {
-                            meta = (new Buffer(meta.res.content, 'base64')).toString();
-                            meta = JSON.parse(meta);
-
-                            //TODO can make some post-load operations here
-
-                            return meta;
-                        };
-
-                    peopleHash[people.name] = {
-                        en: getPeopleFromMeta(value.metaEn._value),
-                        ru: getPeopleFromMeta(value.metaRu._value)
-                    };
-
-                    _def.resolve(peopleHash[people.name]);
-                    return _def.promise();
-                });
-        });
-
-        return vow.allResolved(promises);
-    });
-};
-
 var getSourceFromMetaAndMd = function(meta, md) {
-    try {
-        var repo = meta.repo;
+    var repo = meta.repo;
 
-        logger.silly('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
+    logger.silly('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
+
+    try {
+        if(!md.res) {
+            logger.error(MSG.ERR.NOT_EXIST, 'md', repo.user, repo.repo, repo.ref, repo.path);
+            md = null;
+        }else {
+            _.extend(repo, { path: md.res.path });
+            md = (new Buffer(md.res.content, 'base64')).toString();
+            md = util.mdToHtml(md);
+        }
+    } catch(err) {
+        logger.error(MSG.ERR.PARSING_ERROR, 'md', repo.user, repo.repo, repo.ref, repo.path);
+        md = null;
+    }
+
+    try {
+        if(!meta.res) {
+            logger.error(MSG.ERR.NOT_EXIST, 'meta', repo.user, repo.repo, repo.ref, repo.path);
+            return null;
+        }
 
         meta = (new Buffer(meta.res.content, 'base64')).toString();
         meta = JSON.parse(meta);
 
-        try {
-            _.extend(repo, { path: md.res.path });
-            md = (new Buffer(md.res.content, 'base64')).toString();
-            md = util.mdToHtml(md);
-        } catch(err) {
-            logger.error('md content loading error user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
-            md = null;
-        }
-
-        meta.content = md;
-
-        //parse date from dd-mm-yyyy format into milliseconds
-        if(meta.createDate) {
-            meta.createDate = util.dateToMilliseconds(meta.createDate);
-        }
-
-        //parse date from dd-mm-yyyy format into milliseconds
-        if(meta.editDate) {
-            meta.editDate = util.dateToMilliseconds(meta.editDate);
-        }
-
-        //remove empty strings from authors array
-        if(_.has(meta, 'authors')) {
-            if(_.isString(meta.authors)) {
-                meta.authors = [meta.authors];
-            }
-
-            meta.authors = _.compact(meta.authors);
-            collectedAuthors = _.union(collectedAuthors, meta.authors);
-        }
-
-        //remove empty strings from translators array
-        if(_.has(meta, 'translators')) {
-            if(_.isString(meta.translators)) {
-                meta.translators = [meta.translators];
-            }
-
-            meta.translators = _.compact(meta.translators);
-            collectedTranslators = _.union(collectedTranslators, meta.translators);
-        }
-
-        if(_.has(meta, 'tags')) {
-            collectedTags = _.union(collectedTags, meta.tags);
-        }
-
-        /** fallbacks **/
-
-        //TODO  remove this type hack later after sources meta refactoring!
-        if(_.isArray(meta.type)) {
-            if(meta.type.indexOf('authors') !== -1 || meta.type.indexOf('translators') !== -1) {
-                meta.type = 'people';
-            }else if(meta.type.indexOf('page') !== -1) {
-                meta.type = 'page';
-            }else {
-                meta.type = 'post';
-            }
-        }else if(_.isString(meta.type)){
-            if(meta.type === 'authors' || meta.type === 'translators') {
-                meta.type = 'people';
-            }else if(meta.type === 'page') {
-                meta.type = 'page';
-            }else {
-                meta.type = 'post';
-            }
-        }
-
-        //TODO  remove this root hack later after sources meta refactoring!
-        //TODO  remove this categories hack later after sources meta refactoring!
-        //TODO  remove this order hack later after sources meta refactoring!
-        //TODO  remove this url hack later after sources meta refactoring!
-        meta.root && delete meta.root;
-        meta.categories && delete meta.categories;
-        meta.order && delete meta.order;
-        meta.url && delete meta.url;
-        /** end of fallbacks **/
-
-            //set repo information
-        meta.repo = {
-            issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
-                repo.host, repo.user, repo.repo, meta.title),
-            prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",
-                repo.user, repo.repo, repo.ref, repo.path)
-        };
-
     } catch(err) {
-        logger.error('meta information loading error user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
+        logger.error(MSG.ERR.PARSING_ERROR, 'meta', repo.user, repo.repo, repo.ref, repo.path);
         return null;
     }
+
+    meta.content = md;
+
+    //parse date from dd-mm-yyyy format into milliseconds
+    if(meta.createDate) {
+        meta.createDate = util.dateToMilliseconds(meta.createDate);
+    }
+
+    //parse date from dd-mm-yyyy format into milliseconds
+    if(meta.editDate) {
+        meta.editDate = util.dateToMilliseconds(meta.editDate);
+    }
+
+    //set repo information
+    meta.repo = {
+        issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
+            repo.host, repo.user, repo.repo, meta.title),
+        prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",
+            repo.user, repo.repo, repo.ref, repo.path)
+    };
+
+    //collect authors
+    if(meta.authors && _.isArray(meta.authors)) {
+        meta.authors = _.compact(meta.authors);
+        collectedAuthors = _.union(collectedAuthors, meta.authors);
+    }
+
+    //collect translators
+    if(meta.translators &&_.isArray(meta.translators)) {
+        meta.translators = _.compact(meta.translators);
+        collectedTranslators = _.union(collectedTranslators, meta.translators);
+    }
+
+    if(meta.tags) {
+        collectedTags = _.union(collectedTags, meta.tags);
+    }
+
+    /** fallbacks **/
+    ['type', 'root', 'categories', 'order', 'url', 'slug'].forEach(function(field) {
+        if(meta[field]) {
+            //TODO uncomment it for warnings
+            //logger.warn(MSG.WARN.DEPRECATED, field, repo.user, repo.repo, repo.ref, repo.path);
+            delete meta[field];
+        }
+    });
+    /** end of fallbacks **/
 
     return meta;
 };
