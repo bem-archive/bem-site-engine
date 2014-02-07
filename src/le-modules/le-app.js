@@ -156,21 +156,29 @@ var process = function(sitemap) {
          * @param node {Object} - single node of sitemap model
          */
         processHidden = function(node) {
-            if(node.hidden && _.isArray(node.hidden)) {
+
+            //show node for all locales
+            if(!node.hidden) {
+                node.hidden = {};
+                return;
+            }
+
+            //hide node for locales that exists in node hidden array
+            if(_.isArray(node.hidden)) {
                 node.hidden = {
                     en: node.hidden.indexOf('en') !== -1,
                     ru: node.hidden.indexOf('ru') !== -1
                 };
-            }else if(node.hidden && node.hidden === true) {
+                return;
+            }
+
+            //hide node for all locales
+            if(node.hidden === true) {
                 node.hidden = {
                     en: true,
                     ru: true
                 };
-            }else {
-                node.hidden = {
-                    en: false,
-                    ru: false
-                };
+                return;
             }
         },
 
