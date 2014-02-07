@@ -131,12 +131,10 @@ var process = function(sitemap) {
          * @param node {Object} - single node of sitemap model
          */
         processTitle = function(node) {
-            if(node.title) {
-                if(_.isString(node.title)) {
-                    node.title = {
-                        en: node.title,
-                        ru: node.title
-                    }
+            if(node.title && _.isString(node.title)) {
+                node.title = {
+                    en: node.title,
+                    ru: node.title
                 }
             }
         },
@@ -146,9 +144,7 @@ var process = function(sitemap) {
          * @param node {Object} - single node of sitemap model
          */
         processView = function(node) {
-            if(!node.view) {
-                node.view = node.source ? NODE.VIEW.POST : NODE.VIEW.POSTS;
-            }
+            node.view = node.view || (node.source ? NODE.VIEW.POST : NODE.VIEW.POSTS);
         },
 
         /**
@@ -219,7 +215,6 @@ var process = function(sitemap) {
                 });
 
                 node.type = node.type || NODE.TYPE.SIMPLE;
-                processView(node);
             }else {
                 node.route = {
                     name: node.parent.route.name
@@ -244,6 +239,7 @@ var process = function(sitemap) {
             processTitle(node);
             processSource(node);
             processHidden(node);
+            processView(node);
 
             logger.silly('id = %s level = %s url = %s source = %s',
                     node.id, node.level, node.url, node.source);
