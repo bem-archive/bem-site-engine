@@ -38,7 +38,7 @@ module.exports = function(config) {
             [ require('enb/techs/levels'), { levels: getLevels(config) } ],
             require('enb/techs/files'),
             [ require('enb/techs/deps'), { target: '?.bemdecl.js' } ],
-            [ require('enb/techs/css'), { target: '?.noprefix.css' } ],
+            [ require('enb-roole-techs/techs/css-roole'), { target: '?.noprefix.css' } ],
             [ require('enb-autoprefixer-techs/techs/css-autoprefixer'), {
                 browsers: ['last 2 versions', 'last 3 Chrome versions'],
                 sourceTarget: '?.noprefix.css'
