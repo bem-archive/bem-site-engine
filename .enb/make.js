@@ -1,31 +1,6 @@
 module.exports = function(config) {
     config.setLanguages(['ru', 'en']);
 
-    // Сборка страниц ошибок
-    config.nodes('src/bundles/errors.bundles/*', function(nodeConfig) {
-        nodeConfig.addTechs([
-            [ require('enb/techs/file-provider'), { target: '?.bemjson.js' } ],
-            require('enb/techs/bemdecl-from-bemjson'),
-            [ require('enb/techs/html-from-bemjson-i18n'), { lang: '{lang}' } ]
-        ]);
-        nodeConfig.addTargets([
-            '?.{lang}.html'
-        ]);
-    });
-
-    // Сборка технологий, специфичных для `common` бандла
-    config.node('src/bundles/desktop.bundles/common', function(nodeConfig) {
-        nodeConfig.addTechs([
-            [ require('enb/techs/file-provider'), { target: '?.bemdecl.js' } ],
-            [ require('enb/techs/browser-js'), { target: '?.pre.js' } ],
-            [ require('enb-modules/techs/prepend-modules'), { target: '?.js', source: '?.pre.js' } ],
-            [ require('enb-bemxjst/techs/bemtree-old'), { devMode: false } ]
-        ]);
-        nodeConfig.addTargets([
-            '_?.js', '_?.bemtree.js'
-        ]);
-    });
-
     // Сборка общих технологий для всех бандлов
     config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
         nodeConfig.addTechs([
@@ -45,6 +20,31 @@ module.exports = function(config) {
         ]);
         nodeConfig.addTargets([
             '_?.css', '_?.bemhtml.js', '_?.lang.all.js', '_?.lang.{lang}.js'
+        ]);
+    });
+
+    // Сборка технологий, специфичных для `common` бандла
+    config.node('src/bundles/desktop.bundles/common', function(nodeConfig) {
+        nodeConfig.addTechs([
+            [ require('enb/techs/file-provider'), { target: '?.bemdecl.js' } ],
+            [ require('enb/techs/browser-js'), { target: '?.pre.js' } ],
+            [ require('enb-modules/techs/prepend-modules'), { target: '?.js', source: '?.pre.js' } ],
+            [ require('enb-bemxjst/techs/bemtree-old'), { devMode: false } ]
+        ]);
+        nodeConfig.addTargets([
+            '_?.js', '_?.bemtree.js'
+        ]);
+    });
+
+    // Сборка страниц ошибок
+    config.nodes('src/bundles/errors.bundles/*', function(nodeConfig) {
+        nodeConfig.addTechs([
+            [ require('enb/techs/file-provider'), { target: '?.bemjson.js' } ],
+            require('enb/techs/bemdecl-from-bemjson'),
+            [ require('enb/techs/html-from-bemjson-i18n'), { lang: '{lang}' } ]
+        ]);
+        nodeConfig.addTargets([
+            '?.{lang}.html'
         ]);
     });
 
