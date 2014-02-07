@@ -1,5 +1,3 @@
-var fs = require('fs');
-
 module.exports = function(config) {
     config.setLanguages(['ru', 'en']);
 
