@@ -17,7 +17,7 @@ module.exports = {
 
         var result,
             url = req._parsedUrl.pathname,
-            nodeR = function(node) {
+            traverseTreeNodes = function(node) {
 
                 if(node.url === url) {
                     if(node.hidden[req.prefLocale]) {
@@ -30,7 +30,7 @@ module.exports = {
                 //deep into node items
                 if(!result && node.items) {
                     node.items.some(function(item) {
-                        return nodeR(item);
+                        return traverseTreeNodes(item);
                     });
                 }
             };
@@ -41,7 +41,7 @@ module.exports = {
         }
 
         leApp.getSitemap().some(function(item) {
-            return nodeR(item);
+            return traverseTreeNodes(item);
         });
 
         if(result) {
@@ -68,14 +68,14 @@ module.exports = {
             title = node.title[req.prefLocale];
         }
 
-        var nodeR = function(node) {
+        var traverseTreeNodes = function(node) {
             if(node.route && node.route.pattern) {
                 return '/' + node.title[req.prefLocale];
             }
-            return node.parent ? nodeR(node.parent) : '';
+            return node.parent ? traverseTreeNodes(node.parent) : '';
         };
 
-        title += nodeR(node.parent) + '/BEM';
+        title += traverseTreeNodes(node.parent) + '/BEM';
 
         logger.debug('page title: %s', title);
         return title;
@@ -129,13 +129,13 @@ module.exports = {
 
         var result = [],
             activeIds = [],
-            nodeRP = function(_node) {
+            traverseTreeNodesUp = function(_node) {
                 activeIds.push(_node.id);
                 if(_node.parent && _node.parent.id) {
-                    nodeRP(_node.parent);
+                    traverseTreeNodesUp(_node.parent);
                 }
             },
-            nodeRC = function(_node) {
+            traverseTreeNodesDown = function(_node) {
                 result[_node.level] = result[_node.level] || [];
 
                 //if node is not hidden for current selected locale
@@ -160,17 +160,17 @@ module.exports = {
 
                 if(isNeedToDrawChildNodes) {
                     _node.items.forEach(function(item) {
-                        nodeRC(item);
+                        traverseTreeNodesDown(item);
                     });
                 }
 
             };
 
-        nodeRP(node);
+        traverseTreeNodesUp(node);
         logger.silly('active ids %s', activeIds.join(', '));
 
         leApp.getSitemap().forEach(function(item) {
-            nodeRC(item);
+            traverseTreeNodesDown(item);
         });
 
         return result;
@@ -189,7 +189,7 @@ module.exports = {
         logger.silly('get node ids by criteria start');
 
         var result = {},
-            nodeR = function(node) {
+            traverseTreeNodes = function(node) {
                 if(node.route.pattern) {
                     result[node.route.name] = {
                         title: node.title[lang]
@@ -203,7 +203,7 @@ module.exports = {
 
                 if(node.items) {
                     node.items.forEach(function(item) {
-                        nodeR(item);
+                        traverseTreeNodes(item);
                     })
                 }
             };
@@ -214,7 +214,7 @@ module.exports = {
             with corresponded posts
         */
         leApp.getSitemap().forEach(function(node) {
-            nodeR(node);
+            traverseTreeNodes(node);
         });
 
         //if value is not present show all-pseudo nodes
