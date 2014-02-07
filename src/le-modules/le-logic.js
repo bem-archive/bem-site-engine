@@ -100,28 +100,28 @@ module.exports = {
         var source,
             meta = {};
 
-        if(node.source) {
-            source = leData.getData()[node.id][req.prefLocale];
+        if(!node.source) {
+            meta.description = node.title[req.prefLocale];
+            meta.ogUrl = req.url;
 
-            if(source) {
-                meta['description'] = meta['ogDescription'] = source.summary;
-                meta['keywords'] = meta['ogKeywords'] = source.tags ? source.tags.join(', ') : '';
-
-                if(source['ogImage'] && source['ogImage'].length > 0) {
-                    meta['image'] = source['ogImage'];
-                }else if(source['thumbnail'] && source['thumbnail'].length > 0) {
-                    meta['image'] = source['thumbnail'];
-                }
-
-                meta['ogType'] = source.type === 'post' ? 'article': null;
-                meta['ogUrl'] = req.url;
-            }
-        }else{
-            meta['description'] = node.title[req.prefLocale];
-            meta['ogUrl'] = req.url;
+            return meta;
         }
 
-        return meta;
+        source = leData.getData()[node.id][req.prefLocale];
+
+        if(source) {
+            meta.description = meta.ogDescription = source.summary;
+            meta.keywords = meta.ogKeywords = source.tags ? source.tags.join(', ') : '';
+
+            if(source.ogImage && source.ogImage.length > 0) {
+                meta.image = source.ogImage;
+            }else if(source.thumbnail && source.thumbnail.length > 0) {
+                meta.image = source.thumbnail;
+            }
+
+            meta.ogType = source.type === 'post' ? 'article': null;
+            meta.ogUrl = req.url;
+        }
     },
 
     getMenuByNode: function(req, node) {
