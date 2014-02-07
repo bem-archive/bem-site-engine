@@ -187,40 +187,41 @@ var process = function(sitemap) {
             node.params = _.extend({}, node.parent.params);
             node.level = level;
 
-            if(node.route && _.isObject(node.route)) {
-                var r = node.route;
-
-                if(r[ROUTE.NAME]) {
-                    routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
-                    node.url = susanin.Route(routes[r.name]).build(node.params);
-                }else {
-                    r.name = node.parent.route.name;
-                }
-
-                [ROUTE.DEFAULTS, ROUTE.CONDITIONS, ROUTE.DATA].forEach(function(item) {
-                    routes[r.name][item] = routes[r.name][item] || {};
-
-                    if(r[item]) {
-                        Object.keys(r[item]).forEach(function(key) {
-                            if(item === ROUTE.CONDITIONS) {
-                                routes[r.name][item][key] = routes[r.name][item][key] || [];
-                                routes[r.name][item][key].push(r[item][key]);
-
-                                node.url = susanin.Route(routes[r.name]).build(_.extend(node.params, r[item]));
-                            }else {
-                                routes[r.name][item][key] = r[item][key];
-                            }
-                        });
-                    }
-                });
-
-                node.type = node.type || NODE.TYPE.SIMPLE;
-            }else {
+            if(!node.route) {
                 node.route = {
                     name: node.parent.route.name
                 };
                 node.type = node.type || (node.url ? NODE.TYPE.SIMPLE : NODE.TYPE.GROUP);
+                return;
             }
+
+            var r = node.route;
+
+            if(r[ROUTE.NAME]) {
+                routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
+                node.url = susanin.Route(routes[r.name]).build(node.params);
+            }else {
+                r.name = node.parent.route.name;
+            }
+
+            [ROUTE.DEFAULTS, ROUTE.CONDITIONS, ROUTE.DATA].forEach(function(item) {
+                routes[r.name][item] = routes[r.name][item] || {};
+
+                if(r[item]) {
+                    Object.keys(r[item]).forEach(function(key) {
+                        if(item === ROUTE.CONDITIONS) {
+                            routes[r.name][item][key] = routes[r.name][item][key] || [];
+                            routes[r.name][item][key].push(r[item][key]);
+
+                            node.url = susanin.Route(routes[r.name]).build(_.extend(node.params, r[item]));
+                        }else {
+                            routes[r.name][item][key] = r[item][key];
+                        }
+                    });
+                }
+            });
+
+            node.type = node.type || NODE.TYPE.SIMPLE;
         },
 
         /**
