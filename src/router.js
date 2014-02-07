@@ -1,6 +1,6 @@
 var Susanin = require('susanin'),
     config = require('./config'),
-    leApp = require('./le-modules/le-app');
+    leApp = require('./modules/le-app');
 
 module.exports = {
 

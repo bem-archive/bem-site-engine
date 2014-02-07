@@ -1,5 +1,5 @@
 var template = require('../template'),
-    leLogic = require('../le-modules').leLogic,
+    leLogic = require('../modules').leLogic,
     BUNDLE_NAME = 'common';
 
 module.exports = function() {

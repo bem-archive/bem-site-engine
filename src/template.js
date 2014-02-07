@@ -7,9 +7,9 @@ var path = require('path'),
     config = require('./config'),
     ctx = {
         Vow: vow,
-        leApp: require('./le-modules').leApp,
-        leLogic: require('./le-modules').leLogic,
-        leData: require('./le-modules').leData,
+        leApp: require('./modules').leApp,
+        leLogic: require('./modules').leLogic,
+        leData: require('./modules').leData,
         leStatics: new (require('../lib/Statics').Statics)(config.get('statics')),
         leBundles: new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' }),
         logger: require('./logger')(module)

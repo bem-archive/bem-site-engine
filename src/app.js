@@ -11,7 +11,7 @@ var path = require('path'),
     port = config.get('app:port') || process.env.port || 8080;
 
 function run() {
-    var leApp = require('./le-modules').leApp,
+    var leApp = require('./modules').leApp,
         deferred = vow.defer();
 
     return leApp.run()
