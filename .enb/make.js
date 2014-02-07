@@ -1,14 +1,10 @@
-var fs = require('fs'),
-    commonBundleMask = /src\/bundles\/desktop\.bundles\/common/,
-    errorBundlesMask = /src\/bundles\/errors\.bundles\/.*/,
-    bundlesMask = /src\/bundles\/.*\.bundles/;
+var fs = require('fs');
 
 module.exports = function(config) {
     config.setLanguages(['ru', 'en']);
-    config.nodes('src/bundles/*.bundles/*');
 
     // Сборка страниц ошибок
-    config.nodeMask(errorBundlesMask, function(nodeConfig) {
+    config.nodes('src/bundles/errors.bundles/*', function(nodeConfig) {
         nodeConfig.addTechs([
             [ require('enb/techs/file-provider'), { target: '?.bemjson.js' } ],
             require('enb/techs/bemdecl-from-bemjson'),
@@ -20,12 +16,12 @@ module.exports = function(config) {
     });
 
     // Сборка технологий, специфичных для `common` бандла
-    config.nodeMask(commonBundleMask, function(nodeConfig) {
+    config.node('src/bundles/desktop.bundles/common', function(nodeConfig) {
         nodeConfig.addTechs([
             [ require('enb/techs/file-provider'), { target: '?.bemdecl.js' } ],
             [ require('enb/techs/browser-js'), { target: '?.pre.js' } ],
             [ require('enb-modules/techs/prepend-modules'), { target: '?.js', source: '?.pre.js' } ],
-            [ require('enb-bemxjst/techs/bemtree-old'), { devMode: false } ],
+            [ require('enb-bemxjst/techs/bemtree-old'), { devMode: false } ]
         ]);
         nodeConfig.addTargets([
             '_?.js', '_?.bemtree.js'
@@ -33,7 +29,7 @@ module.exports = function(config) {
     });
 
     // Сборка общих технологий для всех бандлов
-    config.nodeMask(bundlesMask, function(nodeConfig) {
+    config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
         nodeConfig.addTechs([
             [ require('enb/techs/levels'), { levels: getLevels(config) } ],
             require('enb/techs/files'),
@@ -57,7 +53,7 @@ module.exports = function(config) {
     // Псевдообработка финальных файлов, получившихся в результате сборки:
     // копируем файлы, добавляя префикс `_`
     config.mode('development', function() {
-        config.nodeMask(bundlesMask, function(nodeConfig) {
+        config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
             var fileCopy = require('enb/techs/file-copy');
 
             nodeConfig.addTechs([
@@ -73,7 +69,7 @@ module.exports = function(config) {
 
     // Обработка борщиком финальных файлов, получившихся в результате сборки
     config.mode('production', function() {
-        config.nodeMask(bundlesMask, function(nodeConfig) {
+        config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
             var borschik = require('enb/techs/borschik');
 
             nodeConfig.addTechs([
