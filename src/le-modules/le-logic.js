@@ -28,7 +28,7 @@ module.exports = {
                 }
 
                 //deep into node items
-                if(!result && _.has(node, 'items')) {
+                if(!result && node.items) {
                     node.items.some(function(item) {
                         return nodeR(item);
                     });
@@ -36,7 +36,7 @@ module.exports = {
             };
 
         //if not index page then remove possible multiple trailing slashes
-        if(!/^\/$/.test(url)) {
+        if(url !== '/') {
             url = url.replace(/(\/)+$/, '');
         }
 
@@ -64,15 +64,15 @@ module.exports = {
 
         var title;
 
-        if(_.has(node, 'title')) {
+        if(node.title) {
             title = node.title[req.prefLocale];
         }
 
         var nodeR = function(node) {
-            if(_.has(node, 'route') && _.has(node.route, 'pattern')) {
+            if(node.route && node.route.pattern) {
                 return '/' + node.title[req.prefLocale];
             }
-            return _.has(node, 'parent') ? nodeR(node.parent) : '';
+            return node.parent ? nodeR(node.parent) : '';
         };
 
         title += nodeR(node.parent) + '/BEM';
@@ -100,16 +100,16 @@ module.exports = {
         var source,
             meta = {};
 
-        if(_.has(node, 'source')){
+        if(node.source) {
             source = leData.getData()[node.id][req.prefLocale];
 
             if(source) {
                 meta['description'] = meta['ogDescription'] = source.summary;
                 meta['keywords'] = meta['ogKeywords'] = source.tags ? source.tags.join(', ') : '';
 
-                if(_.has(source, 'ogImage') && source['ogImage'].length > 0) {
+                if(source['ogImage'] && source['ogImage'].length > 0) {
                     meta['image'] = source['ogImage'];
-                }else if(_.has(source, 'thumbnail') && source['thumbnail'].length > 0) {
+                }else if(source['thumbnail'] && source['thumbnail'].length > 0) {
                     meta['image'] = source['thumbnail'];
                 }
 
@@ -131,7 +131,7 @@ module.exports = {
             activeIds = [],
             nodeRP = function(_node) {
                 activeIds.push(_node.id);
-                if(_.has(_node, 'parent') && _.has(_node.parent, 'id')) {
+                if(_node.parent && _node.parent.id) {
                     nodeRP(_node.parent);
                 }
             },
@@ -150,10 +150,10 @@ module.exports = {
                     });
                 }
 
-                var hasSource = _.has(_node, 'source'),
-                    hasItems = _.has(_node, 'items'),
+                var hasSource = _node.source,
+                    hasItems = _node.items,
                     isTargetNode = _node.id === node.id,
-                    isActive = _.indexOf(activeIds, _node.id) !== -1,
+                    isActive = activeIds.indexOf(_node.id) !== -1,
                     isGroup = _node.type === 'group',
 
                     isNeedToDrawChildNodes = isGroup || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
@@ -190,18 +190,18 @@ module.exports = {
 
         var result = {},
             nodeR = function(node) {
-                if(_.has(node.route, 'pattern')) {
+                if(node.route.pattern) {
                     result[node.route.name] = {
                         title: node.title[lang]
                     }
                 }
 
-                if(_.has(node, 'source')) {
+                if(node.source) {
                     result[node.route.name].items = result[node.route.name].items || [];
                     result[node.route.name].items.push(_.pick(node, 'id', 'url'));
                 }
 
-                if(_.has(node, 'items')) {
+                if(node.items) {
                     node.items.forEach(function(item) {
                         nodeR(item);
                     })
@@ -220,7 +220,7 @@ module.exports = {
         //if value is not present show all-pseudo nodes
         if(_.isUndefined(value) || _.isNull(value)) {
             return _.values(result).filter(function(item) {
-                return _.has(item, 'items') && item.items.length > 0;
+                return item.items && item.items.length > 0;
             });
         }
 
@@ -241,13 +241,13 @@ module.exports = {
                     if(_.isArray(data[f])) {
                         return _.intersection(data[f], value).length > 0;
                     }else {
-                        return _.indexOf(value, data[f]) !== -1;
+                        return value.indexOf(data[f]) !== -1;
                     }
                 }).length > 0;
             } else if(_.isArray(field)) {
                 return field.filter(function(f) {
                     if(_.isArray(data[f])) {
-                        return _.indexOf(data[f], value) !== -1;
+                        return data[f].indexOf(value) !== -1;
                     }else {
                         return data[f] === value;
                     }
@@ -256,11 +256,11 @@ module.exports = {
                 if(_.isArray(data[field])) {
                     return _.intersection(data[field], value).length > 0;
                 }else {
-                    return _.indexOf(value, data[field]) !== -1;
+                    return value.indexOf(data[field]) !== -1;
                 }
             } else {
                 if(_.isArray(data[field])) {
-                    return _.indexOf(data[field], value) !== -1;
+                    return data[field].indexOf(value) !== -1;
                 }else {
                     return data[field] === value;
                 }
@@ -273,11 +273,11 @@ module.exports = {
         //filter pseudo-nodes by validIdSet criteria
         result = _.values(result)
             .filter(function(item) {
-                return _.has(item, 'items');
+                return item.items;
             })
             .map(function(item) {
                 item.items = item.items.filter(function(_item) {
-                    return _.indexOf(validIdSet, _item.id) !== -1;
+                    return validIdSet.indexOf(_item.id) !== -1;
                 });
 
                 return item;
