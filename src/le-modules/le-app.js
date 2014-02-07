@@ -230,7 +230,7 @@ var process = function(sitemap) {
          * @param parent {Object} - parent for current node
          * @param level {Number} - menu deep level
          */
-        nodeR = function(node, parent, level) {
+        traverseTreeNodes = function(node, parent, level) {
 
             node.id = sha(JSON.stringify(node)); //generate unique id for node as sha sum of node object
             node.parent = parent; //set parent for current node
@@ -248,14 +248,14 @@ var process = function(sitemap) {
             //deep into node items
             if(node.items) {
                 node.items.forEach(function(item) {
-                    nodeR(item, node, node.type === NODE.TYPE.GROUP ? level : level + 1);
+                    traverseTreeNodes(item, node, node.type === NODE.TYPE.GROUP ? level : level + 1);
                 });
             }
         };
 
     try {
         sitemap.forEach(function(item) {
-            nodeR(item, {
+            traverseTreeNodes(item, {
                 route: {name: null},
                 params: {}
             }, 0);
@@ -316,16 +316,16 @@ var addDynamicNodesFor = function(config) {
     }
 
     //find base route (route with pattern) for target node
-    var nodeRP = function(node) {
+    var traverseTreeNodes = function(node) {
             if(node.route && node.route.pattern) {
                 return node.route;
             }
 
             if(node.parent) {
-                return nodeRP(node.parent);
+                return traverseTreeNodes(node.parent);
             }
         },
-        baseRoute = nodeRP(targetNode);
+        baseRoute = traverseTreeNodes(targetNode);
 
     //create empty items array if it not exist yet
     if(!targetNode.items) {
@@ -384,14 +384,14 @@ var addDynamicNodesFor = function(config) {
 var findNodeByCriteria = function(field, value) {
 
     var result = null,
-        nodeR = function(node) {
+        traverseTreeNodes = function(node) {
             if(node[field] && node[field] === value) {
                 result = node;
             }
 
             if(!result && node.items) {
                 node.items.forEach(function(item) {
-                    nodeR(item);
+                    traverseTreeNodes(item);
                 })
             }
         };
@@ -400,7 +400,7 @@ var findNodeByCriteria = function(field, value) {
         if(result) {
             return;
         }
-        nodeR(node);
+        traverseTreeNodes(node);
     });
 
     return result;
