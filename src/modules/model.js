@@ -10,7 +10,7 @@ var u = require('util'),
     util = require('../util'),
     logger = require('../logger')(module),
     config = require('../config'),
-    leData = require('./le-data');
+    data = require('./data');
 
 var ROUTE = {
     NAME: 'name',
@@ -40,18 +40,18 @@ var sitemap,
     routes = {};
 
 module.exports = {
-    run: function() {
+    init: function() {
         logger.info('Init site structure and load data');
 
-        leData.init();
+        data.common.init();
 
         return load()
             .then(parse)
             .then(process)
             .then(function(nodesWithSource) {
                 return vow.all([
-                    leData.loadDocs(nodesWithSource),
-                    leData.loadPeople()
+                    data.docs.load(nodesWithSource),
+                    data.people.load()
                 ])
             })
             .then(addDynamicNodes);
@@ -284,7 +284,7 @@ var addDynamicNodes = function() {
 
     var basePeopleConfig = {
         title: function(item){
-            var people = leData.getPeople()[item];
+            var people = data.people.getPeople()[item];
             return {
                 en: u.format('%s %s', people.en.firstName, people.en.lastName),
                 ru: u.format('%s %s', people.ru.firstName, people.ru.lastName)
@@ -294,12 +294,12 @@ var addDynamicNodes = function() {
         urlHash: peopleUrls
     };
 
-    addDynamicNodesFor(_.extend({ key: 'authors', data: leData.getAuthors }, basePeopleConfig));
-    addDynamicNodesFor(_.extend({ key: 'translators', data: leData.getTranslators }, basePeopleConfig));
+    addDynamicNodesFor(_.extend({ key: 'authors', data: data.docs.getAuthors }, basePeopleConfig));
+    addDynamicNodesFor(_.extend({ key: 'translators', data: data.docs.getTranslators }, basePeopleConfig));
 
     addDynamicNodesFor({
         key: 'tags',
-        data: leData.getTags,
+        data: data.docs.getTags,
         title: function(item) {
             return {
                 en: item,

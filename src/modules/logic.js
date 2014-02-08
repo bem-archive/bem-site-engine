@@ -1,9 +1,11 @@
 var u = require('util'),
     _ = require('lodash'),
+
     logger = require('../logger')(module),
     HttpError = require('../errors').HttpError,
-    leData = require('./le-data'),
-    leApp = require('./le-app');
+
+    data = require('./data'),
+    model = require('./model');
 
 module.exports = {
 
@@ -40,7 +42,7 @@ module.exports = {
             url = url.replace(/(\/)+$/, '');
         }
 
-        leApp.getSitemap().some(function(item) {
+        model.getSitemap().some(function(item) {
             return traverseTreeNodes(item);
         });
 
@@ -169,7 +171,7 @@ module.exports = {
         traverseTreeNodesUp(node);
         logger.silly('active ids %s', activeIds.join(', '));
 
-        leApp.getSitemap().forEach(function(item) {
+        model.getSitemap().forEach(function(item) {
             traverseTreeNodesDown(item);
         });
 
@@ -211,7 +213,7 @@ module.exports = {
                 }
             };
 
-        leApp.getSitemap().forEach(function(node) {
+        model.getSitemap().forEach(function(node) {
             traverseTreeNodes(node);
         });
 

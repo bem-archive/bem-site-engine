@@ -18,7 +18,7 @@ block content, mod view author {
     authorPosts: {
         logger.silly('authorPosts lang: %s id: %s', this.data.lang, this.data.req.params.id);
 
-        var posts = leLogic.getNodesBySourceCriteria(
+        var posts = logic.getNodesBySourceCriteria(
                 this.data.lang, ['authors', 'translators'], this.data.req.params.id);
 
         logger.silly('posts length %s', posts.length);

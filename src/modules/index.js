@@ -1,3 +1,3 @@
-exports.leApp = require('./le-app');
-exports.leData = require('./le-data');
-exports.leLogic = require('./le-logic');
+exports.data = require('./data');
+exports.model = require('./model');
+exports.logic = require('./logic');
