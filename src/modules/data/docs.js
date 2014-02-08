@@ -17,7 +17,9 @@ var https = require('https'),
 
 var collectedAuthors = [],
     collectedTranslators = [],
-    collectedTags = [];
+    collectedTags = [],
+
+    tagUrls = {};
 
 var MSG = {
     ERR: {
@@ -31,10 +33,6 @@ var MSG = {
 
 module.exports = {
 
-    /**
-     * Loads all resources by values of idHash
-     * @returns {*}
-     */
     load: function(nodesWithSource) {
         logger.info('Load all resources start');
 
@@ -88,6 +86,10 @@ module.exports = {
 
     getTags: function() {
         return collectedTags;
+    },
+
+    getTagUrls: function() {
+        return tagUrls;
     }
 };
 

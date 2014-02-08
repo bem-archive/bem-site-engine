@@ -56,6 +56,35 @@ module.exports = {
         return def.promise();
     },
 
+    getDataByHttps: function(repository) {
+        var _this = this,
+            deferred = vow.defer(),
+            url = u.format({
+                'public': 'https://raw.github.com/%s/%s/%s/%s',
+                'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
+            }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
+
+        logger.debug('load data from: %s', url);
+
+        https.get(url, function(res) {
+            var data = '';
+
+            res.on('data', function(chunk) {
+                data += chunk;
+            });
+
+            res.on('end', function() {
+                logger.debug('load data successfully finished from url %s', url);
+                deferred.resolve(JSON.parse(data));
+            });
+        }).on('error', function(e) {
+            logger.error('load data failed with error %s from url %s', e.message, url);
+            deferred.reject(e);
+        });
+
+        return deferred.promise();
+    },
+
     /**
      * Transform https url of source into repo object suitable for github api using
      * @param source - {String} https url of source block on github

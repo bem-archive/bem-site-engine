@@ -3,6 +3,6 @@ block author, content: {
     var author = data.people.getPeople()[this.ctx.id][this.data.req.prefLocale] || this.ctx.id;
 
     return this._.extend(author, {
-        url: model.getPeopleUrls()[this.ctx.id]
+        url: data.people.getUrls()[this.ctx.id]
     });
 }

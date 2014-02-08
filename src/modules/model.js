@@ -23,7 +23,8 @@ NODE = {
         POST: 'post',
         POSTS: 'posts',
         AUTHOR: 'author',
-        TAGS: 'tags'
+        TAGS: 'tags',
+        BLOCK: 'block'
     },
     TYPE: {
         SIMPLE: 'simple',
@@ -35,9 +36,8 @@ NODE = {
 };
 
 var sitemap,
-    peopleUrls = {},
-    tagUrls = {},
     routes = {};
+
 
 module.exports = {
     init: function() {
@@ -48,13 +48,21 @@ module.exports = {
         return load()
             .then(parse)
             .then(process)
-            .then(function(nodesWithSource) {
+            .then(function(res) {
                 return vow.all([
-                    data.docs.load(nodesWithSource),
+                    data.docs.load(res.docs),
+                    data.libraries.load(res.libs),
                     data.people.load()
+                ]).then(function() {
+                    return res;
+                })
+            })
+            .then(function(res) {
+                return vow.all([
+                    addLibraryNodes(res.libs),
+                    addDynamicNodes()
                 ])
             })
-            .then(addDynamicNodes);
     },
 
     /**
@@ -71,10 +79,6 @@ module.exports = {
      */
     getSitemap: function() {
         return sitemap;
-    },
-
-    getPeopleUrls: function() {
-        return peopleUrls;
     }
 };
 
@@ -120,6 +124,7 @@ var process = function(sitemap) {
 
     var def = vow.defer(),
         nodesWithSource = [],
+        nodesWithLib = [],
 
         /**
          * Creates hash unique id of node -> source
@@ -250,6 +255,10 @@ var process = function(sitemap) {
             logger.silly('id = %s level = %s url = %s source = %s',
                     node.id, node.level, node.url, node.source);
 
+            if(node.lib) {
+                nodesWithLib.push(node);
+            }
+
             //deep into node items
             if(node.items) {
                 node.items.forEach(function(item) {
@@ -266,7 +275,10 @@ var process = function(sitemap) {
             }, 0);
         });
 
-        def.resolve(nodesWithSource);
+        def.resolve({
+            docs: nodesWithSource,
+            libs: nodesWithLib
+        });
     } catch(e) {
         logger.error(e.message);
         def.reject(e);
@@ -291,7 +303,75 @@ var addDynamicNodes = function() {
             };
         },
         view: NODE.VIEW.AUTHOR,
-        urlHash: peopleUrls
+        urlHash: data.people.getUrls()
+    };
+
+    var addDynamicNodesFor = function(config) {
+        //find node with attribute dynamic and value equal to key
+        var targetNode = findNodeByCriteria('dynamic', config.key);
+
+        if(!targetNode) {
+            return;
+        }
+
+        //find base route (route with pattern) for target node
+        var traverseTreeNodes = function(node) {
+                if(node.route && node.route.pattern) {
+                    return node.route;
+                }
+
+                if(node.parent) {
+                    return traverseTreeNodes(node.parent);
+                }
+            },
+            baseRoute = traverseTreeNodes(targetNode);
+
+        //create empty items array if it not exist yet
+        if(!targetNode.items) {
+            targetNode.items = [];
+        }
+
+        routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
+        try {
+            config.data.apply(null).forEach(function(item) {
+                var conditions = {
+                    conditions: {
+                        id: item
+                    }
+                };
+
+                //collect conditions for base route in routes map
+                Object.keys(conditions.conditions).forEach(function(key) {
+                    routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
+                    routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
+                });
+
+                //create node
+                var _node = {
+                    title: config.title.call(null, item),
+                    route: _.extend({}, { name: baseRoute.name }, conditions),
+                    url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
+                    level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
+                    type: NODE.TYPE.SIMPLE,
+                    size: NODE.SIZE.NORMAL,
+                    view: config.view,
+                    hidden: {en: false, ru: false}
+                };
+
+                config.urlHash[item] = _node.url;
+
+                //generate unique id for node
+                //set target node as parent
+                //put node to the items array of target node
+                targetNode.items.push(_.extend(_node, {
+                    id: sha(JSON.stringify(_node)),
+                    parent: targetNode
+                }));
+            });
+        }catch(e) {
+            logger.error(e.message);
+        }
     };
 
     addDynamicNodesFor(_.extend({ key: 'authors', data: data.docs.getAuthors }, basePeopleConfig));
@@ -307,15 +387,14 @@ var addDynamicNodes = function() {
             };
         },
         view: NODE.VIEW.TAGS,
-        urlHash: tagUrls
+        urlHash: data.docs.getTagUrls()
     });
 };
 
-var addDynamicNodesFor = function(config) {
-    //find node with attribute dynamic and value equal to key
-    var targetNode = findNodeByCriteria('dynamic', config.key);
+var addLibraryNodes = function(nodesWithLib) {
+    logger.debug('add library nodes');
 
-    if(!targetNode) {
+    if(!nodesWithLib || !_.isArray(nodesWithLib) || nodesWithLib.length === 0) {
         return;
     }
 
@@ -329,54 +408,203 @@ var addDynamicNodesFor = function(config) {
                 return traverseTreeNodes(node.parent);
             }
         },
-        baseRoute = traverseTreeNodes(targetNode);
 
-    //create empty items array if it not exist yet
-    if(!targetNode.items) {
-        targetNode.items = [];
-    }
-
-    routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
-
-    try {
-        config.data.apply(null).forEach(function(item) {
-            var conditions = {
-                conditions: {
-                    id: item
-                }
-            };
-
-            //collect conditions for base route in routes map
-            Object.keys(conditions.conditions).forEach(function(key) {
-                routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
-                routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
-            });
-
-            //create node
-            var _node = {
-                title: config.title.call(null, item),
+        getBaseNode = function(targetNode, baseRoute, conditions) {
+            return {
                 route: _.extend({}, { name: baseRoute.name }, conditions),
                 url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
                 level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
                 type: NODE.TYPE.SIMPLE,
                 size: NODE.SIZE.NORMAL,
-                view: config.view,
-                hidden: {en: false, ru: false}
+                view: NODE.VIEW.POST,
+                hidden: {}
+            };
+        },
+
+        //collect conditions for base route in routes map
+        collectConditionsForBaseRoute = function(baseRoute, conditions) {
+            Object.keys(conditions.conditions).forEach(function(key) {
+                routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
+                routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
+            });
+        },
+
+        addVersionsToLibrary = function(targetNode) {
+            logger.silly('add versions to library');
+
+            var baseRoute = traverseTreeNodes(targetNode);
+            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
+            targetNode.items = targetNode.items || [];
+
+            var versions = data.libraries.getLibraries()[targetNode.lib];
+
+            if(!versions) return;
+
+            Object.keys(versions).forEach(function(key) {
+
+                var version = versions[key];
+                    conditions = {
+                        conditions: {
+                            lib: version.repo,
+                            version: version.ref
+                        }
+                    };
+
+                collectConditionsForBaseRoute(baseRoute, conditions)
+
+                //create node
+                var _node = _.extend({
+                    title: {
+                        en: version.ref,
+                        ru: version.ref
+                    },
+                    source: {
+                        en: { content: version.readme },
+                        ru: { content: version.readme }
+                    }
+                }, getBaseNode(targetNode, baseRoute, conditions));
+
+                targetNode.items.push(_.extend(_node, {
+                    id: sha(JSON.stringify(_node)),
+                    parent: targetNode
+                }));
+
+                addPostToVersion(_node, version, {
+                    key: 'migration',
+                    title: {
+                        en: 'Migration',
+                        ru: 'Migration'
+                    }
+                });
+                addPostToVersion(_node, version, {
+                    key: 'changelog',
+                    title: {
+                        en: 'Changelog',
+                        ru: 'Changelog'
+                    }
+                });
+                addLevelsToVersion(_node, version);
+            });
+        },
+
+        addPostToVersion = function(targetNode, version, config) {
+            logger.silly('add post to version');
+
+            var baseRoute = traverseTreeNodes(targetNode);
+            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
+            targetNode.items = targetNode.items || [];
+
+            var conditions = {
+                conditions: {
+                    lib: version.repo,
+                    version: version.ref,
+                    id: config.key
+                }
             };
 
-            config.urlHash[item] = _node.url;
+            collectConditionsForBaseRoute(baseRoute, conditions);
 
-            //generate unique id for node
-            //set target node as parent
-            //put node to the items array of target node
+            //create node
+            var _node = _.extend({
+                title: config.title,
+                source: {
+                    en: {
+                        title: config.title.en,
+                        content: version[config.key]
+                    },
+                    ru: {
+                        title: config.title.ru,
+                        content: version[config.key]
+                    }
+                }
+            }, getBaseNode(targetNode, baseRoute, conditions));
+
             targetNode.items.push(_.extend(_node, {
                 id: sha(JSON.stringify(_node)),
                 parent: targetNode
             }));
-        });
-    }catch(e) {
-        logger.error(e.message);
-    }
+        },
+
+        addLevelsToVersion = function(targetNode, version) {
+            logger.silly('add levels to version');
+
+            targetNode.items = targetNode.items || [];
+
+            var levels = version.levels;
+
+            if(!levels) return;
+
+            levels.forEach(function(level) {
+                //create node
+                var _node = {
+                    title: {
+                        en: level.name,
+                        ru: level.name
+                    },
+                    level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
+                    type: NODE.TYPE.GROUP,
+                    size: NODE.SIZE.NORMAL,
+                    hidden: {}
+                };
+
+                targetNode.items.push(_.extend(_node, {
+                    id: sha(JSON.stringify(_node)),
+                    parent: targetNode
+                }));
+
+                addBlocksToLevel(_node, version, level);
+            });
+        },
+
+        addBlocksToLevel = function(targetNode, version, level) {
+            logger.silly('add blocks to level');
+
+            var baseRoute = traverseTreeNodes(targetNode);
+            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
+            targetNode.items = targetNode.items || [];
+
+            var blocks = level.blocks;
+
+            if(!blocks) return;
+
+            blocks.forEach(function(block) {
+                var conditions = {
+                    conditions: {
+                        lib: version.repo,
+                        version: version.ref,
+                        id: block.name
+                    }
+                };
+
+                collectConditionsForBaseRoute(baseRoute, conditions)
+
+                //create node
+                var _node = _.extend({
+                    title: {
+                        en: block.name,
+                        ru: block.name
+                    },
+                    source: {
+                        data: block.data,
+                        jsdoc: block.jsdoc
+                    }
+                }, getBaseNode(targetNode, baseRoute, conditions), { view: NODE.VIEW.BLOCK });
+
+                targetNode.items.push(_.extend(_node, {
+                    id: sha(JSON.stringify(_node)),
+                    parent: targetNode
+                }));
+            });
+        };
+
+    nodesWithLib.forEach(function(node) {
+        addVersionsToLibrary(node);
+    });
+
+    logger.debug('end');
 };
 
 /**

@@ -66,6 +66,8 @@ block post, mod view full {
     issue: {
         var repo = this.ctx.content;
 
+        if(!repo) return [];
+
         return {
             elem: 'issue',
             content: [

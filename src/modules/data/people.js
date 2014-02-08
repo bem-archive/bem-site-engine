@@ -12,7 +12,8 @@ var https = require('https'),
 
     common = require('./common');
 
-var peopleHash = {};
+var peopleHash = {},
+    peopleUrls = {};
 
 module.exports = {
 
@@ -61,5 +62,9 @@ module.exports = {
 
     getPeople: function() {
         return peopleHash;
+    },
+
+    getUrls: function() {
+        return peopleUrls;
     }
 };
