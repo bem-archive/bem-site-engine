@@ -20,9 +20,8 @@ module.exports = function(config) {
         ]);
 
         nodeConfig.addTargets([
-            '_?.css', '_?.bemhtml.js', '_?.lang.all.js', '_?.lang.{lang}.js'
-        ]);
-    });
+            '_?.css', '_?.bemhtml.js'
+        ]);});
 
     // Сборка технологий, специфичных для `common` бандла
     config.node('src/bundles/desktop.bundles/common', function(nodeConfig) {
@@ -30,11 +29,22 @@ module.exports = function(config) {
             use('provider', { target: '?.bemdecl.js' }),
             use('js', { target: '?.pre.js' }),
             use('modules', { target: '?.js', source: '?.pre.js' }),
-            use('bemtree', { devMode: false })
+            use('bemtree', { devMode: false }),
+            use('merge', {
+                target: '?.template.js',
+                sources: ['?.bemtree.js', '?.bemhtml.js']
+            }),
+            use('template-i18n', {
+                target: '?.template.i18n.js',
+                sourceTarget: '?.template.js',
+                langTargets: ['all'].concat(config.getLanguages()).map(function (lang) {
+                    return '?.lang.' + lang + '.js'
+                })
+            })
         ]);
 
         nodeConfig.addTargets([
-            '_?.js', '_?.bemtree.js'
+            '_?.js', '_?.template.i18n.js'
         ]);
     });
 
@@ -59,9 +69,7 @@ module.exports = function(config) {
                 use('copy', { sourceTarget: '?.css', destTarget: '_?.css' }),
                 use('copy', { sourceTarget: '?.js', destTarget: '_?.js' }),
                 use('copy', { sourceTarget: '?.bemhtml.js', destTarget: '_?.bemhtml.js' }),
-                use('copy', { sourceTarget: '?.bemtree.js', destTarget: '_?.bemtree.js' }),
-                use('copy', { sourceTarget: '?.lang.all.js', destTarget: '_?.lang.all.js' }),
-                use('copy', { sourceTarget: '?.lang.{lang}.js', destTarget: '_?.lang.{lang}.js' })
+                use('copy', { sourceTarget: '?.template.i18n.js', destTarget: '_?.template.i18n.js' })
             ]);
         });
     });
@@ -74,11 +82,7 @@ module.exports = function(config) {
                 use('borschik', { sourceTarget: '?.js', destTarget: '_?.js', minify: true, freeze: false }),
                 use('borschik', { sourceTarget: '?.bemhtml.js', destTarget: '_?.bemhtml.js',
                     minify: true, freeze: false }),
-                use('borschik', { sourceTarget: '?.bemtree.js', destTarget: '_?.bemtree.js',
-                    minify: true, freeze: false }),
-                use('borschik', { sourceTarget: '?.lang.{lang}.js', destTarget: '_?.lang.{lang}.js',
-                    minify: true, freeze: false }),
-                use('borschik', { sourceTarget: '?.lang.all.js', destTarget: '_?.lang.all.js',
+                use('borschik', { sourceTarget: '?.template.i18n.js', destTarget: '_?.template.i18n.js',
                     minify: true, freeze: false })
             ]);
         });
@@ -87,22 +91,24 @@ module.exports = function(config) {
 
 // Хэш технологий
 var techs = {
-    levels         : require('enb/techs/levels'),
-    files          : require('enb/techs/files'),
-    provider       : require('enb/techs/file-provider'),
-    copy           : require('enb/techs/file-copy'),
-    bemdecl        : require('enb/techs/bemdecl-from-bemjson'),
-    deps           : require('enb/techs/deps'),
-    modules        : require('enb-modules/techs/prepend-modules'),
-    js             : require('enb/techs/browser-js'),
-    roole          : require('enb-roole-techs/techs/css-roole'),
-    autoprefixer   : require('enb-autoprefixer-techs/techs/css-autoprefixer'),
-    bemhtml        : require('enb-bemxjst/techs/bemhtml-old'),
-    bemtree        : require('enb-bemxjst/techs/bemtree-old'),
-    'i18n-keysets' : require('enb/techs/i18n-merge-keysets'),
-    'i18n-lang'    : require('enb/techs/i18n-lang-js'),
-    'i18n-html'    : require('enb/techs/html-from-bemjson-i18n'),
-    borschik       : require('enb/techs/borschik')
+    levels          : require('enb/techs/levels'),
+    files           : require('enb/techs/files'),
+    provider        : require('enb/techs/file-provider'),
+    copy            : require('enb/techs/file-copy'),
+    merge           : require('enb/techs/file-merge'),
+    bemdecl         : require('enb/techs/bemdecl-from-bemjson'),
+    deps            : require('enb/techs/deps'),
+    modules         : require('enb-modules/techs/prepend-modules'),
+    js              : require('enb/techs/browser-js'),
+    roole           : require('enb-roole-techs/techs/css-roole'),
+    autoprefixer    : require('enb-autoprefixer-techs/techs/css-autoprefixer'),
+    bemhtml         : require('enb-bemxjst/techs/bemhtml-old'),
+    bemtree         : require('enb-bemxjst/techs/bemtree-old'),
+    'template-i18n' : require('./techs/template-i18n'),
+    'i18n-keysets'  : require('enb/techs/i18n-merge-keysets'),
+    'i18n-lang'     : require('enb/techs/i18n-lang-js'),
+    'i18n-html'     : require('enb/techs/html-from-bemjson-i18n'),
+    borschik        : require('enb/techs/borschik')
 };
 
 /**
