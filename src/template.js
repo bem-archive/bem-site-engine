@@ -3,7 +3,7 @@ var path = require('path'),
     vow = require('vow'),
     vfs = require('vow-fs'),
     stringify = require('json-stringify-safe'),
-    target = 'src/bundles/desktop.bundles/common/_common.template.i18n.js',
+    target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
     config = require('./config'),
     ctx = {
         Vow: vow,

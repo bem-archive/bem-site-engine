@@ -20,7 +20,7 @@ module.exports = function(config) {
         ]);
 
         nodeConfig.addTargets([
-            '_?.css'
+            '?.min.css'
         ]);});
 
     // Сборка технологий, специфичных для `common` бандла
@@ -44,7 +44,7 @@ module.exports = function(config) {
         ]);
 
         nodeConfig.addTargets([
-            '_?.js', '_?.template.i18n.js'
+            '?.min.js', '?.min.template.i18n.js'
         ]);
     });
 
@@ -66,9 +66,9 @@ module.exports = function(config) {
     config.mode('development', function() {
         config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
             nodeConfig.addTechs([
-                use('copy', { sourceTarget: '?.css', destTarget: '_?.css' }),
-                use('copy', { sourceTarget: '?.js', destTarget: '_?.js' }),
-                use('copy', { sourceTarget: '?.template.i18n.js', destTarget: '_?.template.i18n.js' })
+                use('copy', { sourceTarget: '?.css', destTarget: '?.min.css' }),
+                use('copy', { sourceTarget: '?.js', destTarget: '?.min.js' }),
+                use('copy', { sourceTarget: '?.template.i18n.js', destTarget: '?.min.template.i18n.js' })
             ]);
         });
     });
@@ -77,9 +77,9 @@ module.exports = function(config) {
     config.mode('production', function() {
         config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
             nodeConfig.addTechs([
-                use('borschik', { sourceTarget: '?.css', destTarget: '_?.css', minify: true, freeze: true }),
-                use('borschik', { sourceTarget: '?.js', destTarget: '_?.js', minify: true, freeze: false }),
-                use('borschik', { sourceTarget: '?.template.i18n.js', destTarget: '_?.template.i18n.js',
+                use('borschik', { sourceTarget: '?.css', destTarget: '?.min.css', minify: true, freeze: true }),
+                use('borschik', { sourceTarget: '?.js', destTarget: '?.min.js', minify: true, freeze: false }),
+                use('borschik', { sourceTarget: '?.template.i18n.js', destTarget: '?.min.template.i18n.js',
                     minify: true, freeze: false })
             ]);
         });
