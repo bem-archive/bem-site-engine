@@ -47,7 +47,7 @@ block page {
     }
 
     asset, this.elem !== '': {
-        prefix : leStatics.getUrl(leBundles.getBundlePath(this.data.bundleName) + '/_' + this.data.bundleName),
+        prefix : leStatics.getUrl(leBundles.getBundlePath(this.data.bundleName) + '/' + this.data.bundleName + '.min'),
         suffix : this.ctx.ext
     }
 
