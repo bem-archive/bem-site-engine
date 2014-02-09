@@ -1,22 +1,20 @@
 var path = require('path'),
     vow = require('vow'),
     url = require('url'),
-    VowFs = require('vow-fs'),
+    vfs = require('vow-fs'),
     config = require('../config'),
     terror = require('terror'),
     logger = require('../logger')(module),
     staticsUrl = url.format(config.get('statics'));
 
 function buildErrorPage(code, lang) {
-    var enbBuilder = require('enb/lib/server/server-middleware').createBuilder({
-            cdir: path.join(__dirname, '..', '..')
-        }),
+    var builder = require('../builder'),
         targetName = (code && code === 404) ? 'error-404' : 'error-500',
-        target = targetName + '/' + targetName + '.' + lang + '.html';
+        target = 'src/errors.bundles/' + targetName + '/' + targetName + '.' + lang + '.html';
 
-    return enbBuilder('src/bundles/errors.bundles/' + target)
-        .then(function(target) {
-            return VowFs.read(target, 'utf-8');
+    return builder.build([target])
+        .then(function() {
+            return vfs.read(path.join(__dirname, 'bundles', target), 'utf-8');
         })
         .then(function(page) {
             return page.replace(/\{STATICS_HOST\}/g, staticsUrl);
@@ -30,8 +28,8 @@ function loadErrorPages() {
 
     return vow.all(langs.map(function(lang) {
         return vow.all([
-                VowFs.read(path.join(errorBundlesPath, 'error-404', 'error-404.' + lang + '.html'), 'utf-8'),
-                VowFs.read(path.join(errorBundlesPath, 'error-500', 'error-500.' + lang + '.html'), 'utf-8')
+                vfs.read(path.join(errorBundlesPath, 'error-404', 'error-404.' + lang + '.html'), 'utf-8'),
+                vfs.read(path.join(errorBundlesPath, 'error-500', 'error-500.' + lang + '.html'), 'utf-8')
             ]).spread(function(error404, error500) {
                 errorPages[lang] = {
                     error404: error404.replace(/\{STATICS_HOST\}/g, staticsUrl),
