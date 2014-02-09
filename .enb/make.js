@@ -20,7 +20,7 @@ module.exports = function(config) {
         ]);
 
         nodeConfig.addTargets([
-            '_?.css', '_?.bemhtml.js'
+            '_?.css'
         ]);});
 
     // Сборка технологий, специфичных для `common` бандла
@@ -68,7 +68,6 @@ module.exports = function(config) {
             nodeConfig.addTechs([
                 use('copy', { sourceTarget: '?.css', destTarget: '_?.css' }),
                 use('copy', { sourceTarget: '?.js', destTarget: '_?.js' }),
-                use('copy', { sourceTarget: '?.bemhtml.js', destTarget: '_?.bemhtml.js' }),
                 use('copy', { sourceTarget: '?.template.i18n.js', destTarget: '_?.template.i18n.js' })
             ]);
         });
@@ -80,8 +79,6 @@ module.exports = function(config) {
             nodeConfig.addTechs([
                 use('borschik', { sourceTarget: '?.css', destTarget: '_?.css', minify: true, freeze: true }),
                 use('borschik', { sourceTarget: '?.js', destTarget: '_?.js', minify: true, freeze: false }),
-                use('borschik', { sourceTarget: '?.bemhtml.js', destTarget: '_?.bemhtml.js',
-                    minify: true, freeze: false }),
                 use('borschik', { sourceTarget: '?.template.i18n.js', destTarget: '_?.template.i18n.js',
                     minify: true, freeze: false })
             ]);

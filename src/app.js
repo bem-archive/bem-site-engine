@@ -44,7 +44,7 @@ function run() {
                         repo: config.get('forum:repo'),
                         route: config.get('forum:route')
                     },
-                    BEMHTML = require('./bundles/desktop.bundles/common/_common.bemhtml').BEMHTML;
+                    BEMHTML = require('./bundles/desktop.bundles/common/_common.template.i18n').BEMHTML;
 
                 app.use(forum(forumConfig, BEMHTML));
             }
