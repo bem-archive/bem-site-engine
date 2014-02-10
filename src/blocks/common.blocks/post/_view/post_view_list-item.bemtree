@@ -1,7 +1,7 @@
 block post, mod view list-item {
 
     content: {
-        var source = leData.getData()[this.ctx.node.id][this.data.req.prefLocale];
+        var source = this.ctx.node.source[this.data.req.prefLocale];
 
         if(!source) {
             logger.error('source not found for node %s and locale %s', this.ctx.node.id, this.data.req.prefLocale);

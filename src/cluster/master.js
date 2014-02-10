@@ -11,7 +11,7 @@ if (master.isMaster) {
 
     if (socket) {
         try {
-            logger.silly('luster: unlink socket');
+            logger.debug('luster: unlink socket');
             fs.unlinkSync(socket);
         } catch (e) {}
     }

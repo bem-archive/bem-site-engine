@@ -1,8 +1,8 @@
 block author, content: {
 
-    var author = leData.getPeople()[this.ctx.id][this.data.req.prefLocale] || this.ctx.id;
+    var author = data.people.getPeople()[this.ctx.id][this.data.req.prefLocale] || this.ctx.id;
 
     return this._.extend(author, {
-        url: leApp.getPeopleUrls()[this.ctx.id]
+        url: data.people.getUrls()[this.ctx.id]
     });
 }

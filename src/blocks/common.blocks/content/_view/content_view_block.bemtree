@@ -1,0 +1,13 @@
+block content, mod view block {
+
+    content: [
+        {
+            elem: 'content-area',
+            content: [
+                JSON.stringify(this.data.node.source.data),
+                JSON.stringify(this.data.node.source.jsdoc)
+            ]
+        }
+    ]
+
+}

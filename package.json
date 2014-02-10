@@ -23,7 +23,7 @@
     "lodash": "2.4.1",
     "luster": "0.2.0",
     "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.3",
-    "winston": "0.7.2",
+    "intel": "0.4.0",
     "sha1": "1.0.0",
     "ometajs": "3.1.4",
     "marked": "git://github.com/dab/marked.git",

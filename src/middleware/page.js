@@ -1,5 +1,5 @@
 var template = require('../template'),
-    leLogic = require('../le-modules').leLogic,
+    logic = require('../modules').logic,
     BUNDLE_NAME = 'common';
 
 module.exports = function() {
@@ -7,16 +7,18 @@ module.exports = function() {
         var node, ctx;
 
         try {
-            node = leLogic.getNodeByRequest(req);
+            node = logic.getNodeByRequest(req);
             ctx = {
                 req: req,
                 bundleName: BUNDLE_NAME,
-                pageTitle: leLogic.getTitleByNode(req, node),
-                meta: leLogic.getMetaByNode(req, node),
-                menu: leLogic.getMenuByNode(req, node),
+                pageTitle: logic.getTitleByNode(req, node),
+                meta: logic.getMetaByNode(req, node),
+                menu: logic.getMenuByNode(req, node),
                 node: node,
                 lang: req.prefLocale
             };
+
+            logic.getNodesBySourceCriteria('ru', ['authors', 'translators'], 'androsov-alexey');
 
             return template.apply(ctx, req.prefLocale, req.query.__mode)
                 .then(function(html) {

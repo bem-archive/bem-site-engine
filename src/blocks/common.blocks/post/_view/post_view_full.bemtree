@@ -1,7 +1,7 @@
 block post, mod view full {
 
     content: {
-        var source = leData.getData()[this.data.node.id][this.data.req.prefLocale];
+        var source = this.data.node.source[this.data.req.prefLocale];
 
         if(!source) {
             logger.error('source not found for node %s and locale %s', this.data.node.id, this.data.req.prefLocale);
@@ -65,6 +65,8 @@ block post, mod view full {
 
     issue: {
         var repo = this.ctx.content;
+
+        if(!repo) return [];
 
         return {
             elem: 'issue',

@@ -3,8 +3,8 @@ block menu-list {
     this.ctx.content, content: {
 
         return this.ctx.content.map(function(item) {
-            logger.silly('menu item: title: %s url: %s type: %s active: %s size: %s',
-                        item.title, item.url, item.type, item.active, item.size);
+            //logger.verbose('menu item: title: %s url: %s type: %s active: %s size: %s',
+                        //item.title, item.url, item.type, item.active, item.size);
 
             return {
                 elem: 'item',

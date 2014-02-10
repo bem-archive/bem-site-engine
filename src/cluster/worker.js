@@ -1,6 +1,6 @@
 var worker = require('luster'),
     logger = require('../logger')(module),
-    leData = require('../le-modules').leData,
+    data = require('../modules').data,
     app = require('../app');
 
 if (worker.isWorker) {
@@ -8,7 +8,7 @@ if (worker.isWorker) {
 
     worker.registerRemoteCommand('reloadCache', function(target, workerId) {
         logger.info('worker %s receive message reloadCache initialized by worker %s', target.wid, workerId);
-        leData.reload();
+        data.docs.reload();
     });
 
     app.run()

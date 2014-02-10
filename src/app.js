@@ -11,10 +11,10 @@ var path = require('path'),
     port = config.get('app:port') || process.env.port || 8080;
 
 function run() {
-    var leApp = require('./le-modules').leApp,
+    var model = require('./modules').model,
         deferred = vow.defer();
 
-    return leApp.run()
+    return model.init()
         .then(function() {
             router.init();
 
@@ -75,7 +75,8 @@ exports.run = run;
 if (!module.parent) {
     run()
         .then(function() {
-            logger.info('start application on %s %s', socket && 'socket' || port && 'port', socket || port);
+            logger.info('start application on %s %s',
+                socket && 'socket' || port && 'port', socket || port);
         })
         .fail(function(err) {
             logger.error(err);
