@@ -23,14 +23,14 @@ module.exports = {
 
         var peopleRepository = config.get('github:peopleRepository');
 
-        return common.getDataByGithubAPI(peopleRepository).then(function(result) {
+        return common.loadData(peopleRepository, common.PROVIDER_GITHUB_API).then(function(result) {
             var promises = result.res.map(function(people) {
                 return vow
                     .allResolved({
-                        metaEn: common.getDataByGithubAPI(_.extend({}, peopleRepository,
-                            { path: path.join(people.path, people.name + '.en.meta.json') })),
-                        metaRu: common.getDataByGithubAPI(_.extend({}, peopleRepository,
-                            { path: path.join(people.path, people.name + '.ru.meta.json') }))
+                        metaEn: common.loadData(_.extend({}, peopleRepository,
+                            { path: path.join(people.path, people.name + '.en.meta.json') }), common.PROVIDER_GITHUB_API),
+                        metaRu: common.loadData(_.extend({}, peopleRepository,
+                            { path: path.join(people.path, people.name + '.ru.meta.json') }), common.PROVIDER_GITHUB_API)
                     })
                     .then(function(value) {
                         var _def = vow.defer(),

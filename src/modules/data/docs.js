@@ -36,14 +36,14 @@ module.exports = {
 
             return vow
                 .allResolved({
-                    metaEn: common.getDataByGithubAPI(
-                        common.getRepoFromSource(node.source, 'en.meta.json')),
-                    mdEn: common.getDataByGithubAPI(
-                        common.getRepoFromSource(node.source, 'en.md')),
-                    metaRu: common.getDataByGithubAPI(
-                        common.getRepoFromSource(node.source, 'ru.meta.json')),
-                    mdRu: common.getDataByGithubAPI(
-                        common.getRepoFromSource(node.source, 'ru.md'))
+                    metaEn: common.loadData(
+                        common.getRepoFromSource(node.source, 'en.meta.json'), common.PROVIDER_GITHUB_API),
+                    metaRu: common.loadData(
+                        common.getRepoFromSource(node.source, 'ru.meta.json'), common.PROVIDER_GITHUB_API),
+                    mdEn: common.loadData(
+                        common.getRepoFromSource(node.source, 'en.md'), common.PROVIDER_GITHUB_API),
+                    mdRu: common.loadData(
+                        common.getRepoFromSource(node.source, 'ru.md'), common.PROVIDER_GITHUB_API)
                 })
                 .then(function(value) {
                     var _def = vow.defer();
@@ -53,12 +53,17 @@ module.exports = {
                         ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value)
                     };
 
-                    _def.resolve(node);
+                    _def.resolve({ id: node.id, source: node.source });
                     return _def.promise();
                 });
         });
 
-        return vow.allResolved(promises);
+        return vow.allResolved(promises).then(function(res) {
+            return common.saveData(res.reduce(function(prev, item) {
+                    prev[item._value.id] = item._value.source;
+                    return prev;
+                }, {}), common.PROVIDER_FILE);
+        });
     },
 
     reloadAll: function() {
