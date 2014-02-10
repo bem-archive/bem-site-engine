@@ -15,11 +15,6 @@ var https = require('https'),
     gitPrivate = null,
     gitPublic = null;
 
-var BACKUPS = {
-    DIRECTORY: 'backups',
-        FILE: 'backup.json'
-};
-
 module.exports = {
 
     PROVIDER_FILE: 'file',
@@ -27,7 +22,7 @@ module.exports = {
     PROVIDER_GITHUB_HTTPS: 'github_https',
 
     /**
-     * initialize github API
+     * Initialize github API
      */
     init: function() {
         logger.info('Init');
@@ -43,23 +38,35 @@ module.exports = {
         return this;
     },
 
-    loadData: function(repository, provider) {
+    /**
+     * Load data
+     * @param provider - {String} name of data provider
+     * @param options - {Object} options
+     * @returns {Object} result
+     */
+    loadData: function(provider, options) {
         switch (provider) {
             case this.PROVIDER_FILE:
-                return loadDataFromFile();
+                return loadDataFromJSONFile(options);
             case this.PROVIDER_GITHUB_API:
-                return getDataByGithubAPI(repository);
+                return getDataByGithubAPI(options);
             case this.PROVIDER_GITHUB_HTTPS:
-                return getDataByHttps(repository);
+                return getDataByHttps(options);
             default:
                 logger.error('load data provider not recognized');
         }
     },
 
-    saveData: function(data, provider) {
+    /**
+     * Save data
+     * @param provider - {String} name of data provider
+     * @param options - {Object} options
+     * @returns {}
+     */
+    saveData: function(provider, options) {
         switch (provider) {
             case this.PROVIDER_FILE:
-                return saveDataToFile(data);
+                return saveDataToJSONFile(options);
             default:
                 logger.error('save data provider not recognized');
         }
@@ -101,7 +108,28 @@ module.exports = {
 };
 
 /**
- * Returns content of repository directory
+ * Returns loaded and parsed content of json file
+ * @param options - {Object} with fields
+ * - path {String} path to file
+ * @returns {Object}
+ */
+var loadDataFromJSONFile = function(options) {
+    logger.debug('load data from json file %s', JSON.stringify(options));
+
+    return fs.read(options.path, 'utf-8')
+        .then(
+            function(content) {
+                return JSON.parse(content);
+            },
+            function() {
+                logger.warn('cannot read content of %s file', options.path);
+                return {};
+            }
+        );
+};
+
+/**
+ * Returns content of repository directory or file loaded by github api
  * @param repository - {Object} with fields:
  * - user {String} name of user or organization which this repository is belong to
  * - repo {String} name of repository
@@ -109,8 +137,10 @@ module.exports = {
  * - path {String} relative path from the root of repository
  * @returns {*}
  */
-var getDataByGithubAPI = function(repository) {
-    var def = vow.defer();
+var getDataByGithubAPI = function(options) {
+    var def = vow.defer(),
+        repository = options.repository;
+
     gitPublic.repos.getContent(repository, function(err, res) {
         if (err || !res) {
             def.reject({res: null, repo: repository});
@@ -121,8 +151,18 @@ var getDataByGithubAPI = function(repository) {
     return def.promise();
 };
 
-var getDataByHttps = function(repository) {
+/**
+ * Returns raw content of file loaded by github https protocol
+ * @param repository - {Object} with fields:
+ * - user {String} name of user or organization which this repository is belong to
+ * - repo {String} name of repository
+ * - ref {String} name of branch
+ * - path {String} relative path from the root of repository
+ * @returns {*}
+ */
+var getDataByHttps = function(options) {
     var deferred = vow.defer(),
+        repository = options.repository,
         url = u.format({
             'public': 'https://raw.github.com/%s/%s/%s/%s',
             'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
@@ -149,10 +189,14 @@ var getDataByHttps = function(repository) {
     return deferred.promise();
 };
 
-var saveDataToFile = function(data) {
-    return fs.write(path.join(BACKUPS.DIRECTORY, BACKUPS.FILE), JSON.stringify(data), 'utf8');
-};
-
-var loadDataFromFile = function() {
-    return fs.read(path.join(BACKUPS.DIRECTORY, BACKUPS.FILE), 'utf-8')
+/**
+ * Stringify and save data object into json file
+ * @param options - {Object} with fields:
+ * - path {String} path to target file
+ * - data {Object} content for file
+ * @returns {*}
+ */
+var saveDataToJSONFile = function(options) {
+    logger.debug('save data from json file %s', JSON.stringify(options));
+    return fs.write(options.path, JSON.stringify(options.data), 'utf8');
 };

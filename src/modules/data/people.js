@@ -23,37 +23,43 @@ module.exports = {
 
         var peopleRepository = config.get('github:peopleRepository');
 
-        return common.loadData(peopleRepository, common.PROVIDER_GITHUB_API).then(function(result) {
-            var promises = result.res.map(function(people) {
-                return vow
-                    .allResolved({
-                        metaEn: common.loadData(_.extend({}, peopleRepository,
-                            { path: path.join(people.path, people.name + '.en.meta.json') }), common.PROVIDER_GITHUB_API),
-                        metaRu: common.loadData(_.extend({}, peopleRepository,
-                            { path: path.join(people.path, people.name + '.ru.meta.json') }), common.PROVIDER_GITHUB_API)
-                    })
-                    .then(function(value) {
-                        var _def = vow.defer(),
-                            getPeopleFromMeta = function(meta) {
-                                meta = (new Buffer(meta.res.content, 'base64')).toString();
-                                meta = JSON.parse(meta);
+        return common
+            .loadData(common.PROVIDER_GITHUB_API, { repository: peopleRepository })
+            .then(function(result) {
+                var promises = result.res.map(function(people) {
+                    return vow
+                        .allResolved({
+                            metaEn: common.loadData(common.PROVIDER_GITHUB_API, {
+                                repository: _.extend({}, peopleRepository,
+                                    { path: path.join(people.path, people.name + '.en.meta.json') })
+                            }),
+                            metaRu: common.loadData(common.PROVIDER_GITHUB_API, {
+                                repository: _.extend({}, peopleRepository,
+                                    { path: path.join(people.path, people.name + '.ru.meta.json') })
+                            })
+                        })
+                        .then(function(value) {
+                            var _def = vow.defer(),
+                                getPeopleFromMeta = function(meta) {
+                                    meta = (new Buffer(meta.res.content, 'base64')).toString();
+                                    meta = JSON.parse(meta);
 
-                                //TODO can make some post-load operations here
-                                return meta;
+                                    //TODO can make some post-load operations here
+                                    return meta;
+                                };
+
+                            peopleHash[people.name] = {
+                                en: getPeopleFromMeta(value.metaEn._value),
+                                ru: getPeopleFromMeta(value.metaRu._value)
                             };
 
-                        peopleHash[people.name] = {
-                            en: getPeopleFromMeta(value.metaEn._value),
-                            ru: getPeopleFromMeta(value.metaRu._value)
-                        };
+                            _def.resolve(peopleHash[people.name]);
+                            return _def.promise();
+                        });
+                });
 
-                        _def.resolve(peopleHash[people.name]);
-                        return _def.promise();
-                    });
+                return vow.allResolved(promises);
             });
-
-            return vow.allResolved(promises);
-        });
     },
 
     getPeople: function() {

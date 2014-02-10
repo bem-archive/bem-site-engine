@@ -35,7 +35,7 @@ var loadLibraryVersions = function(librariesRepository, node) {
     librariesHash[node.lib] = librariesHash[node.lib] || {};
 
     return common
-        .loadData(_.extend({ path: node.lib }, librariesRepository), common.PROVIDER_GITHUB_API)
+        .loadData(common.PROVIDER_GITHUB_API, { repository: _.extend({ path: node.lib }, librariesRepository) })
         .then(function(result) {
             var promises = result.res.map(function(version) {
                 return loadVersionData(librariesRepository, node, version);
@@ -48,7 +48,7 @@ var loadLibraryVersions = function(librariesRepository, node) {
 var loadVersionData = function(librariesRepository, node, version) {
     var _path = u.format('%s/%s/data.json', node.lib, version.name);
     return common
-        .loadData(_.extend({ path: _path }, librariesRepository), common.PROVIDER_GITHUB_HTTPS)
+        .loadData(common.PROVIDER_GITHUB_HTTPS, { repository: _.extend({ path: _path }, librariesRepository) })
         .then(function(result) {
             librariesHash[node.lib][version.name] = result;
         });

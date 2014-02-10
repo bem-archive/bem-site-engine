@@ -26,6 +26,11 @@ var MSG = {
     }
 };
 
+var BACKUPS = {
+    DIRECTORY: 'backups',
+    FILE: 'backup.json'
+};
+
 module.exports = {
 
     load: function(nodesWithSource) {
@@ -36,14 +41,18 @@ module.exports = {
 
             return vow
                 .allResolved({
-                    metaEn: common.loadData(
-                        common.getRepoFromSource(node.source, 'en.meta.json'), common.PROVIDER_GITHUB_API),
-                    metaRu: common.loadData(
-                        common.getRepoFromSource(node.source, 'ru.meta.json'), common.PROVIDER_GITHUB_API),
-                    mdEn: common.loadData(
-                        common.getRepoFromSource(node.source, 'en.md'), common.PROVIDER_GITHUB_API),
-                    mdRu: common.loadData(
-                        common.getRepoFromSource(node.source, 'ru.md'), common.PROVIDER_GITHUB_API)
+                    metaEn: common.loadData(common.PROVIDER_GITHUB_API, {
+                        repository: common.getRepoFromSource(node.source, 'en.meta.json')
+                    }),
+                    metaRu: common.loadData(common.PROVIDER_GITHUB_API, {
+                        repository: common.getRepoFromSource(node.source, 'ru.meta.json')
+                    }),
+                    mdEn: common.loadData(common.PROVIDER_GITHUB_API, {
+                        repository: common.getRepoFromSource(node.source, 'en.md')
+                    }),
+                    mdRu: common.loadData(common.PROVIDER_GITHUB_API, {
+                        repository: common.getRepoFromSource(node.source, 'ru.md')
+                    })
                 })
                 .then(function(value) {
                     var _def = vow.defer();
@@ -61,10 +70,13 @@ module.exports = {
         return vow.allResolved(promises)
             .then(function(res) {
                 //backup loaded data into file
-                return common.saveData(res.reduce(function(prev, item) {
+                return common.saveData(common.PROVIDER_FILE, {
+                    path: path.join(BACKUPS.DIRECTORY, BACKUPS.FILE),
+                    data: res.reduce(function(prev, item) {
                         prev[item._value.id] = item._value.source;
                         return prev;
-                    }, {}), common.PROVIDER_FILE);
+                    }, {})
+                });
             });
     },
 
