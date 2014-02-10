@@ -1,6 +1,5 @@
 var Susanin = require('susanin'),
-    config = require('./config'),
-    modules = require('./modules');
+    _modules = require('./modules');
 
 module.exports = {
 
@@ -11,7 +10,7 @@ module.exports = {
 
         this.router = Susanin();
 
-        modules.model.getRoutes().forEach(function(route) {
+        _modules.model.getRoutes().forEach(function(route) {
             self.router.addRoute(route);
         });
 
