@@ -7,7 +7,6 @@ var u = require('util'),
     sha = require('sha1'),
     susanin = require('susanin'),
 
-    util = require('../util'),
     logger = require('../logger')(module),
     config = require('../config'),
     data = require('./data');
@@ -47,7 +46,9 @@ module.exports = {
 
         return load()
             .then(parse)
-            .then(process)
+            .then(function(sitemap) {
+                return createModel(sitemap);
+            })
             .then(function(res) {
                 return vow.all([
                     data.docs.load(res.docs),
@@ -55,14 +56,14 @@ module.exports = {
                     data.people.load()
                 ]).then(function() {
                     return res;
-                })
+                });
             })
             .then(function(res) {
                 return vow.all([
                     addLibraryNodes(res.libs),
                     addDynamicNodes()
-                ])
-            })
+                ]);
+            });
     },
 
     /**
@@ -119,7 +120,7 @@ var parse = function(data) {
     return def.promise();
 };
 
-var process = function(sitemap) {
+var createModel = function(sitemap) {
     logger.info('Process site map');
 
     var def = vow.defer(),
@@ -145,7 +146,7 @@ var process = function(sitemap) {
                 node.title = {
                     en: node.title,
                     ru: node.title
-                }
+                };
             }
         },
 
@@ -400,6 +401,8 @@ var addDynamicNodes = function() {
 var addLibraryNodes = function(nodesWithLib) {
     logger.info('add library nodes');
 
+    var librariesRepository = config.get('github:librariesRepository');
+
     if(!nodesWithLib || !_.isArray(nodesWithLib) || nodesWithLib.length === 0) {
         logger.warn('nodes with lib not found');
         return;
@@ -436,6 +439,16 @@ var addLibraryNodes = function(nodesWithLib) {
             });
         },
 
+        getUrlPrefixForExample = function(libRepo, lib, version, level, block) {
+            var url = u.format({
+                'public': 'https://raw.github.com/%s/%s/%s/%s/%s/%s/%s',
+                'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s/%s/%s/%s'
+            }[libRepo.type], libRepo.user, libRepo.repo, libRepo.ref, lib, version, level, block);
+
+            logger.verbose('exapmle prefix: %s', url);
+            return url;
+        },
+
         addVersionsToLibrary = function(targetNode) {
             logger.debug('add versions to library %s', targetNode.lib);
 
@@ -450,7 +463,7 @@ var addLibraryNodes = function(nodesWithLib) {
 
             Object.keys(versions).forEach(function(key) {
 
-                var version = versions[key];
+                var version = versions[key],
                     conditions = {
                         conditions: {
                             lib: version.repo,
@@ -458,7 +471,7 @@ var addLibraryNodes = function(nodesWithLib) {
                         }
                     };
 
-                collectConditionsForBaseRoute(baseRoute, conditions)
+                collectConditionsForBaseRoute(baseRoute, conditions);
 
                 //create node
                 var _node = _.extend({
@@ -587,7 +600,7 @@ var addLibraryNodes = function(nodesWithLib) {
                     }
                 };
 
-                collectConditionsForBaseRoute(baseRoute, conditions)
+                collectConditionsForBaseRoute(baseRoute, conditions);
 
                 //create node
                 var _node = _.extend({
@@ -596,6 +609,8 @@ var addLibraryNodes = function(nodesWithLib) {
                         ru: block.name
                     },
                     source: {
+                        prefix: getUrlPrefixForExample(
+                            librariesRepository, version.repo, version.ref, level.name, block.name),
                         data: block.data,
                         jsdoc: block.jsdoc
                     }
@@ -632,7 +647,7 @@ var findNodeByCriteria = function(field, value) {
             if(!result && node.items) {
                 node.items.forEach(function(item) {
                     traverseTreeNodes(item);
-                })
+                });
             }
         };
 
