@@ -168,7 +168,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
     }
 
     //collect translators
-    if(meta.translators &&_.isArray(meta.translators)) {
+    if(meta.translators && _.isArray(meta.translators)) {
         meta.translators = _.compact(meta.translators);
         collectedTranslators = _.union(collectedTranslators, meta.translators);
     }
