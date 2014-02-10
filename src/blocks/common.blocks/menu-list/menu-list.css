@@ -1,4 +1,4 @@
-.menu-list 
+.menu-list
 {
     -webkit-flex: 1 0 auto;
     -moz-flex: 1 0 auto;
@@ -11,6 +11,7 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
+    overflow: auto;
     border-right: 1px solid rgba(0,0,0,.2);
     position: relative;
     list-style-type: none;
@@ -18,12 +19,12 @@
     margin: 0px;
 }
 
-.page_fullscreen .menu-list 
+.page_fullscreen .menu-list
 {
     display: none;
 }
 
-.page_fullscreen .menu-list_main 
+.page_fullscreen .menu-list_main
 {
     display: block;
 }
