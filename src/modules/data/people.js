@@ -1,12 +1,8 @@
-var https = require('https'),
-    u = require('util'),
-    path = require('path'),
+var path = require('path'),
 
     vow = require('vow'),
-    fs = require('vow-fs'),
     _ = require('lodash'),
 
-    util = require('../../util'),
     logger = require('../../logger')(module),
     config = require('../../config'),
 

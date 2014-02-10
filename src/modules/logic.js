@@ -4,7 +4,6 @@ var u = require('util'),
     logger = require('../logger')(module),
     HttpError = require('../errors').HttpError,
 
-    data = require('./data'),
     model = require('./model');
 
 module.exports = {
@@ -195,7 +194,7 @@ module.exports = {
                 if(node.route.pattern) {
                     result[node.route.name] = {
                         title: node.title[lang]
-                    }
+                    };
                 }
 
                 if(node.source) {
@@ -209,7 +208,7 @@ module.exports = {
                 if(node.items) {
                     node.items.forEach(function(item) {
                         traverseTreeNodes(item);
-                    })
+                    });
                 }
             };
 

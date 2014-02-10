@@ -1,12 +1,8 @@
-var https = require('https'),
-    u = require('util'),
-    path = require('path'),
+var u = require('util'),
 
     vow = require('vow'),
-    fs = require('vow-fs'),
     _ = require('lodash'),
 
-    util = require('../../util'),
     logger = require('../../logger')(module),
     config = require('../../config'),
 
@@ -42,7 +38,7 @@ var loadLibraryVersions = function(librariesRepository, node) {
         .getDataByGithubAPI(_.extend({ path: node.lib }, librariesRepository))
         .then(function(result) {
             var promises = result.res.map(function(version) {
-                return loadVersionData(librariesRepository, node, version)
+                return loadVersionData(librariesRepository, node, version);
             });
 
             return vow.allResolved(promises);

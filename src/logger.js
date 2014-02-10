@@ -22,7 +22,7 @@ intel.addHandler(
             colorize: true
         })
     })
-)
+);
 
 module.exports = function(module) {
     var name = module ? module.filename.split('/').slice(-2).join('/') : '';

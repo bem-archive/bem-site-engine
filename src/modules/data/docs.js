@@ -1,17 +1,12 @@
 'use strict';
 
-var https = require('https'),
-    u = require('util'),
-    path = require('path'),
+var u = require('util'),
 
-    api = require('github'),
     vow = require('vow'),
-    fs = require('vow-fs'),
     _ = require('lodash'),
 
     util = require('../../util'),
     logger = require('../../logger')(module),
-    config = require('../../config'),
 
     common = require('./common');
 
@@ -29,7 +24,7 @@ var MSG = {
     WARN: {
         DEPRECATED: 'remove deprecated field %s for source user: %s repo: %s ref: %s path: %s'
     }
-}
+};
 
 module.exports = {
 

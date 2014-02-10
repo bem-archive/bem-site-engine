@@ -2,14 +2,11 @@
 
 var https = require('https'),
     u = require('util'),
-    path = require('path'),
 
     api = require('github'),
     vow = require('vow'),
-    fs = require('vow-fs'),
     _ = require('lodash'),
 
-    util = require('../../util'),
     logger = require('../../logger')(module),
     config = require('../../config'),
 
@@ -57,8 +54,7 @@ module.exports = {
     },
 
     getDataByHttps: function(repository) {
-        var _this = this,
-            deferred = vow.defer(),
+        var deferred = vow.defer(),
             url = u.format({
                 'public': 'https://raw.github.com/%s/%s/%s/%s',
                 'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
