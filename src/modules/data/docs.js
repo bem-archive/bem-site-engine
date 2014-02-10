@@ -58,12 +58,14 @@ module.exports = {
                 });
         });
 
-        return vow.allResolved(promises).then(function(res) {
-            return common.saveData(res.reduce(function(prev, item) {
-                    prev[item._value.id] = item._value.source;
-                    return prev;
-                }, {}), common.PROVIDER_FILE);
-        });
+        return vow.allResolved(promises)
+            .then(function(res) {
+                //backup loaded data into file
+                return common.saveData(res.reduce(function(prev, item) {
+                        prev[item._value.id] = item._value.source;
+                        return prev;
+                    }, {}), common.PROVIDER_FILE);
+            });
     },
 
     reloadAll: function() {
@@ -93,11 +95,22 @@ module.exports = {
     }
 };
 
+/**
+ * Post-processing meta-information and markdown contents
+ * Merge them into one object.
+ * Remove deprecated fields from meta-information
+ * Collect tags, authors and translators for advanced people loading
+ * Create url for repo issues and prose.io
+ * @param meta - {Object} object with .meta.json file information
+ * @param md - {Object} object with .md file information
+ * @returns {*}
+ */
 var getSourceFromMetaAndMd = function(meta, md) {
     var repo = meta.repo;
 
     logger.verbose('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
 
+    //verify if md file content exists and valid
     try {
         if(!md.res) {
             logger.error(MSG.ERR.NOT_EXIST, 'md', repo.user, repo.repo, repo.ref, repo.path);
@@ -112,6 +125,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
         md = null;
     }
 
+    //verify if meta.json file content exists and valid
     try {
         if(!meta.res) {
             logger.error(MSG.ERR.NOT_EXIST, 'meta', repo.user, repo.repo, repo.ref, repo.path);
@@ -126,6 +140,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
         return null;
     }
 
+    //set md inton content field of meta information
     meta.content = md;
 
     //parse date from dd-mm-yyyy format into milliseconds
@@ -158,6 +173,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
         collectedTranslators = _.union(collectedTranslators, meta.translators);
     }
 
+    //collect tags
     if(meta.tags) {
         collectedTags = _.union(collectedTags, meta.tags);
     }
