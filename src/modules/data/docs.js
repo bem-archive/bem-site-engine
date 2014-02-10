@@ -1,6 +1,7 @@
 'use strict';
 
 var u = require('util'),
+    path = require('path'),
 
     vow = require('vow'),
     _ = require('lodash'),

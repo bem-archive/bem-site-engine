@@ -182,9 +182,9 @@ var getDataByHttps = function(options) {
             deferred.resolve(JSON.parse(data));
         });
     }).on('error', function(e) {
-            logger.error('load data failed with error %s from url %s', e.message, url);
-            deferred.reject(e);
-        });
+        logger.error('load data failed with error %s from url %s', e.message, url);
+        deferred.reject(e);
+    });
 
     return deferred.promise();
 };
@@ -197,6 +197,6 @@ var getDataByHttps = function(options) {
  * @returns {*}
  */
 var saveDataToJSONFile = function(options) {
-    logger.debug('save data from json file %s', JSON.stringify(options));
+    logger.debug('save data to json file %s', options.path ? JSON.stringify(options.path) : 'unknown file');
     return fs.write(options.path, JSON.stringify(options.data), 'utf8');
 };
