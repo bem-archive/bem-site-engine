@@ -480,8 +480,14 @@ var addLibraryNodes = function(nodesWithLib) {
                         ru: version.ref
                     },
                     source: {
-                        en: { content: version.readme },
-                        ru: { content: version.readme }
+                        en: {
+                            title: version.repo,
+                            content: version.readme
+                        },
+                        ru: {
+                            title: version.repo,
+                            content: version.readme
+                        }
                     }
                 }, getBaseNode(targetNode, baseRoute, conditions));
 
