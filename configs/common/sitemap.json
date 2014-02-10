@@ -458,7 +458,7 @@
         },
         "route": {
             "name": "libs",
-            "pattern": "/libs(/<lib>)(/<version>)(/<id>)(/)"
+            "pattern": "/libs(/<lib>)(/<version>)(/<level>)(/<block>)(/<id>)(/)"
         },
         "source": "https://github.com/bem/bem-method/tree/bem-info-data/libs/index",
         "items": [

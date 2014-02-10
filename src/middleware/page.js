@@ -18,6 +18,8 @@ module.exports = function() {
                 lang: req.prefLocale
             };
 
+            logic.getNodesBySourceCriteria('ru', ['authors', 'translators'], 'androsov-alexey');
+
             return template.apply(ctx, req.prefLocale, req.query.__mode)
                 .then(function(html) {
                     res.end(html);

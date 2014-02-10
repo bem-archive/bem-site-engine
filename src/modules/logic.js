@@ -187,7 +187,7 @@ module.exports = {
      * @returns {Array}
      */
     getNodesBySourceCriteria: function(lang, field, value) {
-        logger.silly('get node ids by criteria start');
+        logger.debug('get nodes by criteria start %s %s %s', lang, field, value);
 
         var result = {},
             traverseTreeNodes = function(node) {

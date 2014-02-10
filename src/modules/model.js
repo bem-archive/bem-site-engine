@@ -551,6 +551,9 @@ var addLibraryNodes = function(nodesWithLib) {
         addLevelsToVersion = function(targetNode, version) {
             logger.verbose('add levels to version');
 
+            var baseRoute = traverseTreeNodes(targetNode);
+            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
             targetNode.items = targetNode.items || [];
 
             var levels = version.levels;
@@ -558,17 +561,23 @@ var addLibraryNodes = function(nodesWithLib) {
             if(!levels) return;
 
             levels.forEach(function(level) {
+                var conditions = {
+                    conditions: {
+                        lib: version.repo,
+                        version: version.ref,
+                        level: level.name
+                    }
+                };
+
+                collectConditionsForBaseRoute(baseRoute, conditions);
+
                 //create node
-                var _node = {
+                var _node = _.extend({
                     title: {
                         en: level.name,
                         ru: level.name
-                    },
-                    level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
-                    type: NODE.TYPE.GROUP,
-                    size: NODE.SIZE.NORMAL,
-                    hidden: {}
-                };
+                    }
+                }, getBaseNode(targetNode, baseRoute, conditions), { type: NODE.TYPE.GROUP });
 
                 targetNode.items.push(_.extend(_node, {
                     id: sha(JSON.stringify(_node)),
@@ -596,7 +605,8 @@ var addLibraryNodes = function(nodesWithLib) {
                     conditions: {
                         lib: version.repo,
                         version: version.ref,
-                        id: block.name
+                        level: level.name,
+                        block: block.name
                     }
                 };
 
