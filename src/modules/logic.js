@@ -169,7 +169,7 @@ module.exports = {
             };
 
         traverseTreeNodesUp(node);
-        logger.silly('active ids %s', activeIds.join(', '));
+        //logger.verbose('active ids %s', activeIds.join(', '));
 
         model.getSitemap().forEach(function(item) {
             traverseTreeNodesDown(item);

@@ -5,7 +5,7 @@
     },
     "logger": {
         "mode": "dev",
-        "level": "silly",
+        "level": "verbose",
         "dir": "logs",
         "stdout": "logs/output.log",
         "stderr": "logs/errors.log"

@@ -34,10 +34,10 @@ var MSG = {
 module.exports = {
 
     load: function(nodesWithSource) {
-        logger.info('Load all resources start');
+        logger.info('Load all docs start');
 
         var promises = nodesWithSource.map(function(node){
-            logger.silly('Load source for node with url %s %s', node.url, node.source);
+            logger.verbose('Load source for node with url %s %s', node.url, node.source);
 
             return vow
                 .allResolved({
@@ -96,7 +96,7 @@ module.exports = {
 var getSourceFromMetaAndMd = function(meta, md) {
     var repo = meta.repo;
 
-    logger.silly('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
+    logger.verbose('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
 
     try {
         if(!md.res) {

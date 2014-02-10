@@ -64,7 +64,7 @@ module.exports = {
                 'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
             }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
 
-        logger.debug('load data from: %s', url);
+        logger.debug('load data by https from: %s', url);
 
         https.get(url, function(res) {
             var data = '';
@@ -113,7 +113,7 @@ module.exports = {
 
         var result = _.extend(repoData, {path: u.format('%s/%s.%s', repoData.path, repoData.block, extention)});
 
-        logger.silly('repo meta user: %s repo: %s ref: %s path: %s',
+        logger.verbose('get repo from source user: %s repo: %s ref: %s path: %s',
             result.user, result.repo, result.ref, result.path);
 
         return result;

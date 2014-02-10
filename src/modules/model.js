@@ -87,7 +87,7 @@ module.exports = {
  * @returns {String} - content of sitemap.json file
  */
 var load = function() {
-    logger.debug('Load site map');
+    logger.info('Load site map');
 
     return fs
         .read(path.join('configs', 'common', 'sitemap.json'), 'utf-8')
@@ -104,7 +104,7 @@ var load = function() {
  * @returns {Object} parsed sitemap object
  */
 var parse = function(data) {
-    logger.debug('Parse site map');
+    logger.info('Parse site map');
 
     var def = vow.defer();
 
@@ -120,7 +120,7 @@ var parse = function(data) {
 };
 
 var process = function(sitemap) {
-    logger.debug('Process site map');
+    logger.info('Process site map');
 
     var def = vow.defer(),
         nodesWithSource = [],
@@ -252,7 +252,7 @@ var process = function(sitemap) {
             processHidden(node);
             processView(node);
 
-            logger.silly('id = %s level = %s url = %s source = %s',
+            logger.verbose('id = %s level = %s url = %s source = %s',
                     node.id, node.level, node.url, node.source);
 
             if(node.lib) {
@@ -292,7 +292,7 @@ var process = function(sitemap) {
  * grouped menu items
  */
 var addDynamicNodes = function() {
-    logger.debug('add dynamic nodes');
+    logger.info('Add dynamic nodes to sitemap');
 
     var basePeopleConfig = {
         title: function(item){
@@ -307,10 +307,13 @@ var addDynamicNodes = function() {
     };
 
     var addDynamicNodesFor = function(config) {
+        logger.debug('add dynamic nodes for %s', config.key);
+
         //find node with attribute dynamic and value equal to key
         var targetNode = findNodeByCriteria('dynamic', config.key);
 
         if(!targetNode) {
+            logger.warn('target node for %s was not found', config.key);
             return;
         }
 
@@ -368,6 +371,9 @@ var addDynamicNodes = function() {
                     id: sha(JSON.stringify(_node)),
                     parent: targetNode
                 }));
+
+                logger.verbose('add dynamic node for %s with id = %s level = %s url = %s',
+                    config.key, _node.id, _node.level, _node.url);
             });
         }catch(e) {
             logger.error(e.message);
@@ -392,9 +398,10 @@ var addDynamicNodes = function() {
 };
 
 var addLibraryNodes = function(nodesWithLib) {
-    logger.debug('add library nodes');
+    logger.info('add library nodes');
 
     if(!nodesWithLib || !_.isArray(nodesWithLib) || nodesWithLib.length === 0) {
+        logger.warn('nodes with lib not found');
         return;
     }
 
@@ -430,7 +437,7 @@ var addLibraryNodes = function(nodesWithLib) {
         },
 
         addVersionsToLibrary = function(targetNode) {
-            logger.silly('add versions to library');
+            logger.debug('add versions to library %s', targetNode.lib);
 
             var baseRoute = traverseTreeNodes(targetNode);
             routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
@@ -488,8 +495,9 @@ var addLibraryNodes = function(nodesWithLib) {
             });
         },
 
-        addPostToVersion = function(targetNode, version, config) {
-            logger.silly('add post to version');
+        addPostToVersion = function(targetNode, version, _config) {
+            logger.debug('add post %s to version %s of library %s',
+                _config.key, version.ref, version.repo);
 
             var baseRoute = traverseTreeNodes(targetNode);
             routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
@@ -500,7 +508,7 @@ var addLibraryNodes = function(nodesWithLib) {
                 conditions: {
                     lib: version.repo,
                     version: version.ref,
-                    id: config.key
+                    id: _config.key
                 }
             };
 
@@ -508,15 +516,15 @@ var addLibraryNodes = function(nodesWithLib) {
 
             //create node
             var _node = _.extend({
-                title: config.title,
+                title: _config.title,
                 source: {
                     en: {
-                        title: config.title.en,
-                        content: version[config.key]
+                        title: _config.title.en,
+                        content: version[_config.key]
                     },
                     ru: {
-                        title: config.title.ru,
-                        content: version[config.key]
+                        title: _config.title.ru,
+                        content: version[_config.key]
                     }
                 }
             }, getBaseNode(targetNode, baseRoute, conditions));
@@ -528,7 +536,7 @@ var addLibraryNodes = function(nodesWithLib) {
         },
 
         addLevelsToVersion = function(targetNode, version) {
-            logger.silly('add levels to version');
+            logger.verbose('add levels to version');
 
             targetNode.items = targetNode.items || [];
 
@@ -559,7 +567,7 @@ var addLibraryNodes = function(nodesWithLib) {
         },
 
         addBlocksToLevel = function(targetNode, version, level) {
-            logger.silly('add blocks to level');
+            logger.verbose('add blocks to level');
 
             var baseRoute = traverseTreeNodes(targetNode);
             routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
