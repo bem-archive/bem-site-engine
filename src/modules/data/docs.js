@@ -8,6 +8,7 @@ var u = require('util'),
 
     util = require('../../util'),
     logger = require('../../logger')(module),
+    config = require('../../config'),
 
     common = require('./common');
 
@@ -29,7 +30,7 @@ var MSG = {
 
 var BACKUPS = {
     DIRECTORY: 'backups',
-    FILE: 'backup.json'
+    FILE: 'docs.json'
 };
 
 module.exports = {
@@ -37,48 +38,57 @@ module.exports = {
     load: function(nodesWithSource) {
         logger.info('Load all docs start');
 
-        var promises = nodesWithSource.map(function(node){
-            logger.verbose('Load source for node with url %s %s', node.url, node.source);
+        var forceUpdate = config.get('forceUpdate');
 
-            return vow
-                .allResolved({
-                    metaEn: common.loadData(common.PROVIDER_GITHUB_API, {
-                        repository: common.getRepoFromSource(node.source, 'en.meta.json')
-                    }),
-                    metaRu: common.loadData(common.PROVIDER_GITHUB_API, {
-                        repository: common.getRepoFromSource(node.source, 'ru.meta.json')
-                    }),
-                    mdEn: common.loadData(common.PROVIDER_GITHUB_API, {
-                        repository: common.getRepoFromSource(node.source, 'en.md')
-                    }),
-                    mdRu: common.loadData(common.PROVIDER_GITHUB_API, {
-                        repository: common.getRepoFromSource(node.source, 'ru.md')
+        common.loadData(common.PROVIDER_FILE, {
+            path: path.join(BACKUPS.DIRECTORY, BACKUPS.FILE)
+        })
+        .then(function(backup) {
+            var promises = nodesWithSource.map(function(node){
+                logger.verbose('Load source for node with url %s %s', node.url, node.source);
+
+                if(!forceUpdate && backup[node.id]) {
+                    node.source = backup[node.id];
+                    return { id: node.id, source: node.source }
+                }
+
+                return vow
+                    .allResolved({
+                        metaEn: common.loadData(common.PROVIDER_GITHUB_API, {
+                            repository: common.getRepoFromSource(node.source, 'en.meta.json')
+                        }),
+                        metaRu: common.loadData(common.PROVIDER_GITHUB_API, {
+                            repository: common.getRepoFromSource(node.source, 'ru.meta.json')
+                        }),
+                        mdEn: common.loadData(common.PROVIDER_GITHUB_API, {
+                            repository: common.getRepoFromSource(node.source, 'en.md')
+                        }),
+                        mdRu: common.loadData(common.PROVIDER_GITHUB_API, {
+                            repository: common.getRepoFromSource(node.source, 'ru.md')
+                        })
                     })
-                })
-                .then(function(value) {
-                    var _def = vow.defer();
+                    .then(function(value) {
+                        node.source = {
+                            en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value),
+                            ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value)
+                        };
 
-                    node.source = {
-                        en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value),
-                        ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value)
-                    };
+                        return { id: node.id, source: node.source };
+                    });
+            });
 
-                    _def.resolve({ id: node.id, source: node.source });
-                    return _def.promise();
+            return vow.allResolved(promises)
+                .then(function(res) {
+                    //backup loaded data into file
+                    return common.saveData(common.PROVIDER_FILE, {
+                        path: path.join(BACKUPS.DIRECTORY, BACKUPS.FILE),
+                        data: res.reduce(function(prev, item) {
+                            prev[item._value.id] = item._value.source;
+                            return prev;
+                        }, {})
+                    });
                 });
         });
-
-        return vow.allResolved(promises)
-            .then(function(res) {
-                //backup loaded data into file
-                return common.saveData(common.PROVIDER_FILE, {
-                    path: path.join(BACKUPS.DIRECTORY, BACKUPS.FILE),
-                    data: res.reduce(function(prev, item) {
-                        prev[item._value.id] = item._value.source;
-                        return prev;
-                    }, {})
-                });
-            });
     },
 
     reloadAll: function() {
