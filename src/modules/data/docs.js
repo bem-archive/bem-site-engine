@@ -12,9 +12,9 @@ var u = require('util'),
 
     common = require('./common');
 
-var collectedAuthors = [],
-    collectedTranslators = [],
-    collectedTags = [],
+var collectedAuthors,
+    collectedTranslators,
+    collectedTags,
 
     tagUrls = {};
 
@@ -30,7 +30,7 @@ var MSG = {
 
 var BACKUPS = {
     DIRECTORY: 'backups',
-    FILE: 'docs.json'
+    DOCS: 'docs.json'
 };
 
 module.exports = {
@@ -41,14 +41,28 @@ module.exports = {
         var forceUpdate = config.get('forceUpdate');
 
         common.loadData(common.PROVIDER_FILE, {
-            path: path.join(BACKUPS.DIRECTORY, BACKUPS.FILE)
+            path: path.join(BACKUPS.DIRECTORY, BACKUPS.DOCS)
         })
         .then(function(backup) {
+
+            if(!backup) {
+                backup = {
+                    docs: {},
+                    collectedAuthors: [],
+                    collectedTranslators: [],
+                    collectedTags: []
+                };
+            }
+
+            collectedAuthors = forceUpdate ? [] : backup.collectedAuthors;
+            collectedTranslators = forceUpdate ? [] : backup.collectedTranslators;
+            collectedTags = forceUpdate ? [] : backup.collectedTags;
+
             var promises = nodesWithSource.map(function(node){
                 logger.verbose('Load source for node with url %s %s', node.url, node.source);
 
-                if(!forceUpdate && backup[node.id]) {
-                    node.source = backup[node.id];
+                if(!forceUpdate && backup.docs[node.id]) {
+                    node.source = backup.docs[node.id];
                     return { id: node.id, source: node.source }
                 }
 
@@ -77,17 +91,7 @@ module.exports = {
                     });
             });
 
-            return vow.allResolved(promises)
-                .then(function(res) {
-                    //backup loaded data into file
-                    return common.saveData(common.PROVIDER_FILE, {
-                        path: path.join(BACKUPS.DIRECTORY, BACKUPS.FILE),
-                        data: res.reduce(function(prev, item) {
-                            prev[item._value.id] = item._value.source;
-                            return prev;
-                        }, {})
-                    });
-                });
+            return vow.allResolved(promises).then(createDocsBackup);
         });
     },
 
@@ -101,14 +105,26 @@ module.exports = {
         //TODO implement this
     },
 
+    /**
+     * Returns array of collected authors from docs meta-information without dublicates
+     * @returns {Array}
+     */
     getAuthors: function() {
         return collectedAuthors;
     },
 
+    /**
+     * Returns array of collected translators from docs meta-information without dublicates
+     * @returns {Array}
+     */
     getTranslators: function() {
         return collectedTranslators;
     },
 
+    /**
+     * Returns array of collected tags from docs meta-information without dublicates
+     * @returns {Array}
+     */
     getTags: function() {
         return collectedTags;
     },
@@ -212,6 +228,32 @@ var getSourceFromMetaAndMd = function(meta, md) {
     /** end of fallbacks **/
 
     return meta;
+};
+
+/**
+* Creates backup object and save it into json file
+* @param res - {Object} object with fields:
+* - id {String} unique id of node
+* - source {Object} source of node
+*/
+var createDocsBackup = function(res) {
+    logger.info('create backup files for documentation');
+
+    //backup loaded data into file
+    return common.saveData(common.PROVIDER_FILE, {
+        path: path.join(BACKUPS.DIRECTORY, BACKUPS.DOCS),
+        data: {
+            docs: res.reduce(function(prev, item) {
+                item = item._value || item;
+
+                prev[item.id] = item.source;
+                return prev;
+            }, {}),
+            collectedAuthors: collectedAuthors,
+            collectedTranslators: collectedTranslators,
+            collectedTags: collectedTags
+        }
+    });
 };
 
 

@@ -123,7 +123,6 @@ var loadDataFromJSONFile = function(options) {
             },
             function() {
                 logger.warn('cannot read content of %s file', options.path);
-                return {};
             }
         );
 };
@@ -198,5 +197,5 @@ var getDataByHttps = function(options) {
  */
 var saveDataToJSONFile = function(options) {
     logger.debug('save data to json file %s', options.path ? JSON.stringify(options.path) : 'unknown file');
-    return fs.write(options.path, JSON.stringify(options.data), 'utf8');
+    return fs.write(options.path, JSON.stringify(options.data, null, 4), 'utf8');
 };
