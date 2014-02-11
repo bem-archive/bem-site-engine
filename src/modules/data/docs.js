@@ -1,18 +1,20 @@
 'use strict';
 
 var u = require('util'),
+    path = require('path'),
 
     vow = require('vow'),
     _ = require('lodash'),
 
     util = require('../../util'),
     logger = require('../../logger')(module),
+    config = require('../../config'),
 
     common = require('./common');
 
-var collectedAuthors = [],
-    collectedTranslators = [],
-    collectedTags = [],
+var collectedAuthors,
+    collectedTranslators,
+    collectedTags,
 
     tagUrls = {};
 
@@ -26,39 +28,71 @@ var MSG = {
     }
 };
 
+var BACKUPS = {
+    DIRECTORY: 'backups',
+    DOCS: 'docs.json'
+};
+
 module.exports = {
 
     load: function(nodesWithSource) {
         logger.info('Load all docs start');
 
-        var promises = nodesWithSource.map(function(node){
-            logger.verbose('Load source for node with url %s %s', node.url, node.source);
+        var forceUpdate = config.get('forceUpdate');
 
-            return vow
-                .allResolved({
-                    metaEn: common.getDataByGithubAPI(
-                        common.getRepoFromSource(node.source, 'en.meta.json')),
-                    mdEn: common.getDataByGithubAPI(
-                        common.getRepoFromSource(node.source, 'en.md')),
-                    metaRu: common.getDataByGithubAPI(
-                        common.getRepoFromSource(node.source, 'ru.meta.json')),
-                    mdRu: common.getDataByGithubAPI(
-                        common.getRepoFromSource(node.source, 'ru.md'))
-                })
-                .then(function(value) {
-                    var _def = vow.defer();
+        common.loadData(common.PROVIDER_FILE, {
+            path: path.join(BACKUPS.DIRECTORY, BACKUPS.DOCS)
+        })
+        .then(function(backup) {
 
-                    node.source = {
-                        en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value),
-                        ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value)
-                    };
+            if(!backup) {
+                backup = {
+                    docs: {},
+                    collectedAuthors: [],
+                    collectedTranslators: [],
+                    collectedTags: []
+                };
+            }
 
-                    _def.resolve(node);
-                    return _def.promise();
-                });
+            collectedAuthors = forceUpdate ? [] : backup.collectedAuthors;
+            collectedTranslators = forceUpdate ? [] : backup.collectedTranslators;
+            collectedTags = forceUpdate ? [] : backup.collectedTags;
+
+            var promises = nodesWithSource.map(function(node){
+                logger.verbose('Load source for node with url %s %s', node.url, node.source);
+
+                if(!forceUpdate && backup.docs[node.id]) {
+                    node.source = backup.docs[node.id];
+                    return { id: node.id, source: node.source }
+                }
+
+                return vow
+                    .allResolved({
+                        metaEn: common.loadData(common.PROVIDER_GITHUB_API, {
+                            repository: common.getRepoFromSource(node.source, 'en.meta.json')
+                        }),
+                        metaRu: common.loadData(common.PROVIDER_GITHUB_API, {
+                            repository: common.getRepoFromSource(node.source, 'ru.meta.json')
+                        }),
+                        mdEn: common.loadData(common.PROVIDER_GITHUB_API, {
+                            repository: common.getRepoFromSource(node.source, 'en.md')
+                        }),
+                        mdRu: common.loadData(common.PROVIDER_GITHUB_API, {
+                            repository: common.getRepoFromSource(node.source, 'ru.md')
+                        })
+                    })
+                    .then(function(value) {
+                        node.source = {
+                            en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value),
+                            ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value)
+                        };
+
+                        return { id: node.id, source: node.source };
+                    });
+            });
+
+            return vow.allResolved(promises).then(createDocsBackup);
         });
-
-        return vow.allResolved(promises);
     },
 
     reloadAll: function() {
@@ -71,14 +105,26 @@ module.exports = {
         //TODO implement this
     },
 
+    /**
+     * Returns array of collected authors from docs meta-information without dublicates
+     * @returns {Array}
+     */
     getAuthors: function() {
         return collectedAuthors;
     },
 
+    /**
+     * Returns array of collected translators from docs meta-information without dublicates
+     * @returns {Array}
+     */
     getTranslators: function() {
         return collectedTranslators;
     },
 
+    /**
+     * Returns array of collected tags from docs meta-information without dublicates
+     * @returns {Array}
+     */
     getTags: function() {
         return collectedTags;
     },
@@ -88,11 +134,22 @@ module.exports = {
     }
 };
 
+/**
+ * Post-processing meta-information and markdown contents
+ * Merge them into one object.
+ * Remove deprecated fields from meta-information
+ * Collect tags, authors and translators for advanced people loading
+ * Create url for repo issues and prose.io
+ * @param meta - {Object} object with .meta.json file information
+ * @param md - {Object} object with .md file information
+ * @returns {*}
+ */
 var getSourceFromMetaAndMd = function(meta, md) {
     var repo = meta.repo;
 
     logger.verbose('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
 
+    //verify if md file content exists and valid
     try {
         if(!md.res) {
             logger.error(MSG.ERR.NOT_EXIST, 'md', repo.user, repo.repo, repo.ref, repo.path);
@@ -107,6 +164,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
         md = null;
     }
 
+    //verify if meta.json file content exists and valid
     try {
         if(!meta.res) {
             logger.error(MSG.ERR.NOT_EXIST, 'meta', repo.user, repo.repo, repo.ref, repo.path);
@@ -121,6 +179,7 @@ var getSourceFromMetaAndMd = function(meta, md) {
         return null;
     }
 
+    //set md inton content field of meta information
     meta.content = md;
 
     //parse date from dd-mm-yyyy format into milliseconds
@@ -148,11 +207,12 @@ var getSourceFromMetaAndMd = function(meta, md) {
     }
 
     //collect translators
-    if(meta.translators &&_.isArray(meta.translators)) {
+    if(meta.translators && _.isArray(meta.translators)) {
         meta.translators = _.compact(meta.translators);
         collectedTranslators = _.union(collectedTranslators, meta.translators);
     }
 
+    //collect tags
     if(meta.tags) {
         collectedTags = _.union(collectedTags, meta.tags);
     }
@@ -168,6 +228,32 @@ var getSourceFromMetaAndMd = function(meta, md) {
     /** end of fallbacks **/
 
     return meta;
+};
+
+/**
+* Creates backup object and save it into json file
+* @param res - {Object} object with fields:
+* - id {String} unique id of node
+* - source {Object} source of node
+*/
+var createDocsBackup = function(res) {
+    logger.info('create backup files for documentation');
+
+    //backup loaded data into file
+    return common.saveData(common.PROVIDER_FILE, {
+        path: path.join(BACKUPS.DIRECTORY, BACKUPS.DOCS),
+        data: {
+            docs: res.reduce(function(prev, item) {
+                item = item._value || item;
+
+                prev[item.id] = item.source;
+                return prev;
+            }, {}),
+            collectedAuthors: collectedAuthors,
+            collectedTranslators: collectedTranslators,
+            collectedTags: collectedTags
+        }
+    });
 };
 
 

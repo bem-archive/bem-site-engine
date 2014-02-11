@@ -9,7 +9,7 @@ ifneq ($(YENV),production)
 endif
 
 .PHONY: build
-build: npm_deps bower_deps config logs
+build: npm_deps bower_deps config logs backups
 	$(ENB) make --no-cache
 
 .PHONY: clean
@@ -24,6 +24,10 @@ config:
 .PHONY: logs
 logs:
 	if [ ! -d logs ]; then mkdir logs; fi;
+
+.PHONY: backups
+backups:
+	if [ ! -d backups ]; then mkdir backups; fi;
 
 .PHONY: lint
 lint: npm_deps

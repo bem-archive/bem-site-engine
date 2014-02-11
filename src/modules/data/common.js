@@ -1,10 +1,12 @@
 'use strict';
 
 var https = require('https'),
+    path = require('path'),
     u = require('util'),
 
     api = require('github'),
     vow = require('vow'),
+    fs = require('vow-fs'),
     _ = require('lodash'),
 
     logger = require('../../logger')(module),
@@ -15,8 +17,12 @@ var https = require('https'),
 
 module.exports = {
 
+    PROVIDER_FILE: 'file',
+    PROVIDER_GITHUB_API: 'github_api',
+    PROVIDER_GITHUB_HTTPS: 'github_https',
+
     /**
-     * initialize github API
+     * Initialize github API
      */
     init: function() {
         logger.info('Init');
@@ -33,52 +39,37 @@ module.exports = {
     },
 
     /**
-     * Returns content of repository directory
-     * @param repository - {Object} with fields:
-     * - user {String} name of user or organization which this repository is belong to
-     * - repo {String} name of repository
-     * - ref {String} name of branch
-     * - path {String} relative path from the root of repository
-     * @returns {*}
+     * Load data
+     * @param provider - {String} name of data provider
+     * @param options - {Object} options
+     * @returns {Object} result
      */
-    getDataByGithubAPI: function(repository) {
-        var def = vow.defer();
-        gitPublic.repos.getContent(repository, function(err, res) {
-            if (err || !res) {
-                def.reject({res: null, repo: repository});
-            }else {
-                def.resolve({res: res, repo: repository});
-            }
-        });
-        return def.promise();
+    loadData: function(provider, options) {
+        switch (provider) {
+            case this.PROVIDER_FILE:
+                return loadDataFromJSONFile(options);
+            case this.PROVIDER_GITHUB_API:
+                return getDataByGithubAPI(options);
+            case this.PROVIDER_GITHUB_HTTPS:
+                return getDataByHttps(options);
+            default:
+                logger.error('load data provider not recognized');
+        }
     },
 
-    getDataByHttps: function(repository) {
-        var deferred = vow.defer(),
-            url = u.format({
-                'public': 'https://raw.github.com/%s/%s/%s/%s',
-                'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
-            }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
-
-        logger.debug('load data by https from: %s', url);
-
-        https.get(url, function(res) {
-            var data = '';
-
-            res.on('data', function(chunk) {
-                data += chunk;
-            });
-
-            res.on('end', function() {
-                logger.debug('load data successfully finished from url %s', url);
-                deferred.resolve(JSON.parse(data));
-            });
-        }).on('error', function(e) {
-            logger.error('load data failed with error %s from url %s', e.message, url);
-            deferred.reject(e);
-        });
-
-        return deferred.promise();
+    /**
+     * Save data
+     * @param provider - {String} name of data provider
+     * @param options - {Object} options
+     * @returns {}
+     */
+    saveData: function(provider, options) {
+        switch (provider) {
+            case this.PROVIDER_FILE:
+                return saveDataToJSONFile(options);
+            default:
+                logger.error('save data provider not recognized');
+        }
     },
 
     /**
@@ -114,4 +105,97 @@ module.exports = {
 
         return result;
     }
+};
+
+/**
+ * Returns loaded and parsed content of json file
+ * @param options - {Object} with fields
+ * - path {String} path to file
+ * @returns {Object}
+ */
+var loadDataFromJSONFile = function(options) {
+    logger.debug('load data from json file %s', JSON.stringify(options));
+
+    return fs.read(options.path, 'utf-8')
+        .then(
+            function(content) {
+                return JSON.parse(content);
+            },
+            function() {
+                logger.warn('cannot read content of %s file', options.path);
+            }
+        );
+};
+
+/**
+ * Returns content of repository directory or file loaded by github api
+ * @param repository - {Object} with fields:
+ * - user {String} name of user or organization which this repository is belong to
+ * - repo {String} name of repository
+ * - ref {String} name of branch
+ * - path {String} relative path from the root of repository
+ * @returns {*}
+ */
+var getDataByGithubAPI = function(options) {
+    var def = vow.defer(),
+        repository = options.repository;
+
+    gitPublic.repos.getContent(repository, function(err, res) {
+        if (err || !res) {
+            def.reject({res: null, repo: repository});
+        }else {
+            def.resolve({res: res, repo: repository});
+        }
+    });
+    return def.promise();
+};
+
+/**
+ * Returns raw content of file loaded by github https protocol
+ * @param repository - {Object} with fields:
+ * - user {String} name of user or organization which this repository is belong to
+ * - repo {String} name of repository
+ * - ref {String} name of branch
+ * - path {String} relative path from the root of repository
+ * @returns {*}
+ */
+var getDataByHttps = function(options) {
+    var deferred = vow.defer(),
+        repository = options.repository,
+        url = u.format({
+            'public': 'https://raw.github.com/%s/%s/%s/%s',
+            'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
+        }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
+
+    logger.debug('load data by https from: %s', url);
+
+    https.get(url, function(res) {
+        var data = '';
+
+        res.on('data', function(chunk) {
+            data += chunk;
+        });
+
+        res.on('end', function() {
+            logger.debug('load data successfully finished from url %s', url);
+            deferred.resolve(JSON.parse(data));
+        });
+    }).on('error', function(e) {
+        logger.error('load data failed with error %s from url %s', e.message, url);
+        deferred.reject(e);
+    });
+
+    return deferred.promise();
+};
+
+/**
+ * Stringify and save data object into json file
+ * @param options - {Object} with fields:
+ * - path {String} path to target file
+ * - data {Object} content for file
+ * @returns {*}
+ */
+var saveDataToJSONFile = function(options) {
+    logger.debug('save data to json file %s', options.path ? JSON.stringify(options.path) : 'unknown file');
+    return fs.write(options.path, JSON.stringify(options.data, null, 4), 'utf8');
 };

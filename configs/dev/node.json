@@ -1,5 +1,6 @@
 {
     "NODE_ENV": "development",
+    "forceUpdate": false,
     "app": {
         "port": 3014
     },
