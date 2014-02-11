@@ -1,0 +1,25 @@
+.error-billboard
+{
+    padding-top: 50px;
+    margin: 0 auto;
+}
+
+.error-billboard__panel
+{
+    margin: 100px auto;
+    width: 50%
+}
+
+.error-billboard__title,
+.error-billboard__description,
+.error-billboard__report,
+.error-billboard__sitemap
+{
+    text-align: center;
+}
+
+.error-billboard__sitemap
+{
+    font-size: 1.5em;
+    margin-top: 50px;
+}

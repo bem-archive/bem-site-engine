@@ -10,11 +10,11 @@ var path = require('path'),
 function buildErrorPage(code, lang) {
     var builder = require('../builder'),
         targetName = (code && code === 404) ? 'error-404' : 'error-500',
-        target = 'src/errors.bundles/' + targetName + '/' + targetName + '.' + lang + '.html';
+        target = 'src/bundles/errors.bundles/' + targetName + '/' + targetName + '.' + lang + '.html';
 
     return builder.build([target])
         .then(function() {
-            return vfs.read(path.join(__dirname, 'bundles', target), 'utf-8');
+            return vfs.read(path.join(__dirname, '..', '..', target), 'utf-8');
         })
         .then(function(page) {
             return page.replace(/\{STATICS_HOST\}/g, staticsUrl);

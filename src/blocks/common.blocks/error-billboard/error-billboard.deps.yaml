@@ -1,0 +1,8 @@
+- block: i-bem
+  required: true
+  elems: [html, tree]
+- block: i-global
+  required: true
+
+- elem: logo
+- block: link
