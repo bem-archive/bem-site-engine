@@ -1,3 +1,9 @@
+yandex-bem-info-nginx-conf (3.2) unstable; urgency=low
+
+  * Test rebuild. Up to borschik and csso redirect.
+
+ -- Andrey Kuznetsov <bemer@yandex-team.ru>  Tue, 11 Feb 2014 20:22:03 +0400
+
 yandex-bem-info-nginx-conf (3.1) unstable; urgency=low
 
   * Test rebuild. Up to bem-core redirect
