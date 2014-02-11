@@ -1,0 +1,10 @@
+.error-billboard__logo
+{
+    margin: 0 auto;
+
+    height: 300px;
+    width: 500px;
+
+    background-size: auto 300px;
+    background: url('error-billboard__logo.png') no-repeat center;
+}
