@@ -654,16 +654,6 @@
                         ]
                     }
                 ]
-            },
-            {
-                "title": "islands-components",
-                "route": {
-                    "conditions": {
-                        "lib": "islands-components"
-                    }
-                },
-                "type": "group",
-                "lib": "islands-components"
             }
         ]
     },
