@@ -4,6 +4,8 @@ var u = require('util'),
     logger = require('../logger')(module),
     HttpError = require('../errors').HttpError,
 
+    constants = require('./constants'),
+    data = require('./data'),
     model = require('./model');
 
 module.exports = {
@@ -239,6 +241,30 @@ module.exports = {
         url += node.hidden[targetLang] ? '/' : req._parsedUrl.pathname;
 
         return url;
+    },
+
+    getAdvancedData: function(req, node) {
+        var  result = {
+            people: data.people.getPeople(),
+            peopleUrls: data.people.getUrls()
+        };
+
+        if(node.view === constants.NODE.VIEW.AUTHOR) {
+            return _.extend(result, {
+                posts: this.getNodesBySourceCriteria(req.prefLocale, ['authors', 'translators'], req.params.id) });
+        }
+
+        if(node.view === constants.NODE.VIEW.TAGS) {
+            return _.extend(result, {
+                posts: this.getNodesBySourceCriteria(req.prefLocale, ['tags'], req.params.id) });
+        }
+
+        if(node.view === constants.NODE.VIEW.AUTHORS) {
+            return _.extend(result, {
+                authors: data.docs.getAuthors() });
+        }
+
+        return result;
     }
 };
 

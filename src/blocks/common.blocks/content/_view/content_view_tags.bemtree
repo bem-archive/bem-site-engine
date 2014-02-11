@@ -11,15 +11,10 @@ block content, mod view tags {
     ]
 
     tagPosts: {
-        logger.verbose('tagPosts lang: %s id: %s', this.data.lang, this.data.req.params.id);
-
-        var posts = logic.getNodesBySourceCriteria(
-                this.data.lang, 'tags', this.data.req.params.id);
-
         return {
             block: this.block,
             elem: 'tag-posts',
-            content: posts.map(function(node) {
+            content: this.data.posts.map(function(node) {
                 return {
                     block: 'posts',
                     title: node.title,

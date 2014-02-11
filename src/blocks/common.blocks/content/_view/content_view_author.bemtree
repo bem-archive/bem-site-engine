@@ -16,17 +16,10 @@ block content, mod view author {
     ]
 
     authorPosts: {
-        //logger.verbose('authorPosts lang: %s id: %s', this.data.lang, this.data.req.params.id);
-
-        var posts = logic.getNodesBySourceCriteria(
-                this.data.lang, ['authors', 'translators'], this.data.req.params.id);
-
-        //logger.verbose('posts length %s', posts.length);
-
         return {
             block: this.block,
             elem: 'author-posts',
-            content: posts.map(function(node) {
+            content: this.data.posts.map(function(node) {
                 return {
                     block: 'posts',
                     title: node.title,

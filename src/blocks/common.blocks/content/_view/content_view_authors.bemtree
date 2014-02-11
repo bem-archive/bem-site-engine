@@ -4,7 +4,7 @@ block content, mod view authors {
         applyNext(),
         {
             elem: 'content-area',
-            content: data.docs.getAuthors().map(function(author) {
+            content: this.data.authors.map(function(author) {
                 return {
                     block: 'author',
                     mods: { view: 'grid-cell' },
