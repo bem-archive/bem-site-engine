@@ -33,5 +33,10 @@
             "ref": "bem-info-data",
             "path": "people"
         }
+    },
+    "yandexApi": {
+        "login": "bem-info.bem",
+        "password": "pass4bem-info"
     }
+
 }
