@@ -31,7 +31,7 @@
             "user": "bem",
             "repo": "bem-method",
             "ref": "bem-info-data",
-            "path": "people"
+            "path": "people/people.json"
         }
     }
 }
