@@ -9,34 +9,11 @@ var u = require('util'),
 
     logger = require('../logger')(module),
     config = require('../config'),
+    constants = require('./constants'),
     data = require('./data');
-
-var ROUTE = {
-    NAME: 'name',
-    CONDITIONS: 'conditions',
-    DEFAULTS: 'defaults',
-    DATA: 'data'
-},
-NODE = {
-    VIEW: {
-        POST: 'post',
-        POSTS: 'posts',
-        AUTHOR: 'author',
-        TAGS: 'tags',
-        BLOCK: 'block'
-    },
-    TYPE: {
-        SIMPLE: 'simple',
-        GROUP: 'group'
-    },
-    SIZE: {
-        NORMAL: 'normal'
-    }
-};
 
 var sitemap,
     routes = {};
-
 
 module.exports = {
     init: function() {
@@ -155,7 +132,7 @@ var createModel = function(sitemap) {
          * @param node {Object} - single node of sitemap model
          */
         processView = function(node) {
-            node.view = node.view || (node.source ? NODE.VIEW.POST : NODE.VIEW.POSTS);
+            node.view = node.view || (node.source ? constants.NODE.VIEW.POST : constants.NODE.VIEW.POSTS);
         },
 
         /**
@@ -202,25 +179,25 @@ var createModel = function(sitemap) {
                 node.route = {
                     name: node.parent.route.name
                 };
-                node.type = node.type || (node.url ? NODE.TYPE.SIMPLE : NODE.TYPE.GROUP);
+                node.type = node.type || (node.url ? constants.NODE.TYPE.SIMPLE : constants.NODE.TYPE.GROUP);
                 return;
             }
 
             var r = node.route;
 
-            if(r[ROUTE.NAME]) {
+            if(r[constants.ROUTE.NAME]) {
                 routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
                 node.url = susanin.Route(routes[r.name]).build(node.params);
             }else {
                 r.name = node.parent.route.name;
             }
 
-            [ROUTE.DEFAULTS, ROUTE.CONDITIONS, ROUTE.DATA].forEach(function(item) {
+            [constants.ROUTE.DEFAULTS, constants.ROUTE.CONDITIONS, constants.ROUTE.DATA].forEach(function(item) {
                 routes[r.name][item] = routes[r.name][item] || {};
 
                 if(r[item]) {
                     Object.keys(r[item]).forEach(function(key) {
-                        if(item === ROUTE.CONDITIONS) {
+                        if(item === constants.ROUTE.CONDITIONS) {
                             routes[r.name][item][key] = routes[r.name][item][key] || [];
                             routes[r.name][item][key].push(r[item][key]);
 
@@ -232,7 +209,7 @@ var createModel = function(sitemap) {
                 }
             });
 
-            node.type = node.type || NODE.TYPE.SIMPLE;
+            node.type = node.type || constants.NODE.TYPE.SIMPLE;
         },
 
         /**
@@ -245,7 +222,7 @@ var createModel = function(sitemap) {
 
             node.id = sha(JSON.stringify(node)); //generate unique id for node as sha sum of node object
             node.parent = parent; //set parent for current node
-            node.size = node.size || NODE.SIZE.NORMAL;
+            node.size = node.size || constants.NODE.SIZE.NORMAL;
 
             processRoute(node, level);
             processTitle(node);
@@ -263,7 +240,7 @@ var createModel = function(sitemap) {
             //deep into node items
             if(node.items) {
                 node.items.forEach(function(item) {
-                    traverseTreeNodes(item, node, node.type === NODE.TYPE.GROUP ? level : level + 1);
+                    traverseTreeNodes(item, node, node.type === constants.NODE.TYPE.GROUP ? level : level + 1);
                 });
             }
         };
@@ -303,7 +280,7 @@ var addDynamicNodes = function() {
                 ru: u.format('%s %s', people.ru.firstName, people.ru.lastName)
             };
         },
-        view: NODE.VIEW.AUTHOR,
+        view: constants.NODE.VIEW.AUTHOR,
         urlHash: data.people.getUrls()
     };
 
@@ -356,9 +333,9 @@ var addDynamicNodes = function() {
                     title: config.title.call(null, item),
                     route: _.extend({}, { name: baseRoute.name }, conditions),
                     url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
-                    level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
-                    type: NODE.TYPE.SIMPLE,
-                    size: NODE.SIZE.NORMAL,
+                    level: targetNode.type === constants.NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
+                    type: constants.NODE.TYPE.SIMPLE,
+                    size: constants.NODE.SIZE.NORMAL,
                     view: config.view,
                     hidden: {en: false, ru: false}
                 };
@@ -393,7 +370,7 @@ var addDynamicNodes = function() {
                 ru: item
             };
         },
-        view: NODE.VIEW.TAGS,
+        view: constants.NODE.VIEW.TAGS,
         urlHash: data.docs.getTagUrls()
     });
 };
@@ -423,10 +400,10 @@ var addLibraryNodes = function(nodesWithLib) {
             return {
                 route: _.extend({}, { name: baseRoute.name }, conditions),
                 url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
-                level: targetNode.type === NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
-                type: NODE.TYPE.SIMPLE,
-                size: NODE.SIZE.NORMAL,
-                view: NODE.VIEW.POST,
+                level: targetNode.type === constants.NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
+                type: constants.NODE.TYPE.SIMPLE,
+                size: constants.NODE.SIZE.NORMAL,
+                view: constants.NODE.VIEW.POST,
                 hidden: {}
             };
         },
@@ -583,7 +560,7 @@ var addLibraryNodes = function(nodesWithLib) {
                         en: level.name,
                         ru: level.name
                     }
-                }, getBaseNode(targetNode, baseRoute, conditions), { type: NODE.TYPE.GROUP });
+                }, getBaseNode(targetNode, baseRoute, conditions), { type: constants.NODE.TYPE.GROUP });
 
                 targetNode.items.push(_.extend(_node, {
                     id: sha(JSON.stringify(_node)),
@@ -630,7 +607,7 @@ var addLibraryNodes = function(nodesWithLib) {
                         data: block.data,
                         jsdoc: block.jsdoc
                     }
-                }, getBaseNode(targetNode, baseRoute, conditions), { view: NODE.VIEW.BLOCK });
+                }, getBaseNode(targetNode, baseRoute, conditions), { view: constants.NODE.VIEW.BLOCK });
 
                 targetNode.items.push(_.extend(_node, {
                     id: sha(JSON.stringify(_node)),

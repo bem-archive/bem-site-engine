@@ -3,7 +3,7 @@ block page {
     default: {
         return applyCtx({
             block : this.block,
-            title : this.data.pageTitle,
+            title : this.data.title,
             mods : this._.extend({ theme : 'normal', page : this.data.req.route }, this.ctx.mods),
             head : apply('head'),
             favicon : '/www/favicon.ico'
