@@ -65,6 +65,10 @@ module.exports = {
 
         var title;
 
+        if(req.url === '/') {
+            return node.title[req.prefLocale];
+        }
+
         if(node.title) {
             title = node.title[req.prefLocale];
         }
