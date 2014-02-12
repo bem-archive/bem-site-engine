@@ -1,8 +1,8 @@
 [
     {
         "title": {
-            "en": "Main",
-            "ru": "Главная"
+            "en": "BEM. Block, Element, Modifier",
+            "ru": "БЭМ. Блок, Элемент, Модификатор"
         },
         "route": {
             "name": "index",
