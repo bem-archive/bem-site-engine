@@ -67,3 +67,37 @@ exports.dateToMilliseconds = function(dateStr) {
 
     return date.valueOf();
 };
+
+/**
+ * Transform https url of source into repo object suitable for github api using
+ * @param source - {String} https url of source block on github
+ * @param extension - {String} file extension
+ * @returns {Object} with fields:
+ * - user {String} name of user or organization which this repository is belong to
+ * - repo {String} name of repository
+ * - ref {String} name of branch
+ * - path {String} relative path from the root of repository
+ * - block {String} name of block
+ */
+exports.getRepoFromSource = function(source, extention) {
+
+    var repoData = (function(_source) {
+        var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+\/(.+))/,
+            parsedSource = _source.match(re);
+        return {
+            host: parsedSource[1],
+            user: parsedSource[2],
+            repo: parsedSource[3],
+            ref: parsedSource[4],
+            path: parsedSource[5],
+            block: parsedSource[6]
+        };
+    })(source);
+
+    var result = _.extend(repoData, {path: u.format('%s/%s.%s', repoData.path, repoData.block, extention)});
+
+    logger.verbose('get repo from source user: %s repo: %s ref: %s path: %s',
+        result.user, result.repo, result.ref, result.path);
+
+    return result;
+};
