@@ -1,0 +1,30 @@
+.link_award {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding-top: 125px;
+    width: 120px;
+    background-image: url('../../../common.blocks/link/_award/net_awards_logo.svg');
+    background-size: 120px;
+    background-position: top center;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+
+.page_page_index .menu-list .link_award {
+    display: none;
+}
+
+.menu-list .link_award {
+    position: static;
+    display: block;
+    padding: 0 0 125px 0;
+    background-image: url('../../../common.blocks/link/_award/net_awards_logo.svg');
+    background-size: 86px;
+    margin: 20px 0 0 30px;
+    background-position: 0 20px;
+    background-repeat: no-repeat;
+    text-align: left;
+    color: white;
+}
+
