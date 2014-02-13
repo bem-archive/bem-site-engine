@@ -43,7 +43,7 @@ module.exports = {
             tags = content.tags;
 
             nodesWithSource.forEach(function(node) {
-                node.source = content.docs[node.id];
+                node.source = content.docs[node.source];
             });
 
             return nodesWithSource;

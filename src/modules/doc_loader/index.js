@@ -105,7 +105,7 @@ var loadSourcesForNodes = function(nodesWithSource) {
             })
             .then(function(value) {
                 return {
-                    id: node.id,
+                    id: node.source,
                     source: {
                         en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value, collected),
                         ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value, collected)
