@@ -150,7 +150,7 @@ module.exports = {
                 if(!_node.hidden[req.prefLocale]) {
                     result[_node.level].push({
                         title: _node.title ? _node.title[req.prefLocale]: '',
-                        url: _node.url,
+                        url: (_node.url && _.isObject(_node.url)) ? _node.url[req.prefLocale] : _node.url,
                         active: _.indexOf(activeIds, _node.id) !== -1,
                         type: _node.type,
                         size: _node.size
