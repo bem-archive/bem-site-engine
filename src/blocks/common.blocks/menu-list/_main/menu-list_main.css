@@ -2,9 +2,6 @@
 {
     background: black;
     color: #FFFFFF;
-    -webkit-flex: 0 0 200px;
-    -moz-flex: 0 0 200px;
-    -ms-flex: 0 0 200px;
     flex: 0 0 200px;
     padding-top: 20px;
     vertical-align: top;
@@ -12,10 +9,6 @@
 
 .menu-list_main .menu-list__item
 {
-    -webkit-transition: .3s color;
-    -moz-transition: .3s color;
-    -ms-transition: .3s color;
-    -o-transition: .3s color;
     transition: .3s color;
 }
 
