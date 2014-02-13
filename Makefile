@@ -41,3 +41,7 @@ bower_deps: npm_deps
 .PHONY: npm_deps
 npm_deps:
 	npm install
+
+.PHONY: doc_loader
+doc_loader:
+	node bin/doc_loader.js

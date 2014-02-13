@@ -33,5 +33,16 @@
             "ref": "bem-info-data",
             "path": "people/people.json"
         }
+    },
+    "yandexApi": {
+        "login": "bem-info.bem",
+        "password": "pass4bem-info"
+    },
+    "data": {
+        "docs": {
+            "file": "backups/docs.json",
+            "disk": "docs/docs.json"
+        }
     }
+
 }

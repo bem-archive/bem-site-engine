@@ -21,9 +21,11 @@ module.exports = {
 
         data.common.init();
 
-        return load()
-            .then(parse)
-            .then(function(sitemap) {
+        return data.common.loadData(data.common.PROVIDER_FILE, {
+                path: path.join('configs', 'common', 'sitemap.json')
+            })
+            .then(function(content) {
+                sitemap = content;
                 return createModel(sitemap);
             })
             .then(function(res) {
@@ -58,43 +60,6 @@ module.exports = {
     getSitemap: function() {
         return sitemap;
     }
-};
-
-/**
- * Load sitemap file from filesystem
- * @returns {String} - content of sitemap.json file
- */
-var load = function() {
-    logger.info('Load site map');
-
-    return fs
-        .read(path.join('configs', 'common', 'sitemap.json'), 'utf-8')
-        .fail(
-            function(err) {
-                logger.error('Site map loading failed with error %s', err.message);
-            }
-        );
-};
-
-/**
- * Parse content of sitemap json file to js object and handle errors
- * @param data - content of sitemap.json file
- * @returns {Object} parsed sitemap object
- */
-var parse = function(data) {
-    logger.info('Parse site map');
-
-    var def = vow.defer();
-
-    try {
-        sitemap = JSON.parse(data);
-        def.resolve(sitemap);
-    } catch(err) {
-        logger.error('Site map parsed with error %s', err.message);
-        def.reject(err);
-    }
-
-    return def.promise();
 };
 
 var createModel = function(sitemap) {
@@ -619,8 +584,6 @@ var addLibraryNodes = function(nodesWithLib) {
     nodesWithLib.forEach(function(node) {
         addVersionsToLibrary(node);
     });
-
-    logger.debug('end');
 };
 
 /**
