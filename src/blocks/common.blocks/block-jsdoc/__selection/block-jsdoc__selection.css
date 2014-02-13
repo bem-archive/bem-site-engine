@@ -1,0 +1,9 @@
+.block-jsdoc__selection
+{
+    display: inline-block;
+
+    padding: 2px 10px;
+
+    border: 1px solid;
+    border-radius: 2px;
+}

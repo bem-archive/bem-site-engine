@@ -1,0 +1,10 @@
+.block-docs__value
+{
+    display: inline-block;
+
+    margin-bottom: 5px;
+    padding: 2px 10px;
+
+    border: 1px solid #E6E6E6;
+    border-radius: 2px;
+}

@@ -1,0 +1,10 @@
+a.example__source-link_active_yes,
+.example__source-link_active_yes:link
+{
+    color: #000;
+}
+
+.example__source-link_active_yes:after
+{
+    opacity: 1;
+}

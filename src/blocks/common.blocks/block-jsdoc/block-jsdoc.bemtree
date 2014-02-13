@@ -1,0 +1,248 @@
+block block-jsdoc {
+
+    content: {
+
+        var _jsdoc = this.data.node.source.jsdoc;
+
+        return [
+            apply('description', this.ctx.description = _jsdoc.description),
+            apply('methods', this.ctx.methods = _jsdoc.methods),
+            apply('events', this.ctx.events = _jsdoc.events)
+        ]
+    }
+
+    description: {
+        return [
+            {
+                elem: 'title',
+                tag: 'h2',
+                mix: [{ block: 'post', elem: 'title' }],
+                content: 'Описание'
+            },
+            {
+                elem: 'description',
+                content: this.ctx.description
+            }
+        ]
+    }
+
+    methods: {
+
+        if(this.ctx.methods && this.ctx.methods.length > 0) {
+
+            return [
+                apply('methods-title'),
+                this.ctx.methods.map(function(method) {
+
+                    return {
+                        elem: 'item',
+                        content: [
+                            {
+                                elem: 'title',
+                                mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
+                                tag: 'h3',
+                                content: {
+                                    elem: 'selection',
+                                    elemMods: { color: 'gold' },
+                                    content: method.name + '()'
+                                }
+                            },
+                            {
+                                elem: 'access',
+                                content: method.access
+                            },
+                            {
+                                elem: 'description',
+                                content: method.description
+                            },
+                            apply('method-params', this.ctx.method = method),
+                            apply('method-returns', this.ctx.method = method)
+                        ]
+                    }
+
+                })
+            ]
+        }
+
+    }
+
+    methods-title: {
+        elem: 'title',
+        tag: 'h2',
+        mix: [{ block: 'post', elem: 'title' }],
+        content: 'Методы'
+    }
+
+    method-params: {
+
+        if(this.ctx.method.params && this.ctx.method.params.length > 0) {
+
+            return [
+                {
+                    elem: 'title',
+                    mix: [{ block: 'post', elem: 'title' }],
+                    tag: 'h4',
+                    content: 'Параметры:'
+                },
+
+                this.ctx.method.params.map(function(param) {
+
+                    return [
+                        {
+                            elem: 'value',
+                            mix: [{ elem: 'selection', elemMods: { color: 'grey' } }],
+                            content: param.name
+                        },
+                        apply('method-params-type', this.ctx.param = param),
+                        {
+                            elem: 'js-description',
+                            content: param.description
+                        }
+                    ]
+
+                })
+            ]
+
+        }
+
+    }
+
+    method-params-type: {
+
+        if(this.ctx.param.types && this.ctx.param.types.length > 0) {
+
+            return this.ctx.param.types.map(function(type){
+
+                return {
+                    elem: 'type',
+                    content: '<code>' + type + '</code>'
+                }
+
+            })
+
+        }
+
+    }
+
+    method-returns: {
+
+        if(this.ctx.method.returns && this.ctx.method.returns.length > 0) {
+
+            return [
+                {
+                    elem: 'title',
+                    mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
+                    tag: 'h4',
+                    content: 'Возвращаемое значение:'
+                },
+
+                this.ctx.method.returns.map(function(returns) {
+
+                    return [
+                        {
+                            elem: 'types',
+                            content: returns.types.map(function(type) {
+
+                                return {
+                                    elem: 'type',
+                                    content: '<code>' + type + '</code>'
+                                }
+
+                            })
+                        },
+                        {
+                            elem: 'description',
+                            content: returns.description
+                        }
+                    ]
+
+                })
+            ]
+
+        }
+
+    }
+
+    events: {
+
+        if (this.ctx.events && this.ctx.events.length > 0) {
+
+            return [
+                apply('events-title'),
+                this.ctx.events.map(function(event) {
+
+                    return {
+                        elem: 'item',
+                        content: [
+                            {
+                                elem: 'title',
+                                mix: [{ block: 'post', elem: 'title' }],
+                                tag: 'h3',
+                                content: {
+                                    elem: 'selection',
+                                    elemMods: { color: 'gold' },
+                                    content: event.name
+                                }
+                            },
+                            {
+                                elem: 'description',
+                                content: event.description
+                            },
+                            apply('event-params', this.ctx.event = event)
+                        ]
+                    }
+
+
+                })
+            ]
+
+        }
+
+    }
+
+    events-title: {
+        elem: 'title',
+        tag: 'h2',
+        mix: [{ block: 'post', elem: 'title' }],
+        content: 'События'
+    }
+
+    event-params: {
+
+        if(this.ctx.event.params && this.ctx.event.params.length > 0) {
+
+            return [
+                {
+                    elem: 'title',
+                    mix: [{ block: 'post', elem: 'title' }],
+                    tag: 'h4',
+                    content: 'Параметры:'
+                },
+                this.ctx.event.params.map(function(param) {
+
+                    return [
+                        {
+                            elem: 'value',
+                            mix: [{ elem: 'selection', elemMods: { color: 'grey' } }],
+                            content: param.name
+                        },
+                        param.types.map(function(type){
+                            return {
+                                elem: 'type',
+                                content: '<code>' + type + '</code>'
+                            }
+                        }),
+                        {
+                            elem: 'js-description',
+                            content: param.description
+                        }
+                    ]
+
+                })
+            ]
+
+        }
+
+    }
+
+}

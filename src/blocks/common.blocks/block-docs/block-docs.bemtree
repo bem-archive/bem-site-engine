@@ -1,0 +1,195 @@
+block block-docs {
+
+    content: {
+
+        var _data = this.data.node.source.data;
+
+        return [
+            applyNext(),
+            apply('description', this.ctx.description = _data.description),
+            apply('mods', this.ctx.mods = _data.mods),
+            apply('elems', this.ctx.elems = _data.elems)
+        ]
+    }
+
+    description: {
+        return {
+            elem: 'description',
+            content: this.ctx.description ? this.ctx.description[0].content : ''
+        }
+    }
+
+    mods: {
+
+        if(this.ctx.mods && this.ctx.mods.length > 0) {
+            return [
+                apply('mods-title'),
+                this.ctx.mods.map(function(mod) {
+
+                    return {
+                        elem: 'item',
+                        content: [
+                            {
+                                elem: 'title',
+                                mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
+                                tag: 'h3',
+                                content: {
+                                    elem: 'selection',
+                                    elemMods: { color: 'gold' },
+                                    content: '_' + mod.name
+                                }
+                            },
+                            {
+                                elem: 'description',
+                                elemMods: { inline: 'yes' },
+                                content: mod.title ? mod.title[0].content : ''
+                            },
+                            apply('mod-values', this.ctx.values = mod.vals)
+                        ]
+                    }
+
+                })
+            ]
+        }
+
+    }
+
+    mods-title: {
+        elem: 'title',
+        tag: 'h2',
+        mix: [{ block: 'post', elem: 'title' }],
+        content: 'Список _модификаторов'
+    }
+
+    mod-values: {
+
+        if(this.ctx.values && this.ctx.values.length > 0) {
+
+            return this.ctx.values.map(function(value){
+                return [
+                    {
+                        elem: 'values',
+                        content: [
+                            {
+                                elem: 'value',
+                                content: value.name
+                            },
+                            {
+                                elem: 'description',
+                                elemMods: { inline: 'yes' },
+                                content: value.title ? value.title[0].content : ''
+                            }
+                        ]
+                    }
+                ]
+            })
+
+        }
+
+    }
+
+    elems: {
+
+        if(this.ctx.elems && this.ctx.elems.length > 0) {
+
+            return [
+                apply('elems-title'),
+                this.ctx.elems.map(function(elem) {
+
+                    return {
+                        elem: 'item',
+                        content: [
+                            {
+                                elem: 'title',
+                                mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
+                                tag: 'h3',
+                                content: {
+                                    elem: 'selection',
+                                    elemMods: { color: 'gold' },
+                                    content: '__' + elem.name
+                                }
+                            },
+                            {
+                                elem: 'description',
+                                elemMods: { inline: 'yes' },
+                                content: elem.title ? elem.title[0].content : ''
+                            },
+                            apply('elem-mods', this.ctx.eMods = elem.mods)
+                        ]
+                    }
+
+                })
+            ]
+        }
+
+    }
+
+    elems-title: {
+        elem: 'title',
+        tag: 'h2',
+        mix: [{ block: 'post', elem: 'title' }],
+        content: 'Список __элементов'
+    }
+
+    elem-mods: {
+
+        if(this.ctx.eMods && this.ctx.eMods.length > 0) {
+
+            return this.ctx.eMods.map(function(eMod){
+                return [
+                    {
+                        elem: 'values',
+                        mix: [{ elem: 'sublevel' }],
+                        content: [
+                            {
+                                elem: 'title',
+                                mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
+                                tag: 'h3',
+                                content: {
+                                    elem: 'selection',
+                                    elemMods: { color: 'gold' },
+                                    content: '_' + eMod.name
+                                }
+                            },
+                            {
+                                elem: 'description',
+                                elemMods: { inline: 'yes' },
+                                content: eMod.title ? eMod.title[0].content : ''
+                            },
+                            apply('elem-mod-values', this.ctx.values = eMod.vals)
+                        ]
+                    }
+                ]
+            })
+
+        }
+
+    }
+
+    elem-mod-values: {
+
+        if(this.ctx.values && this.ctx.values.length > 0) {
+
+            return this.ctx.values.map(function(value){
+                return [
+                    {
+                        elem: 'values',
+                        content: [
+                            {
+                                elem: 'value',
+                                content: value.name
+                            },
+                            {
+                                elem: 'description',
+                                elemMods: { inline: 'yes' },
+                                content: value.title ? value.title[0].content : ''
+                            }
+                        ]
+                    }
+                ]
+            })
+
+        }
+    }
+
+}

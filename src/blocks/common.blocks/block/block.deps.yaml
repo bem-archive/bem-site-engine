@@ -1,0 +1,9 @@
+- elems:
+    - header
+- block: tabs
+  mods:
+    theme: default
+- block: block-docs
+- block: block-jsdoc
+- block: block-example
+
