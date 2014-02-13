@@ -11,6 +11,15 @@ var path = require('path'),
 var peopleHash = {},
     peopleUrls = {};
 
+var MSG = {
+    INFO: {
+        START: 'Load all people start',
+        END: 'People succssfully loaded'
+    },
+    ERR: 'Error while loading people occur',
+    VERBOSE: 'Load person %s'
+};
+
 module.exports = {
 
     /**
@@ -19,46 +28,28 @@ module.exports = {
      * @returns {*}
      */
     load: function() {
-        logger.info('Load all people start');
+        logger.info(MSG.INFO.START);
 
         var peopleRepository = config.get('github:peopleRepository');
 
         return common
             .loadData(common.PROVIDER_GITHUB_API, { repository: peopleRepository })
             .then(function(result) {
-                var promises = result.res.map(function(people) {
-                    return vow
-                        .allResolved({
-                            metaEn: common.loadData(common.PROVIDER_GITHUB_API, {
-                                repository: _.extend({}, peopleRepository,
-                                    { path: path.join(people.path, people.name + '.en.meta.json') })
-                            }),
-                            metaRu: common.loadData(common.PROVIDER_GITHUB_API, {
-                                repository: _.extend({}, peopleRepository,
-                                    { path: path.join(people.path, people.name + '.ru.meta.json') })
-                            })
-                        })
-                        .then(function(value) {
-                            var _def = vow.defer(),
-                                getPeopleFromMeta = function(meta) {
-                                    meta = (new Buffer(meta.res.content, 'base64')).toString();
-                                    meta = JSON.parse(meta);
+                try {
+                    var content = (new Buffer(result.res.content, 'base64')).toString();
+                    var people = JSON.parse(content);
 
-                                    //TODO can make some post-load operations here
-                                    return meta;
-                                };
+                    peopleHash = Object.keys(people).reduce(function(prev, key) {
+                        logger.verbose(MSG.VERBOSE, key);
 
-                            peopleHash[people.name] = {
-                                en: getPeopleFromMeta(value.metaEn._value),
-                                ru: getPeopleFromMeta(value.metaRu._value)
-                            };
+                        prev[key] = people[key];
+                        return prev;
+                    }, {})
 
-                            _def.resolve(peopleHash[people.name]);
-                            return _def.promise();
-                        });
-                });
-
-                return vow.allResolved(promises);
+                    logger.info(MSG.INFO.END);
+                }catch(err) {
+                    logger.error(MSG.ERR);
+                }
             });
     },
 
