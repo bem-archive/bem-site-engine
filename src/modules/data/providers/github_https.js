@@ -1,6 +1,9 @@
 var https = require('https'),
     u = require('util'),
 
+    vow = require('vow'),
+    _ = require('lodash'),
+
     logger = require('../../../logger')(module);
 
 
@@ -16,7 +19,7 @@ module.exports = {
      * @returns {*}
      */
     load: function(options) {
-        var deferred = vow.defer(),
+        var def = vow.defer(),
             repository = options.repository,
             url = u.format({
                 'public': 'https://raw.github.com/%s/%s/%s/%s',
@@ -34,13 +37,13 @@ module.exports = {
 
             res.on('end', function() {
                 logger.debug('load data successfully finished from url %s', url);
-                deferred.resolve(JSON.parse(data));
+                def.resolve(JSON.parse(data));
             });
         }).on('error', function(e) {
             logger.error('load data failed with error %s from url %s', e.message, url);
-            deferred.reject(e);
+            def.reject(e);
         });
 
-        return deferred.promise();
+        return def.promise();
     }
 };
