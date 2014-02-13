@@ -13,9 +13,14 @@ block menu-list, mod main true{
         });
         _content.push({ block: 'lang-switch', url: this.data.langSwitch });
         _content.push({
+            block: 'menu-list',
+            elem: 'item',
+            mods: { type: 'delimeter'}
+            });
+        _content.push({
             block: 'link',
             mods: { award: true },
-            url: 'https://thenetawards.com/vote/web-tech/bem/',
+            url: 'http://bit.ly/voteforb',
             content: 'Vote for BEM'
         });
         _content.push({ block: 'search' });

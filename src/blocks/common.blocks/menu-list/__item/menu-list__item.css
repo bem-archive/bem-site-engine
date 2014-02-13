@@ -22,7 +22,7 @@
     color: #000000;
 }
 
-@media screen and (max-height:700px) {
+@media screen and (max-height:640px) {
     .menu-list__item {
         font-size: 0.9em;
         line-height: 0.8em;

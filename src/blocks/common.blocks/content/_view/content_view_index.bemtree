@@ -18,7 +18,7 @@ block content, mod view index {
         {
             block: 'link',
             mods: { award: true },
-            url: 'https://thenetawards.com/vote/web-tech/bem/',
+            url: 'http://bit.ly/voteforb',
             content: 'Vote for BEM!'
         }
     ]
