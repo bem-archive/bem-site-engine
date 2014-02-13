@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 YENV ?= production
-NPM ?= npm --registry=http://npm.yandex-team.ru
+NPM ?= npm --registry=http://registry.npmjs.org
 ENB := $(shell $(NPM) bin)/enb
 BOWER := $(shell $(NPM) bin)/bower
 
