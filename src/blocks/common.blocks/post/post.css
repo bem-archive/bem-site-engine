@@ -1,12 +1,46 @@
 .post
 {
-    margin-bottom: 0px;
+    margin-bottom: 0;
     padding: 10px 10px 5px 10px;
 }
 
 .post:last-child
 {
     border-bottom: none;
+}
+
+.post p
+{
+    margin: 0 0 20px;
+}
+
+.post h1, h2, h3, h4
+{
+    font-weight: normal;
+
+    margin: 0 0 .5em 0;
+
+    color: #000;
+}
+
+.post h1
+{
+    font-size: 32px;
+}
+
+.post h2
+{
+    font-size: 27px;
+}
+
+.post h3
+{
+    font-size: 22px;
+}
+
+.post h4
+{
+    font-size: 17px;
 }
 
 .post .post__translation
