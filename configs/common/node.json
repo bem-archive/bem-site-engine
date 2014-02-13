@@ -37,6 +37,12 @@
     "yandexApi": {
         "login": "bem-info.bem",
         "password": "pass4bem-info"
+    },
+    "data": {
+        "docs": {
+            "file": "backups/docs.json",
+            "disk": "docs/docs.json"
+        }
     }
 
 }

@@ -584,8 +584,6 @@ var addLibraryNodes = function(nodesWithLib) {
     nodesWithLib.forEach(function(node) {
         addVersionsToLibrary(node);
     });
-
-    logger.debug('end');
 };
 
 /**

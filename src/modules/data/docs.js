@@ -21,22 +21,33 @@ var authors,
 module.exports = {
 
     load: function(nodesWithSource) {
-        return common.loadData(common.PROVIDER_YANDEX_DISK, {
-                path: 'docs/docs.json'
-            })
-            .then(function(content) {
-                content = JSON.parse(content);
 
-                authors = content.authors;
-                translators = content.translators;
-                tags = content.tags;
+        var docs;
 
-                nodesWithSource.forEach(function(node) {
-                    node.source = content.docs[node.id];
+        if('production' === process.env.NODE_ENV) {
+            docs = common.loadData(common.PROVIDER_YANDEX_DISK, {
+                    path: config.get('data:docs:disk')
+                })
+                .then(function(content) {
+                    return JSON.parse(content);
                 });
-
-                return nodesWithSource;
+        }else {
+            docs = common.loadData(common.PROVIDER_FILE, {
+                path: config.get('data:docs:file')
             });
+        }
+
+        return docs.then(function(content) {
+            authors = content.authors;
+            translators = content.translators;
+            tags = content.tags;
+
+            nodesWithSource.forEach(function(node) {
+                node.source = content.docs[node.id];
+            });
+
+            return nodesWithSource;
+        });
     },
 
     reload: function(source) {

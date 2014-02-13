@@ -1,6 +1,5 @@
 {
     "NODE_ENV": "production",
-    "forceUpdate": true,
     "luster": {
         "workers": 4,
         "control": {

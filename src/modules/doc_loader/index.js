@@ -13,23 +13,10 @@ var u = require('util'),
     common = data.common;
 
 var MSG = {
-    ERR: {
-        NOT_EXIST: '%s file does not exist for source user: %s repo: %s ref: %s path: %s',
-        PARSING_ERROR: '%s file parsed with error for source user: %s repo: %s ref: %s path: %s'
-    },
     WARN: {
+        NOT_EXIST: '%s file does not exist for source user: %s repo: %s ref: %s path: %s',
+        PARSING_ERROR: '%s file parsed with error for source user: %s repo: %s ref: %s path: %s',
         DEPRECATED: 'remove deprecated field %s for source user: %s repo: %s ref: %s path: %s'
-    }
-};
-
-var BACKUP = {
-    FILE: {
-        DIRECTORY: 'backups',
-        DOCS: 'docs.json'
-    },
-    YANDEX_DISK: {
-        DIRECTORY: 'docs',
-        DOCS: 'docs.json'
     }
 };
 
@@ -150,7 +137,7 @@ var getSourceFromMetaAndMd = function(meta, md, collected) {
     //verify if md file content exists and valid
     try {
         if(!md.res) {
-            logger.warn(MSG.ERR.NOT_EXIST, 'md', repo.user, repo.repo, repo.ref, repo.path);
+            logger.warn(MSG.WARN.NOT_EXIST, 'md', repo.user, repo.repo, repo.ref, repo.path);
             md = null;
         }else {
             _.extend(repo, { path: md.res.path });
@@ -158,14 +145,14 @@ var getSourceFromMetaAndMd = function(meta, md, collected) {
             md = util.mdToHtml(md);
         }
     } catch(err) {
-        logger.warn(MSG.ERR.PARSING_ERROR, 'md', repo.user, repo.repo, repo.ref, repo.path);
+        logger.warn(MSG.WARN.PARSING_ERROR, 'md', repo.user, repo.repo, repo.ref, repo.path);
         md = null;
     }
 
     //verify if meta.json file content exists and valid
     try {
         if(!meta.res) {
-            logger.warn(MSG.ERR.NOT_EXIST, 'meta', repo.user, repo.repo, repo.ref, repo.path);
+            logger.warn(MSG.WARN.NOT_EXIST, 'meta', repo.user, repo.repo, repo.ref, repo.path);
             return null;
         }
 
@@ -173,7 +160,7 @@ var getSourceFromMetaAndMd = function(meta, md, collected) {
         meta = JSON.parse(meta);
 
     } catch(err) {
-        logger.warn(MSG.ERR.PARSING_ERROR, 'meta', repo.user, repo.repo, repo.ref, repo.path);
+        logger.warn(MSG.WARN.PARSING_ERROR, 'meta', repo.user, repo.repo, repo.ref, repo.path);
         return null;
     }
 
@@ -218,8 +205,6 @@ var getSourceFromMetaAndMd = function(meta, md, collected) {
     /** fallbacks **/
     ['type', 'root', 'categories', 'order', 'url', 'slug'].forEach(function(field) {
         if(meta[field]) {
-            //TODO uncomment it for warnings
-            //logger.warn(MSG.WARN.DEPRECATED, field, repo.user, repo.repo, repo.ref, repo.path);
             delete meta[field];
         }
     });
@@ -256,11 +241,11 @@ var saveAndUploadDocs = function(docs, collected) {
 
     return vow.all([
         common.saveData(common.PROVIDER_FILE, {
-            path: path.join(BACKUP.FILE.DIRECTORY, BACKUP.FILE.DOCS),
+            path: config.get('data:docs:file'),
             data: content
         }),
         common.saveData(common.PROVIDER_YANDEX_DISK, {
-            path: path.join(BACKUP.YANDEX_DISK.DIRECTORY, BACKUP.YANDEX_DISK.DOCS),
+            path: config.get('data:docs:disk'),
             data: JSON.stringify(content, null, 4)
         })
     ]);

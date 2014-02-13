@@ -1,5 +1,10 @@
-var md = require('marked'),
-    hl = require('highlight.js');
+var u = require('util'),
+
+    _ = require('lodash'),
+    md = require('marked'),
+    hl = require('highlight.js'),
+
+    logger = require('./logger')(module);
 
 exports.mdToHtml = function(content) {
     var languages = {};
