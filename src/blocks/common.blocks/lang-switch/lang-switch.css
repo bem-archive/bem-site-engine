@@ -3,14 +3,9 @@
 {
     color: #FFFFFF;
 
-    -webkit-transition: .3s color;
-    -moz-transition: .3s color;
-    -ms-transition: .3s color;
-    -o-transition: .3s color;
     transition: .3s color;
-
     font-size: 1em;
-    padding: 0px 0 0px 20px;
+    padding: 0px 0 10px 20px;
     letter-spacing: 1px;
 }
 
