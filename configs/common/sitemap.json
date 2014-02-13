@@ -374,49 +374,33 @@
                             {
                                 "title": {
                                     "en": "BEMHTML-Reference",
-                                    "ru": "BEMHTML: шаблонизатор для БЭМ"
+                                    "ru": "Референс по BEMHTML"
                                 },
-                                "route": {
-                                    "conditions": {
-                                        "id": "reference"
-                                    }
-                                },
+                                "url": "/libs/bem-core/1.0.0/reference/#",
                                 "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/reference"
                             },
                             {
                                 "title": {
                                     "en": "BEMHTML-Reference",
-                                    "ru": "BEMHTML: шаблонизатор для БЭМ"
+                                    "ru": "Референс по BEMHTML"
                                 },
-                                "route": {
-                                    "conditions": {
-                                        "id": "reference"
-                                    }
-                                },
+                                "url": "/libs/bem-core/1.1.0/reference/#",
                                 "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/reference"
                             },
                             {
                                 "title": {
                                     "en": "BEMHTML: Template Engine for BEM",
-                                    "ru": "Референс по BEMHTML"
+                                    "ru": "BEMHTML: шаблонизатор для БЭМ"
                                 },
-                                "route": {
-                                    "conditions": {
-                                        "id": "rationale"
-                                    }
-                                },
+                                "url": "/libs/bem-core/1.0.0/rationale/#",
                                 "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/rationale"
                             },
                             {
                                 "title": {
                                     "en": "BEMHTML: Template Engine for BEM",
-                                    "ru": "Референс по BEMHTML"
+                                    "ru": "BEMHTML: шаблонизатор для БЭМ"
                                 },
-                                "route": {
-                                    "conditions": {
-                                        "id": "rationale"
-                                    }
-                                },
+                                "url": "/libs/bem-core/1.1.0/rationale/#",
                                 "source": "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/rationale"
                             }
                         ]
