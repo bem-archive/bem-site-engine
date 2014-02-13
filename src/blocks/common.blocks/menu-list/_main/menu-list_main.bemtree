@@ -12,6 +12,12 @@ block menu-list, mod main true{
             return apply('item', this.ctx = item);
         });
         _content.push({ block: 'lang-switch', url: this.data.langSwitch });
+        _content.push({
+            block: 'link',
+            mods: { award: true },
+            url: 'https://thenetawards.com/vote/web-tech/bem/',
+            content: 'Vote for BEM'
+        });
         _content.push({ block: 'search' });
 
         return _content;
