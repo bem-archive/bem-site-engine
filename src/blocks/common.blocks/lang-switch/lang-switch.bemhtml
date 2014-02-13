@@ -1,5 +1,5 @@
 block lang-switch {
-    tag: 'li'
+    tag: 'div'
 
     content: {
         block: 'link',
