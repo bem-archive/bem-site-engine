@@ -1,43 +1,10 @@
-.page_touch_yes .main-menu
+.page_touch_yes .page__fullscreen
 {
-    position: static;
-
-    float: left;
-    overflow: visible;
-
-    height: 100%;
+    opacity: 0.6;
+    background-size: 24px;
 }
 
-.page_touch_yes .search
+.page_touch_yes .content_view_post
 {
-    position: static;
-
-    margin-top: 10px;
-    margin-left: 5px;
-}
-
-.page_touch_yes .layout__col,
-.page_touch_yes .layout_section_p-menu
-
-{
-    height: 100%;
-}
-
-.page_touch_yes .layout_section_p-menu .layout__col_type_left
-{
-    position: static;
-
-    height: 100%;
-}
-
-.page_touch_yes .layout__page:not(.p-index)
-{
-    display: block;
-
-    padding-left: 0;
-}
-
-.page_touch_yes .p-index
-{
-    padding-bottom: 0;
+    padding-left: 29px;
 }
