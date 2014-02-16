@@ -60,9 +60,7 @@ module.exports = {
      */
     getSitemap: function() {
         return sitemap;
-    },
-
-
+    }
 };
 
 var setSiteMap = function(_sitemap) {
@@ -158,12 +156,11 @@ var createModel = function(sitemap) {
 
     try {
         setSiteMap(sitemap.map(function(item) {
-                return traverseTreeNodes(item, {
-                    route: { name: null },
-                    params: {}
-                }, 0);
-            })
-        );
+            return traverseTreeNodes(item, {
+                route: { name: null },
+                params: {}
+            }, 0);
+        }));
 
         def.resolve({
             docs: nodesWithSource,
@@ -184,105 +181,73 @@ var createModel = function(sitemap) {
 var addDynamicNodes = function() {
     logger.info('Add dynamic nodes to sitemap');
 
-    var basePeopleConfig = {
-        title: function(item){
-            var people = data.people.getPeople()[item];
-            return {
-                en: u.format('%s %s', people.en.firstName, people.en.lastName),
-                ru: u.format('%s %s', people.ru.firstName, people.ru.lastName)
-            };
-        },
-        view: constants.NODE.VIEW.AUTHOR,
-        urlHash: data.people.getUrls()
-    };
-
-    var addDynamicNodesFor = function(config) {
-        logger.debug('add dynamic nodes for %s', config.key);
+    var addDynamicNodesFor = function(_config) {
+        logger.debug('add dynamic nodes for %s', _config.key);
 
         //find node with attribute dynamic and value equal to key
-        var targetNode = findNodeByCriteria('dynamic', config.key);
+        var targetNode = findNodeByCriteria('dynamic', _config.key);
 
         if(!targetNode) {
-            logger.warn('target node for %s was not found', config.key);
+            logger.warn('target node for %s was not found', _config.key);
             return;
         }
 
-        //find base route (route with pattern) for target node
-        var traverseTreeNodes = function(node) {
-                if(node.route && node.route.pattern) {
-                    return node.route;
-                }
+        var baseRoute = targetNode.getBaseRoute();
 
-                if(node.parent) {
-                    return traverseTreeNodes(node.parent);
-                }
-            },
-            baseRoute = traverseTreeNodes(targetNode);
-
-        //create empty items array if it not exist yet
-        if(!targetNode.items) {
-            targetNode.items = [];
-        }
-
+        targetNode.items = targetNode.items || [];
         routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
 
         try {
-            config.data.apply(null).forEach(function(item) {
+            _config.data.apply(null).forEach(function(item) {
                 var conditions = {
                     conditions: {
                         id: item
                     }
                 };
 
-                //collect conditions for base route in routes map
                 Object.keys(conditions.conditions).forEach(function(key) {
                     routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
                     routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
                 });
 
-                //create node
-                var _node = {
-                    title: config.title.call(null, item),
-                    route: _.extend({}, { name: baseRoute.name }, conditions),
-                    url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
-                    level: targetNode.type === constants.NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
-                    type: constants.NODE.TYPE.SIMPLE,
-                    size: constants.NODE.SIZE.NORMAL,
-                    view: config.view,
-                    hidden: {en: false, ru: false}
-                };
+                var _node,
+                    _route = {
+                        route: _.extend({}, { name: baseRoute.name }, conditions),
+                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
+                    };
 
-                config.urlHash[item] = _node.url;
+                if('authors' === _config.key || 'translators' === _config.key) {
+                    _node = new nodes.person.PersonNode(_route, targetNode, item);
+                }else if('tags' === _config.key) {
+                    _node = new nodes.tag.TagNode(_route, targetNode, item);
+                }
 
-                //generate unique id for node
-                //set target node as parent
-                //put node to the items array of target node
-                targetNode.items.push(_.extend(_node, {
-                    id: sha(JSON.stringify(_node)),
-                    parent: targetNode
-                }));
+                _config.urlHash[item] = _node.url;
+                targetNode.items.push(_node);
 
                 logger.verbose('add dynamic node for %s with id = %s level = %s url = %s',
-                    config.key, _node.id, _node.level, _node.url);
+                    _config.key, _node.id, _node.level, _node.url);
             });
         }catch(e) {
             logger.error(e.message);
         }
     };
 
-    addDynamicNodesFor(_.extend({ key: 'authors', data: data.docs.getAuthors }, basePeopleConfig));
-    addDynamicNodesFor(_.extend({ key: 'translators', data: data.docs.getTranslators }, basePeopleConfig));
+    addDynamicNodesFor({
+        key: 'authors',
+        data: data.docs.getAuthors,
+        urlHash: data.people.getUrls()
+    });
+
+    addDynamicNodesFor({
+        key: 'translators',
+        data: data.docs.getTranslators,
+        urlHash: data.people.getUrls()
+    });
 
     addDynamicNodesFor({
         key: 'tags',
         data: data.docs.getTags,
-        title: function(item) {
-            return {
-                en: item,
-                ru: item
-            };
-        },
-        view: constants.NODE.VIEW.TAGS,
         urlHash: data.docs.getTagUrls()
     });
 };
