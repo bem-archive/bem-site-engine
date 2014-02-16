@@ -10,6 +10,7 @@ var u = require('util'),
     logger = require('../logger')(module),
     config = require('../config'),
     constants = require('./constants'),
+    nodes = require('./nodes'),
     data = require('./data');
 
 var sitemap,
@@ -59,7 +60,13 @@ module.exports = {
      */
     getSitemap: function() {
         return sitemap;
-    }
+    },
+
+
+};
+
+var setSiteMap = function(_sitemap) {
+    sitemap = _sitemap;
 };
 
 var createModel = function(sitemap) {
@@ -68,68 +75,6 @@ var createModel = function(sitemap) {
     var def = vow.defer(),
         nodesWithSource = [],
         nodesWithLib = [],
-
-        /**
-         * Creates hash unique id of node -> source
-         * @param node {Object} - single node of sitemap model
-         */
-        processSource = function(node) {
-            if(node.source) {
-                nodesWithSource.push(node);
-            }
-        },
-
-        /**
-         * Makes title consistent
-         * @param node {Object} - single node of sitemap model
-         */
-        processTitle = function(node) {
-            if(node.title && _.isString(node.title)) {
-                node.title = {
-                    en: node.title,
-                    ru: node.title
-                };
-            }
-        },
-
-        /**
-         * Select view for node
-         * @param node {Object} - single node of sitemap model
-         */
-        processView = function(node) {
-            node.view = node.view || (node.source ? constants.NODE.VIEW.POST : constants.NODE.VIEW.POSTS);
-        },
-
-        /**
-         * Set hidden state for node
-         * @param node {Object} - single node of sitemap model
-         */
-        processHidden = function(node) {
-
-            //show node for all locales
-            if(!node.hidden) {
-                node.hidden = {};
-                return;
-            }
-
-            //hide node for locales that exists in node hidden array
-            if(_.isArray(node.hidden)) {
-                node.hidden = {
-                    en: node.hidden.indexOf('en') !== -1,
-                    ru: node.hidden.indexOf('ru') !== -1
-                };
-                return;
-            }
-
-            //hide node for all locales
-            if(node.hidden === true) {
-                node.hidden = {
-                    en: true,
-                    ru: true
-                };
-                return;
-            }
-        },
 
         /**
          * Collects routes rules for nodes
@@ -144,7 +89,8 @@ var createModel = function(sitemap) {
                 node.route = {
                     name: node.parent.route.name
                 };
-                node.type = node.type || (node.url ? constants.NODE.TYPE.SIMPLE : constants.NODE.TYPE.GROUP);
+                node.type = node.type ||
+                    (node.url ? node.TYPE.SIMPLE : node.TYPE.GROUP);
                 return;
             }
 
@@ -174,7 +120,7 @@ var createModel = function(sitemap) {
                 }
             });
 
-            node.type = node.type || constants.NODE.TYPE.SIMPLE;
+            node.type = node.type || node.TYPE.SIMPLE;
         },
 
         /**
@@ -185,38 +131,39 @@ var createModel = function(sitemap) {
          */
         traverseTreeNodes = function(node, parent, level) {
 
-            node.id = sha(JSON.stringify(node)); //generate unique id for node as sha sum of node object
-            node.parent = parent; //set parent for current node
-            node.size = node.size || constants.NODE.SIZE.NORMAL;
+            node = new nodes.base.BaseNode(node, parent);
 
             processRoute(node, level);
-            processTitle(node);
-            processSource(node);
-            processHidden(node);
-            processView(node);
 
-            logger.verbose('id = %s level = %s url = %s source = %s',
-                    node.id, node.level, node.url, node.source);
-
+            if(node.source) {
+                nodesWithSource.push(node);
+            }
             if(node.lib) {
                 nodesWithLib.push(node);
             }
 
+            logger.verbose('id = %s level = %s url = %s source = %s',
+                    node.id, node.level, node.url, node.source);
+
             //deep into node items
             if(node.items) {
-                node.items.forEach(function(item) {
-                    traverseTreeNodes(item, node, node.type === constants.NODE.TYPE.GROUP ? level : level + 1);
+                node.items = node.items.map(function(item) {
+                    return traverseTreeNodes(item, node,
+                        node.type === node.TYPE.GROUP ? level : level + 1);
                 });
             }
+
+            return node;
         };
 
     try {
-        sitemap.forEach(function(item) {
-            traverseTreeNodes(item, {
-                route: {name: null},
-                params: {}
-            }, 0);
-        });
+        setSiteMap(sitemap.map(function(item) {
+                return traverseTreeNodes(item, {
+                    route: { name: null },
+                    params: {}
+                }, 0);
+            })
+        );
 
         def.resolve({
             docs: nodesWithSource,
