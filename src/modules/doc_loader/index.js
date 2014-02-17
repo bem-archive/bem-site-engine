@@ -239,16 +239,17 @@ var saveAndUploadDocs = function(docs, collected) {
         tags: collected.tags
     };
 
-    return vow.all([
-        common.saveData(common.PROVIDER_FILE, {
-            path: config.get('data:docs:file'),
-            data: content
-        }),
-        common.saveData(common.PROVIDER_YANDEX_DISK, {
+    if ('production' === process.env.NODE_ENV) {
+        return common.saveData(common.PROVIDER_YANDEX_DISK, {
             path: config.get('data:docs:disk'),
             data: JSON.stringify(content, null, 4)
-        })
-    ]);
+        });
+    }else {
+        return common.saveData(common.PROVIDER_FILE, {
+            path: config.get('data:docs:file'),
+            data: content
+        });
+    }
 };
 
 
