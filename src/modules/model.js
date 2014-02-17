@@ -184,20 +184,25 @@ var addDynamicNodes = function() {
     var addDynamicNodesFor = function(_config) {
         logger.debug('add dynamic nodes for %s', _config.key);
 
-        //find node with attribute dynamic and value equal to key
-        var targetNode = findNodeByCriteria('dynamic', _config.key);
-
-        if(!targetNode) {
-            logger.warn('target node for %s was not found', _config.key);
-            return;
-        }
-
-        var baseRoute = targetNode.getBaseRoute();
-
-        targetNode.items = targetNode.items || [];
-        routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+        var def = vow.defer(),
+            targetNode,
+            baseRoute;
 
         try {
+            targetNode = findNodeByCriteria('dynamic', _config.key);
+
+            if(!targetNode) {
+                logger.warn('target node for %s was not found', _config.key);
+
+                def.resolve();
+                return def.promise();
+            }
+
+            baseRoute = targetNode.getBaseRoute();
+
+            targetNode.items = targetNode.items || [];
+            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
             _config.data.apply(null).forEach(function(item) {
                 var conditions = {
                     conditions: {
@@ -227,29 +232,34 @@ var addDynamicNodes = function() {
 
                 logger.verbose('add dynamic node for %s with id = %s level = %s url = %s',
                     _config.key, _node.id, _node.level, _node.url);
+
+                def.resolve(_node);
             });
-        }catch(e) {
-            logger.error(e.message);
+        }catch(err) {
+            logger.error(err.message);
+            def.reject(err);
         }
+
+        return def.promise();
     };
 
-    addDynamicNodesFor({
-        key: 'authors',
-        data: data.docs.getAuthors,
-        urlHash: data.people.getUrls()
-    });
-
-    addDynamicNodesFor({
-        key: 'translators',
-        data: data.docs.getTranslators,
-        urlHash: data.people.getUrls()
-    });
-
-    addDynamicNodesFor({
-        key: 'tags',
-        data: data.docs.getTags,
-        urlHash: data.docs.getTagUrls()
-    });
+    return vow.all([
+        addDynamicNodesFor({
+            key: 'authors',
+            data: data.docs.getAuthors,
+            urlHash: data.people.getUrls()
+        }),
+        addDynamicNodesFor({
+            key: 'translators',
+            data: data.docs.getTranslators,
+            urlHash: data.people.getUrls()
+        }),
+        addDynamicNodesFor({
+            key: 'tags',
+            data: data.docs.getTags,
+            urlHash: data.docs.getTagUrls()
+        })
+    ]);
 };
 
 var addLibraryNodes = function(nodesWithLib) {
@@ -262,57 +272,22 @@ var addLibraryNodes = function(nodesWithLib) {
         return;
     }
 
-    //find base route (route with pattern) for target node
-    var traverseTreeNodes = function(node) {
-            if(node.route && node.route.pattern) {
-                return node.route;
-            }
-
-            if(node.parent) {
-                return traverseTreeNodes(node.parent);
-            }
-        },
-
-        getBaseNode = function(targetNode, baseRoute, conditions) {
-            return {
-                route: _.extend({}, { name: baseRoute.name }, conditions),
-                url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions),
-                level: targetNode.type === constants.NODE.TYPE.GROUP ? targetNode.level : targetNode.level + 1,
-                type: constants.NODE.TYPE.SIMPLE,
-                size: constants.NODE.SIZE.NORMAL,
-                view: constants.NODE.VIEW.POST,
-                hidden: {}
-            };
-        },
-
-        //collect conditions for base route in routes map
-        collectConditionsForBaseRoute = function(baseRoute, conditions) {
+    var collectConditionsForBaseRoute = function(baseRoute, conditions) {
             Object.keys(conditions.conditions).forEach(function(key) {
                 routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
                 routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
             });
         },
 
-        getUrlPrefixForExample = function(libRepo, lib, version, level, block) {
-            var url = u.format({
-                'public': 'https://raw.github.com/%s/%s/%s/%s/%s/%s/%s',
-                'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s/%s/%s/%s'
-            }[libRepo.type], libRepo.user, libRepo.repo, libRepo.ref, lib, version, level, block);
-
-            logger.verbose('exapmle prefix: %s', url);
-            return url;
-        },
-
         addVersionsToLibrary = function(targetNode) {
             logger.debug('add versions to library %s', targetNode.lib);
 
-            var baseRoute = traverseTreeNodes(targetNode);
-            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+            var baseRoute = targetNode.getBaseRoute();
 
+            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
             targetNode.items = targetNode.items || [];
 
             var versions = data.libraries.getLibraries()[targetNode.lib];
-
             if(!versions) return;
 
             Object.keys(versions).forEach(function(key) {
@@ -328,27 +303,13 @@ var addLibraryNodes = function(nodesWithLib) {
                 collectConditionsForBaseRoute(baseRoute, conditions);
 
                 //create node
-                var _node = _.extend({
-                    title: {
-                        en: version.ref,
-                        ru: version.ref
+                var _route = {
+                        route: _.extend({}, { name: baseRoute.name }, conditions),
+                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
                     },
-                    source: {
-                        en: {
-                            title: version.repo,
-                            content: version.readme
-                        },
-                        ru: {
-                            title: version.repo,
-                            content: version.readme
-                        }
-                    }
-                }, getBaseNode(targetNode, baseRoute, conditions));
+                    _node = new nodes.version.VersionNode(_route, targetNode, version);
 
-                targetNode.items.push(_.extend(_node, {
-                    id: sha(JSON.stringify(_node)),
-                    parent: targetNode
-                }));
+                targetNode.items.push(_node);
 
                 addPostToVersion(_node, version, {
                     key: 'migration',
@@ -369,12 +330,11 @@ var addLibraryNodes = function(nodesWithLib) {
         },
 
         addPostToVersion = function(targetNode, version, _config) {
-            logger.debug('add post %s to version %s of library %s',
-                _config.key, version.ref, version.repo);
+            logger.debug('add post %s to version %s of library %s', _config.key, version.ref, version.repo);
 
-            var baseRoute = traverseTreeNodes(targetNode);
+            var baseRoute = targetNode.getBaseRoute();
+
             routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
-
             targetNode.items = targetNode.items || [];
 
             var conditions = {
@@ -388,36 +348,23 @@ var addLibraryNodes = function(nodesWithLib) {
             collectConditionsForBaseRoute(baseRoute, conditions);
 
             //create node
-            var _node = _.extend({
-                title: _config.title,
-                source: {
-                    en: {
-                        title: _config.title.en,
-                        content: version[_config.key]
-                    },
-                    ru: {
-                        title: _config.title.ru,
-                        content: version[_config.key]
-                    }
-                }
-            }, getBaseNode(targetNode, baseRoute, conditions));
+            var _route = {
+                    route: _.extend({}, { name: baseRoute.name }, conditions),
+                    url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
+                },
+                _node = new nodes.post.PostNode(_route, targetNode, version, _config);
 
-            targetNode.items.push(_.extend(_node, {
-                id: sha(JSON.stringify(_node)),
-                parent: targetNode
-            }));
+            targetNode.items.push(_node);
         },
 
         addLevelsToVersion = function(targetNode, version) {
-            logger.verbose('add levels to version');
 
-            var baseRoute = traverseTreeNodes(targetNode);
+            var baseRoute = targetNode.getBaseRoute();
+
             routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
-
             targetNode.items = targetNode.items || [];
 
             var levels = version.levels;
-
             if(!levels) return;
 
             levels.forEach(function(level) {
@@ -432,17 +379,13 @@ var addLibraryNodes = function(nodesWithLib) {
                 collectConditionsForBaseRoute(baseRoute, conditions);
 
                 //create node
-                var _node = _.extend({
-                    title: {
-                        en: level.name,
-                        ru: level.name
-                    }
-                }, getBaseNode(targetNode, baseRoute, conditions), { type: constants.NODE.TYPE.GROUP });
+                var _route = {
+                        route: _.extend({}, { name: baseRoute.name }, conditions),
+                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
+                    },
+                    _node = new nodes.level.LevelNode(_route, targetNode, level);
 
-                targetNode.items.push(_.extend(_node, {
-                    id: sha(JSON.stringify(_node)),
-                    parent: targetNode
-                }));
+                targetNode.items.push(_node);
 
                 addBlocksToLevel(_node, version, level);
             });
@@ -451,13 +394,12 @@ var addLibraryNodes = function(nodesWithLib) {
         addBlocksToLevel = function(targetNode, version, level) {
             logger.verbose('add blocks to level');
 
-            var baseRoute = traverseTreeNodes(targetNode);
-            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+            var baseRoute = targetNode.getBaseRoute();
 
+            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
             targetNode.items = targetNode.items || [];
 
             var blocks = level.blocks;
-
             if(!blocks) return;
 
             blocks.forEach(function(block) {
@@ -473,23 +415,23 @@ var addLibraryNodes = function(nodesWithLib) {
                 collectConditionsForBaseRoute(baseRoute, conditions);
 
                 //create node
-                var _node = _.extend({
-                    title: {
-                        en: block.name,
-                        ru: block.name
+                var _route = {
+                        route: _.extend({}, { name: baseRoute.name }, conditions),
+                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
                     },
-                    source: {
-                        prefix: getUrlPrefixForExample(
-                            librariesRepository, version.repo, version.ref, level.name, block.name),
+                    _node = new nodes.block.BlockNode(_route, targetNode, block);
+
+                    _node.setSource({
+                        prefix: u.format({
+                            'public': 'https://raw.github.com/%s/%s/%s/%s/%s/%s/%s',
+                            'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s/%s/%s/%s'
+                        }[librariesRepository.type], librariesRepository.user, librariesRepository.repo,
+                            librariesRepository.ref, version.repo, version.ref, level.name, block.name),
                         data: block.data,
                         jsdoc: block.jsdoc
-                    }
-                }, getBaseNode(targetNode, baseRoute, conditions), { view: constants.NODE.VIEW.BLOCK });
+                    });
 
-                targetNode.items.push(_.extend(_node, {
-                    id: sha(JSON.stringify(_node)),
-                    parent: targetNode
-                }));
+                targetNode.items.push(_node);
             });
         };
 
