@@ -2,7 +2,7 @@ var u = require('util'),
     _ = require('lodash'),
     DynamicNode = require('./dynamic').DynamicNode;
 
-exports.TagNode = function(node, parent, tagKey) {
+var TagNode = function(node, parent, tagKey) {
     Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
 
     this
@@ -10,18 +10,19 @@ exports.TagNode = function(node, parent, tagKey) {
         .setTitle(tagKey);
 };
 
-exports.TagNode.prototype = _.extend({}, DynamicNode.prototype, {
+TagNode.prototype = Object.create(DynamicNode.prototype)
 
-    setTitle: function(tagKey) {
-        this.title = {
-            en: tagKey,
-            ru: tagKey
-        };
-        return this;
-    },
+TagNode.prototype.setTitle = function(tagKey) {
+    this.title = {
+        en: tagKey,
+        ru: tagKey
+    };
+    return this;
+};
 
-    setView: function() {
-        this.view = this.VIEW.TAGS;
-        return this;
-    }
-});
+TagNode.prototype.setView = function() {
+    this.view = this.VIEW.TAGS;
+    return this;
+};
+
+exports.TagNode = TagNode;

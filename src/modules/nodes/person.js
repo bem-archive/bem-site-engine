@@ -3,7 +3,7 @@ var u = require('util'),
     data = require('../data'),
     DynamicNode = require('./dynamic').DynamicNode;
 
-exports.PersonNode = function(node, parent, personKey) {
+var PersonNode = function(node, parent, personKey) {
     Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
 
     this
@@ -11,19 +11,20 @@ exports.PersonNode = function(node, parent, personKey) {
         .setTitle(personKey);
 };
 
-exports.PersonNode.prototype = _.extend({}, DynamicNode.prototype, {
+PersonNode.prototype = Object.create(DynamicNode.prototype);
 
-    setTitle: function(personKey) {
-        var person = data.people.getPeople()[personKey];
-        this.title = {
-            en: u.format('%s %s', person.en['firstName'], person.en['lastName']),
-            ru: u.format('%s %s', person.ru['firstName'], person.ru['lastName'])
-        };
-    },
+PersonNode.prototype.setTitle = function(personKey) {
+    var person = data.people.getPeople()[personKey];
+    this.title = {
+        en: u.format('%s %s', person.en['firstName'], person.en['lastName']),
+        ru: u.format('%s %s', person.ru['firstName'], person.ru['lastName'])
+    };
+    return this;
+};
 
-    setView: function() {
-        this.view = this.VIEW.AUTHOR;
-        return this;
-    }
-});
+PersonNode.prototype.setView = function() {
+    this.view = this.VIEW.AUTHOR;
+    return this;
+};
 
+exports.PersonNode = PersonNode;

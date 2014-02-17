@@ -2,7 +2,7 @@ var u = require('util'),
     _ = require('lodash'),
     DynamicNode = require('./dynamic').DynamicNode;
 
-exports.LevelNode = function(node, parent, level) {
+var LevelNode = function(node, parent, level) {
     Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
 
     this
@@ -10,18 +10,19 @@ exports.LevelNode = function(node, parent, level) {
         .setTitle(level);
 };
 
-exports.LevelNode.prototype = _.extend({}, DynamicNode.prototype, {
+LevelNode.prototype = Object.create(DynamicNode.prototype);
 
-    setTitle: function(level) {
-        this.title = {
-            en: level.name,
-            ru: level.name
-        };
-        return this;
-    },
+LevelNode.prototype.setTitle = function(level) {
+    this.title = {
+        en: level.name,
+        ru: level.name
+    };
+    return this;
+};
 
-    setType: function() {
-        this.type = this.TYPE.GROUP;
-        return this;
-    }
-});
+LevelNode.prototype.setType = function() {
+    this.type = this.TYPE.GROUP;
+    return this;
+};
+
+exports.LevelNode = LevelNode;
