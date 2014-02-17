@@ -6,6 +6,11 @@ DynamicNode = function() {};
 
 DynamicNode.prototype = Object.create(BaseNode.prototype);
 
+/**
+ * Init function for node
+ * @param parent - {Object} parent node
+ * @returns {DynamicNode}
+ */
 DynamicNode.prototype.init = function(parent) {
 
     this.generateUniqueId()
@@ -19,26 +24,47 @@ DynamicNode.prototype.init = function(parent) {
     return this;
 };
 
+/**
+ * Sets level for node
+ * @param parent - {Object} parent node
+ * @returns {DynamicNode}
+ */
 DynamicNode.prototype.setLevel = function(parent) {
     this.level = parent.type === this.TYPE.GROUP ? parent.level : parent.level + 1;
     return this;
 };
 
+/**
+ * Sets type for node
+ * @returns {DynamicNode}
+ */
 DynamicNode.prototype.setType = function() {
     this.type = this.TYPE.SIMPLE;
     return this;
 };
 
+/**
+ * Sets size for node
+ * @returns {DynamicNode}
+ */
 DynamicNode.prototype.setSize = function() {
     this.size = this.SIZE.NORMAL;
     return this;
 };
 
+/**
+ * Sets view for node
+ * @returns {DynamicNode}
+ */
 DynamicNode.prototype.setView = function() {
     this.view = this.VIEW.POST;
     return this;
 };
 
+/**
+ * Sets hidden state for node
+ * @returns {DynamicNode}
+ */
 DynamicNode.prototype.setHidden = function() {
     this.hidden = {};
     return this;
