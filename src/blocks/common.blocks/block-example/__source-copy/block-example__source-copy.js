@@ -16,7 +16,6 @@ BEMDOM.decl('block-example', {
         var _this = this;
 
         ZeroClipboard.config({
-            moviePath: '/libs/zeroclipboard/ZeroClipboard.swf',
             hoverClass: _this.params.copyHoverClass
         });
 
