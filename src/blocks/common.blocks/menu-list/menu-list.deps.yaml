@@ -1,5 +1,6 @@
 - mods:
     main: yes
+    accordion: yes
 - elem: item
   mods:
     type: [simple, group, delimeter]
