@@ -693,8 +693,8 @@
                 "items": [
                     {
                         "title": {
-                            "en": "BEM-JS TUTORIAL",
-                            "ru": "BEM-JS ТУТОРИАЛ"
+                            "en": "Step-by-step tutorial on i-bem.js",
+                            "ru": "Пошаговое руководство по i-bem.js"
                         },
                         "route": {
                             "conditions": {
