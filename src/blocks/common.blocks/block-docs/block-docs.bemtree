@@ -58,7 +58,7 @@ block block-docs {
         elem: 'title',
         tag: 'h2',
         mix: [{ block: 'post', elem: 'title' }],
-        content: 'Список _модификаторов'
+        content: BEM.I18N('block-docs', 'mods')
     }
 
     mod-values: {
@@ -128,7 +128,7 @@ block block-docs {
         elem: 'title',
         tag: 'h2',
         mix: [{ block: 'post', elem: 'title' }],
-        content: 'Список __элементов'
+        content: BEM.I18N('block-docs', 'elems')
     }
 
     elem-mods: {

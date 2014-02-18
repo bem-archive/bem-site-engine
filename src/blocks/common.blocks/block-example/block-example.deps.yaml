@@ -1,2 +1,7 @@
+- block: i-bem
+  required: true
+  elem: i18n
+
 - block: link
+
 - elems: [header, link, live, source, source-code, source-link, source-copy]

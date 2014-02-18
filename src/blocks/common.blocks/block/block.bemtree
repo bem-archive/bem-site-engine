@@ -17,7 +17,7 @@ block block {
             elem: 'title',
             tag: 'h1',
             mix: [{ block: 'post', elem: 'title' }],
-            content: 'Блок ' + this.ctx.name
+            content: BEM.I18N('block', 'static-title') + ' ' + this.ctx.name
         }
     }
 
@@ -30,7 +30,7 @@ block block {
             tabsHeader.push({
                 elem: 'tab',
                 mods: { 'side': 'left', 'state': 'current' },
-                content: 'Документация'
+                content: BEM.I18N('block', 'docs')
             });
 
             tabsContent.push({
@@ -45,7 +45,7 @@ block block {
         if(this.ctx.jsdoc) {
             tabsHeader.push({
                 elem: 'tab',
-                content: 'Javascript API'
+                content: BEM.I18N('block', 'jsdoc')
             });
 
             tabsContent.push({
@@ -60,7 +60,7 @@ block block {
             tabsHeader.push({
                 elem: 'tab',
                 mods: { 'side': 'right' },
-                content: 'Примеры'
+                content: BEM.I18N('block', 'examples')
             });
 
             tabsContent.push({
@@ -100,7 +100,7 @@ block block {
             elem: 'title',
             tag: 'h2',
             mix: [{ block: 'post', elem: 'title' }],
-            content: 'Примеры'
+            content: BEM.I18N('block-example', 'examples-title')
         }
     }
 
@@ -149,20 +149,18 @@ block block {
                                 content: [
                                     {
                                         elem: 'source-code',
-                                        tag: 'iframe',
                                         attrs: { src: bemjson }
                                     },
                                     {
                                         block: 'link',
                                         mods: { type: 'block' },
-                                        attrs: { title: 'Скопировать код' },
+                                        attrs: { title: BEM.I18N('block-example', 'copy-title') },
                                         mix: [{ block: 'block-example', elem: 'source-copy' }]
                                     }
                                 ]
                             },
                             {
                                 elem: 'live',
-                                tag: 'iframe',
                                 attrs: { src: exampleUrl }
                             }
                         ]

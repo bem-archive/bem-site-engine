@@ -17,7 +17,7 @@ block block-jsdoc {
                 elem: 'title',
                 tag: 'h2',
                 mix: [{ block: 'post', elem: 'title' }],
-                content: 'Описание'
+                content: BEM.I18N('block-jsdoc', 'description-title')
             },
             {
                 elem: 'description',
@@ -70,7 +70,7 @@ block block-jsdoc {
         elem: 'title',
         tag: 'h2',
         mix: [{ block: 'post', elem: 'title' }],
-        content: 'Методы'
+        content: BEM.I18N('block-jsdoc', 'methods-title')
     }
 
     method-params: {
@@ -82,7 +82,7 @@ block block-jsdoc {
                     elem: 'title',
                     mix: [{ block: 'post', elem: 'title' }],
                     tag: 'h4',
-                    content: 'Параметры:'
+                    content: BEM.I18N('block-jsdoc', 'params') + ':'
                 },
 
                 this.ctx.method.params.map(function(param) {
@@ -133,7 +133,7 @@ block block-jsdoc {
                     elem: 'title',
                     mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
                     tag: 'h4',
-                    content: 'Возвращаемое значение:'
+                    content: BEM.I18N('block-jsdoc', 'returns') + ':'
                 },
 
                 this.ctx.method.returns.map(function(returns) {
@@ -204,7 +204,7 @@ block block-jsdoc {
         elem: 'title',
         tag: 'h2',
         mix: [{ block: 'post', elem: 'title' }],
-        content: 'События'
+        content: BEM.I18N('block-jsdoc', 'events-title')
     }
 
     event-params: {
@@ -216,7 +216,7 @@ block block-jsdoc {
                     elem: 'title',
                     mix: [{ block: 'post', elem: 'title' }],
                     tag: 'h4',
-                    content: 'Параметры:'
+                    content: BEM.I18N('block-jsdoc', 'params') + ':'
                 },
                 this.ctx.event.params.map(function(param) {
 
