@@ -662,26 +662,6 @@
                         ]
                     }
                 ]
-            },
-            {
-                "title": "islands-components",
-                "route": {
-                    "conditions": {
-                        "lib": "islands-components"
-                    }
-                },
-                "type": "group",
-                "lib": "islands-components"
-            },
-            {
-                "title": "islands-user",
-                "route": {
-                    "conditions": {
-                        "lib": "islands-user"
-                    }
-                },
-                "type": "group",
-                "lib": "islands-user"
             }
         ]
     },
