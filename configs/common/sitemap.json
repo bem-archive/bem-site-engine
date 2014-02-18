@@ -66,12 +66,18 @@
         },
         "route": {
             "name": "tools",
-            "pattern": "/tools(/<lib>)(/<id>)(/)"
+            "pattern": "/tools(/<group>)(/<lib>)(/<id>)(/)"
         },
         "source": "https://github.com/bem/bem-method/tree/bem-info-data/tools/index",
         "items": [
             {
                 "title": "Bem",
+                "route": {
+                    "conditions": {
+                        "group": "bem"
+                    }
+                },
+                "type": "group",
                 "items": [
                     {
                         "title": "bem-tools",
@@ -199,6 +205,12 @@
                     "en": "Optimizers",
                     "ru": "Оптимизаторы"
                 },
+                "route": {
+                    "conditions": {
+                        "group": "optimizers"
+                    }
+                },
+                "type": "group",
                 "items": [
                     {
                         "title": "borschik",
@@ -362,6 +374,12 @@
                     "en": "Templating engines",
                     "ru": "Шаблонизаторы"
                 },
+                "route": {
+                    "conditions": {
+                        "group": "templating-engines"
+                    }
+                },
+                "type": "group",
                 "items": [
                     {
                         "title": "BEMHTML",
@@ -421,6 +439,12 @@
                     "en": "Parsers",
                     "ru": "Парсеры"
                 },
+                "route": {
+                    "conditions": {
+                        "group": "parsers"
+                    }
+                },
+                "type": "group",
                 "items": [
                     {
                         "title": "Gonzales",
