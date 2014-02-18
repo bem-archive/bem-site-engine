@@ -116,5 +116,27 @@ exports.BaseNode.prototype = {
         }
 
         return this;
+    },
+
+    createBreadcrumbs: function() {
+        this.breadcrumbs = [];
+
+        var self = this;
+            traverse = function(node) {
+                if(node.url) {
+                    self.breadcrumbs.unshift({
+                        title: node.title,
+                        url: node.url
+                    });
+                }
+
+                if(node.parent) {
+                    traverse(node.parent);
+                }
+            };
+
+        if(this.parent) {
+            traverse(this.parent);
+        }
     }
 };

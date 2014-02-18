@@ -144,6 +144,7 @@ var createModel = function(sitemap) {
             node = new nodes.base.BaseNode(node, parent);
 
             processRoute(node, level);
+            node.createBreadcrumbs();
 
             if(node.source) {
                 nodesWithSource.push(node);

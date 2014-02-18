@@ -1,11 +1,20 @@
 block post, mod view list-item {
 
     content: {
-        var source = this.ctx.node.source[this.data.req.prefLocale];
+        var node = this.ctx.node,
+            source = node.source && node.source[this.data.lang];
 
         if(!source) {
-            logger.error('source not found for node %s and locale %s', this.ctx.node.id, this.data.req.prefLocale);
-            return [];
+            return [
+                apply('title', this.ctx = {
+                    node: node,
+                    content: { title: node.title[this.data.lang] }
+                }),
+                apply('categories', this.ctx = {
+                    breadcrumbs: node.breadcrumbs,
+                    lang: this.data.lang
+                })
+            ];
         }
 
         return [
@@ -17,22 +26,17 @@ block post, mod view list-item {
 
             apply('tags', this.ctx.content = source.tags),
             apply('categories', this.ctx = {
-                content: source.categories,
-                type: source.type
+                breadcrumbs: node.breadcrumbs,
+                lang: this.data.lang
             }),
 
-//            apply('date', this.ctx = {
-//                createDate: source.createDate,
-//                editDate: source.editDate
-//            }),
-
             apply('title', this.ctx = {
-                node: this.ctx.node,
+                node: node,
                 content: source
             }),
 
             apply('summary', this.ctx.content = source.summary)
-        ]
+        ];
     }
 
     //authors of post
@@ -40,14 +44,6 @@ block post, mod view list-item {
         elem: 'author',
         authors: this.ctx.authors,
         translators: this.ctx.translators
-    }
-
-    //date of creation or last modification of post
-    date: {
-        elem: 'date',
-        elemMods: { type: 'human' },
-        createDate: this.ctx.createDate,
-        editDate: this.ctx.editDate
     }
 
     //tags array of post
@@ -59,8 +55,8 @@ block post, mod view list-item {
     //post categories
     categories: {
         elem: 'categories',
-        type: this.ctx.type,
-        content: this.ctx.content
+        breadcrumbs: this.ctx.breadcrumbs,
+        lang: this.ctx.lang
     }
 
     //title of post

@@ -16,6 +16,8 @@ var PostNode = function(node, parent, version, config) {
         .init(parent)
         .setTitle(version, config)
         .setSource(version, config);
+
+    this.createBreadcrumbs();
 };
 
 PostNode.prototype = Object.create(DynamicNode.prototype);

@@ -1,51 +1,30 @@
 block post, elem categories {
 
-    default, !(this.ctx && this.ctx.content && this.ctx.content.length > 0): {
+    default, !(this.ctx && this.ctx.breadcrumbs && this.ctx.breadcrumbs.length > 0): {
         return false;
     }
 
     content : [
         BEM.I18N('post', this.elem),
         ': ',
-        apply('contentTransformation')
+        apply('breadcrumbs')
     ]
 
-    contentTransformation, this._.isArray(this.ctx.content): {
-        var self = this,
-            buf = [];
-        this.ctx.content.forEach(function(item, index) {
+    breadcrumbs, this._.isArray(this.ctx.breadcrumbs): {
+        var buf = [];
+        this.ctx.breadcrumbs.forEach(function(item, index) {
+
             index > 0 && buf.push({
-                    tag: 'span',
-                    content: ' , '
-                });
-
-            /*
-            buf.push({
-                block: 'link',
-                url: '/' + self.ctx.type,
-                content: BEM.I18N('post', self.ctx.type)
-            });
-
-            buf.push({
-                block: 'splitter',
                 tag: 'span',
                 content: ' / '
             });
-            */
 
             buf.push({
                 block: 'link',
-                url: '/' + (item.type || self.ctx.type) + '/' + (item.url || item),
-                content:  apply('drawCategoryName', this.ctx.content = item)
+                url: item.url,
+                content: item.title[this.ctx.lang]
             });
-
-        });
+        }, this);
         return buf;
-    }
-
-    drawCategoryName: {
-        var item = this._.isSimple(this.ctx.content) ? this.ctx.content : this.ctx.content.name;
-
-        return item.split('/').join(' / ');
     }
 }

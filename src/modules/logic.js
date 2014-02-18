@@ -204,7 +204,7 @@ module.exports = {
                     };
                 }
 
-                if(node.source) {
+                if(node.source && node.view !== node.VIEW.TAGS) {
                     result[node.route.name].items = result[node.route.name].items || [];
 
                     if(sourceOfNodeSatisfyCriteria(node.source[lang], field, value)) {
@@ -274,7 +274,6 @@ module.exports = {
 };
 
 var sourceOfNodeSatisfyCriteria = function(data, field, value) {
-
     if(!data) {
         return false;
     }

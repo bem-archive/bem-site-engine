@@ -16,6 +16,10 @@ block post, mod view full {
             }),
 
             apply('tags', this.ctx.content = source.tags),
+            apply('categories', this.ctx = {
+                breadcrumbs: this.data.node.breadcrumbs,
+                lang: this.data.lang
+            }),
 
             apply('date', this.ctx = {
                 createDate: source.createDate,
@@ -41,6 +45,13 @@ block post, mod view full {
         elemMods: { type: 'human' },
         createDate: this.ctx.createDate,
         editDate: this.ctx.editDate
+    }
+
+    //post categories
+    categories: {
+        elem: 'categories',
+        breadcrumbs: this.ctx.breadcrumbs,
+        lang: this.ctx.lang
     }
 
     //tags array of post
