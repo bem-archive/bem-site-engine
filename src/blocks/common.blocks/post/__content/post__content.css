@@ -18,10 +18,7 @@
 
 .post__content .highlight
 {
-    padding: .5em;
-
     color: #333;
-    background: #f8f8ff;
 }
 
 .post__content .highlight .string,
@@ -45,14 +42,6 @@
 .post__content a
 {
     color: #268bd2;
-}
-
-.post__content a:hover
-{
-    /*text-decoration: none;*/
-
-    /*color: #fff;*/
-    /*background-color: #000;*/
 }
 
 /* Tables */

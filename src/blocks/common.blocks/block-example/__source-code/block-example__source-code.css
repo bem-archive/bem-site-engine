@@ -1,17 +1,6 @@
 .block-example__source-code
 {
-    font-size: 14px;
-
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
     height: 500px;
-    margin: 2px;
-    padding: 0 5px;
-
-    color: #333;
-    border: none;
-    border: 1px solid #ddd;
-    border-radius: 2px;
-    background-color: #f8f8ff;
 }

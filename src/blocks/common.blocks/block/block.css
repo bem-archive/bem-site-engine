@@ -12,16 +12,3 @@
 {
     text-align: center;
 }
-
-.block code
-{
-    font-size: 14px;
-
-    margin: 2px;
-    padding: 0 5px;
-
-    color: #333;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    background: #f8f8ff;
-}
