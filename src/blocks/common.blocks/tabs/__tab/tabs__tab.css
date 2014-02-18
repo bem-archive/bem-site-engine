@@ -1,0 +1,13 @@
+.tabs__tab
+{
+    display: inline-block;
+
+    position: relative;
+
+    user-select: none;
+}
+
+.tabs__tab:hover
+{
+    cursor: pointer;
+}
