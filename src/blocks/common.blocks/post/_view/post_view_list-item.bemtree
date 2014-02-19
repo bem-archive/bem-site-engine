@@ -18,17 +18,12 @@ block post, mod view list-item {
         }
 
         return [
-
             apply('author', this.ctx = {
                 authors: source.authors,
                 translators: source.translators
             }),
 
             apply('tags', this.ctx.content = source.tags),
-            apply('categories', this.ctx = {
-                breadcrumbs: node.breadcrumbs,
-                lang: this.data.lang
-            }),
 
             apply('title', this.ctx = {
                 node: node,
@@ -50,13 +45,6 @@ block post, mod view list-item {
     tags: {
         elem: 'tags',
         content: this.ctx.content
-    }
-
-    //post categories
-    categories: {
-        elem: 'categories',
-        breadcrumbs: this.ctx.breadcrumbs,
-        lang: this.ctx.lang
     }
 
     //title of post

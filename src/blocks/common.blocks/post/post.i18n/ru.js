@@ -8,7 +8,6 @@ module.exports = {
         "createDate": "опубликовано",
         "editDate": "изменено",
         "tags": "Тэги",
-        "categories": "Категории",
         "summary": "Краткое описание",
         "translation": "Английская версия",
         "plug": "Данная статья доступна только на ",

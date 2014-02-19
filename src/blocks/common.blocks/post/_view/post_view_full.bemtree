@@ -16,14 +16,15 @@ block post, mod view full {
             }),
 
             apply('tags', this.ctx.content = source.tags),
-            apply('categories', this.ctx = {
-                breadcrumbs: this.data.node.breadcrumbs,
-                lang: this.data.lang
-            }),
 
             apply('date', this.ctx = {
                 createDate: source.createDate,
                 editDate: source.editDate
+            }),
+
+            apply('categories', this.ctx = {
+                breadcrumbs: this.data.node.breadcrumbs,
+                lang: this.data.lang
             }),
 
             apply('title', this.ctx.content = source),

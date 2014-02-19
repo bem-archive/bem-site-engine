@@ -4,11 +4,7 @@ block post, elem categories {
         return false;
     }
 
-    content : [
-        BEM.I18N('post', this.elem),
-        ': ',
-        apply('breadcrumbs')
-    ]
+    content : apply('breadcrumbs')
 
     breadcrumbs, this._.isArray(this.ctx.breadcrumbs): {
         var buf = [];
@@ -16,7 +12,7 @@ block post, elem categories {
 
             index > 0 && buf.push({
                 tag: 'span',
-                content: ' / '
+                content: ' &rarr; '
             });
 
             buf.push({

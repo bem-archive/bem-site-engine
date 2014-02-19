@@ -7,8 +7,7 @@
 .post_view_full  .post__date,
 .post_view_full  .post__author,
 .post_view_full  .post__translator,
-.post_view_full  .post__tags,
-.post_view_full  .post__categories
+.post_view_full  .post__tags
 {
     display: inline-block;
 }

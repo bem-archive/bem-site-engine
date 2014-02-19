@@ -6,8 +6,7 @@
 .post_view_list-item > .post__date,
 .post_view_list-item > .post__author,
 .post_view_list-item > .post__translator,
-.post_view_list-item > .post__tags,
-.post_view_list-item > .post__categories
+.post_view_list-item > .post__tags
 {
     font-size: 0.9em;
 
