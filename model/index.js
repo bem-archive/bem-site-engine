@@ -3,7 +3,8 @@ var method = require('./method'),
     libraries = require('./libraries'),
     tutorials = require('./tutorials'),
     articles = require('./articles'),
-    news = require('./news');
+    news = require('./news'),
+    pages = require('./pages');
 
 module.exports = {
     get: function() {
@@ -20,12 +21,14 @@ module.exports = {
             news.get(),
             getTags,
             getAuthors(),
+            pages.jobs.get(),
 
             getDelimeter(),
 
             getYaRu(),
             getFacebook(),
-            getTwitter()
+            getTwitter(),
+            pages.acknowledgements.get()
         ]
     }
 };
