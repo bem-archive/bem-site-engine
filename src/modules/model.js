@@ -279,19 +279,6 @@ var addLibraryNodes = function(nodesWithLib) {
             });
         },
 
-<<<<<<< HEAD
-=======
-        getUrlPrefixForExample = function(libRepo, lib, version, level, block) {
-            var url = u.format({
-                'public': 'http://rawgithub.com/%s/%s/%s/%s/%s/%s/%s',
-                'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s/%s/%s/%s'
-            }[libRepo.type], libRepo.user, libRepo.repo, libRepo.ref, lib, version, level, block);
-
-            logger.verbose('exapmle prefix: %s', url);
-            return url;
-        },
-
->>>>>>> Add page about block
         addVersionsToLibrary = function(targetNode) {
             logger.debug('add versions to library %s', targetNode.lib);
 
@@ -436,7 +423,7 @@ var addLibraryNodes = function(nodesWithLib) {
 
                     _node.setSource({
                         prefix: u.format({
-                            'public': 'https://raw.github.com/%s/%s/%s/%s/%s/%s/%s',
+                            'public': 'http://rawgithub.com/%s/%s/%s/%s/%s/%s/%s',
                             'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s/%s/%s/%s'
                         }[librariesRepository.type], librariesRepository.user, librariesRepository.repo,
                             librariesRepository.ref, version.repo, version.ref, level.name, block.name),
