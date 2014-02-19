@@ -514,6 +514,12 @@
                             },
                             {
                                 "title": "Bemhtml",
+                                "route": {
+                                    "conditions": {
+                                        "level": "bemhtml"
+                                    }
+                                },
+                                "type": "group",
                                 "items": [
                                     {
                                         "title": "Hello, BEMHTML!",
@@ -553,6 +559,12 @@
                             },
                             {
                                 "title": "i-bem.js",
+                                "route": {
+                                    "conditions": {
+                                        "level": "i-bem-js"
+                                    }
+                                },
+                                "type": "group",
                                 "items": [
                                     {
                                         "title": {
