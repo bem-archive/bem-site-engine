@@ -14,8 +14,8 @@ var u = require('util'),
 
 var MSG = {
     WARN: {
-        NOT_EXIST: '%s file does not exist for source user: %s repo: %s ref: %s path: %s',
-        PARSING_ERROR: '%s file parsed with error for source user: %s repo: %s ref: %s path: %s',
+        META_NOT_EXIST: 'source with lang %s does not exists for node %s',
+        META_PARSING_ERROR: 'source for lang %s contains errors for node %s',
         DEPRECATED: 'remove deprecated field %s for source user: %s repo: %s ref: %s path: %s'
     }
 };
@@ -27,7 +27,7 @@ module.exports = {
         data.common.init();
 
         return common.loadData(common.PROVIDER_FILE, {
-            path: path.join('configs', 'common', 'sitemap.json')
+            path: path.resolve(config.get('data:sitemap:file'))
         })
         .then(collectNodesWithSource)
         .then(loadSourcesForNodes)
@@ -58,8 +58,7 @@ var collectNodesWithSource = function(sitemap) {
     var traverseTreeNodes = function(node) {
 
         if(node.source) {
-            node.id = sha(JSON.stringify(node))
-            nodesWithSource.push(node);
+           nodesWithSource.push(node);
         }
 
         if(node.items) {
@@ -85,38 +84,87 @@ var loadSourcesForNodes = function(nodesWithSource) {
         tags: []
     };
 
-    var promises = nodesWithSource.map(function(node){
-        logger.verbose('Load source for node with url %s %s', node.url, node.source);
+    var promises = nodesWithSource.map(function(node) {
+        var source = node.source;
 
-        return vow
-            .allResolved({
-                metaEn: common.loadData(common.PROVIDER_GITHUB_API, {
-                    repository: util.getRepoFromSource(node.source, 'en.meta.json')
-                }),
-                metaRu: common.loadData(common.PROVIDER_GITHUB_API, {
-                    repository: util.getRepoFromSource(node.source, 'ru.meta.json')
-                }),
-                mdEn: common.loadData(common.PROVIDER_GITHUB_API, {
-                    repository: util.getRepoFromSource(node.source, 'en.md')
-                }),
-                mdRu: common.loadData(common.PROVIDER_GITHUB_API, {
-                    repository: util.getRepoFromSource(node.source, 'ru.md')
-                })
-            })
-            .then(function(value) {
-                return {
-                    id: node.source,
-                    source: {
-                        en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value, collected),
-                        ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value, collected)
-                    }
-                };
-            });
+
     });
+
+//    var promises = nodesWithSource.map(function(node){
+//        logger.verbose('Load source for node with url %s %s', node.url, node.source);
+//
+//        return vow
+//            .allResolved({
+//                metaEn: common.loadData(common.PROVIDER_GITHUB_API, {
+//                    repository: util.getRepoFromSource(node.source, 'en.meta.json')
+//                }),
+//                metaRu: common.loadData(common.PROVIDER_GITHUB_API, {
+//                    repository: util.getRepoFromSource(node.source, 'ru.meta.json')
+//                }),
+//                mdEn: common.loadData(common.PROVIDER_GITHUB_API, {
+//                    repository: util.getRepoFromSource(node.source, 'en.md')
+//                }),
+//                mdRu: common.loadData(common.PROVIDER_GITHUB_API, {
+//                    repository: util.getRepoFromSource(node.source, 'ru.md')
+//                })
+//            })
+//            .then(function(value) {
+//                return {
+//                    id: node.source,
+//                    source: {
+//                        en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value, collected),
+//                        ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value, collected)
+//                    }
+//                };
+//            });
+//    });
 
     return vow.allResolved(promises).then(function(docs) {
         return saveAndUploadDocs(docs, collected);
     });
+};
+
+var analyzeMetaInformation = function(node, lang, collected) {
+
+    if(!node.source[lang]) {
+        logger.warn(MSG.WARN.META_NOT_EXIST, lang, node.title);
+        return null;
+    }
+
+    try {
+        var meta = node.source[lang];
+
+        //parse date from dd-mm-yyyy format into milliseconds
+        if(meta.createDate) {
+            meta.createDate = util.dateToMilliseconds(meta.createDate);
+        }
+
+        //parse date from dd-mm-yyyy format into milliseconds
+        if(meta.editDate) {
+            meta.editDate = util.dateToMilliseconds(meta.editDate);
+        }
+
+        //collect authors
+        if(meta.authors && _.isArray(meta.authors)) {
+            meta.authors = _.compact(meta.authors);
+            collected.authors = _.union(collected.authors, meta.authors);
+        }
+
+        //collect translators
+        if(meta.translators && _.isArray(meta.translators)) {
+            meta.translators = _.compact(meta.translators);
+            collected.translators = _.union(collected.translators, meta.translators);
+        }
+
+        //collect tags
+        if(meta.tags) {
+            collected.tags = _.union(collected.tags, meta.tags);
+        }
+    }catch(err) {
+        logger.warn(MSG.WARN.META_PARSING_ERROR, lang, node.title);
+        return null;
+    }
+
 };
 
 /**

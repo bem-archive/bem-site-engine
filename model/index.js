@@ -9,7 +9,7 @@ var method = require('./method'),
 module.exports = {
     get: function() {
         return [
-            getMain,
+            getMain(),
             method.get(),
             tools.get(),
             libraries.get(),
@@ -19,7 +19,7 @@ module.exports = {
             tutorials.get(),
             articles.get(),
             news.get(),
-            getTags,
+            getTags(),
             getAuthors(),
             pages.jobs.get(),
 

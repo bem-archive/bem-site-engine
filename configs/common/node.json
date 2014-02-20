@@ -39,6 +39,10 @@
         "password": "pass4bem-info"
     },
     "data": {
+        "sitemap": {
+            "file": "backups/sitemap.json",
+            "disk": "sitemap.json"
+        },
         "docs": {
             "file": "backups/docs.json",
             "disk": "docs/docs.json"
