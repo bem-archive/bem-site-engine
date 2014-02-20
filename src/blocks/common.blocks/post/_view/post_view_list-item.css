@@ -10,12 +10,15 @@
 .post_view_list-item > .post__categories
 {
     font-size: 0.9em;
+
     display: inline-block;
+
     padding-right: 10px;
 }
 
 .post_view_list-item > .post__date
 {
     float: right;
+
     color: #AAA;
 }

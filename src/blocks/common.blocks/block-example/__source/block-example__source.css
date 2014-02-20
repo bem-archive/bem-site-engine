@@ -1,5 +1,6 @@
 .block-example__source
 {
-    display: none;
     position: relative;
+
+    display: none;
 }

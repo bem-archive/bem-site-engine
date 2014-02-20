@@ -14,7 +14,6 @@
     content: "";
 
     background: linear-gradient(to right, #e6e6e6 0%,rgba(115,115,115,0) 100%,rgba(229,229,229,0) 100%);
-    /*background: linear-gradient(to right, #586e75 0%,rgba(115,115,115,0) 100%,rgba(229,229,229,0) 100%);*/
 }
 
 .block-jsdoc__item:last-child:after

@@ -1,20 +1,21 @@
 .menu-list
 {
-
-    flex: 1 0 auto;
-    box-sizing: border-box;
-
-    overflow: auto;
-    border-right: 1px solid rgba(0,0,0,.2);
     position: relative;
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
 
     display: block;
+    overflow: auto;
+
+    box-sizing: border-box;
     min-width: 100px;
     max-width: 200px;
-    width: auto;
+    margin: 0;
+    padding: 0;
+
+    list-style-type: none;
+
+    border-right: 1px solid rgba(0,0,0,.2);
+
+    flex: 1 0 auto;
 }
 
 .page_fullscreen .menu-list

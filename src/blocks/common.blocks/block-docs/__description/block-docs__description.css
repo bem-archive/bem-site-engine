@@ -37,9 +37,12 @@
 
 .block-docs__description .b-text__li:before
 {
-    content: '\2014\a0';
     font-size: 1em;
-    margin: 0 0 0 -1.5em;
+
     position: absolute;
+
+    margin: 0 0 0 -1.5em;
+
+    content: '\2014\a0';
 }
 /* (END) Поддержать блок b-text из bem.sets */

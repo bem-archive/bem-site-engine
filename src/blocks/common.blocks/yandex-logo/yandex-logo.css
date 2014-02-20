@@ -2,9 +2,8 @@
 {
     width: 95px;
     height: 37px;
-
     padding: 14px 0 6px;
 
-    text-indent: -9999px;
     white-space: nowrap;
+    text-indent: -9999px;
 }

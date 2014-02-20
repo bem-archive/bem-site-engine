@@ -7,14 +7,15 @@
 
 .post__tags .link
 {
-    background: none repeat scroll 0 0 #EEEEEE;
-    border-radius: 10px 10px 10px 10px;
     margin-left: 2px;
     padding: 4px 10px;
+
     color: #AAAAAA;
+    border-radius: 10px 10px 10px 10px;
+    background: none repeat scroll 0 0 #EEEEEE;
 }
 
 .post__tags .link:hover{
-    background: none repeat scroll 0 0 #DDDDDD;
     color: #777777;
+    background: none repeat scroll 0 0 #DDDDDD;
 }

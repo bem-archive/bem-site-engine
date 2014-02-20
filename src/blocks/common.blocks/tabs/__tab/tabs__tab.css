@@ -1,8 +1,8 @@
 .tabs__tab
 {
-    display: inline-block;
-
     position: relative;
+
+    display: inline-block;
 
     user-select: none;
 }

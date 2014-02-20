@@ -1,7 +1,10 @@
-.content__content-area 
+.content__content-area
 {
-    -webkit-overflow-scrolling: touch;
-    overflow: auto;
-    height: 100%;
     position: relative;
+
+    overflow: auto;
+
+    height: 100%;
+
+    -webkit-overflow-scrolling: touch;
 }

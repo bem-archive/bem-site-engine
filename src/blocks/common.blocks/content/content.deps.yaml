@@ -5,6 +5,6 @@
 - block: code
 - block: link
 
-- elems: [content-area, fullscreen]
 - mods:
     view: [post, posts, index, authors, author, block, tags]
+- elems: [content-area, fullscreen]
