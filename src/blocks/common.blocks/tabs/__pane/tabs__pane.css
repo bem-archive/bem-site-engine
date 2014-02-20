@@ -1,0 +1,9 @@
+.tabs__pane
+{
+    display: none;
+}
+
+.tabs__pane_state_current
+{
+    display: block;
+}

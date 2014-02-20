@@ -1,0 +1,38 @@
+/* Верхняя черта */
+.tabs_theme_default .tabs__header
+{
+    line-height: 36px;
+
+    list-style: none outside none;
+
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Цвет и отступы отдельного таба */
+.tabs_theme_default .tabs__tab
+{
+    font-size: 16px;
+
+    margin-right: 16px;
+}
+
+.tabs_theme_default .tabs__tab:after
+{
+    position: absolute;
+    top: -2px;
+    right: 0;
+    left: 0;
+
+    content: '';
+}
+
+.tabs_theme_default .tabs__tab:hover:after
+{
+    border-bottom: 3px solid #dbd9d9;
+}
+
+/* Верхнее выделение таба */
+.tabs_theme_default .tabs__tab_state_current:after
+{
+    border-bottom: 3px solid !important;
+}
