@@ -423,7 +423,7 @@ var addLibraryNodes = function(nodesWithLib) {
 
                     _node.setSource({
                         prefix: u.format({
-                            'public': 'https://raw.github.com/%s/%s/%s/%s/%s/%s/%s',
+                            'public': 'http://rawgithub.com/%s/%s/%s/%s/%s/%s/%s',
                             'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s/%s/%s/%s'
                         }[librariesRepository.type], librariesRepository.user, librariesRepository.repo,
                             librariesRepository.ref, version.repo, version.ref, level.name, block.name),

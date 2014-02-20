@@ -1,0 +1,15 @@
+- elems:
+    - header
+
+- block: i-bem
+  required: true
+  elem: i18n
+
+- block: tabs
+  mods:
+    theme: default
+
+- block: block-docs
+- block: block-jsdoc
+- block: block-example
+

@@ -19,17 +19,9 @@
     color: #AAA;
 }
 
-.post_view_full .post__title
+.post_view_full h1.post__title
 {
-    font-size: 2.3em !important;
-
     margin-top: 20px;
-}
-
-.post_view_full .post__title > .link,
-.post_view_full .post__title > .link:hover
-{
-    color: #555;
 }
 
 .post_view_full .post__issueLink

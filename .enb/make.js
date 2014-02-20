@@ -67,7 +67,8 @@ module.exports = function(config) {
         config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
             nodeConfig.addTechs([
                 use('copy', { sourceTarget: '?.css', destTarget: '?.min.css' }),
-                use('copy', { sourceTarget: '?.js', destTarget: '?.min.js' }),
+                use('borschik', { sourceTarget: '?.js', destTarget: '?.borschik.js', minify: false, freeze: true }),
+                use('copy', { sourceTarget: '?.borschik.js', destTarget: '?.min.js' }),
                 use('copy', { sourceTarget: '?.template.i18n.js', destTarget: '?.min.template.i18n.js' })
             ]);
         });
@@ -78,7 +79,7 @@ module.exports = function(config) {
         config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
             nodeConfig.addTechs([
                 use('borschik', { sourceTarget: '?.css', destTarget: '?.min.css', minify: true, freeze: true }),
-                use('borschik', { sourceTarget: '?.js', destTarget: '?.min.js', minify: true, freeze: false }),
+                use('borschik', { sourceTarget: '?.js', destTarget: '?.min.js', minify: true, freeze: true }),
                 use('borschik', { sourceTarget: '?.template.i18n.js', destTarget: '?.min.template.i18n.js',
                     minify: true, freeze: false })
             ]);

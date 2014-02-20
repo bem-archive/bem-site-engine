@@ -1,13 +1,12 @@
 block content, mod view block {
-
     content: [
+        applyNext(),
         {
             elem: 'content-area',
-            content: [
-                JSON.stringify(this.data.node.source.data),
-                JSON.stringify(this.data.node.source.jsdoc)
-            ]
+            content: {
+                block: 'block',
+                mix: { block: 'post', mods: { view: 'full' } }
+            }
         }
     ]
-
 }

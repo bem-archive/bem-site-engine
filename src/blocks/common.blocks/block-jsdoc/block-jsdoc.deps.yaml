@@ -1,0 +1,7 @@
+- elems: [item, selection, value, title, access, types, type]
+
+- block: i-bem
+  required: true
+  elem: i18n
+
+

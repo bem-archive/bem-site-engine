@@ -1,0 +1,173 @@
+block block {
+
+    content: {
+
+        var _source = this.data.node.source;
+
+        return [
+            apply('header', this.ctx.name = _source.data.name),
+            apply('contents', this.ctx = _source)
+        ];
+
+    }
+
+    header: {
+        elem: 'header',
+        content: {
+            elem: 'title',
+            tag: 'h1',
+            mix: [{ block: 'post', elem: 'title' }],
+            content: BEM.I18N('block', 'static-title') + ' ' + this.ctx.name
+        }
+    }
+
+    contents: {
+
+        var tabsHeader = [],
+            tabsContent = [];
+
+        if(this.ctx.data) {
+            tabsHeader.push({
+                elem: 'tab',
+                mods: { 'side': 'left', 'state': 'current' },
+                content: BEM.I18N('block', 'docs')
+            });
+
+            tabsContent.push({
+                elem: 'pane',
+                mods: { 'state': 'current' },
+                content: {
+                    block: 'block-docs'
+                }
+            });
+        }
+
+        if(this.ctx.jsdoc) {
+            tabsHeader.push({
+                elem: 'tab',
+                content: BEM.I18N('block', 'jsdoc')
+            });
+
+            tabsContent.push({
+                elem: 'pane',
+                content: {
+                    block: 'block-jsdoc'
+                }
+            });
+        }
+
+        if(this.ctx.data.examples && this.ctx.data.examples[0].content.length > 0) {
+            tabsHeader.push({
+                elem: 'tab',
+                mods: { 'side': 'right' },
+                content: BEM.I18N('block', 'examples')
+            });
+
+            tabsContent.push({
+                elem: 'pane',
+                content: [
+                    apply('examples-title'),
+                    apply('examples-items')
+                ]
+            });
+        }
+
+        return [
+            {
+                elem: 'content',
+                mix: [{ block: 'post', elem: 'content' }],
+                content: {
+                    block: 'tabs',
+                    mods: { theme: 'default' },
+                    content: [
+                        {
+                            elem: 'header',
+                            content: tabsHeader
+                        },
+                        {
+                            elem: 'content',
+                            content: tabsContent
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+
+    examples-title: {
+        return {
+            block: 'block-example',
+            elem: 'title',
+            tag: 'h2',
+            mix: [{ block: 'post', elem: 'title' }],
+            content: BEM.I18N('block-example', 'examples-title')
+        }
+    }
+
+    examples-items: {
+
+        if(this.ctx.data.examples && this.ctx.data.examples.length > 0) {
+
+            var prefix = this.ctx.prefix;
+
+            return this.ctx.data.examples[0].content.map(function(example) {
+                var exampleUrl = prefix + '/' + example.url + '.ru.html',
+                    bemjson = prefix + '/' + example.url + '.bemjson.js',
+                    exampleName = example.url.replace(/.+\//, '');
+
+                return [
+                    {
+                        block: 'block-example',
+                        js: {
+                            bemjsonUrl: bemjson,
+                            copyHoverClass: 'source-copy-hover'
+                        },
+                        content: [
+                            {
+                                elem: 'header',
+                                content: [
+                                    {
+                                        block: 'link',
+                                        url: exampleUrl,
+                                        attrs: { target: '_blank' },
+                                        mix: [{ block: 'block-example', elem: 'link', elemMods: { icon: 'blank' } }],
+                                        content: example.title + ' (' + exampleName + ')'
+                                    },
+                                    {
+                                        block: 'link',
+                                        url: '#',
+                                        mix: [
+                                            { block: 'block-example', elem: 'link', elemMods: { icon: 'source' } },
+                                            { block: 'block-example', elem: 'source-link' }
+                                        ],
+                                        content: 'BEMJSON'
+                                    }
+                                ]
+                            },
+                            {
+                                elem: 'source',
+                                content: [
+                                    {
+                                        elem: 'source-code',
+                                        attrs: { src: bemjson }
+                                    },
+                                    {
+                                        block: 'link',
+                                        mods: { type: 'block' },
+                                        attrs: { title: BEM.I18N('block-example', 'copy-title') },
+                                        mix: [{ block: 'block-example', elem: 'source-copy' }]
+                                    }
+                                ]
+                            },
+                            {
+                                elem: 'live',
+                                attrs: { src: exampleUrl }
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
+    }
+
+}

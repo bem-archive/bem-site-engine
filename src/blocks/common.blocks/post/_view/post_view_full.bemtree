@@ -45,15 +45,19 @@ block post, mod view full {
 
     //tags array of post
     tags: {
-        elem: 'tags',
-        content: this.ctx.content
+        if (this.ctx.content) {
+            return {
+                elem: 'tags',
+                content: this.ctx.content
+            }
+        }
     }
 
     //post title
     title: {
         elem: 'title',
-        url: null,
-        title: this.ctx.content.longTitle || this.ctx.content.title
+        tag: 'h1',
+        content: this.ctx.content.longTitle || this.ctx.content.title
     }
 
     //post content

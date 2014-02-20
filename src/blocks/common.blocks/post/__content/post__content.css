@@ -1,22 +1,13 @@
 .post__content
 {
     font-size: 16px;
-    line-height: 1.4;
+    line-height: 1.5;
 
     max-width: 1050px;
     padding: 5px 19px 24px 0;
 
     color: #586e75;
 }
-
-.post__content h1,
-.post__content h2
-{
-    font-weight: normal;
-
-    color: #555;
-}
-
 
 .post_view_full .post__content h1:first-child
 {
@@ -27,10 +18,7 @@
 
 .post__content .highlight
 {
-    padding: .5em;
-
     color: #333;
-    background: #f8f8ff;
 }
 
 .post__content .highlight .string,
@@ -49,19 +37,6 @@
     font-style: italic;
 
     color: #998;
-}
-
-.post__content a
-{
-    color: #268bd2;
-}
-
-.post__content a:hover
-{
-    /*text-decoration: none;*/
-
-    /*color: #fff;*/
-    /*background-color: #000;*/
 }
 
 /* Tables */
