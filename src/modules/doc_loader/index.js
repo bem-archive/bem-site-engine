@@ -15,7 +15,9 @@ var u = require('util'),
 var MSG = {
     WARN: {
         META_NOT_EXIST: 'source with lang %s does not exists for node %s',
+        MD_NOT_EXIST: 'markdown with lang %s does not exists for node %s',
         META_PARSING_ERROR: 'source for lang %s contains errors for node %s',
+        MD_PARSING_ERROR: 'markdown for lang %s contains errors for node %s',
         DEPRECATED: 'remove deprecated field %s for source user: %s repo: %s ref: %s path: %s'
     }
 };
@@ -24,13 +26,23 @@ module.exports = {
     run: function() {
         logger.info('Collect docs start');
 
+        var _sitemap;
+
         data.common.init();
 
         return common.loadData(common.PROVIDER_FILE, {
             path: path.resolve(config.get('data:sitemap:file'))
         })
-        .then(collectNodesWithSource)
-        .then(loadSourcesForNodes)
+        .then(function(sitemap) {
+            _sitemap = sitemap;
+            return collectNodesWithSource(sitemap);
+        })
+        .then(function(nodeWithSources) {
+            return loadSourcesForNodes(nodeWithSources);
+        })
+        .then(function() {
+            return saveAndUploadSitemap(_sitemap);
+        })
         .then(
             function() {
                 logger.info('Collect docs end successfully');
@@ -79,56 +91,58 @@ var loadSourcesForNodes = function(nodesWithSource) {
     logger.info('Load all docs start');
 
     var collected = {
+        docs: [],
         authors: [],
         translators: [],
         tags: []
     };
 
+    var LANG = {
+        EN: 'en',
+        RU: 'ru'
+    };
+
     var promises = nodesWithSource.map(function(node) {
-        var source = node.source;
-
-
+        return vow.allResolved({
+            en: analyzeMetaInformation(node, LANG.EN, collected)
+                .then(function(res) {
+                    return loadMDFile(res.node, LANG.EN, res.repo);
+                })
+                .then(function(res) {
+                    collected.docs.push({
+                        id: node.source[LANG.EN].content,
+                        source: res
+                    });
+                })
+            ,
+            ru: analyzeMetaInformation(node, LANG.RU, collected)
+                .then(function(res) {
+                    return loadMDFile(res.node, LANG.RU, res.repo);
+                })
+                .then(function() {
+                    collected.docs.push({
+                        id: node.source[LANG.RU].content,
+                        source: res
+                    });
+                })
+        })
     });
 
-//    var promises = nodesWithSource.map(function(node){
-//        logger.verbose('Load source for node with url %s %s', node.url, node.source);
-//
-//        return vow
-//            .allResolved({
-//                metaEn: common.loadData(common.PROVIDER_GITHUB_API, {
-//                    repository: util.getRepoFromSource(node.source, 'en.meta.json')
-//                }),
-//                metaRu: common.loadData(common.PROVIDER_GITHUB_API, {
-//                    repository: util.getRepoFromSource(node.source, 'ru.meta.json')
-//                }),
-//                mdEn: common.loadData(common.PROVIDER_GITHUB_API, {
-//                    repository: util.getRepoFromSource(node.source, 'en.md')
-//                }),
-//                mdRu: common.loadData(common.PROVIDER_GITHUB_API, {
-//                    repository: util.getRepoFromSource(node.source, 'ru.md')
-//                })
-//            })
-//            .then(function(value) {
-//                return {
-//                    id: node.source,
-//                    source: {
-//                        en: getSourceFromMetaAndMd(value.metaEn._value, value.mdEn._value, collected),
-//                        ru: getSourceFromMetaAndMd(value.metaRu._value, value.mdRu._value, collected)
-//                    }
-//                };
-//            });
-//    });
-
-    return vow.allResolved(promises).then(function(docs) {
-        return saveAndUploadDocs(docs, collected);
+    return vow.allResolved(promises).then(function() {
+        return saveAndUploadDocs(collected);
     });
 };
 
 var analyzeMetaInformation = function(node, lang, collected) {
 
+    var def = vow.defer();
+
     if(!node.source[lang]) {
-        logger.warn(MSG.WARN.META_NOT_EXIST, lang, node.title);
-        return null;
+        logger.warn(MSG.WARN.META_NOT_EXIST, lang, node.title && (node.title[lang] || node.title));
+        node.source[lang] = null;
+
+        def.reject();
+        return def.promise();
     }
 
     try {
@@ -141,18 +155,20 @@ var analyzeMetaInformation = function(node, lang, collected) {
 
         //parse date from dd-mm-yyyy format into milliseconds
         if(meta.editDate) {
-            meta.editDate = util.dateToMilliseconds(meta.editDate);
+            node.source[lang].editDate = util.dateToMilliseconds(meta.editDate);
         }
 
-        //collect authors
+        //compact and collect authors
         if(meta.authors && _.isArray(meta.authors)) {
             meta.authors = _.compact(meta.authors);
+            node.source[lang].authors = meta.authors;
             collected.authors = _.union(collected.authors, meta.authors);
         }
 
-        //collect translators
+        //compact and collect translators
         if(meta.translators && _.isArray(meta.translators)) {
             meta.translators = _.compact(meta.translators);
+            node.source[lang].translators = meta.translators;
             collected.translators = _.union(collected.translators, meta.translators);
         }
 
@@ -160,105 +176,62 @@ var analyzeMetaInformation = function(node, lang, collected) {
         if(meta.tags) {
             collected.tags = _.union(collected.tags, meta.tags);
         }
+
+        var content = meta.content;
+
+        var repo = (function(_source) {
+            var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+)/,
+                parsedSource = _source.match(re);
+            return {
+                host: parsedSource[1],
+                user: parsedSource[2],
+                repo: parsedSource[3],
+                ref: parsedSource[4],
+                path: parsedSource[5]
+            };
+        })(content);
+
+        logger.verbose('get repo from source user: %s repo: %s ref: %s path: %s',
+            repo.user, repo.repo, repo.ref, repo.path);
+
+        //set repo information
+        node.source[lang].repo = {
+            issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
+                repo.host, repo.user, repo.repo, meta.title),
+            prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",
+                repo.user, repo.repo, repo.ref, repo.path)
+        };
+
+        def.resolve({ node: node, repo: repo });
+
     }catch(err) {
-        logger.warn(MSG.WARN.META_PARSING_ERROR, lang, node.title);
-        return null;
+        logger.warn(MSG.WARN.META_PARSING_ERROR, lang, node.title && (node.title[lang] || node.title));
+
+        node.source[lang] = null;
+        def.reject();
     }
 
+    return def.promise();
 };
 
-/**
- * Post-processing meta-information and markdown contents
- * Merge them into one object.
- * Remove deprecated fields from meta-information
- * Collect tags, authors and translators for advanced people loading
- * Create url for repo issues and prose.io
- * @param meta - {Object} object with .meta.json file information
- * @param md - {Object} object with .md file information
- * @returns {*}
- */
-var getSourceFromMetaAndMd = function(meta, md, collected) {
-    var repo = meta.repo;
+var loadMDFile = function(node, lang, repo) {
+    return common.loadData(common.PROVIDER_GITHUB_API, { repository: repo })
+        .then(function(md) {
+            try {
+                if(!md.res) {
+                    logger.warn(MSG.WARN.MD_NOT_EXIST, lang, node.title);
+                    md = null;
+                }else {
+                    md = (new Buffer(md.res.content, 'base64')).toString();
+                    md = util.mdToHtml(md);
+                }
+            } catch(err) {
+                logger.warn(MSG.WARN.MD_PARSING_ERROR, lang, node.title);
+                md = null;
+            }
 
-    logger.verbose('loaded data from repo user: %s repo: %s ref: %s path: %s', repo.user, repo.repo, repo.ref, repo.path);
-
-    //verify if md file content exists and valid
-    try {
-        if(!md.res) {
-            logger.warn(MSG.WARN.NOT_EXIST, 'md', repo.user, repo.repo, repo.ref, repo.path);
-            md = null;
-        }else {
-            _.extend(repo, { path: md.res.path });
-            md = (new Buffer(md.res.content, 'base64')).toString();
-            md = util.mdToHtml(md);
-        }
-    } catch(err) {
-        logger.warn(MSG.WARN.PARSING_ERROR, 'md', repo.user, repo.repo, repo.ref, repo.path);
-        md = null;
-    }
-
-    //verify if meta.json file content exists and valid
-    try {
-        if(!meta.res) {
-            logger.warn(MSG.WARN.NOT_EXIST, 'meta', repo.user, repo.repo, repo.ref, repo.path);
-            return null;
-        }
-
-        meta = (new Buffer(meta.res.content, 'base64')).toString();
-        meta = JSON.parse(meta);
-
-    } catch(err) {
-        logger.warn(MSG.WARN.PARSING_ERROR, 'meta', repo.user, repo.repo, repo.ref, repo.path);
-        return null;
-    }
-
-    //set md inton content field of meta information
-    meta.content = md;
-
-    //parse date from dd-mm-yyyy format into milliseconds
-    if(meta.createDate) {
-        meta.createDate = util.dateToMilliseconds(meta.createDate);
-    }
-
-    //parse date from dd-mm-yyyy format into milliseconds
-    if(meta.editDate) {
-        meta.editDate = util.dateToMilliseconds(meta.editDate);
-    }
-
-    //set repo information
-    meta.repo = {
-        issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
-            repo.host, repo.user, repo.repo, meta.title),
-        prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",
-            repo.user, repo.repo, repo.ref, repo.path)
-    };
-
-    //collect authors
-    if(meta.authors && _.isArray(meta.authors)) {
-        meta.authors = _.compact(meta.authors);
-        collected.authors = _.union(collected.authors, meta.authors);
-    }
-
-    //collect translators
-    if(meta.translators && _.isArray(meta.translators)) {
-        meta.translators = _.compact(meta.translators);
-        collected.translators = _.union(collected.translators, meta.translators);
-    }
-
-    //collect tags
-    if(meta.tags) {
-        collected.tags = _.union(collected.tags, meta.tags);
-    }
-
-    /** fallbacks **/
-    ['type', 'root', 'categories', 'order', 'url', 'slug'].forEach(function(field) {
-        if(meta[field]) {
-            delete meta[field];
-        }
-    });
-    /** end of fallbacks **/
-
-    return meta;
+            return md;
+        });
 };
 
 /**
@@ -272,20 +245,8 @@ var getSourceFromMetaAndMd = function(meta, md, collected) {
  * - translators {Array} - array of unique translators
  * - tags {Array} - array of unique tags
  */
-var saveAndUploadDocs = function(docs, collected) {
-    logger.info('save documentation to file and upload it');
-
-    var content = {
-        docs: docs.reduce(function(prev, item) {
-            item = item._value || item;
-
-            prev[item.id] = item.source;
-            return prev;
-        }, {}),
-        authors: collected.authors,
-        translators: collected.translators,
-        tags: collected.tags
-    };
+var saveAndUploadDocs = function(content) {
+    logger.info('Save documentation to file and upload it');
 
     if ('production' === process.env.NODE_ENV) {
         return common.saveData(common.PROVIDER_YANDEX_DISK, {
@@ -296,6 +257,20 @@ var saveAndUploadDocs = function(docs, collected) {
         return common.saveData(common.PROVIDER_FILE, {
             path: config.get('data:docs:file'),
             data: content
+        });
+    }
+};
+
+var saveAndUploadSitemap = function(sitemap) {
+    if ('production' === process.env.NODE_ENV) {
+        return common.saveData(common.PROVIDER_YANDEX_DISK, {
+            path: config.get('data:sitemap:disk'),
+            data: JSON.stringify(sitemap, null, 4)
+        });
+    }else {
+        return common.saveData(common.PROVIDER_FILE, {
+            path: config.get('data:sitemap:file'),
+            data: sitemap
         });
     }
 };

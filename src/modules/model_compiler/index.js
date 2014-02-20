@@ -24,7 +24,7 @@ module.exports = {
                 .then(
                     function() {
                         logger.info('Save and upload sitemap successfully finished');
-                        //return docLoader.run();
+                        return docLoader.run();
                     },
                     function(err) {
                         logger.error('Save and upload sitemap failed with error %s', err.message);
