@@ -17,7 +17,6 @@ module.exports = {
                     authors: ["kryzhanovsky-sergey"],
                     tags: ["tools", "css"],
                     translators: [],
-                    type: "tools",
                     content: "https://github.com/css/csso/tree/master/docs/index/index.en.md"
                 },
                 ru: {
@@ -29,7 +28,6 @@ module.exports = {
                     authors: ["kryzhanovsky-sergey"],
                     tags: ["tools", "css"],
                     translators: [],
-                    type: "tools",
                     content: "https://github.com/css/csso/tree/master/docs/index/index.ru.md"
                 }
             }

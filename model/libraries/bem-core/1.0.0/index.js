@@ -20,7 +20,6 @@ module.exports = {
                     authors: ["berezhnoy-sergey"],
                     tags: ["bem-core"],
                     translators: ["stepanova-varvara"],
-                    type: "libs",
                     content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/bem-core/bem-core.en.md"
                 },
                 ru: {
@@ -32,7 +31,6 @@ module.exports = {
                     authors: ["berezhnoy-sergey"],
                     tags: ["bem-core"],
                     translators: [],
-                    type: "libs",
                     content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/bem-core/bem-core.ru.md"
                 }
             },
@@ -68,7 +66,6 @@ var getChangelog = function() {
                 authors: ["berezhnoy-sergey","filatov-dmitry"],
                 tags: ["bem-core"],
                 translators: [],
-                type: "libs",
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/changelog/changelog.en.md"
             },
             ru: {
@@ -81,7 +78,6 @@ var getChangelog = function() {
                 authors: ["berezhnoy-sergey","filatov-dmitry"],
                 tags: ["bem-core"],
                 translators: [],
-                type: "libs",
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/changelog/changelog.ru.md"
             }
         }
@@ -110,7 +106,6 @@ var getMigration = function() {
                 authors: ["filatov-dmitry"],
                 tags: ["bem-core","i-bem"],
                 translators: ["stepanova-varvara"],
-                type: "libs",
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/migration/migration.en.md"
             },
             ru: {
@@ -123,7 +118,6 @@ var getMigration = function() {
                 authors: ["filatov-dmitry"],
                 tags: ["bem-core"],
                 translators: [],
-                type: "libs",
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/migration/migration.ru.md"
             }
         }

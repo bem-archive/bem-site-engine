@@ -24,7 +24,6 @@ module.exports = {
                     authors: ["grinenko-vladimir"],
                     tags: ["libs"],
                     translators: [],
-                    type: "libs",
                     content: "https://github.com/bem/bem-method/tree/bem-info-data/tools/index/index.en.md"
                 },
                 ru: {
@@ -36,7 +35,6 @@ module.exports = {
                     authors: ["grinenko-vladimir"],
                     tags: ["libs"],
                     translators: [],
-                    type: "libs",
                     content: "https://github.com/bem/bem-method/tree/bem-info-data/tools/index.ru.md"
                 }
             },

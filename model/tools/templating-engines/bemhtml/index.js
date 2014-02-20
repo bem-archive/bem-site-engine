@@ -34,7 +34,6 @@ var getReference100 = function() {
                 authors: ["maslinsky-kirill", "ivanichenko-sergey"],
                 tags: ["BEMHTML"],
                 translators: ["nekhaieva-aleksandra"],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/reference/reference.en.md"
             },
             ru: {
@@ -46,7 +45,6 @@ var getReference100 = function() {
                 authors: ["maslinsky-kirill", "ivanichenko-sergey"],
                 tags: ["BEMHTML"],
                 translators: [],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/reference/reference.ru.md"
             }
         }
@@ -70,7 +68,6 @@ var getReference110 = function() {
                 authors: ["maslinsky-kirill", "ivanichenko-sergey"],
                 tags: ["BEMHTML"],
                 translators: ["nekhaieva-aleksandra"],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/reference/reference.en.md"
             },
             ru: {
@@ -82,7 +79,6 @@ var getReference110 = function() {
                 authors: ["maslinsky-kirill", "ivanichenko-sergey"],
                 tags: ["BEMHTML"],
                 translators: [],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/reference/reference.ru.md"
             }
         }
@@ -106,7 +102,6 @@ var getRationale100 = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["BEMHTML"],
                 translators: ["nekhaieva-aleksandra"],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/rationale/rationale.en.md"
             },
             ru: {
@@ -118,7 +113,6 @@ var getRationale100 = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["BEMHTML"],
                 translators: [],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/rationale/rationale.ru.md"
             }
         }
@@ -142,7 +136,6 @@ var getRationale110 = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["BEMHTML"],
                 translators: ["nekhaieva-aleksandra"],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/rationale/rationale.en.md"
             },
             ru: {
@@ -154,7 +147,6 @@ var getRationale110 = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["BEMHTML"],
                 translators: [],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/rationale/rationale.ru.md"
             }
         }

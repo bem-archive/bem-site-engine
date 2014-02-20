@@ -36,7 +36,6 @@ var getGonzales = function() {
                 authors: ["kryzhanovsky-sergey"],
                 tags: ["tools", "css"],
                 translators: [""],
-                type: "tools",
                 content: "https://github.com/lesanra/gonzales/tree/bem-info-data/doc/gonzales/gonzales.en.md"
             },
             ru: {
@@ -48,7 +47,6 @@ var getGonzales = function() {
                 authors: ["kryzhanovsky-sergey"],
                 tags: ["tools", "css"],
                 translators: [""],
-                type: "tools",
                 content: "https://github.com/lesanra/gonzales/tree/bem-info-data/doc/gonzales/gonzales.ru.md"
             }
         }

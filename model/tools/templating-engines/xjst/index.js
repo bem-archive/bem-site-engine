@@ -17,7 +17,6 @@ module.exports = {
                     authors: ["indutny-fedor"],
                     tags: ["tools"],
                     translators: [],
-                    type: "tools",
                     content: "https://github.com/veged/xjst/tree/master/doc/index/index.en.md"
                 },
                 ru: {
@@ -29,7 +28,6 @@ module.exports = {
                     authors: ["indutny-fedor"],
                     tags: ["tools"],
                     translators: [],
-                    type: "tools",
                     content: "https://github.com/veged/xjst/tree/master/doc/index/index.ru.md"
                 }
             }

@@ -17,7 +17,6 @@ module.exports = {
                     authors: ["androsov-alexey"],
                     tags: ["tools", "borschik"],
                     translators: [],
-                    type: "tools",
                     content: "https://github.com/bem/borschik/tree/master/docs/index/index.en.md"
                 },
                 ru: {
@@ -29,7 +28,6 @@ module.exports = {
                     authors: ["androsov-alexey"],
                     tags: ["tools", "borschik"],
                     translators: [],
-                    type: "tools",
                     content: "https://github.com/bem/borschik/tree/master/docs/index/index.ru.md"
                 }
             },
@@ -65,7 +63,6 @@ var getFreeze = function() {
                 authors: ["androsov-alexey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik/tree/master/docs/freeze/freeze.en.md"
             },
             ru: {
@@ -78,7 +75,6 @@ var getFreeze = function() {
                 authors: ["androsov-alexey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik/tree/master/docs/freeze/freeze.ru.md"
             }
         }
@@ -106,12 +102,10 @@ var getWhereIsMyTech = function() {
                 authors: ["androsov-alexey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik/tree/master/docs/where-is-my-tech/where-is-my-tech.en.md"
             },
             ru: {
                 title: "borschik и технологии",
-                longTitle: "Как borschik собирает технологии",
                 createDate: "02-10-2013",
                 editDate: "",
                 summary: "Как borschik собирает технологии.",
@@ -119,7 +113,6 @@ var getWhereIsMyTech = function() {
                 authors: ["androsov-alexey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik/tree/master/docs/where-is-my-tech/where-is-my-tech.ru.md"
             }
         }
@@ -144,7 +137,6 @@ var getborschikServer = function() {
                 authors: ["androsov-alexey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik-server/tree/master/docs/borschik-server/borschik-server.en.md"
             },
             ru: {
@@ -156,7 +148,6 @@ var getborschikServer = function() {
                 authors: ["androsov-alexey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik-server/tree/master/docs/borschik-server/borschik-server.ru.md"
             }
         }
@@ -177,7 +168,6 @@ var getChangelog = function() {
         source: {
             en: {
                 title: "Changelog",
-                longTitle: "borschik Changelog",
                 createDate: "06-07-2013",
                 editDate: "08-10-2013",
                 summary: "borschik changelog.",
@@ -185,12 +175,10 @@ var getChangelog = function() {
                 authors: ["androsov-alexey", "belov-sergey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik/tree/master/docs/changelog/changelog.en.md"
             },
             ru: {
                 title: "Changelog",
-                longTitle: "borschik Changelog",
                 createDate: "06-07-2013",
                 editDate: "08-10-2013",
                 summary: "borschik changelog.",
@@ -198,7 +186,6 @@ var getChangelog = function() {
                 authors: ["androsov-alexey", "belov-sergey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik/tree/master/docs/changelog/changelog.ru.md"
             }
         }
@@ -226,7 +213,6 @@ var getJsInclude = function() {
                 authors: ["androsov-alexey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik/tree/master/docs/js-include/js-include.en.md"
             },
             ru: {
@@ -238,7 +224,6 @@ var getJsInclude = function() {
                 authors: ["androsov-alexey"],
                 tags: ["tools", "borschik"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/borschik/tree/master/docs/js-include/js-include.ru.md"
             }
         }

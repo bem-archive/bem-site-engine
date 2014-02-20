@@ -17,7 +17,6 @@ module.exports = {
                     authors: ["harisov-vitaly"],
                     tags: ["tools", "css"],
                     translators: ["khachaturov-leonid"],
-                    type: "tools",
                     content: "https://github.com/css/csso/tree/master/docs/index/index.en.md"
                 },
                 ru: {
@@ -29,7 +28,6 @@ module.exports = {
                     authors: ["harisov-vitaly"],
                     tags: ["tools", "css"],
                     translators: [],
-                    type: "tools",
                     content: "https://github.com/css/csso/tree/master/docs/index/index.ru.md"
                 }
             },
@@ -63,7 +61,6 @@ var getDescription = function() {
                 authors: ["harisov-vitaly"],
                 tags: ["tools", "css"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/css/csso/tree/master/docs/description/description.en.md"
             },
             ru: {
@@ -75,7 +72,6 @@ var getDescription = function() {
                 authors: ["harisov-vitaly"],
                 tags: ["tools", "css"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/css/csso/tree/master/docs/description/description.ru.md"
             }
         }
@@ -103,7 +99,6 @@ var getInstallation = function() {
                 authors: ["harisov-vitaly"],
                 tags: ["tools", "css"],
                 translators: ["khachaturov-leonid"],
-                type: "tools",
                 content: "https://github.com/css/csso/tree/master/docs/install/install.en.md"
             },
             ru: {
@@ -115,7 +110,6 @@ var getInstallation = function() {
                 authors: ["harisov-vitaly"],
                 tags: ["tools", "css"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/css/csso/tree/master/docs/install/install.ru.md"
             }
         }
@@ -143,7 +137,6 @@ var getUsage = function() {
                 authors: ["harisov-vitaly"],
                 tags: ["tools", "css"],
                 translators: ["khachaturov-leonid"],
-                type: "tools",
                 content: "https://github.com/css/csso/tree/master/docs/usage/usage.en.md"
             },
             ru: {
@@ -155,7 +148,6 @@ var getUsage = function() {
                 authors: ["harisov-vitaly"],
                 tags: ["tools", "css"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/css/csso/tree/master/docs/usage/usage.ru.md"
             }
         }

@@ -17,7 +17,6 @@ module.exports = {
                     authors: ["harisov-vitaly"],
                     tags: ["tools","bem-tools"],
                     translators: [],
-                    type: "tools",
                     content: "https://github.com/bem/bem-tools/tree/dev/docs/index/index.en.md"
                 },
                 ru: {
@@ -29,7 +28,6 @@ module.exports = {
                     authors: ["harisov-vitaly"],
                     tags: ["tools","bem-tools"],
                     translators: [],
-                    type: "tools",
                     content: "https://github.com/bem/bem-tools/tree/dev/docs/index/index.ru.md"
                 }
             },
@@ -70,7 +68,6 @@ var getInstallation = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["tools","bem-tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/installation/installation.en.md"
             },
             ru: {
@@ -83,7 +80,6 @@ var getInstallation = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["tools","bem-tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/installation/installation.ru.md"
             }
         }
@@ -104,7 +100,6 @@ var getCommands = function() {
         source: {
             en: {
                 title: "Commands",
-                longTitle: "bem-tools: сommands",
                 createDate: "19-10-2012",
                 editDate: "",
                 summary: "The main bem-tools commands.",
@@ -112,12 +107,10 @@ var getCommands = function() {
                 authors: ["jetpyspayeva-yelena"],
                 tags: ["tools","bem-tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/commands/commands.en.md"
             },
             ru: {
                 title: "Команды",
-                longTitle: "Команды bem-tools",
                 createDate: "19-10-2012",
                 editDate: "",
                 summary: "Описание основных команд bem-tools.",
@@ -125,7 +118,6 @@ var getCommands = function() {
                 authors: ["jetpyspayeva-yelena"],
                 tags: ["tools","bem-tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/commands/commands.ru.md"
             }
         }
@@ -146,7 +138,6 @@ var getLevels = function() {
         source: {
             en: {
                 title: "Levels",
-                longTitle: "bem-tools: levels",
                 createDate: "03-10-2012",
                 editDate: "",
                 summary: "Description of the level .bem/level.js.",
@@ -154,12 +145,10 @@ var getLevels = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["bem-tools","tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/levels/levels.en.md"
             },
             ru: {
                 title: "Уровни переопределения",
-                longTitle: "Уровни переопределения в bem-tools",
                 createDate: "03-10-2012",
                 editDate: "",
                 summary: "Описание уровеня переопределения .bem/level.js.",
@@ -167,7 +156,6 @@ var getLevels = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["bem-tools","tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/levels/levels.ru.md"
             }
         }
@@ -188,7 +176,6 @@ var getDependencies = function() {
         source: {
             en: {
                 title: "Dependences",
-                longTitle: "bem-tools: dependencies declaration",
                 createDate: "27-08-2013",
                 editDate: "",
                 summary: "deps.js — a technology to declare dependencies in BEM",
@@ -196,12 +183,10 @@ var getDependencies = function() {
                 authors: ["bashinsky-pavel"],
                 tags: ["bem-tools","tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/depsjs/depsjs.en.md"
             },
             ru: {
                 title: "Зависимости",
-                longTitle: "deps.js — технология для декларирования зависимостей по БЭМ",
                 createDate: "27-08-2013",
                 editDate: "",
                 summary: "deps.js — технология для декларирования зависимостей по БЭМ",
@@ -209,7 +194,6 @@ var getDependencies = function() {
                 authors: ["bashinsky-pavel"],
                 tags: ["bem-tools","tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/depsjs/depsjs.ru.md"
             }
         }
@@ -230,7 +214,6 @@ var getCustomization = function() {
         source: {
             en: {
                 title: "Сustomization",
-                longTitle: "bem-tools: customization",
                 createDate: "03-10-2012",
                 editDate: "",
                 summary: "Description of the build customization.",
@@ -238,12 +221,10 @@ var getCustomization = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["tools","bem-tools"],
                 translators: ["varankin-vladimir"],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/customization/customization.en.md"
             },
             ru: {
                 title: "Настройка",
-                longTitle: "Настройка bem-tools",
                 createDate: "03-10-2012",
                 editDate: "",
                 summary: "Описание кастомизации сборки.",
@@ -251,7 +232,6 @@ var getCustomization = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["tools","bem-tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/customization/customization.ru.md"
             }
         }
@@ -272,7 +252,6 @@ var getTechModules = function() {
         source: {
             en: {
                 title: "Tech Modules",
-                longTitle: "bem-tools: tech modules",
                 createDate: "03-10-2012",
                 editDate: "23-12-2012",
                 summary: "Several ways to create a tech module.",
@@ -280,12 +259,10 @@ var getTechModules = function() {
                 authors: ["ivanichenko-sergey"],
                 tags: ["bem-tools","tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/tech-modules/tech-modules.en.md"
             },
             ru: {
                 title: "Модули технологий",
-                longTitle: "Модули технологий bem-tools",
                 createDate: "03-10-2012",
                 editDate: "30-11-2013",
                 summary: "Способы создания модуля технологии.",
@@ -293,7 +270,6 @@ var getTechModules = function() {
                 authors: ["ivanichenko-sergey"],
                 tags: ["bem-tools","tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/tech-modules/tech-modules.ru.md"
             }
         }
@@ -314,7 +290,6 @@ var getApiUsage = function() {
         source: {
             en: {
                 title: "API usage",
-                longTitle: "bem-tools: API usage",
                 createDate: "03-10-2012",
                 editDate: "",
                 summary: "The document explains how use bem-tools from API.",
@@ -322,12 +297,10 @@ var getApiUsage = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["tools","bem-tools", "API"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/api/api.en.md"
             },
             ru: {
                 title: "Использование через API",
-                longTitle: "Использование bem-tools через API",
                 createDate: "03-10-2012",
                 editDate: "",
                 summary: "Использование команды bem-tools через API.",
@@ -335,7 +308,6 @@ var getApiUsage = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["tools","bem-tools", "API"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/api/api.ru.md"
             }
         }
@@ -356,7 +328,6 @@ var getCreatingSubcommands = function() {
         source: {
             en: {
                 title: "Creating subcommands",
-                longTitle: "Extension of the bem-tools standard set of commands with subcommands modules",
                 createDate: "05-09-2013",
                 editDate: "",
                 summary: "Starting from `bem-tools 1.0.0` it is possible to extend standard set of commands with subcommands modules.",
@@ -364,12 +335,10 @@ var getCreatingSubcommands = function() {
                 authors: ["tatarincev-sergej"],
                 tags: ["bem-tools","tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/creating-subcommands/creating-subcommands.en.md"
             },
             ru: {
                 title: "Создание подкоманд",
-                longTitle: "Расширение набора команд bem-tools при помощи модулей подкоманд",
                 createDate: "05-09-2013",
                 editDate: "",
                 summary: "Начиная с версии `bem-tools` `1.0.0` cтандартный набор команд можно расширить при помощи модулей подкоманд.",
@@ -377,7 +346,6 @@ var getCreatingSubcommands = function() {
                 authors: ["tatarincev-sergej"],
                 tags: ["bem-tools","tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/creating-subcommands/creating-subcommands.ru.md"
             }
         }
@@ -398,7 +366,6 @@ var getContribute = function() {
         source: {
             en: {
                 title: "Contribute to development",
-                longTitle: " Contribute to bem-tools development",
                 createDate: "03-10-2012",
                 editDate: "",
                 summary: "Information about autotests execution.",
@@ -406,12 +373,10 @@ var getContribute = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["tools","bem-tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/contribute/contribute.en.md"
             },
             ru: {
                 title: "Участие в разработке",
-                longTitle: "Участие в разработке bem-tools",
                 createDate: "03-10-2012",
                 editDate: "",
                 summary: "Информация о запуске автотестов.",
@@ -419,7 +384,6 @@ var getContribute = function() {
                 authors: ["alaev-vladimir"],
                 tags: ["tools","bem-tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/bem/bem-tools/tree/dev/docs/contribute/contribute.ru.md"
             }
         }

@@ -36,7 +36,6 @@ var getHowItWorks = function() {
                 authors: ["belevich-kir"],
                 tags: ["tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/svg/svgo/tree/beminfo/docs/how-it-works/how-it-works.en.md"
             },
             ru: {
@@ -48,7 +47,6 @@ var getHowItWorks = function() {
                 authors: ["belevich-kir"],
                 tags: ["tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/svg/svgo/tree/beminfo/docs/how-it-works/how-it-works.ru.md"
             }
         }
@@ -73,7 +71,6 @@ var getSvgo = function() {
                 authors: ["belevich-kir"],
                 tags: ["tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/svg/svgo/tree/beminfo/docs/svgo/svgo.en.md"
             },
             ru: {
@@ -85,7 +82,6 @@ var getSvgo = function() {
                 authors: ["belevich-kir"],
                 tags: ["tools"],
                 translators: [],
-                type: "tools",
                 content: "https://github.com/svg/svgo/tree/beminfo/docs/svgo/svgo.ru.md"
             }
         }

@@ -36,7 +36,6 @@ var getIBemJs = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["bem-core","i-bem"],
                 translators: [],
-                type: "libs",
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/i-bem-js/i-bem-js.en.md"
             },
             ru: {
@@ -48,7 +47,6 @@ var getIBemJs = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["bem-core","i-bem"],
                 translators: [],
-                type: "libs",
                 content: "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/i-bem-js/i-bem-js.ru.md"
             }
         }

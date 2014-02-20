@@ -35,7 +35,6 @@ var getIntro = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["BEMHTML"],
                 translators: ["nekhaieva-aleksandra"],
-                type: "libs",
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/intro/intro.en.md"
             },
             ru: {
@@ -47,7 +46,6 @@ var getIntro = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["BEMHTML"],
                 translators: [],
-                type: "libs",
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/intro/intro.ru.md"
             }
         }
@@ -70,7 +68,6 @@ var getReference = function() {
                 authors: ["maslinsky-kirill", "ivanichenko-sergey"],
                 tags: ["BEMHTML"],
                 translators: ["nekhaieva-aleksandra"],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/reference/reference.en.md"
             },
             ru: {
@@ -82,7 +79,6 @@ var getReference = function() {
                 authors: ["maslinsky-kirill", "ivanichenko-sergey"],
                 tags: ["BEMHTML"],
                 translators: [],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/reference/reference.ru.md"
             }
         }
@@ -105,7 +101,6 @@ var getRationale = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["BEMHTML"],
                 translators: ["nekhaieva-aleksandra"],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/rationale/rationale.en.md"
             },
             ru: {
@@ -117,7 +112,6 @@ var getRationale = function() {
                 authors: ["maslinsky-kirill"],
                 tags: ["BEMHTML"],
                 translators: [],
-                type: ["libs", "tools"],
                 content: "https://github.com/tormozz48/bem-core/tree/b1.1.0/common.docs/rationale/rationale.ru.md"
             }
         }
