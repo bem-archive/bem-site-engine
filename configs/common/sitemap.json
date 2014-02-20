@@ -682,7 +682,7 @@
     },
     {
         "title": {
-            "en": "Study materials",
+            "en": "Tutorials",
             "ru": "Учебные материалы"
         },
         "route": {
@@ -693,8 +693,8 @@
         "items": [
             {
                 "title": {
-                    "en": "Articles",
-                    "ru": "Статьи"
+                    "en": "Tutorials",
+                    "ru": "Руководства"
                 },
                 "route": {
                     "conditions": {
