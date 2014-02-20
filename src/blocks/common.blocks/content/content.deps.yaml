@@ -2,13 +2,9 @@
   required: true
   elems: [dom, html, tree]
 
-- elems: [content-area, fullscreen]
+- block: code
+- block: link
+
 - mods:
-    view:
-      - post
-      - posts
-      - index
-      - authors
-      - author
-      - tags
-      - block
+    view: [post, posts, index, authors, author, block, tags]
+- elems: [content-area, fullscreen]

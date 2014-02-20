@@ -1,20 +1,14 @@
-.link
+:link
 {
     text-decoration: none;
+
     color: #268bd2;
 }
 
-.link:link
+:link:hover,
+:visited:hover
 {
-    color: #268bd2;
-}
+    transition: color .15s ease-out;
 
-.link:hover
-{
-
-    -webkit-transition: color .15s ease-out;
-    -moz-transition: color .15s ease-out;
-    -ms-transition: color .15s ease-out;
-    -o-transition: color .15s ease-out;
-    transition: color .15s ease-out;;
+    color: #000;
 }

@@ -67,7 +67,7 @@ block post, mod view list-item {
     title: {
         elem: 'title',
         url: this.ctx.node.url,
-        title: this.ctx.content.longTitle || this.ctx.content.title
+        content: this.ctx.content.longTitle || this.ctx.content.title
     }
 
     //summary of post

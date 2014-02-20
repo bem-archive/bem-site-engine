@@ -1,8 +1,10 @@
 .logobem
 {
     display: block;
+
     height: 50px;
     margin: 0 0 20px 30px;
+
     background: url('logobem.png') no-repeat;
 }
 
@@ -10,6 +12,7 @@
     .logobem
     {
         height: 20px;
+
         background-size: contain;
     }
 }

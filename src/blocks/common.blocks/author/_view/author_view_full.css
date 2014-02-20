@@ -8,6 +8,7 @@
 {
     padding-top: 8px;
     padding-left: 20px;
+
     vertical-align: top;
 }
 
@@ -28,7 +29,6 @@
 {
     padding: 5px 5px 2px;
 }
-
 
 .contact-info .author__e-mail,
 .contact-info .author__twitter,
@@ -52,5 +52,6 @@
 .author_view_full .author__value
 {
     padding: 0 0 0 10px;
+
     vertical-align: top;
 }

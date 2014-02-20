@@ -1,17 +1,10 @@
 block post, elem title {
 
-    content: {
+    content: this.ctx.content
+
+    content, this.ctx.url: {
         block: 'link',
         url: this.ctx.url,
-        content: this.ctx.title
-    }
-}
-
-block post, mod view full, elem title {
-
-    content: {
-        block: 'link',
-        url: null,
-        content: this.ctx.title
+        content: this.ctx.content
     }
 }

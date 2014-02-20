@@ -1,10 +1,9 @@
 .content
 {
-    box-sizing: border-box;
     position: relative;
+
+    box-sizing: border-box;
     height: 100%;
-    -webkit-flex: auto;
-       -moz-flex: auto;
-        -ms-flex: auto;
-            flex: auto;
+
+    flex: auto;
 }

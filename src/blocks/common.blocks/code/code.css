@@ -1,0 +1,21 @@
+.code,
+code
+{
+    font-family: Menlo, Monaco, "Courier New", monospace;
+    font-size: 14px;
+
+    display: inline-block;
+
+    margin: 2px;
+    padding: 1px 5px;
+
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+
+}
+
+pre code
+{
+    background-color: #F7F7F9;
+}

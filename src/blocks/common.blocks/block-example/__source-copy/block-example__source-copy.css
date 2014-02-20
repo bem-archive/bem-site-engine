@@ -1,0 +1,44 @@
+.block-example__source-copy
+{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    padding: 5px;
+
+    border: 1px solid #8F8F8F;
+    border-radius: 2px;
+}
+
+/* For zeroclipboard module */
+.source-copy-hover
+{
+    border-color: #000;
+    background-color: #fff;
+}
+
+.block-example__source-copy_complete_yes
+{
+    border-color: #000;
+    background-color: #FFD94D;
+}
+/* END For zeroclipboard module */
+
+.block-example__source-copy:before
+{
+    display: block;
+
+    width: 24px;
+    height: 24px;
+
+    content: "";
+
+    opacity: .6;
+    background: url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20%3F%3E%3Csvg%20baseProfile%3D%22tiny%22%20height%3D%2224px%22%20id%3D%22Layer_1%22%20version%3D%221.2%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224px%22%20xml%3Aspace%3D%22preserve%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Cpath%20d%3D%22M18%2C4H8C6.896%2C4%2C6%2C4.896%2C6%2C6v2H5c-1.104%2C0-2%2C0.896-2%2C2v9c0%2C1.104%2C0.896%2C2%2C2%2C2h9c1.104%2C0%2C2-0.896%2C2-2v-1h2%20%20c1.104%2C0%2C2-0.896%2C2-2V6C20%2C4.896%2C19.104%2C4%2C18%2C4z%20M5%2C19v-9h3h5.5c0.275%2C0%2C0.5%2C0.225%2C0.5%2C0.5V16v3H5z%20M18%2C16h-3v-5.5%20%20C15%2C9.673%2C14.327%2C9%2C13.5%2C9H8V8V6h10V16z%22%2F%3E%3C%2Fsvg%3E);
+    background-size: 24px;
+}
+
+.block-example__source-copy:hover:before
+{
+    opacity: 1;
+}
