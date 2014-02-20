@@ -1,10 +1,13 @@
 .menu-list_main
 {
-    background: black;
-    color: #FFFFFF;
-    flex: 0 0 200px;
     padding-top: 20px;
+
     vertical-align: top;
+
+    color: #fff;
+    background: black;
+
+    flex: 0 0 200px;
 }
 
 .menu-list_main .menu-list__item
@@ -12,7 +15,7 @@
     transition: .3s color;
 }
 
-.menu-list_main .menu-list__item:hover, 
+.menu-list_main .menu-list__item:hover,
 .menu-list_main .menu-list__item .link:hover
 {
     color: #FFD94D;
@@ -29,14 +32,16 @@
     color: #FFD94D;
 }
 
-
 .menu-list_main .menu-list__item_type_group,
 .menu-list_main .menu-list__item > .link
 {
     display: block;
+
     padding: 10px 10px 7px 10px;
+
     text-decoration: none;
-    color: #ffffff;
+
+    color: #fff;
 }
 
 @media screen and (max-height:700px) {

@@ -1,12 +1,14 @@
 .lang-switch,
 .lang-switch .link
 {
-    color: #FFFFFF;
+    font-size: 1em;
+
+    padding: 0 0 10px 20px;
 
     transition: .3s color;
-    font-size: 1em;
-    padding: 0px 0 10px 20px;
     letter-spacing: 1px;
+
+    color: #FFFFFF;
 }
 
 .lang-switch:hover {

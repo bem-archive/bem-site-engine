@@ -1,3 +1,0 @@
- block post, elem fullscreen {
-    attrs: { title: BEM.I18N('post', 'fullscreen') }
-}
