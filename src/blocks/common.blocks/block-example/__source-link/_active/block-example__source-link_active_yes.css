@@ -1,10 +1,9 @@
-a.example__source-link_active_yes,
-.example__source-link_active_yes:link
+.block-example__source-link_active_yes
 {
     color: #000;
 }
 
-.example__source-link_active_yes:after
+.block-example__source-link_active_yes:after
 {
     opacity: 1;
 }

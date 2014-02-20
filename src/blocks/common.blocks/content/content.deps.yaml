@@ -3,6 +3,7 @@
   elems: [dom, html, tree]
 
 - block: code
+- block: link
 
 - elems: [content-area, fullscreen]
 - mods:
