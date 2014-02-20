@@ -138,6 +138,7 @@ var loadSourcesForNodes = function(nodesWithSource) {
                     return loadMDFile(res.node, LANG.EN, res.repo);
                 })
                 .then(function(res) {
+                    logger.verbose('Collect source for key %s', node.source[LANG.EN].content);
                     collected.docs.push({
                         id: node.source[LANG.EN].content,
                         source: res
@@ -148,7 +149,8 @@ var loadSourcesForNodes = function(nodesWithSource) {
                 .then(function(res) {
                     return loadMDFile(res.node, LANG.RU, res.repo);
                 })
-                .then(function() {
+                .then(function(res) {
+                    logger.verbose('Collect source for key %s', node.source[LANG.RU].content);
                     collected.docs.push({
                         id: node.source[LANG.RU].content,
                         source: res
@@ -221,10 +223,10 @@ var analyzeMetaInformation = function(node, lang, collected) {
             };
         })(content);
 
-        logger.verbose('get repo from source user: %s repo: %s ref: %s path: %s',
-            repo.user, repo.repo, repo.ref, repo.path);
+        //logger.verbose('get repo from source user: %s repo: %s ref: %s path: %s',
+        //    repo.user, repo.repo, repo.ref, repo.path);
 
-        //set repo information
+        //set repo information for issues and prose.io links
         node.source[lang].repo = {
             issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
                 repo.host, repo.user, repo.repo, meta.title),
@@ -244,6 +246,13 @@ var analyzeMetaInformation = function(node, lang, collected) {
     return def.promise();
 };
 
+/**
+ * Loads *.md file for source of node
+ * @param node - {Object} node of sitemap model
+ * @param lang - {String} language key
+ * @param repo - {Object} repository object
+ * @returns {*|Q.IPromise<U>|Q.Promise<U>}
+ */
 var loadMDFile = function(node, lang, repo) {
     return common.loadData(common.PROVIDER_GITHUB_API, { repository: repo })
         .then(function(md) {
@@ -265,8 +274,8 @@ var loadMDFile = function(node, lang, repo) {
 };
 
 /**
- * Creates backup object, save it into json file and
- * upload it via yandex disk api
+ * Saves docs object into *.json file in dev enviroment
+ * or upload it to Yandex Disk in production enviroment
  * @param docs - {Object} object with fields:
  * - id {String} link to md file
  * - source {Object} source of node
@@ -291,6 +300,12 @@ var saveAndUploadDocs = function(content) {
     }
 };
 
+/**
+ * Saves sitemap model object into *.json file in dev enviroment
+ * or upload it to Yandex Disk in production enviroment
+ * @param sitemap - {Object} sitemap model
+ * @returns {*}
+ */
 var saveAndUploadSitemap = function(sitemap) {
     logger.debug('Save sitemap to file or upload it to Yandex Disk');
 

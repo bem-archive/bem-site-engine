@@ -43,7 +43,15 @@ module.exports = {
             tags = content.tags;
 
             nodesWithSource.forEach(function(node) {
-                node.source = content.docs[node.source];
+                ['en', 'ru'].forEach(function(lang) {
+                   if(node.source[lang]) {
+                       var f = _.find(content.docs, function(item) {
+                           return item.id === node.source[lang].content;
+                       });
+
+                       node.source[lang].content = f && f.source;
+                   }
+                });
             });
 
             return nodesWithSource;

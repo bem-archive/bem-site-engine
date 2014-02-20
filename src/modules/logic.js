@@ -166,6 +166,7 @@ module.exports = {
                     isNeedToDrawChildNodes = isGroup || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
 
                 if(isNeedToDrawChildNodes) {
+
                     _node.items.forEach(function(item) {
                         traverseTreeNodesDown(item);
                     });
