@@ -24,34 +24,56 @@ var MSG = {
 
 module.exports = {
     run: function() {
-        logger.info('Collect docs start');
+        logger.info('-- sitemap_compiler module start --');
 
         var _sitemap;
 
         data.common.init();
 
-        return common.loadData(common.PROVIDER_FILE, {
-            path: path.resolve(config.get('data:sitemap:file'))
-        })
-        .then(function(sitemap) {
-            _sitemap = sitemap;
-            return collectNodesWithSource(sitemap);
-        })
-        .then(function(nodeWithSources) {
-            return loadSourcesForNodes(nodeWithSources);
-        })
-        .then(function() {
-            return saveAndUploadSitemap(_sitemap);
-        })
-        .then(
-            function() {
-                logger.info('Collect docs end successfully');
-            },
-            function() {
-                logger.error('Error occur while saving and uploading data');
-            }
-        );
+        getSitemap()
+            .then(function(sitemap) {
+                _sitemap = sitemap;
+                return collectNodesWithSource(sitemap);
+            })
+            .then(function(nodeWithSources) {
+                return loadSourcesForNodes(nodeWithSources);
+            })
+            .then(function(docs) {
+                return vow.all([
+                    saveAndUploadSitemap(_sitemap),
+                    saveAndUploadDocs(docs)
+                ]);
+            })
+            .then(
+                function() {
+                    logger.info('-- sitemap_compiler successfully finished --');
+                },
+                function() {
+                    logger.error('Error occur while compile models and loading dicumentation');
+                }
+            );
     }
+};
+
+/**
+ * Resolves sitemap js model
+ * @returns {*|Q.Promise<T>}
+ */
+var getSitemap  = function() {
+    logger.debug('Get sitemap start');
+
+    var def = vow.defer(),
+        sitemap;
+    try {
+        sitemap = require('../../../model').get();
+        def.resolve(sitemap);
+
+        logger.debug('Sitemap js model has been loaded successfully');
+    }catch(err) {
+        logger.error('Can not resolve valid sitemap js model');
+        def.reject(err.message);
+    }
+    return def.promise();
 };
 
 /**
@@ -60,35 +82,42 @@ module.exports = {
  * @returns {Array} - array of nodes
  */
 var collectNodesWithSource = function(sitemap) {
+    logger.debug('Collect nodes with source start');
 
     var nodesWithSource = [];
 
-    /**
-     * Recursive function for traversing tree model
-     * @param node {Object} - single node of sitemap model
-     */
-    var traverseTreeNodes = function(node) {
+    try {
+        /**
+         * Recursive function for traversing tree model
+         * @param node {Object} - single node of sitemap model
+         */
+        var traverseTreeNodes = function(node) {
 
-        if(node.source) {
-           nodesWithSource.push(node);
-        }
+            if(node.source) {
+               nodesWithSource.push(node);
+            }
 
-        if(node.items) {
-            node.items.forEach(function(item) {
-                traverseTreeNodes(item);
-            });
-        }
-    };
+            if(node.items) {
+                node.items.forEach(function(item) {
+                    traverseTreeNodes(item);
+                });
+            }
+        };
 
-    sitemap.forEach(function(item) {
-        traverseTreeNodes(item);
-    });
+        sitemap.forEach(function(item) {
+            traverseTreeNodes(item);
+        });
+
+        logger.debug('Collect nodes with source successfully finished');
+    }catch(err) {
+        logger.error('Can not traverse throught sitemap model and extrude source nodes');
+    }
 
     return nodesWithSource;
 };
 
 var loadSourcesForNodes = function(nodesWithSource) {
-    logger.info('Load all docs start');
+    logger.debug('Load sources for nodes start');
 
     var collected = {
         docs: [],
@@ -129,7 +158,8 @@ var loadSourcesForNodes = function(nodesWithSource) {
     });
 
     return vow.allResolved(promises).then(function() {
-        return saveAndUploadDocs(collected);
+        logger.debug('All loading operations for docs have been performed');
+        return collected;
     });
 };
 
@@ -238,7 +268,7 @@ var loadMDFile = function(node, lang, repo) {
  * Creates backup object, save it into json file and
  * upload it via yandex disk api
  * @param docs - {Object} object with fields:
- * - id {String} unique id of node
+ * - id {String} link to md file
  * - source {Object} source of node
  * @param collected - {Object} object with fields:
  * - authors {Array} - array of unique authors
@@ -246,7 +276,7 @@ var loadMDFile = function(node, lang, repo) {
  * - tags {Array} - array of unique tags
  */
 var saveAndUploadDocs = function(content) {
-    logger.info('Save documentation to file and upload it');
+    logger.debug('Save documentation to file or upload it to Yandex Disk');
 
     if ('production' === process.env.NODE_ENV) {
         return common.saveData(common.PROVIDER_YANDEX_DISK, {
@@ -262,6 +292,8 @@ var saveAndUploadDocs = function(content) {
 };
 
 var saveAndUploadSitemap = function(sitemap) {
+    logger.debug('Save sitemap to file or upload it to Yandex Disk');
+
     if ('production' === process.env.NODE_ENV) {
         return common.saveData(common.PROVIDER_YANDEX_DISK, {
             path: config.get('data:sitemap:disk'),
