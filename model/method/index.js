@@ -11,15 +11,15 @@ module.exports = {
             },
             source: {
                 en: {
-                    "title": "Methodology",
-                    "createDate": "02-10-2012",
-                    "editDate": "15-06-2012",
-                    "summary": "Foreword to BEM methodology.",
-                    "thumbnail": "",
-                    "authors": ["harisov-vitaly"],
-                    "tags": ["BEM"],
-                    "translators": ["belov-sergey"],
-                    "content": "https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md"
+                    title: "Methodology",
+                    createDate: "02-10-2012",
+                    editDate: "15-06-2012",
+                    summary: "Foreword to BEM methodology.",
+                    thumbnail: "",
+                    authors: ["harisov-vitaly"],
+                    tags: ["BEM"],
+                    translators: ["belov-sergey"],
+                    content: "https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md"
                 },
                 ru: {
                     title: "Методология",
@@ -30,7 +30,7 @@ module.exports = {
                     authors: ["harisov-vitaly"],
                     tags: ["BEM"],
                     translators: [],
-                    content: "https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md"
+                    content: "https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.ru.md"
                 }
             },
             items: [
