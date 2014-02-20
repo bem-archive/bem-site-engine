@@ -556,29 +556,6 @@
                                     }
 
                                 ]
-                            },
-                            {
-                                "title": "i-bem.js",
-                                "route": {
-                                    "conditions": {
-                                        "level": "i-bem-js"
-                                    }
-                                },
-                                "type": "group",
-                                "items": [
-                                    {
-                                        "title": {
-                                            "en": "i-bem.js Guide Book",
-                                            "ru": "i-bem.js: Руководство пользователя"
-                                        },
-                                        "route": {
-                                            "conditions": {
-                                                "id": "i-bem-js"
-                                            }
-                                        },
-                                        "source": "https://github.com/tormozz48/bem-core/tree/b1.0.0/common.docs/i-bem-js"
-                                    }
-                                ]
                             }
                         ]
                     },
