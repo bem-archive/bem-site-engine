@@ -39,7 +39,7 @@ var getNewBeminfoSite = function() {
                 id: "new-beminfo-site"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "New bem.info",
                 createDate: "21-11-2013",
@@ -77,7 +77,7 @@ var getBemupYac2013 = function() {
                 id: "bemup-yac2013"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "Announcement of Second BEM Meetup!",
                 createDate: "06-09-2013",
@@ -115,7 +115,7 @@ var getBemTools064 = function() {
                 id: "bem-tools-0-6-4"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "bem-tools v0.6.4",
                 createDate: "02-07-2013",
@@ -153,7 +153,7 @@ var getBemupTalks = function() {
                 id: "bemup-talks"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "First BEMup Talks Archive",
                 createDate: "20-08-2013",
@@ -192,7 +192,7 @@ var getBemupPromo = function() {
                 id: "bemup-promo"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "BEMup — Watch It, Feel It!",
                 createDate: "13-08-2013",
@@ -230,7 +230,7 @@ var getBemComponents = function() {
                 id: "bem-components"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "Rename of 'bem-controls' to 'bem-components'",
                 createDate: "05-08-2013",
@@ -268,7 +268,7 @@ var getBemup = function() {
                 id: "bemup"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "Announcement of First BEM Meetup!",
                 createDate: "23-07-2013",
@@ -306,7 +306,7 @@ var getBemCli = function() {
                 id: "bem-cli"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "bem-cli: Launch bem-tools Locally",
                 createDate: "09-07-2013",
@@ -344,7 +344,7 @@ var getBemTools0533 = function() {
                 id: "bem-tools-0-5-33"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "bem-tools v0.5.33",
                 createDate: "02-07-2013",
@@ -382,7 +382,7 @@ var getAnygridBemNotations = function() {
                 id: "anygrid-bem-notations"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "AnyGrid – CSS Grids Generator that Uses BEM-Notations and etc!",
                 createDate: "18-06-2013",
@@ -420,7 +420,7 @@ var get201302MaintainableFrontendDevWithBem = function() {
                 id: "2013-02-maintainable-frontend-dev-with-bem"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "BEM at MetaRefresh 2013",
                 createDate: "22-02-2013",
@@ -458,7 +458,7 @@ var get201302BemGoesToIndia = function() {
                 id: "2013-02-bem-goes-to-india"
             }
         },
-        content: {
+        source: {
             en: {
                 title: "BEM goes to India",
                 createDate: "12-02-2013",

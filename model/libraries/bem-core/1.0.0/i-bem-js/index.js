@@ -1,7 +1,7 @@
 module.exports = {
     get: function() {
         return {
-            title: "i-bem.js"
+            title: "i-bem.js",
             route: {
                 conditions: {
                     level: "i-bem-js"

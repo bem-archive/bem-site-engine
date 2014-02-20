@@ -1,6 +1,6 @@
 var bem = require('./bem'),
     optimizers = require('./optimizers'),
-    templatingEngines = require('./templatingEngines'),
+    templatingEngines = require('./templating-engines'),
     parsers = require('./parsers');
 
 module.exports = {
