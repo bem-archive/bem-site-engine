@@ -167,7 +167,7 @@ module.exports = {
 
                 if(isNeedToDrawChildNodes) {
 
-                    _node.items.forEach(function(item) {
+                    _node.items && _node.items.forEach(function(item) {
                         traverseTreeNodesDown(item);
                     });
                 }
