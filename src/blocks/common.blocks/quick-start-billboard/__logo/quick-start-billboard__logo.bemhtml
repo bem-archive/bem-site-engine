@@ -4,7 +4,7 @@ block quick-start-billboard, elem logo {
         var index = Math.round(10 * Math.random()),
             ctx = this.ctx,
             mod = ['batman', 'breaks', 'captain-america',
-                    'generated', 'ironman', 'motion', 'robin',
+                    'generated', 'motion', 'robin',
                     'scheme', 'spots', 'stripe', 'waves'][index];
 
         ctx.mix || (ctx.mix = []);
