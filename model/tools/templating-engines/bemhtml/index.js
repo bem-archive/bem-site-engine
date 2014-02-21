@@ -23,7 +23,7 @@ var getReference100 = function() {
             en: "BEMHTML-Reference",
             ru: "Референс по BEMHTML"
         },
-        url: "/libs/bem-core/1.0.0/reference/#",
+        url: "/libs/bem-core/1.0.0/bemhtml/reference/#",
         source: {
             en: {
                 title: "BEMHTML-Reference",
@@ -57,7 +57,7 @@ var getReference110 = function() {
             en: "BEMHTML-Reference",
             ru: "Референс по BEMHTML"
         },
-        url: "/libs/bem-core/1.1.0/reference/#",
+        url: "/libs/bem-core/1.1.0/bemhtml/reference/#",
         source: {
             en: {
                 title: "BEMHTML-Reference",
