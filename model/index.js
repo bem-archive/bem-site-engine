@@ -16,7 +16,7 @@ module.exports = {
 
             getDelimeter(),
 
-            //tutorials.get(),
+            tutorials.get(),
             articles.get(),
             news.get(),
             getTags(),
