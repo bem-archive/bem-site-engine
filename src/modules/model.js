@@ -22,9 +22,21 @@ module.exports = {
 
         data.common.init();
 
-        return data.common.loadData(data.common.PROVIDER_FILE, {
-                path: path.join('configs', 'common', 'sitemap.json')
-            })
+        var promise;
+
+        if('production' === process.env.NODE_ENV) {
+            promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
+                    path: config.get('data:sitemap:disk')
+                }).then(function(content) {
+                    return JSON.parse(content);
+                });
+        }else {
+            promise = data.common.loadData(data.common.PROVIDER_FILE, {
+                path: config.get('data:sitemap:file')
+            });
+        }
+
+        return promise
             .then(function(content) {
                 sitemap = content;
                 return createModel(sitemap);
@@ -140,8 +152,7 @@ var createModel = function(sitemap) {
                 nodesWithLib.push(node);
             }
 
-            logger.verbose('id = %s level = %s url = %s source = %s',
-                    node.id, node.level, node.url, node.source);
+            logger.verbose('id = %s level = %s url = %s', node.id, node.level, node.url);
 
             //deep into node items
             if(node.items) {

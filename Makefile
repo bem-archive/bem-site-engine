@@ -42,6 +42,6 @@ bower_deps: npm_deps
 npm_deps:
 	npm install
 
-.PHONY: doc_loader
-doc_loader:
-	node bin/doc_loader.js
+.PHONY: sitemap_compiler
+sitemap_compiler:
+	node bin/sitemap_compiler.js
