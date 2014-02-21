@@ -37,7 +37,14 @@ module.exports = {
 
             res.on('end', function() {
                 logger.debug('load data successfully finished from url %s', url);
-                def.resolve(JSON.parse(data));
+                var res;
+                try {
+                    res = JSON.parse(data);
+                    def.resolve(res);
+                }catch(err) {
+                    def.reject(err.message);
+                }
+
             });
         }).on('error', function(e) {
             logger.error('load data failed with error %s from url %s', e.message, url);
