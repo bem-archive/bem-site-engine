@@ -36,8 +36,26 @@ module.exports = {
                 }
             },
             items: [
-                bemCore.get()
+                bemCore.get(),
+                getIslandLib("islands-components"),
+                getIslandLib("islands-user"),
+                getIslandLib("islands-page"),
+                getIslandLib("islands-search"),
+                getIslandLib("islands-services")
             ]
         };
+    }
+};
+
+var getIslandLib = function(lib) {
+    return {
+        title: lib,
+        route: {
+            conditions: {
+                    lib: lib
+                }
+        },
+        type: "group",
+        lib: lib
     }
 };
