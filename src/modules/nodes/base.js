@@ -126,7 +126,7 @@ exports.BaseNode.prototype = {
                 if(node.url) {
                     self.breadcrumbs.unshift({
                         title: node.title,
-                        url: node.url
+                        url: node !== self ? node.url : null
                     });
                 }
 
@@ -135,8 +135,7 @@ exports.BaseNode.prototype = {
                 }
             };
 
-        if(this.parent) {
-            traverse(this.parent);
-        }
+        traverse(this);
+
     }
 };

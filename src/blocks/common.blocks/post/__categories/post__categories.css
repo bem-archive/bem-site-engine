@@ -1,0 +1,18 @@
+.post__categories
+{
+    display: none;
+
+    padding-top: 10px;
+
+    opacity: .7;
+}
+
+.post__categories .link
+{
+    color: #268bd2;
+}
+
+.page_fullscreen .post__categories
+{
+    display: block;
+}
