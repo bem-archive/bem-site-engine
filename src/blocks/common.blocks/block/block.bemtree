@@ -154,8 +154,8 @@ block block {
                                     {
                                         block: 'link',
                                         mods: { type: 'block' },
-                                        attrs: { title: BEM.I18N('block-example', 'copy-title') },
-                                        mix: [{ block: 'block-example', elem: 'source-copy' }]
+                                        mix: [{ block: 'block-example', elem: 'source-copy' }],
+                                        content: BEM.I18N('block-example', 'copy')
                                     }
                                 ]
                             },
