@@ -357,6 +357,10 @@ var addLibraryNodes = function(nodesWithLib) {
                 }
             };
 
+            if(!version[_config.key]) {
+                return;
+            }
+
             collectConditionsForBaseRoute(baseRoute, conditions);
 
             //create node
