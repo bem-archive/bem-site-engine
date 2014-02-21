@@ -58,6 +58,11 @@ var getReference = function() {
             en: "BEMHTML-Reference",
             ru: "Референс по BEMHTML"
         },
+        route: {
+            conditions: {
+                id: "reference"
+            }
+        },
         source: {
             en: {
                 title: "BEMHTML-Reference",
@@ -90,6 +95,11 @@ var getRationale = function() {
         title: {
             en: "BEMHTML: Template Engine for BEM",
             ru: "BEMHTML: шаблонизатор для БЭМ"
+        },
+        route: {
+            conditions: {
+                id: "rationale"
+            }
         },
         source: {
             en: {
