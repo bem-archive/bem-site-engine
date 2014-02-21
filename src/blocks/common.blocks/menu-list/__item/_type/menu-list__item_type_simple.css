@@ -1,0 +1,9 @@
+.menu-list__item_type_simple
+{
+    transition: background .4s ease;
+}
+
+.menu-list__item_type_simple:hover
+{
+    background: rgba(255,235,160,.35);
+}

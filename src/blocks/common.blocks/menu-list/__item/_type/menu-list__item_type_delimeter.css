@@ -1,9 +1,8 @@
-.menu-list__item_type_delimeter,
-.menu-list_main .menu-list__item_type_delimeter:hover,
-.menu-list_main .menu-list__item_type_delimeter
+.menu-list__item_type_delimeter
 {
     height: 1px;
     margin: 10px 20px;
+    padding: 0;
 
     background-color: #666;
 }

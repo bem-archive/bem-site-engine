@@ -1,19 +1,16 @@
-.menu-list__item_type_group,
-.menu-list__item_type_group.menu-list__item_active
+.menu-list__item_type_group
 {
     line-height: 1.2em;
 
     margin: 0;
-
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    padding: 8px 12px 7px 12px;
 
     border-top: 1px solid rgba(0,0,0,.2);
     border-bottom: 1px solid rgba(0,0,0,.2);
     background: #f6f5f3;
 }
 
-.menu-list__item_type_group:hover
+.menu-list__item_type_group.menu-list__item_active
 {
-    background: #eee;
+    font-weight: bold;
 }
