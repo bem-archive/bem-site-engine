@@ -3,6 +3,7 @@ var u = require('util'),
     _ = require('lodash'),
     md = require('marked'),
     hl = require('highlight.js'),
+    semver = require('semver'),
 
     logger = require('./logger')(module);
 
@@ -105,4 +106,25 @@ exports.getRepoFromSource = function(source, extention) {
         result.user, result.repo, result.ref, result.path);
 
     return result;
+};
+
+/**
+ * Sort library versions function
+ * @param a - {String} first tag value
+ * @param b - {String} second tag value
+ * @returns {number}
+ */
+exports.sortLibraryVerions = function(a, b) {
+    a = semver.clean(a);
+    b = semver.clean(b);
+
+    if(semver.valid(a) !== null && semver.valid(b) !== null) {
+        return semver.gt(a, b) ? 1 : (semver.lt(a, b) ? -1 : 0);
+    }else if(semver.valid(a) !== null) {
+        return 1;
+    }else if(semver.valid(b) !== null) {
+        return -1;
+    }else {
+        return a - b;
+    }
 };

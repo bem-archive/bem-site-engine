@@ -8,6 +8,7 @@ var u = require('util'),
     susanin = require('susanin'),
 
     logger = require('../logger')(module),
+    util  = require('../util'),
     config = require('../config'),
     constants = require('./constants'),
     nodes = require('./nodes'),
@@ -302,7 +303,7 @@ var addLibraryNodes = function(nodesWithLib) {
             var versions = data.libraries.getLibraries()[targetNode.lib];
             if(!versions) return;
 
-            Object.keys(versions).forEach(function(key) {
+            Object.keys(versions).sort(util.sortLibraryVerions).forEach(function(key) {
 
                 var version = versions[key],
                     conditions = {
