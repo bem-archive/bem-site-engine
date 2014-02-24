@@ -3,6 +3,10 @@
     height: 1px;
     margin: 10px 20px;
     padding: 0;
+}
 
+.menu-list_main .menu-list__item_type_delimeter:hover,
+.menu-list_main .menu-list__item_type_delimeter
+{
     background-color: #666;
 }

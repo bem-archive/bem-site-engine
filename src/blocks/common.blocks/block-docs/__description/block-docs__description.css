@@ -37,8 +37,6 @@
 
 .block-docs__description .b-text__li:before
 {
-    font-size: 1em;
-
     position: absolute;
 
     margin: 0 0 0 -1.5em;
