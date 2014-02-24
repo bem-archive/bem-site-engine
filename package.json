@@ -28,7 +28,8 @@
     "ometajs": "3.1.4",
     "marked": "git://github.com/dab/marked.git",
     "highlight.js": "7",
-    "yandex-disk": "0.0.4"
+    "yandex-disk": "0.0.4",
+    "semver": "2.2.1"
   },
   "devDependencies": {
     "enb": "0.8.46",
