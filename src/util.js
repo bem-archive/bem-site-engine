@@ -2,41 +2,16 @@ var u = require('util'),
 
     _ = require('lodash'),
     md = require('marked'),
-    hl = require('highlight.js'),
     semver = require('semver'),
 
     logger = require('./logger')(module);
 
 exports.mdToHtml = function(content) {
-    var languages = {};
-
     return md(content, {
-            gfm: true,
-            pedantic: false,
-            sanitize: false,
-            highlight: function(code, lang) {
-                if (!lang) {
-                    return code;
-                }
-                var res = hl.highlight(function(alias) {
-                    return {
-                        'js' : 'javascript',
-                        'patch': 'diff',
-                        'md': 'markdown',
-                        'html': 'xml',
-                        'sh': 'bash'
-                    }[alias] || alias;
-                }(lang), code);
-
-                languages[lang] = res.language;
-                return res.value;
-            }
-        })
-        .replace(/<pre><code class="lang-(.+?)">([\s\S]+?)<\/code><\/pre>/gm,
-            function(m, lang, code) {
-                return '<pre class="highlight"><code class="highlight__code ' + languages[lang] + '">' + code + '</code></pre>';
-            }
-        );
+        gfm: true,
+        pedantic: false,
+        sanitize: false
+    });
 };
 
 /**

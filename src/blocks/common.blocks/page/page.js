@@ -1,9 +1,13 @@
-modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
+modules.define('i-bem__dom', ['jquery', 'highlightjs'], function(provide, $, hljs, BEMDOM) {
 
 BEMDOM.decl('page', {
     onSetMod: {
         js: {
             inited: function() {
+                $('pre code').each(function(idx, el) {
+                    hljs.highlightBlock(el);
+                });
+
                 this._isTouch() && this.setMod('touch', 'yes');
             }
         }
@@ -32,6 +36,8 @@ BEMDOM.decl('page', {
         this.liveBindTo('fullscreen', 'pointerclick', function() {
             this._onClick();
         });
+
+        return false;
     }
 });
 
