@@ -330,6 +330,7 @@ var addLibraryNodes = function(nodesWithLib) {
                         ru: 'Migration'
                     }
                 });
+
                 addPostToVersion(_node, version, {
                     key: 'changelog',
                     title: {
@@ -337,6 +338,7 @@ var addLibraryNodes = function(nodesWithLib) {
                         ru: 'Changelog'
                     }
                 });
+
                 addLevelsToVersion(_node, version);
             });
         },
