@@ -1,7 +1,6 @@
-modules.define('i-bem__dom', function(provide, BEMDOM) {
+modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
 
 BEMDOM.decl('page', {
-
     onSetMod: {
         js: {
             inited: function() {
@@ -30,7 +29,7 @@ BEMDOM.decl('page', {
 },
 {
     live: function() {
-        this.liveBindTo('fullscreen', 'click', function() {
+        this.liveBindTo('fullscreen', 'pointerclick', function() {
             this._onClick();
         });
     }

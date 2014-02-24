@@ -2,8 +2,8 @@ modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
 
 BEMDOM.decl('tabs', {
 	onSetMod: {
-		'js': {
-			'inited': function() {
+		js: {
+			inited: function() {
                 this._disabled = false;
                 /* показываем текущий pane для активного таба */
                 var currentIndex = this.getCurrentIndex();
@@ -178,9 +178,8 @@ BEMDOM.decl('tabs', {
 
 }, {
     live: function() {
-        this.liveBindTo('tab', 'click', function(e) {
-            this.setActiveTab($(e.target), e);
-            return false;
+        this.liveBindTo('tab', 'pointerclick', function(e) {
+            this.setActiveTab(e.currentTarget, e);
         });
     }
 });
