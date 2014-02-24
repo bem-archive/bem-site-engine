@@ -330,6 +330,7 @@ var addLibraryNodes = function(nodesWithLib) {
                         ru: 'Migration'
                     }
                 });
+
                 addPostToVersion(_node, version, {
                     key: 'changelog',
                     title: {
@@ -337,6 +338,7 @@ var addLibraryNodes = function(nodesWithLib) {
                         ru: 'Changelog'
                     }
                 });
+
                 addLevelsToVersion(_node, version);
             });
         },
@@ -356,6 +358,11 @@ var addLibraryNodes = function(nodesWithLib) {
                     id: _config.key
                 }
             };
+
+            //verify existed docs
+            if(!version[_config.key]) {
+                return;
+            }
 
             collectConditionsForBaseRoute(baseRoute, conditions);
 
@@ -388,18 +395,21 @@ var addLibraryNodes = function(nodesWithLib) {
                     }
                 };
 
-                collectConditionsForBaseRoute(baseRoute, conditions);
+                //verify existed blocks for level
+                if(level.blocks) {
+                    collectConditionsForBaseRoute(baseRoute, conditions);
 
-                //create node
-                var _route = {
-                        route: _.extend({}, { name: baseRoute.name }, conditions),
-                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
-                    },
-                    _node = new nodes.level.LevelNode(_route, targetNode, level);
+                    //create node
+                    var _route = {
+                            route: _.extend({}, { name: baseRoute.name }, conditions),
+                            url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
+                        },
+                        _node = new nodes.level.LevelNode(_route, targetNode, level);
 
-                targetNode.items.push(_node);
+                    targetNode.items.push(_node);
 
-                addBlocksToLevel(_node, version, level);
+                    addBlocksToLevel(_node, version, level);
+                }
             });
         },
 

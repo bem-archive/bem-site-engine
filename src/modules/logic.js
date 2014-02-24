@@ -65,24 +65,24 @@ module.exports = {
     getTitleByNode: function(req, node) {
         logger.debug('get title by request %s and node %s', req.url, node.id);
 
-        var title;
+        var title = '';
 
         if(req.url === '/') {
             return node.title[req.prefLocale];
         }
 
-        if(node.title) {
-            title = node.title[req.prefLocale];
-        }
-
         var traverseTreeNodes = function(node) {
-            if(node.route && node.route.pattern) {
-                return '/' + node.title[req.prefLocale];
+            if(node.title && node.title[req.prefLocale]) {
+                title += node.title[req.prefLocale] + '/';
             }
-            return node.parent ? traverseTreeNodes(node.parent) : '';
+            if(node.parent) {
+                traverseTreeNodes(node.parent);
+            }
         };
 
-        title += traverseTreeNodes(node.parent) + '/BEM';
+        traverseTreeNodes(node);
+
+        title += 'BEM';
 
         logger.debug('page title: %s', title);
         return title;
