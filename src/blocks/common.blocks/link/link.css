@@ -3,6 +3,8 @@
     text-decoration: none;
 
     color: #268bd2;
+
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 :link:hover,
