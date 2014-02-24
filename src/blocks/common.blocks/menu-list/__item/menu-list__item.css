@@ -17,6 +17,5 @@
 @media screen and (max-height:700px) {
     .menu-list__item {
         font-size: 12px;
-        line-height: 0.8em;
     }
 }
