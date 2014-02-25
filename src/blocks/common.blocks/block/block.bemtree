@@ -2,10 +2,12 @@ block block {
 
     content: {
 
-        var _source = this.data.node.source;
+        var node = this.data.node,
+            lang = this.data.lang,
+            _source = node.source;
 
         return [
-            apply('header', this.ctx.name = _source.data.name),
+            apply('header', this.ctx.name = node.title[lang]),
             apply('contents', this.ctx = _source)
         ];
 
@@ -56,7 +58,7 @@ block block {
             });
         }
 
-        if(this.ctx.data.examples && this.ctx.data.examples[0].content.length > 0) {
+        if(this.ctx.data && this.ctx.data.examples && this.ctx.data.examples[0].content.length > 0) {
             tabsHeader.push({
                 elem: 'tab',
                 mods: { 'side': 'right' },
