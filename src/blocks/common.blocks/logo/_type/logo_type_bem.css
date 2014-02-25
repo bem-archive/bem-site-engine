@@ -1,0 +1,13 @@
+.logo_type_bem
+{
+    height: 50px;
+
+    background-image: url('logo_type_bem.png');
+}
+
+@media screen and (max-height:700px) {
+    .logo_type_bem
+    {
+        height: 20px;
+    }
+}

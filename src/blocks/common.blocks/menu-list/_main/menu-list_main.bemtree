@@ -29,7 +29,8 @@ block menu-list, mod main true{
     }
 
     logo: {
-        block: 'logobem',
+        block: 'logo',
+        mods: { type: 'bem' },
         url: this.ctx.url
     }
 
