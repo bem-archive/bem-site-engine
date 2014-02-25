@@ -16,14 +16,14 @@ if (master.isMaster) {
         } catch (e) {}
     }
 
-    logger.silly('luster: register remote command reload');
+    logger.verbose('luster: register remote command reload');
     master.registerRemoteCommand('reload', function(sender, value) {
         logger.info('master receive message reload from sender %s with value %s', sender.wid, value);
     });
 
-    logger.silly('luster: register remote command request');
+    logger.debug('luster: register remote command request');
     master.registerRemoteCommand('request', function(sender, value) {
-        logger.debug('master receive message request from sender %s with value %s', sender.wid, value);
+        logger.verbose('master receive message request from sender %s with value %s', sender.wid, value);
     });
 
     logger.debug('luster: master process started');

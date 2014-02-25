@@ -20,7 +20,7 @@ module.exports = {
         });
 
         return vow
-            .allResolved(promises)
+            .all(promises)
             .then(function() {
                 return nodesWithLib;
             });

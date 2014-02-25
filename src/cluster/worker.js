@@ -11,7 +11,7 @@ if (worker.isWorker) {
         data.docs.reload();
     });
 
-    app.run()
+    app.run(worker)
         .then(function() {
             logger.info('start application for worker with id %s on port %s', worker.wid, process.env.port);
         })

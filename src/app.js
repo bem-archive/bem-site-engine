@@ -10,11 +10,13 @@ var path = require('path'),
     socket = config.get('app:socket'),
     port = config.get('app:port') || process.env.port || 8080;
 
-function run() {
+function run(worker) {
+    worker = worker || { wid: 0 };
+
     var model = require('./modules').model,
         deferred = vow.defer();
 
-    return model.init()
+    return model.init(worker)
         .then(function() {
             router.init();
 

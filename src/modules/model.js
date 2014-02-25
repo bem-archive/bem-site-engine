@@ -14,12 +14,15 @@ var u = require('util'),
     nodes = require('./nodes'),
     data = require('./data');
 
-var sitemap,
+var worker,
+    sitemap,
     routes = {};
 
 module.exports = {
-    init: function() {
-        logger.info('Init site structure and load data');
+    init: function(_worker) {
+        worker = _worker;
+
+        logger.info('Init site structure and load data for worker %s', worker.wid);
 
         data.common.init();
 
@@ -52,6 +55,7 @@ module.exports = {
                 });
             })
             .then(function(res) {
+                logger.debug('All data has been loaded for worker %s', worker.wid);
                 return vow.all([
                     addLibraryNodes(res.libs),
                     addDynamicNodes()
@@ -81,7 +85,7 @@ var setSiteMap = function(_sitemap) {
 };
 
 var createModel = function(sitemap) {
-    logger.info('Process site map');
+    logger.info('Process site map for worker %s', worker.wid);
 
     var def = vow.defer(),
         nodesWithSource = [],
@@ -192,10 +196,10 @@ var createModel = function(sitemap) {
  * grouped menu items
  */
 var addDynamicNodes = function() {
-    logger.info('Add dynamic nodes to sitemap');
+    logger.info('Add dynamic nodes to sitemap for worker %s', worker.wid);
 
     var addDynamicNodesFor = function(_config) {
-        logger.debug('add dynamic nodes for %s', _config.key);
+        logger.debug('add dynamic nodes for %s for worker %s', _config.key, worker.wid);
 
         var def = vow.defer(),
             targetNode,
@@ -205,7 +209,7 @@ var addDynamicNodes = function() {
             targetNode = findNodeByCriteria('dynamic', _config.key);
 
             if(!targetNode) {
-                logger.warn('target node for %s was not found', _config.key);
+                logger.warn('target node for %s was not found for worker %s', _config.key, worker.wid);
 
                 def.resolve();
                 return def.promise();
@@ -243,8 +247,8 @@ var addDynamicNodes = function() {
                 _config.urlHash[item] = _node.url;
                 targetNode.items.push(_node);
 
-                logger.verbose('add dynamic node for %s with id = %s level = %s url = %s',
-                    _config.key, _node.id, _node.level, _node.url);
+                logger.verbose('add dynamic node for %s with id = %s level = %s url = %s for worker %s',
+                    _config.key, _node.id, _node.level, _node.url, worker.wid);
 
                 def.resolve(_node);
             });
@@ -276,7 +280,7 @@ var addDynamicNodes = function() {
 };
 
 var addLibraryNodes = function(nodesWithLib) {
-    logger.info('add library nodes');
+    logger.info('add library nodes for worker %s', worker.wid);
 
     var librariesRepository = config.get('github:librariesRepository');
 
@@ -345,7 +349,7 @@ var addLibraryNodes = function(nodesWithLib) {
         },
 
         addPostToVersion = function(targetNode, version, _config) {
-            logger.debug('add post %s to version %s of library %s', _config.key, version.ref, version.repo);
+            logger.debug('add post %s to version %s of library %s for worker %s', _config.key, version.ref, version.repo, worker.wid);
 
             var baseRoute = targetNode.getBaseRoute();
 
@@ -415,7 +419,7 @@ var addLibraryNodes = function(nodesWithLib) {
         },
 
         addBlocksToLevel = function(targetNode, version, level) {
-            logger.verbose('add blocks to level');
+            logger.verbose('add blocks to level %s of version %s for worker %s', level.name, version.ref, worker.wid);
 
             var baseRoute = targetNode.getBaseRoute();
 
