@@ -4,8 +4,7 @@
   "private": true,
   "dependencies": {
     "bem-core": "git://github.com/bem/bem-core.git#v1.1.0",
-    "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.3",
-    "highlightjs": "8.0.0"
+    "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.3"
   },
   "ignore": [
     "node_modules",
