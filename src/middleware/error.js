@@ -15,7 +15,7 @@ function buildErrorPage(code, lang) {
 
     return builder.build([target])
         .then(function() {
-            return vfs.read(path.join(__dirname, '..', '..', target), 'utf-8');
+            return vfs.read(target, 'utf-8');
         })
         .then(function(page) {
             return page.replace(/\{STATICS_HOST\}/g, staticsUrl);
