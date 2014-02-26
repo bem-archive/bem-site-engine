@@ -9,7 +9,6 @@
   "ignore": [
     "node_modules",
     "configs/current",
-    ".enb/tmp",
-    "src/bundles"
+    ".enb/tmp"
   ]
 }
