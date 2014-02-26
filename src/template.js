@@ -3,7 +3,7 @@ var path = require('path'),
     vow = require('vow'),
     vfs = require('vow-fs'),
     stringify = require('json-stringify-safe'),
-    target = path.resolve(process.cwd(), 'src', 'bundles', 'desktop.bundles', 'common', 'common.min.template.i18n.js'),
+    target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
     config = require('./config'),
     ctx = {
         Vow: vow,
@@ -26,7 +26,7 @@ function apply(ctx, lang, mode) {
 }
 
 function preprocess() {
-    var fullpath = path.join(__dirname, '..', target);
+    var fullpath = path.join(process.cwd(), target);
 
     return vfs.read(fullpath).then(function(source) {
         vm.runInNewContext(source, ctx);

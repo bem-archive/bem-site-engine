@@ -1,7 +1,7 @@
 var path = require('path'),
     vow = require('vow'),
     vfs = require('vow-fs'),
-    enbBuilder = require('enb/lib/server/server-middleware').createBuilder({ cdir: path.join(__dirname, '..') }),
+    enbBuilder = require('enb/lib/server/server-middleware').createBuilder({ cdir: process.cwd() }),
     dropRequireCache = require('enb/lib/fs/drop-require-cache');
 
 function build(targets, process) {
