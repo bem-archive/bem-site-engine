@@ -1,6 +1,6 @@
 var nconf = require('nconf'),
     path = require('path'),
-    configsDir = path.resolve(__dirname, '../configs');
+    configsDir = path.resolve(process.cwd(), 'configs');
 
 nconf
     .argv()

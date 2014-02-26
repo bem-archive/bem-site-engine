@@ -23,14 +23,14 @@ var MSG = {
 };
 
 module.exports = {
-    run: function() {
+    run: function(modelPath) {
         logger.info('-- sitemap_compiler module start --');
 
         var _sitemap;
 
         data.common.init();
 
-        getSitemap()
+        getSitemap(modelPath)
             .then(function(sitemap) {
                 _sitemap = sitemap;
                 return collectNodesWithSource(sitemap);
@@ -59,13 +59,13 @@ module.exports = {
  * Resolves sitemap js model
  * @returns {*|Q.Promise<T>}
  */
-var getSitemap  = function() {
+var getSitemap  = function(modelPath) {
     logger.debug('Get sitemap start');
 
     var def = vow.defer(),
         sitemap;
     try {
-        sitemap = require('../../../model').get();
+        sitemap = require(modelPath).get();
         def.resolve(sitemap);
 
         logger.debug('Sitemap js model has been loaded successfully');
