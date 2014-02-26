@@ -24,7 +24,7 @@ function buildErrorPage(code, lang) {
 
 function loadErrorPages() {
     var langs = config.get('app:languages'),
-        errorBundlesPath = path.join(process.cwd(), 'bundles', 'errors.bundles'),
+        errorBundlesPath = path.join(process.cwd(), 'src', 'bundles', 'errors.bundles'),
         errorPages = {};
 
     return vow.all(langs.map(function(lang) {

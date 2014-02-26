@@ -22,7 +22,7 @@ function run(worker) {
 
             if (process.env.NODE_ENV !== 'production') {
                 var enbServer = require('enb/lib/server/server-middleware'),
-                    rootPath = path.resolve(__dirname, '..');
+                    rootPath = process.cwd();
 
                 app.use(enbServer.createMiddleware({ cdir: rootPath }));
                 app.use(express.static(rootPath));
