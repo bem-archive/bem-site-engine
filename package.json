@@ -28,7 +28,8 @@
     "ometajs": "3.1.4",
     "marked": "git://github.com/dab/marked.git",
     "yandex-disk": "0.0.4",
-    "semver": "2.2.1"
+    "semver": "2.2.1",
+    "nodemon": "1.0.8"
   },
   "devDependencies": {
     "enb": "0.8.46",
@@ -37,7 +38,6 @@
     "enb-autoprefixer-techs": "git://github.yandex-team.ru/blond/enb-autoprefixer-techs.git#v0.0.1",
     "enb-roole-techs": "git://github.yandex-team.ru/blond/enb-roole-techs.git#v0.0.1",
     "bower": "1.2.8",
-    "nodemon": "1.0.8",
     "inherit": "2.1.0",
     "jshint": "2.4.1",
     "jscs": "1.2.2"
