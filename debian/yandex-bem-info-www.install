@@ -10,3 +10,4 @@ src/bundles/errors.bundles var/lib/yandex/bem-info-static/bundles
 www/humans.txt var/lib/yandex/bem-info-static
 www/robots.txt var/lib/yandex/bem-info-static
 www/favicon.ico var/lib/yandex/bem-info-static
+www/ZeroClipboard.swf var/lib/yandex/bem-info-static
