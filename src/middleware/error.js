@@ -10,7 +10,8 @@ var path = require('path'),
 function buildErrorPage(code, lang) {
     var builder = require('../builder'),
         targetName = (code && code === 404) ? 'error-404' : 'error-500',
-        target = 'src/bundles/errors.bundles/' + targetName + '/' + targetName + '.' + lang + '.html';
+        target = path.resolve(process.cwd(), 'src', 'bundles', 'errors.bundles') + '/'
+            + targetName + '/' + targetName + '.' + lang + '.html';
 
     return builder.build([target])
         .then(function() {
@@ -23,7 +24,7 @@ function buildErrorPage(code, lang) {
 
 function loadErrorPages() {
     var langs = config.get('app:languages'),
-        errorBundlesPath = path.join(__dirname, '..', 'bundles', 'errors.bundles'),
+        errorBundlesPath = path.join(process.cwd(), 'bundles', 'errors.bundles'),
         errorPages = {};
 
     return vow.all(langs.map(function(lang) {
