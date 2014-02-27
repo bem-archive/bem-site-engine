@@ -46,6 +46,10 @@
         "docs": {
             "file": "backups/docs.json",
             "disk": "docs/docs.json"
+        },
+        "libraries": {
+            "file": "backups/libraries.json",
+            "disk": "libraries/libraries.json"
         }
     }
 

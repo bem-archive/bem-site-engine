@@ -33,15 +33,31 @@ module.exports = {
         getSitemap(modelPath)
             .then(function(sitemap) {
                 _sitemap = sitemap;
-                return collectNodesWithSource(sitemap);
-            })
-            .then(function(nodeWithSources) {
-                return loadSourcesForNodes(nodeWithSources);
-            })
-            .then(function(docs) {
                 return vow.all([
-                    saveAndUploadSitemap(_sitemap),
-                    saveAndUploadDocs(docs)
+                    collectSourceNodes(sitemap),
+                    collectLibraryNodes(sitemap)
+                ]);
+            })
+            .spread(function(sources, libraries) {
+                return vow.all([
+                    loadSources(sources),
+                    loadLibraries(libraries)
+                ]);
+            })
+            .spread(function(docs, libraries) {
+                return vow.all([
+                    saveAndUpload(_sitemap, {
+                        disk: 'data:sitemap:disk',
+                        file: 'data:sitemap:file'
+                    }),
+                    saveAndUpload(docs, {
+                        disk: 'data:docs:disk',
+                        file: 'data:docs:file'
+                    }),
+                    saveAndUpload(libraries, {
+                        disk: 'data:libraries:disk',
+                        file: 'data:libraries:file'
+                    })
                 ]);
             })
             .then(
@@ -49,7 +65,7 @@ module.exports = {
                     logger.info('-- sitemap_compiler successfully finished --');
                 },
                 function() {
-                    logger.error('Error occur while compile models and loading dicumentation');
+                    logger.error('Error occur while compile models and loading documentation');
                 }
             );
     }
@@ -81,7 +97,7 @@ var getSitemap  = function(modelPath) {
  * @param sitemap - {Object} sitemap model
  * @returns {Array} - array of nodes
  */
-var collectNodesWithSource = function(sitemap) {
+var collectSourceNodes = function(sitemap) {
     logger.debug('Collect nodes with source start');
 
     var nodesWithSource = [];
@@ -116,7 +132,52 @@ var collectNodesWithSource = function(sitemap) {
     return nodesWithSource;
 };
 
-var loadSourcesForNodes = function(nodesWithSource) {
+/**
+ * Collect library nodes
+ * @param sitemap - {Object} sitemap model
+ * @returns {Array} - array of nodes
+ */
+var collectLibraryNodes = function(sitemap) {
+    logger.debug('Collect library nodes start');
+
+    var libraryNodes = [];
+
+    try {
+        /**
+         * Recursive function for traversing tree model
+         * @param node {Object} - single node of sitemap model
+         */
+        var traverseTreeNodes = function(node) {
+
+            if(node.lib) {
+                libraryNodes.push(node);
+            }
+
+            if(node.items) {
+                node.items.forEach(function(item) {
+                    traverseTreeNodes(item);
+                });
+            }
+        };
+
+        sitemap.forEach(function(item) {
+            traverseTreeNodes(item);
+        });
+
+        logger.debug('Collect library nodes successfully finished');
+    }catch(err) {
+        logger.error('Can not traverse through sitemap model and extrude source nodes');
+    }
+
+    return libraryNodes;
+};
+
+/**
+ * Loads sources for nodes
+ * @param nodesWithSource - {Array} sources with nodes
+ * @returns {*|Q.IPromise<U>|Q.Promise<U>}
+ */
+var loadSources = function(nodesWithSource) {
     logger.debug('Load sources for nodes start');
 
     var collected = {
@@ -274,52 +335,67 @@ var loadMDFile = function(node, lang, repo) {
 };
 
 /**
- * Saves docs object into *.json file in dev enviroment
- * or upload it to Yandex Disk in production enviroment
- * @param docs - {Object} object with fields:
- * - id {String} link to md file
- * - source {Object} source of node
- * @param collected - {Object} object with fields:
- * - authors {Array} - array of unique authors
- * - translators {Array} - array of unique translators
- * - tags {Array} - array of unique tags
+ * Load libraries for nodes
+ * @param libraryNodes - {Array} array with nodes linked with libraries
+ * @returns {*|Q.IPromise<U>|Q.Promise<U>}
  */
-var saveAndUploadDocs = function(content) {
-    logger.debug('Save documentation to file or upload it to Yandex Disk');
+var loadLibraries = function(libraryNodes) {
+    var libraries = {};
+    return vow.all(
+            libraryNodes.map(function(node) {
+                return loadLibraryVersions(config.get('github:librariesRepository'), node, libraries);
+            })
+        )
+        .then(function() {
+            return libraries;
+        });
+};
+
+/**
+ * Load data for single version of library
+ * @param repo - {Object} libraries repository
+ * @param node - {BaseNode} node
+ * @param libraries - {Object} libraries hash
+ * @returns {*|Q.IPromise<U>|Q.Promise<U>}
+ */
+var loadLibraryVersions = function(repo, node, libraries) {
+    libraries[node.lib] = libraries[node.lib] || {};
+
+    return common
+        .loadData(common.PROVIDER_GITHUB_API, { repository: _.extend({ path: node.lib }, repo) })
+        .then(function(result) {
+            var promises = result.res.map(function(version) {
+                var _path = u.format('%s/%s/data.json', node.lib, version.name);
+                return common
+                    .loadData(common.PROVIDER_GITHUB_HTTPS, { repository: _.extend({ path: _path }, repo) })
+                    .then(function(result) {
+                        libraries[node.lib][version.name] = result;
+                    });
+            });
+
+            return vow.all(promises);
+        });
+};
+
+/**
+ * Saves data object into *.json file in dev enviroment
+ * or upload it to Yandex Disk in production enviroment
+ * @param content - {Object} object with should be saved
+ * @returns {*}
+ */
+var saveAndUpload = function(content, _path) {
+    logger.debug('Save data to file %s or upload it to Yandex Disk %s',
+        config.get(_path.file), config.get(_path.disk));
 
     if ('production' === process.env.NODE_ENV) {
         return common.saveData(common.PROVIDER_YANDEX_DISK, {
-            path: config.get('data:docs:disk'),
+            path: config.get(_path.disk),
             data: JSON.stringify(content, null, 4)
         });
     }else {
         return common.saveData(common.PROVIDER_FILE, {
-            path: config.get('data:docs:file'),
+            path: config.get(_path.file),
             data: content
         });
     }
 };
-
-/**
- * Saves sitemap model object into *.json file in dev enviroment
- * or upload it to Yandex Disk in production enviroment
- * @param sitemap - {Object} sitemap model
- * @returns {*}
- */
-var saveAndUploadSitemap = function(sitemap) {
-    logger.debug('Save sitemap to file or upload it to Yandex Disk');
-
-    if ('production' === process.env.NODE_ENV) {
-        return common.saveData(common.PROVIDER_YANDEX_DISK, {
-            path: config.get('data:sitemap:disk'),
-            data: JSON.stringify(sitemap, null, 4)
-        });
-    }else {
-        return common.saveData(common.PROVIDER_FILE, {
-            path: config.get('data:sitemap:file'),
-            data: sitemap
-        });
-    }
-};
-
-
