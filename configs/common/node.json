@@ -17,39 +17,39 @@
             "host": "api.github.com"
         },
         "auth": {
-            "type": "oauth",
-            "token": "7a2fb4d7a380f8a20562f5fc910f35d3b1605341"
+            "type": "",
+            "token": ""
         },
         "librariesRepository": {
             "type": "public",
-            "user": "tormozz48",
-            "repo": "bem-data",
-            "ref": "master"
+            "user": "",
+            "repo": "",
+            "ref": ""
         },
         "peopleRepository": {
             "type": "public",
-            "user": "bem",
-            "repo": "bem-method",
-            "ref": "bem-info-data",
-            "path": "people/people.json"
+            "user": "",
+            "repo": "",
+            "ref": "",
+            "path": ""
         }
     },
     "yandexApi": {
-        "login": "bem-info.bem",
-        "password": "pass4bem-info"
+        "login": "",
+        "password": ""
     },
     "data": {
         "sitemap": {
             "file": "backups/sitemap.json",
-            "disk": "sitemap.json"
+            "disk": ""
         },
         "docs": {
             "file": "backups/docs.json",
-            "disk": "docs/docs.json"
+            "disk": ""
         },
         "libraries": {
             "file": "backups/libraries.json",
-            "disk": "libraries/libraries.json"
+            "disk": ""
         }
     }
 

@@ -9,7 +9,7 @@
             "allowedSequentialDeaths": 3
         },
         "server": {
-            "port": "/var/run/yandex/bem-info-www/bem-info-www.sock",
+            "port": "",
             "groups": 1
         }
     },
@@ -17,8 +17,8 @@
         "mode": "default",
         "level": "debug",
         "dir": "logs",
-        "stdout": "/var/log/yandex/bem-info-www/stdout.log",
-        "stderr": "/var/log/yandex/bem-info-www/stderr.log"
+        "stdout": "",
+        "stderr": ""
     },
     "statics": {
         "pathname": "/m"
