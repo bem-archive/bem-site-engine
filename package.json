@@ -16,7 +16,7 @@
     "nconf": "0.6.9",
     "vow": "0.4.1",
     "vow-fs": "0.3.0",
-    "jspath": "0.2.10",
+    "jspath": "0.2.11",
     "ym": "0.0.12",
     "json-stringify-safe": "5.0.0",
     "github": "git://github.com/mikedeboer/node-github.git",
