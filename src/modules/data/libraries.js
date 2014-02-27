@@ -12,44 +12,33 @@ var librariesHash = {};
 
 module.exports = {
 
-    load: function(nodesWithLib) {
+    load: function() {
         logger.info('Load libraries start');
 
-        var promises = nodesWithLib.map(function(node) {
-            return loadLibraryVersions(config.get('github:librariesRepository'), node);
-        });
+        var _load = function() {
+            if('production' === process.env.NODE_ENV) {
+                return common
+                    .loadData(common.PROVIDER_YANDEX_DISK, {
+                        path: config.get('data:libraries:disk')
+                    })
+                    .then(function(content) {
+                        return JSON.parse(content);
+                    });
+            }else {
+                return common
+                    .loadData(common.PROVIDER_FILE, {
+                        path: config.get('data:libraries:file')
+                    });
+            }
+        };
 
-        return vow
-            .all(promises)
-            .then(function() {
-                return nodesWithLib;
-            });
+        return _load().then(function(content) {
+            librariesHash = content;
+            return librariesHash;
+        })
     },
 
     getLibraries: function() {
         return librariesHash;
     }
-};
-
-var loadLibraryVersions = function(librariesRepository, node) {
-    librariesHash[node.lib] = librariesHash[node.lib] || {};
-
-    return common
-        .loadData(common.PROVIDER_GITHUB_API, { repository: _.extend({ path: node.lib }, librariesRepository) })
-        .then(function(result) {
-            var promises = result.res.map(function(version) {
-                return loadVersionData(librariesRepository, node, version);
-            });
-
-            return vow.allResolved(promises);
-        });
-};
-
-var loadVersionData = function(librariesRepository, node, version) {
-    var _path = u.format('%s/%s/data.json', node.lib, version.name);
-    return common
-        .loadData(common.PROVIDER_GITHUB_HTTPS, { repository: _.extend({ path: _path }, librariesRepository) })
-        .then(function(result) {
-            librariesHash[node.lib][version.name] = result;
-        });
 };
