@@ -1,8 +1,0 @@
-/var/log/yandex/bem-info-www/*.log {
-       size=100M
-       missingok
-       copytruncate
-       rotate 9
-       notifempty
-       compress
-}
