@@ -297,7 +297,7 @@ var addLibraryNodes = function(nodesWithLib) {
         },
 
         addVersionsToLibrary = function(targetNode) {
-            logger.debug('add versions to library %s', targetNode.lib);
+            logger.verbose('add versions to library %s', targetNode.lib);
 
             var baseRoute = targetNode.getBaseRoute();
 
