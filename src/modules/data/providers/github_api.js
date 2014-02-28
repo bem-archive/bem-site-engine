@@ -35,9 +35,10 @@ module.exports = {
      */
     getContent: function(options) {
         var def = vow.defer(),
-            repository = options.repository;
+            repository = options.repository,
+            git = repository.type === 'private' ? gitPrivate : gitPublic;
 
-        gitPublic.repos.getContent(repository, function(err, res) {
+        git.repos.getContent(repository, function(err, res) {
             if (err || !res) {
                 def.reject({res: null, repo: repository});
             }else {
