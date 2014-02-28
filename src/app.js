@@ -33,7 +33,6 @@ function run(worker) {
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.logger())
                 .use(middleware.router(router.router))
-                .use(middleware.reloadCache())
                 .use(middleware.page());
 
             if (config.get('forum')) {
