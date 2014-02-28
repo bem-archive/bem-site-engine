@@ -45,26 +45,30 @@ module.exports = {
                 ]);
             })
             .spread(function(docs, libraries) {
-                return vow.all([
-                    saveAndUpload(_sitemap, {
-                        disk: 'data:sitemap:disk',
-                        file: 'data:sitemap:file'
-                    }),
-                    saveAndUpload(docs, {
-                        disk: 'data:docs:disk',
-                        file: 'data:docs:file'
-                    }),
-                    saveAndUpload(libraries, {
-                        disk: 'data:libraries:disk',
-                        file: 'data:libraries:file'
+                return vow
+                    .all([
+                        saveAndUpload(_sitemap, {
+                            disk: 'data:sitemap:disk',
+                            file: 'data:sitemap:file'
+                        }),
+                        saveAndUpload(docs, {
+                            disk: 'data:docs:disk',
+                            file: 'data:docs:file'
+                        }),
+                        saveAndUpload(libraries, {
+                            disk: 'data:libraries:disk',
+                            file: 'data:libraries:file'
+                        })
+                    ])
+                    .then(function() {
+                        return createUpdateMarker(_sitemap, docs, libraries);
                     })
-                ]);
             })
             .then(
                 function() {
                     logger.info('-- sitemap_compiler successfully finished --');
                 },
-                function() {
+                function(err) {
                     logger.error('Error occur while compile models and loading documentation');
                 }
             );
@@ -396,6 +400,28 @@ var saveAndUpload = function(content, _path) {
         return common.saveData(common.PROVIDER_FILE, {
             path: config.get(_path.file),
             data: content
+        });
+    }
+};
+
+var createUpdateMarker = function(sitemap, docs, libraries) {
+    logger.debug('Create update marker start');
+
+    var marker = {
+        sitemap: sha(JSON.stringify(sitemap)),
+        docs: sha(JSON.stringify(docs)),
+        libraries: sha(JSON.stringify(libraries))
+    };
+
+    if ('production' === process.env.NODE_ENV) {
+        return common.saveData(common.PROVIDER_YANDEX_DISK, {
+            path: config.get('data:marker:disk'),
+            data: JSON.stringify(marker, null, 4)
+        });
+    }else {
+        return common.saveData(common.PROVIDER_FILE, {
+            path: config.get('data:marker:file'),
+            data: marker
         });
     }
 };
