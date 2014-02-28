@@ -349,7 +349,7 @@ var addLibraryNodes = function(nodesWithLib) {
         },
 
         addPostToVersion = function(targetNode, version, _config) {
-            logger.debug('add post %s to version %s of library %s for worker %s', _config.key, version.ref, version.repo, worker.wid);
+            logger.verbose('add post %s to version %s of library %s for worker %s', _config.key, version.ref, version.repo, worker.wid);
 
             var baseRoute = targetNode.getBaseRoute();
 
