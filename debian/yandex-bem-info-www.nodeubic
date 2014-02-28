@@ -1,6 +1,0 @@
-module = Ubic::Service::SimpleDaemon
-[options]
-bin = mkdir -p /var/run/yandex/bem-info-www && chown www-data:www-data /var/run/yandex/bem-info-www && (cd /usr/lib/yandex/bem-info-www; NODE_ENV=production node bin/app)
-stdout = /var/log/yandex/bem-info-www/stdout.log
-stderr = /var/log/yandex/bem-info-www/stderr.log
-user = www-data
