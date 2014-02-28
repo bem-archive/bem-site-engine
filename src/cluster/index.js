@@ -3,7 +3,6 @@ var fs = require('fs'),
     logger = require('../logger')(module),
     data_updater = require('../modules/data_updater'),
     config = require('../config'),
-    app = require('../app'),
     socket = config.get('app:socket');
 
 if (luster.isMaster) {
@@ -18,22 +17,12 @@ if (luster.isMaster) {
         } catch (e) {}
     }
 
-    data_updater.init(luster).start(luster);
+    //optional enable cron updater
+    if(config.get('update:enable')) {
+        data_updater.init(luster).start(luster);
+    }
 
     logger.debug('luster: master process started');
-}
-
-if (luster.isWorker) {
-    logger.debug('start worker process %s', luster.id);
-
-    app.run(luster)
-        .then(function() {
-            logger.info('start application for worker with id %s on port %s',
-                luster.id, process.env.port);
-        })
-        .fail(function(err) {
-            logger.error(err);
-        });
 }
 
 luster.configure({

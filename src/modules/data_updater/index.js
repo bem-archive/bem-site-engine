@@ -19,7 +19,7 @@ module.exports = {
         logger.debug('Init data updater for master process');
 
         job = new cronJob({
-            cronTime: '*/30 * * * * *',
+            cronTime: config.get('update:cron'),
             onTick: function() {
                 checkForUpdate(master);
             },
@@ -29,7 +29,7 @@ module.exports = {
         return this;
     },
 
-    start: function(worker) {
+    start: function() {
         logger.info('Start data updater for master process');
         job.start();
 
@@ -56,6 +56,7 @@ var checkForUpdate = function(master) {
 
     return promise.then(function(content) {
         if(!content) {
+            logger.warn('Marker file has not been loaded');
             return;
         }
 
@@ -67,6 +68,8 @@ var checkForUpdate = function(master) {
         if(marker.sitemap !== content.sitemap ||
             marker.docs !== content.docs ||
             marker.libraries !== content.libraries) {
+
+            logger.info('Data has been changed. All application worker will be restarted');
 
             master.softRestart();
         }
