@@ -13,15 +13,38 @@ module.exports = {
 var getMain = function() {
         return {
             title: {
-                en: "BEM. Block, Element, Modifier",
-                ru: "БЭМ. Блок, Элемент, Модификатор"
+                en: "Hello Bem-Engine",
+                ru: "Привет Bem-Engine"
             },
             route: {
                 name: "index",
-                    pattern: "/"
+                pattern: "/"
             },
-            view: "index"
-        }
+            source: {
+                en: {
+                    title: "Hello Bem-Engine",
+                    createDate: "28-02-2014",
+                    editDate: "",
+                    summary: "",
+                    thumbnail: "",
+                    authors: [],
+                    tags: [],
+                    translators: [],
+                    content: "https://github.com/bem/bem-method/tree/bem-info-data/pages/dummy/dummy.en.md"
+                },
+                ru: {
+                    title: "Привет Bem-Engine",
+                    createDate: "28-02-2014",
+                    editDate: "",
+                    summary: "",
+                    thumbnail: "",
+                    authors: [],
+                    tags: [],
+                    translators: [],
+                    content: "https://github.com/bem/bem-method/tree/bem-info-data/pages/dummy/dummy.ru.md"
+                }
+            }
+        };
     },
 
     /**
