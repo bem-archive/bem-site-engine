@@ -5,7 +5,6 @@ var path = require('path'),
     config = require('./config'),
     logger = require('./logger')(module),
     router = require('./router'),
-    data_updater = require('./modules/data_updater'),
     middleware = require('./middleware'),
     app = express(),
     socket = config.get('app:socket'),
@@ -19,7 +18,6 @@ function run(worker) {
 
     return model.init(worker)
         .then(function() {
-            data_updater.init(worker);
             router.init();
 
             if (process.env.NODE_ENV !== 'production') {
@@ -68,7 +66,6 @@ function run(worker) {
                     } catch(e) {}
                 }
 
-                data_updater.start();
                 deferred.resolve();
             });
 
