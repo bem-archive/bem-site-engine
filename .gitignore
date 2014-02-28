@@ -3,6 +3,7 @@
 .settings
 .project
 .borschik
+.bower.json
 
 configs/current
 
