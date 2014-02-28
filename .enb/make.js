@@ -98,7 +98,7 @@ var techs = {
     deps            : require('enb/techs/deps'),
     modules         : require('enb-modules/techs/prepend-modules'),
     js              : require('enb/techs/browser-js'),
-    roole           : require('enb-roole-techs/techs/css-roole'),
+    roole           : require('enb-roole/techs/css-roole'),
     autoprefixer    : require('enb-autoprefixer-techs/techs/css-autoprefixer'),
     bemhtml         : require('enb-bemxjst/techs/bemhtml-old'),
     bemtree         : require('enb-bemxjst/techs/bemtree-old'),
