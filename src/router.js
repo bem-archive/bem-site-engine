@@ -14,11 +14,6 @@ module.exports = {
             self.router.addRoute(route);
         });
 
-        this.router.addRoute({
-            name: '__reload',
-            pattern: '/__reload(/)'
-        });
-
         return this;
     }
 };
