@@ -90,16 +90,45 @@ exports.getRepoFromSource = function(source, extention) {
  * @returns {number}
  */
 exports.sortLibraryVerions = function(a, b) {
+
+
+    var BRANCHES = ['master', 'dev'],
+        VERSION_REGEXP = /^\d+\.\d+\.\d+$/;
+
+    if(BRANCHES.indexOf(a) !== -1) {
+        return -1;
+    }
+
+    if(BRANCHES.indexOf(b) !== -1) {
+        return 1;
+    }
+
     a = semver.clean(a);
     b = semver.clean(b);
 
-    if(semver.valid(a) !== null && semver.valid(b) !== null) {
-        return semver.gt(a, b) ? 1 : (semver.lt(a, b) ? -1 : 0);
-    }else if(semver.valid(a) !== null) {
-        return 1;
-    }else if(semver.valid(b) !== null) {
-        return -1;
-    }else {
-        return a - b;
+    if(VERSION_REGEXP.test(a) && VERSION_REGEXP.test(b)) {
+        return semver.rcompare(a, b);
     }
+
+    if(VERSION_REGEXP.test(a)) {
+        return -1;
+    }
+
+    if(VERSION_REGEXP.test(b)) {
+        return 1;
+    }
+
+    if(semver.valid(a) && semver.valid(b)) {
+        return semver.rcompare(a, b);
+    }
+
+    if(semver.valid(a)) {
+        return -1;
+    }
+
+    if(semver.valid(b)) {
+        return 1;
+    }
+
+    return a - b;
 };
