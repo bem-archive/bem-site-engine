@@ -15,8 +15,13 @@ var job,
 
 module.exports = {
 
+    /**
+     * Init update cron job without start
+     * @param master - {Object} master process of cluster
+     * @returns {exports}
+     */
     init: function(master) {
-        logger.debug('Init data updater for master process');
+        logger.info('Init data updater for master process');
 
         job = new cronJob({
             cronTime: config.get('update:cron'),
@@ -29,6 +34,10 @@ module.exports = {
         return this;
     },
 
+    /**
+     * Starts cron job for data update
+     * @returns {exports}
+     */
     start: function() {
         logger.info('Start data updater for master process');
         job.start();
@@ -37,11 +46,19 @@ module.exports = {
     }
 };
 
+/**
+ * Loads marker file from local filesystem or Yandex Disk depending on enviroment
+ * Compare sha sums of lobraries, docs and sitemap with sums of precious check
+ * If these sums are different then restart all cluster workers
+ * @param master - {Object} master process
+ * @returns {*}
+ */
 var checkForUpdate = function(master) {
     logger.debug('Check for update for master process start');
 
     var promise;
 
+    //load marker.json file from local filesystem or Yandex Disk
     if('production' === process.env.NODE_ENV) {
         promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
             path: config.get('data:marker:disk')
@@ -60,17 +77,20 @@ var checkForUpdate = function(master) {
             return;
         }
 
+        //marker is not exist for first check operation
         if(!marker) {
             marker = content;
             return;
         }
 
+        //compare sha sums for libraries, docs and sitemap
         if(marker.sitemap !== content.sitemap ||
             marker.docs !== content.docs ||
             marker.libraries !== content.libraries) {
 
             logger.info('Data has been changed. All application worker will be restarted');
 
+            //restart all cluster workers
             master.softRestart();
         }
 
