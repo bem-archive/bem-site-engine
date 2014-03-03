@@ -248,23 +248,29 @@ module.exports = {
         return url;
     },
 
+    /**
+     * Loads advanced data for nodes with exotic views
+     * @param req - {Object} http request object
+     * @param node - {Object} node from sitemap model
+     * @returns {*}
+     */
     getAdvancedData: function(req, node) {
         var  result = {
             people: data.people.getPeople(),
             peopleUrls: data.people.getUrls()
         };
 
-        if(node.view === constants.NODE.VIEW.AUTHOR) {
+        if(node.view === node.VIEW.AUTHOR) {
             return _.extend(result, {
                 posts: this.getNodesBySourceCriteria(req.prefLocale, ['authors', 'translators'], req.params.id) });
         }
 
-        if(node.view === constants.NODE.VIEW.TAGS) {
+        if(node.view === node.VIEW.TAGS) {
             return _.extend(result, {
                 posts: this.getNodesBySourceCriteria(req.prefLocale, ['tags'], req.params.id) });
         }
 
-        if(node.view === constants.NODE.VIEW.AUTHORS) {
+        if(node.view === node.VIEW.AUTHORS) {
             return _.extend(result, {
                 authors: data.docs.getAuthors() });
         }
@@ -273,6 +279,13 @@ module.exports = {
     }
 };
 
+/**
+ * Returns true if value of field of data is equal to value
+ * @param data - {Object} data  object
+ * @param field - {Array || String} name of field or array of fields
+ * @param value - {Array || String} value or array of values
+ * @returns {boolean} - Boolean result
+ */
 var sourceOfNodeSatisfyCriteria = function(data, field, value) {
     if(!data) {
         return false;
