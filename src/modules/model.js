@@ -282,8 +282,6 @@ var addDynamicNodes = function() {
 var addLibraryNodes = function(nodesWithLib) {
     logger.info('add library nodes for worker %s', worker.wid);
 
-    var librariesRepository = config.get('github:librariesRepository');
-
     if(!nodesWithLib || !_.isArray(nodesWithLib) || nodesWithLib.length === 0) {
         logger.warn('nodes with lib not found');
         return;
@@ -449,11 +447,8 @@ var addLibraryNodes = function(nodesWithLib) {
                     _node = new nodes.block.BlockNode(_route, targetNode, block);
 
                     _node.setSource({
-                        prefix: u.format({
-                            'public': 'http://rawgithub.com/%s/%s/%s/%s/%s/%s/%s',
-                            'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s/%s/%s/%s'
-                        }[librariesRepository.type], librariesRepository.user, librariesRepository.repo,
-                            librariesRepository.ref, version.repo, version.ref, level.name, block.name),
+                        prefix: u.format('/__example/%s/%s/%s/%s',
+                            version.repo, version.ref, level.name, block.name),
                         data: block.data,
                         jsdoc: block.jsdoc
                     });
