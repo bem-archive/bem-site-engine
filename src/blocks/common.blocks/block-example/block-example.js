@@ -3,23 +3,16 @@ modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
 BEMDOM.decl('block-example', {
 
     onSetMod: {
-
         'js' : {
-
             'inited': function() {
-                // var _this = this;
-
-                // this.findElem('live').load(function() {
-                //     // _this.changeHeight();
-                // });
+                this.loadComplete = {};
             }
-
         }
 
     },
 
-    changeHeight: function() {
-        var iframe = this.elem('live'),
+    changeHeight: function(el) {
+        var iframe = this.elem(el),
             doc = iframe[0].contentDocument || iframe[0].contentWindow && iframe[0].contentWindow.document;
 
         if (!doc) return;
@@ -33,17 +26,36 @@ BEMDOM.decl('block-example', {
     },
 
     toggleSource: function() {
-        this.toggleMod(this.elem('source-link'), 'active', 'yes', '');
+        this
+            .toggleMod(this.elem('source-link'), 'active', 'yes', '')
+            .toggleMod(this.elem('source'), 'visible', 'yes', '');
+    },
 
-        this.toggleMod(this.elem('source'), 'visible', 'yes', '');
+    loadIframe: function(el) {
+        if(this.loadComplete[el]) return;
+
+        var _this = this,
+            iframe = _this.elem(el),
+            url = iframe.data('url');
+
+        iframe.attr('src', url);
+
+        iframe.load(function() {
+            _this.changeHeight(el);
+
+            _this.loadComplete[el] = true;
+        });
     }
 
 }, {
     live: function() {
 
-        this.liveBindTo('source-link', 'click', function(e) {
+        this.liveBindTo('source-link', 'pointerclick', function(e) {
             e.preventDefault();
+
             this.toggleSource();
+
+            this.loadIframe('source-code');
         });
 
         return false;
