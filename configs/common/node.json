@@ -50,6 +50,10 @@
         "libraries": {
             "file": "backups/libraries.json",
             "disk": ""
+        },
+        "marker": {
+            "file": "backups/marker.json",
+            "disk": ""
         }
     }
 
