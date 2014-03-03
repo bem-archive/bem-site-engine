@@ -61,7 +61,7 @@ block block {
         if(this.ctx.data && this.ctx.data.examples && this.ctx.data.examples[0].content.length > 0) {
             tabsHeader.push({
                 elem: 'tab',
-                mods: { 'side': 'right' },
+                mods: { 'side': 'right', 'examples': 'yes' },
                 content: BEM.I18N('block', 'examples')
             });
 
@@ -151,7 +151,7 @@ block block {
                                 content: [
                                     {
                                         elem: 'source-code',
-                                        attrs: { src: bemjson }
+                                        attrs: { 'data-url': bemjson }
                                     },
                                     {
                                         block: 'link',
@@ -163,7 +163,7 @@ block block {
                             },
                             {
                                 elem: 'live',
-                                attrs: { src: exampleUrl }
+                                attrs: { 'data-url': exampleUrl }
                             }
                         ]
                     }
