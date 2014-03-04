@@ -29,7 +29,8 @@
     "yandex-disk": "0.0.4",
     "semver": "2.2.1",
     "nodemon": "1.0.8",
-    "cron": "1.0.1"
+    "cron": "1.0.1",
+    "request": "2.33.0"
   },
   "devDependencies": {
     "enb": "0.8.46",

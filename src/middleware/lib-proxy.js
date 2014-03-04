@@ -1,18 +1,14 @@
 var util = require('util'),
-    https = require('https'),
+    request = require('request'),
     logger = require('../logger')(module),
     HttpError = require('../errors').HttpError,
 
     libRepo = require('../config').get('github:librariesRepository');
 
 var PATTERN = '/__example',
-    HOSTS = {
-        'private': 'github.yandex-team.ru',
-        'public': 'raw.github.com'
-    },
-    PATHS = {
-        'private': '/%s/%s/raw/%s/%s',
-        'public': '' //TODO create pattern
+    URLS = {
+        'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s',
+        'public': 'https://raw.github.com' //TODO create pattern
     };
 
 module.exports = function() {
@@ -22,34 +18,19 @@ module.exports = function() {
             return next();
         }
 
-        var getUrl = function(url) {
-                return util.format(PATHS[libRepo.type],
-                    libRepo.user, libRepo.repo, libRepo.ref, url.replace(PATTERN, ''));
-            },
-            options = {
-                host: HOSTS[libRepo.type],
-                path: getUrl(req._parsedUrl.path)
-            };
+        var url = (function(_url) {
+            return util.format(URLS[libRepo.type],
+                libRepo.user, libRepo.repo, libRepo.ref, _url.replace(PATTERN, ''));
+        })(req._parsedUrl.path);
 
-        logger.verbose('request host: %s path %s', options.host, options.path);
+        logger.verbose('request block example by url', url);
 
-        var callback = function(response) {
-            var str = '';
-
-            response.on('data', function(chunk) {
-                str += chunk;
-            });
-
-            response.on('error', function() {
-                res.end('<h3>Error data loading</h3>');
-            });
-
-            response.on('end', function() {
-                res.writeHead(200);
-                res.end(str);
-            });
-        };
-
-        https.request(options, callback).end()
+        request(url, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                res.end(body);
+            }else {
+                res.end('<h3>Error while loading example</h3>')
+            }
+        });
     };
 };
