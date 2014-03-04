@@ -142,33 +142,39 @@ module.exports = {
                     traverseTreeNodesUp(_node.parent);
                 }
             },
-            traverseTreeNodesDown = function(_node) {
+            traverseTreeNodesDown = function(_node, parent) {
                 result[_node.level] = result[_node.level] || [];
 
-                //if node is not hidden for current selected locale
-                //then we should draw it corresponded menu item
-                if(!_node.hidden[req.prefLocale]) {
-                    result[_node.level].push({
+                var o = {
                         title: _node.title ? _node.title[req.prefLocale]: '',
                         url: (_node.url && _.isObject(_node.url)) ? _node.url[req.prefLocale] : _node.url,
                         active: _.indexOf(activeIds, _node.id) !== -1,
                         type: _node.type,
                         size: _node.size
-                    });
-                }
-
-                var hasSource = _node.source,
+                    },
+                    hasSource = _node.source,
                     hasItems = _node.items,
                     isTargetNode = _node.id === node.id,
                     isActive = activeIds.indexOf(_node.id) !== -1,
-                    isGroup = _node.type === 'group',
+                    isGroup = _node.type === _node.TYPE.GROUP,
 
                     isNeedToDrawChildNodes = isGroup || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
+
+                //if node is not hidden for current selected locale
+                //then we should draw it corresponded menu item
+                if(!_node.hidden[req.prefLocale]) {
+                    if (parent) {
+                        parent.items = parent.items || [];
+                        parent.items.push(o);
+                    }else {
+                        result[_node.level].push(o);
+                    }
+                }
 
                 if(isNeedToDrawChildNodes) {
 
                     _node.items && _node.items.forEach(function(item) {
-                        traverseTreeNodesDown(item);
+                        traverseTreeNodesDown(item, null);
                     });
                 }
 

@@ -24,7 +24,7 @@ exports.BaseNode.prototype = {
     },
     TYPE: {
         SIMPLE: 'simple',
-            GROUP: 'group'
+        GROUP: 'group'
     },
     SIZE: {
         NORMAL: 'normal'
