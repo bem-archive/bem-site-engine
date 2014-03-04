@@ -7,7 +7,8 @@
         "common": {
             "version": "3.0.0",
             "protocol": "https",
-            "timeout": "5000"
+            "timeout": "5000",
+            "debug": "false"
         },
         "private": {
             "host": "github.yandex-team.ru",

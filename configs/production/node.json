@@ -26,10 +26,5 @@
     },
     "statics": {
         "pathname": "/m"
-    },
-    "github": {
-        "common": {
-            "debug": "false"
-        }
     }
 }

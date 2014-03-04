@@ -19,10 +19,5 @@
     },
     "statics": {
         "pathname": "/src"
-    },
-    "github": {
-        "common": {
-            "debug": "false"
-        }
     }
 }
