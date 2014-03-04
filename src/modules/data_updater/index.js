@@ -23,6 +23,8 @@ module.exports = {
     init: function(master) {
         logger.info('Init data updater for master process');
 
+        data.common.init();
+
         job = new cronJob({
             cronTime: config.get('update:cron'),
             onTick: function() {
