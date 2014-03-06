@@ -157,6 +157,7 @@ module.exports = {
                     isTargetNode = _node.id === node.id,
                     isActive = activeIds.indexOf(_node.id) !== -1,
                     isGroup = _node.type === _node.TYPE.GROUP,
+                    isSelect = _node.type === _node.TYPE.SELECT,
 
                     isNeedToDrawChildNodes = isGroup || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
 
@@ -174,7 +175,7 @@ module.exports = {
                 if(isNeedToDrawChildNodes) {
 
                     _node.items && _node.items.forEach(function(item) {
-                        traverseTreeNodesDown(item, isGroup ? o : null);
+                        traverseTreeNodesDown(item, (isGroup || isSelect) ? o : null);
                     });
                 }
 
