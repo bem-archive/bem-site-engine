@@ -1,5 +1,6 @@
 var _ = require('lodash'),
     template = require('../template'),
+    config = require('../config'),
     logic = require('../modules').logic,
     BUNDLE_NAME = 'common';
 
@@ -12,7 +13,8 @@ module.exports = function() {
             baseCtx = {
                 req: req,
                 bundleName: BUNDLE_NAME,
-                lang: req.prefLocale
+                lang: req.prefLocale,
+                statics: config.get('statics:www')
             };
             commonDataCtx = {
                 node: node,

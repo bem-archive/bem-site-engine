@@ -6,7 +6,7 @@ block page {
             title : this.data.title,
             mods : this._.extend({ theme : 'normal', page : this.data.req.route }, this.ctx.mods),
             head : apply('head'),
-            favicon : '/www/favicon.ico'
+            favicon : this.data.statics + '/favicon.ico'
         });
     }
 
