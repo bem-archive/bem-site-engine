@@ -288,6 +288,8 @@ var analyzeMetaInformation = function(node, lang, collected) {
             };
         })(content);
 
+        repo.type = repo.host === 'github.yandex-team.ru' ? 'private' : 'public';
+
         //logger.verbose('get repo from source user: %s repo: %s ref: %s path: %s',
         //    repo.user, repo.repo, repo.ref, repo.path);
 
