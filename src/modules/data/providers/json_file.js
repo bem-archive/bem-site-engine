@@ -30,10 +30,12 @@ module.exports = {
      * @param options - {Object} with fields:
      * - path {String} path to target file
      * - data {Object} content for file
+     * - minimize {Boolean} flag for content minimization
      * @returns {*}
      */
     save:  function(options) {
         logger.debug('save data to json file %s', options.path ? options.path : 'unknown file');
-        return fs.write(options.path, JSON.stringify(options.data, null, 4), 'utf8');
+        return fs.write(options.path, options.minimize ?
+            JSON.stringify(options.data) : JSON.stringify(options.data, null, 4), 'utf8');
     }
 };

@@ -394,12 +394,13 @@ var saveAndUpload = function(content, _path) {
     if ('production' === process.env.NODE_ENV) {
         return common.saveData(common.PROVIDER_YANDEX_DISK, {
             path: config.get(_path.disk),
-            data: JSON.stringify(content, null, 4)
+            data: JSON.stringify(content)
         });
     }else {
         return common.saveData(common.PROVIDER_FILE, {
             path: config.get(_path.file),
-            data: content
+            data: content,
+            minimize: true
         });
     }
 };
@@ -421,7 +422,8 @@ var createUpdateMarker = function(sitemap, docs, libraries) {
     }else {
         return common.saveData(common.PROVIDER_FILE, {
             path: config.get('data:marker:file'),
-            data: marker
+            data: marker,
+            minimize: false
         });
     }
 };
