@@ -174,7 +174,7 @@ module.exports = {
                 if(isNeedToDrawChildNodes) {
 
                     _node.items && _node.items.forEach(function(item) {
-                        traverseTreeNodesDown(item, null);
+                        traverseTreeNodesDown(item, isGroup ? o : null);
                     });
                 }
 
@@ -184,7 +184,7 @@ module.exports = {
         //logger.verbose('active ids %s', activeIds.join(', '));
 
         model.getSitemap().forEach(function(item) {
-            traverseTreeNodesDown(item);
+            traverseTreeNodesDown(item, null);
         });
 
         return result;
