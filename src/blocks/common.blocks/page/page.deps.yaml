@@ -10,6 +10,7 @@
 - mods: { theme: white }
 - mods: { page: error }
 - mods: { touch: yes }
+- mods: { fullscreen: true }
 
 - link
 - island

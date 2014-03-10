@@ -16,15 +16,16 @@ exports.BaseNode.prototype = {
 
     VIEW: {
         POST: 'post',
-            POSTS: 'posts',
-            AUTHOR: 'author',
-            AUTHORS: 'authors',
-            TAGS: 'tags',
-            BLOCK: 'block'
+        POSTS: 'posts',
+        AUTHOR: 'author',
+        AUTHORS: 'authors',
+        TAGS: 'tags',
+        BLOCK: 'block'
     },
     TYPE: {
         SIMPLE: 'simple',
-            GROUP: 'group'
+        GROUP: 'group',
+        SELECT: 'select'
     },
     SIZE: {
         NORMAL: 'normal'

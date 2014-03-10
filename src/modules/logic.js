@@ -142,33 +142,40 @@ module.exports = {
                     traverseTreeNodesUp(_node.parent);
                 }
             },
-            traverseTreeNodesDown = function(_node) {
+            traverseTreeNodesDown = function(_node, parent) {
                 result[_node.level] = result[_node.level] || [];
 
-                //if node is not hidden for current selected locale
-                //then we should draw it corresponded menu item
-                if(!_node.hidden[req.prefLocale]) {
-                    result[_node.level].push({
+                var o = {
                         title: _node.title ? _node.title[req.prefLocale]: '',
                         url: (_node.url && _.isObject(_node.url)) ? _node.url[req.prefLocale] : _node.url,
                         active: _.indexOf(activeIds, _node.id) !== -1,
                         type: _node.type,
                         size: _node.size
-                    });
-                }
-
-                var hasSource = _node.source,
+                    },
+                    hasSource = _node.source,
                     hasItems = _node.items,
                     isTargetNode = _node.id === node.id,
                     isActive = activeIds.indexOf(_node.id) !== -1,
-                    isGroup = _node.type === 'group',
+                    isGroup = _node.type === _node.TYPE.GROUP,
+                    isSelect = _node.type === _node.TYPE.SELECT,
 
                     isNeedToDrawChildNodes = isGroup || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
+
+                //if node is not hidden for current selected locale
+                //then we should draw it corresponded menu item
+                if(!_node.hidden[req.prefLocale]) {
+                    if (parent) {
+                        parent.items = parent.items || [];
+                        parent.items.push(o);
+                    }else {
+                        result[_node.level].push(o);
+                    }
+                }
 
                 if(isNeedToDrawChildNodes) {
 
                     _node.items && _node.items.forEach(function(item) {
-                        traverseTreeNodesDown(item);
+                        traverseTreeNodesDown(item, (isGroup || isSelect) ? o : null);
                     });
                 }
 
@@ -178,7 +185,7 @@ module.exports = {
         //logger.verbose('active ids %s', activeIds.join(', '));
 
         model.getSitemap().forEach(function(item) {
-            traverseTreeNodesDown(item);
+            traverseTreeNodesDown(item, null);
         });
 
         return result;
@@ -248,23 +255,29 @@ module.exports = {
         return url;
     },
 
+    /**
+     * Loads advanced data for nodes with exotic views
+     * @param req - {Object} http request object
+     * @param node - {Object} node from sitemap model
+     * @returns {*}
+     */
     getAdvancedData: function(req, node) {
         var  result = {
             people: data.people.getPeople(),
             peopleUrls: data.people.getUrls()
         };
 
-        if(node.view === constants.NODE.VIEW.AUTHOR) {
+        if(node.view === node.VIEW.AUTHOR) {
             return _.extend(result, {
                 posts: this.getNodesBySourceCriteria(req.prefLocale, ['authors', 'translators'], req.params.id) });
         }
 
-        if(node.view === constants.NODE.VIEW.TAGS) {
+        if(node.view === node.VIEW.TAGS) {
             return _.extend(result, {
                 posts: this.getNodesBySourceCriteria(req.prefLocale, ['tags'], req.params.id) });
         }
 
-        if(node.view === constants.NODE.VIEW.AUTHORS) {
+        if(node.view === node.VIEW.AUTHORS) {
             return _.extend(result, {
                 authors: data.docs.getAuthors() });
         }
@@ -273,6 +286,13 @@ module.exports = {
     }
 };
 
+/**
+ * Returns true if value of field of data is equal to value
+ * @param data - {Object} data  object
+ * @param field - {Array || String} name of field or array of fields
+ * @param value - {Array || String} value or array of values
+ * @returns {boolean} - Boolean result
+ */
 var sourceOfNodeSatisfyCriteria = function(data, field, value) {
     if(!data) {
         return false;

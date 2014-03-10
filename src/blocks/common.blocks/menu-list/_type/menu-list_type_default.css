@@ -1,0 +1,57 @@
+.menu-list_type_default .menu-list__link
+{
+    padding: 8px 12px 7px 12px;
+
+    transition: background .4s ease;
+
+    color: #333;
+}
+
+.menu-list_type_default .menu-list__link:hover
+{
+    background: rgba(255,235,160,.35);
+}
+
+.menu-list_type_default .menu-list__link_active
+{
+    cursor: default;
+
+    background: #ffeba0;
+}
+
+.menu-list_type_default .menu-list__title
+{
+    font-size: 12px;
+
+    position: relative;
+
+    box-sizing: border-box;
+    padding: 15px 12px 7px 12px;
+
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    color: #999;
+}
+
+.menu-list_type_default .menu-list__group:first-child .menu-list__title
+{
+    padding-top: 10px;
+}
+
+.menu-list_type_default .menu-list__title:before
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+
+    height: 1px;
+
+    content: '';
+
+    background: #999;
+    background: -webkit-linear-gradient(left,  rgba(0,0,0,0.15) 20%,rgba(0,0,0,0) 100%);
+    background: linear-gradient(to right,  rgba(0,0,0,0.15) 20%,rgba(0,0,0,0) 100%);
+}

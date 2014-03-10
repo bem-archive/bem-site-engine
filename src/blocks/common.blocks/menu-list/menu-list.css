@@ -17,14 +17,3 @@
 
     flex: 1 0 auto;
 }
-
-.page_fullscreen .menu-list
-{
-    display: none;
-}
-
-.page_fullscreen .menu-list_main
-{
-    display: block;
-}
-
