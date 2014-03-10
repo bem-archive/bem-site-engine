@@ -1,9 +1,6 @@
-- mods:
-    main: yes
-    accordion: yes
-- elem: item
+- elem: link
   mods:
-    type: [simple, group, delimeter]
+    type: [delimeter]
     size: [small, normal]
-    active: true
-    main: true
+- mods:
+    type: [main, default]

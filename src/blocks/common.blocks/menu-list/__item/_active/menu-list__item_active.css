@@ -1,6 +1,0 @@
-.menu-list__item_active.menu-list__item_type_simple:not(.menu-list__item_main)
-{
-    cursor: default;
-
-    background: #ffeba0;
-}

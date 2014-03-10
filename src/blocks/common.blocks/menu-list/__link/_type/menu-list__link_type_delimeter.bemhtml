@@ -1,0 +1,8 @@
+block menu-list, elem link, elemMod type delimeter {
+    default: {
+        applyCtx({
+            block: this.block,
+            elem: 'delimeter'
+        });
+    }
+}

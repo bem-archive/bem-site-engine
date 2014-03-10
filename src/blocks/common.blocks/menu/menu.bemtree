@@ -1,24 +1,13 @@
 block menu, this.data.menu, default: {
 
-    //TODO: Пробрасывать флажок, что мы в разделе библиотеки
-    var mainMenuData = this.data.menu[0],
-        isLibraryActive = (function() {
-            for(var idx = 0; idx < mainMenuData.length; idx++) {
-                var item = mainMenuData[idx];
-                if(item.url && item.url === '/libs' && item.active) return true;
-            }
-    })();
-
     return applyCtx([
         this.data.menu.map(function(column, index) {
             return {
                 block: 'menu-list',
+                content: column,
                 mods: index === 0 ?
-                    { main: true } :
-                    isLibraryActive ?
-                        { accordion: 'yes' } :
-                        undefined,
-                content: column
+                    { type: 'main' } :
+                    { type: 'default' }
             }
         }),
         this.data.menu.length > 1 ? {

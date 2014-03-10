@@ -1,4 +1,4 @@
-block menu-list, mod main true{
+block menu-list, mod type main {
 
     this.ctx.content, content: {
         var _content = this.ctx.content.map(function(item, index) {
@@ -9,14 +9,29 @@ block menu-list, mod main true{
                 return apply('logo', this.ctx = item);
             }
 
+            if(item.type === 'group' && item.items) {
+                return {
+                    elem: 'group',
+                    content: [
+                        {
+                            elem: 'title',
+                            content: item.title
+                        },
+                        item.items.map(function(subitem) {
+                            return apply('item', this.ctx = subitem);
+                        })
+                    ]
+                }
+            }
+
             return apply('item', this.ctx = item);
+
         });
         _content.push({ block: 'lang-switch', url: this.data.langSwitch });
         _content.push({
             block: 'menu-list',
-            elem: 'item',
-            mods: { type: 'delimeter'}
-            });
+            elem: 'delimeter'
+        });
         _content.push({
             block: 'link',
             mods: { award: true },
@@ -35,7 +50,7 @@ block menu-list, mod main true{
     }
 
     item: {
-        elem: 'item',
+        elem: 'link',
         title: this.ctx.title,
         url: this.ctx.url,
         elemMods: {

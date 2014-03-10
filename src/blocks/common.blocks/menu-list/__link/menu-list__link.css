@@ -1,21 +1,18 @@
-.menu-list__item
+.menu-list__link
 {
     font-size: 14px;
 }
 
-.menu-list__item .link
+.menu-list__link
 {
     display: block;
 
-    padding: 8px 12px 7px 12px;
-
     text-decoration: none;
-
-    color: #333;
 }
 
 @media screen and (max-height:700px) {
-    .menu-list__item {
+    .menu-list__link
+    {
         font-size: 12px;
     }
 }

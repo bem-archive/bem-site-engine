@@ -3,18 +3,36 @@ block menu-list {
     this.ctx.content, content: {
 
         return this.ctx.content.map(function(item) {
-            //logger.verbose('menu item: title: %s url: %s type: %s active: %s size: %s',
-                        //item.title, item.url, item.type, item.active, item.size);
+/*            logger.verbose('menu item: title: %s url: %s type: %s active: %s size: %s',
+                        item.title, item.url, item.type, item.active, item.size);*/
 
-            return {
-                elem: 'item',
-                title: item.title,
-                url: item.url,
-                elemMods: {
-                    active: item.active,
-                    type: item.type
+            if(item.type === 'group' && item.items) {
+                return {
+                    elem: 'group',
+                    content: [
+                        {
+                            elem: 'title',
+                            content: item.title
+                        },
+                        item.items.map(function(subitem) {
+                            return apply('item', this.ctx = subitem);
+                        })
+                    ]
                 }
-            };
+            }
+
+            return apply('item', this.ctx = item);
+
         });
+    }
+
+    item: {
+        elem: 'link',
+        url: this.ctx.url,
+        title: this.ctx.title,
+        elemMods: {
+            active: this.ctx.active,
+            type: this.ctx.type
+        }
     }
 }
