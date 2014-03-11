@@ -32,6 +32,7 @@ function run(worker) {
             app.use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.logger())
+                .use(middleware.monitoring())
                 .use(middleware.libProxy())
                 .use(middleware.router(router.router))
                 .use(middleware.page());
