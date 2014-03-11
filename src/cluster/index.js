@@ -14,7 +14,9 @@ if (luster.isMaster) {
         try {
             logger.debug('luster: unlink socket');
             fs.unlinkSync(socket);
-        } catch (e) {}
+        } catch (e) {
+            logger.error('Can\'t unlink socket');
+        }
     }
 
     //optional enable cron updater

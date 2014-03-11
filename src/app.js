@@ -63,7 +63,9 @@ function run(worker) {
                 if (socket) {
                     try {
                         fs.chmod(socket, '0777');
-                    } catch(e) {}
+                    } catch(e) {
+                        logger.error('Can\'t chmod 0777 to socket');
+                    }
                 }
                 deferred.resolve();
             });
