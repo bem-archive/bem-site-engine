@@ -29,7 +29,7 @@ module.exports = function() {
             if (!error && response.statusCode == 200) {
                 res.end(body);
             }else {
-                res.end('<h3>Error while loading example</h3>')
+                res.end('Error while loading example')
             }
         });
     };
