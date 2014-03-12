@@ -96,11 +96,11 @@ exports.sortLibraryVerions = function(a, b) {
         VERSION_REGEXP = /^\d+\.\d+\.\d+$/;
 
     if(BRANCHES.indexOf(a) !== -1) {
-        return -1;
+        return 1;
     }
 
     if(BRANCHES.indexOf(b) !== -1) {
-        return 1;
+        return -1;
     }
 
     a = semver.clean(a);
