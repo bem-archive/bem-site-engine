@@ -21,6 +21,28 @@ block menu-list {
                 }
             }
 
+            if(item.type === 'select' && item.items) {
+                return {
+                    elem: 'group-select',
+                    elemMods: item.active ? { active: 'yes' } : undefined,
+                    content: [
+                        apply('item', this.ctx = item),
+                        {
+                            elem: 'select',
+                            content: item.items.map(function(subitem) {
+                                return {
+                                    elem: 'option',
+                                    content: subitem.title,
+                                    attrs: {
+                                        value: subitem.url,
+                                        selected: subitem.active ? 'selected' : undefined                                    }
+                                }
+                            })
+                        }
+                    ]
+                }
+            }
+
             return apply('item', this.ctx = item);
 
         });

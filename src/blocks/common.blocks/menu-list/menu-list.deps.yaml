@@ -1,6 +1,9 @@
+- elem: group-select
+- elem: select
+- elem: option
 - elem: link
   mods:
-    type: [delimeter]
+    type: [delimeter, select]
     size: [small, normal]
 - mods:
     type: [main, default]

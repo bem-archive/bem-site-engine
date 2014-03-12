@@ -30,7 +30,7 @@ DynamicNode.prototype.init = function(parent) {
  * @returns {DynamicNode}
  */
 DynamicNode.prototype.setLevel = function(parent) {
-    this.level = parent.type === this.TYPE.GROUP ? parent.level : parent.level + 1;
+    this.level = (parent.type === this.TYPE.GROUP || parent.type === this.TYPE.SELECT) ? parent.level : parent.level + 1;
     return this;
 };
 

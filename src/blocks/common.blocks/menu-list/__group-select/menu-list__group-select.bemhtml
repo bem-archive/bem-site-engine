@@ -1,0 +1,3 @@
+block menu-list, elem group-select {
+    mix: [{ block: 'clearfix' }]
+}
