@@ -5,13 +5,12 @@ var util = require('util'),
     sha = require('sha1')
 
     logger = require('../logger')(module),
-    HttpError = require('../errors').HttpError,
+    constants = require('../modules').constants,
     data = require('../modules').data,
 
     libRepo = require('../config').get('github:librariesRepository');
 
 var PATTERN = '/__example',
-    CACHE_DIR = 'cache',
     VERSION_REGEXP = /\/v?\d+\.\d+\.\d+\//;
 
 module.exports = function() {
@@ -24,7 +23,7 @@ module.exports = function() {
             return next();
         }
 
-        var ref = VERSION_REGEXP.test(requestUrl) ? 'tag' : 'branch';
+        var ref = VERSION_REGEXP.test(requestUrl) ? constants.DIRS.TAG : constants.DIRS.BRANCH;
 
         var url = util.format(libRepo.pattern, libRepo.user, libRepo.repo,
             libRepo.ref, requestUrl.replace(PATTERN, ''));
@@ -47,7 +46,7 @@ module.exports = function() {
 
                             //cache examples to filesystem
                             data.common.saveData(data.common.PROVIDER_FILE_COMMON, {
-                                path: path.resolve(CACHE_DIR, ref, sha(url)),
+                                path: path.resolve(constants.DIRS.CACHE, ref, sha(url)),
                                 data: body
                             });
                             res.end(body);

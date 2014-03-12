@@ -7,13 +7,8 @@ var path = require('path'),
     logger = require('../logger')(module),
     dataUpdater = require('../modules/data_updater'),
     config = require('../config'),
+    constants = require('../modules/constants'),
     socket = config.get('app:socket');
-
-var DIRS = {
-    CACHE: 'cache',
-    BRANCH: 'branch',
-    TAG: 'tag'
-};
 
 if (luster.isMaster) {
     logger.info('luster: master process start');
@@ -34,8 +29,8 @@ if (luster.isMaster) {
             logger.debug('Create cache directories and sub-directories');
 
             return vow.all([
-                vowFs.makeDir(path.join(DIRS.CACHE, DIRS.BRANCH)),
-                vowFs.makeDir(path.join(DIRS.CACHE, DIRS.TAG))
+                vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
+                vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.TAG))
             ]);
         })
         .then(function() {

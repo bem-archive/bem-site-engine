@@ -9,6 +9,7 @@ var u = require('util'),
 
     logger = require('../../logger')(module),
     config = require('../../config'),
+    constants = require('../constants'),
     data = require('../data');
 
 var job,
@@ -93,9 +94,9 @@ var checkForUpdate = function(master) {
 
             logger.info('Data has been changed. All application worker will be restarted');
 
-            fs.removeDir(path.resolve('cache', 'branch'))
+            fs.removeDir(path.resolve(constants.DIRS.CACHE, constants.DIRS.BRANCH))
                 .then(function() {
-                    fs.makeDir(path.join('cache', 'branch'));
+                    fs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH));
                 })
                 .then(function() {
                     //restart all cluster workers
