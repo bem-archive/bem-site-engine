@@ -1,7 +1,11 @@
-var fs = require('fs'),
+var path = require('path'),
+    fs = require('fs'),
+
+    vow = require('vow'),
+    vowFs = require('vow-fs'),
     luster = require('luster'),
     logger = require('../logger')(module),
-    data_updater = require('../modules/data_updater'),
+    dataUpdater = require('../modules/data_updater'),
     config = require('../config'),
     socket = config.get('app:socket');
 
@@ -19,12 +23,21 @@ if (luster.isMaster) {
         }
     }
 
-    //optional enable cron updater
-    if(config.get('update:enable')) {
-        data_updater.init(luster).start(luster);
-    }
+    vowFs.chmod(process.cwd(), '0777')
+        .then(function() {
+            return vow.all([
+                vowFs.makeDir(path.join('cache', 'branch')),
+                vowFs.makeDir(path.join('cache', 'tag'))
+            ]);
+        })
+        .then(function() {
+            //optional enable cron updater
+            if(config.get('update:enable')) {
+                dataUpdater.init(luster).start(luster);
+            }
 
-    logger.debug('luster: master process started');
+            logger.debug('luster: master process started');
+        });
 }
 
 luster.configure({
