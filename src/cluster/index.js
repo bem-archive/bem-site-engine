@@ -9,25 +9,33 @@ var path = require('path'),
     config = require('../config'),
     socket = config.get('app:socket');
 
+var DIRS = {
+    CACHE: 'cache',
+    BRANCH: 'branch',
+    TAG: 'tag'
+};
+
 if (luster.isMaster) {
-    logger.debug('luster: master process start');
+    logger.info('luster: master process start');
 
     var socket = config.get('app:socket');
 
     if (socket) {
         try {
-            logger.debug('luster: unlink socket');
+            logger.debug('luster: unlink socket %s', socket);
             fs.unlinkSync(socket);
         } catch (e) {
-            logger.error('Can\'t unlink socket');
+            logger.error('Can\'t unlink socket %s', socket);
         }
     }
 
     vowFs.chmod(process.cwd(), '0777')
         .then(function() {
+            logger.debug('Create cache directories and sub-directories');
+
             return vow.all([
-                vowFs.makeDir(path.join('cache', 'branch')),
-                vowFs.makeDir(path.join('cache', 'tag'))
+                vowFs.makeDir(path.join(DIRS.CACHE, DIRS.BRANCH)),
+                vowFs.makeDir(path.join(DIRS.CACHE, DIRS.TAG))
             ]);
         })
         .then(function() {
@@ -36,7 +44,7 @@ if (luster.isMaster) {
                 dataUpdater.init(luster).start(luster);
             }
 
-            logger.debug('luster: master process started');
+            logger.info('luster: master process started');
         });
 }
 
