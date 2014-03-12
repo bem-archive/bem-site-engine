@@ -32,7 +32,7 @@ module.exports = function() {
 
         data.common
             .loadData(data.common.PROVIDER_FILE_COMMON, {
-                path: path.resolve(CACHE_DIR, ref, sha(url))
+                path: path.resolve(constants.DIRS.CACHE, ref, sha(url))
             })
             .then(
                 function(content) {
