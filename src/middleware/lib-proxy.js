@@ -11,45 +11,48 @@ var util = require('util'),
     libRepo = require('../config').get('github:librariesRepository');
 
 var PATTERN = '/__example',
-    URLS = {
-        'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s',
-        'public': 'https://raw.github.com' //TODO create pattern
-    };
+    CACHE_DIR = 'cache',
+    VERSION_REGEXP = /\/v?\d+\.\d+\.\d+\//;
 
 module.exports = function() {
 
     return function(req, res, next) {
-        if(req._parsedUrl.path.indexOf(PATTERN) === -1) {
+        var requestUrl = req._parsedUrl.path;
+
+        //check for example url. if not then call next middleware
+        if(requestUrl.indexOf(PATTERN) === -1) {
             return next();
         }
 
-        var url = (function(_url) {
-            return util.format(URLS[libRepo.type],
-                libRepo.user, libRepo.repo, libRepo.ref, _url.replace(PATTERN, ''));
-        })(req._parsedUrl.path);
+        var ref = VERSION_REGEXP.test(requestUrl) ? 'tag' : 'branch';
+
+        var url = util.format(libRepo.pattern, libRepo.user, libRepo.repo,
+            libRepo.ref, requestUrl.replace(PATTERN, ''));
 
         logger.verbose('request block example by url %s', url);
 
         data.common
             .loadData(data.common.PROVIDER_FILE_COMMON, {
-                path: path.resolve('cache', sha(url))
+                path: path.resolve(CACHE_DIR, ref, sha(url))
             })
             .then(
                 function(content) {
-                    logger.verbose('content from url %s has been loaded from file cache', url);
+                    logger.verbose('content has been loaded from file cache for url %s', url);
                     res.end(content);
                 },
                 function() {
                     request(url, function (error, response, body) {
                         if (!error && response.statusCode == 200) {
-                            logger.verbose('content from url %s has been loaded from github', url);
+                            logger.verbose('content has been loaded from github for url %s ', url);
+
+                            //cache examples to filesystem
                             data.common.saveData(data.common.PROVIDER_FILE_COMMON, {
-                                path: path.resolve('cache', sha(url)),
+                                path: path.resolve(CACHE_DIR, ref, sha(url)),
                                 data: body
                             });
                             res.end(body);
                         }else {
-                            res.end('Error while loading example')
+                            res.end('Error while loading example');
                         }
                     });
                 }
