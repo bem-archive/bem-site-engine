@@ -55,3 +55,26 @@
     background: -webkit-linear-gradient(left,  rgba(0,0,0,0.15) 20%,rgba(0,0,0,0) 100%);
     background: linear-gradient(to right,  rgba(0,0,0,0.15) 20%,rgba(0,0,0,0) 100%);
 }
+
+/* (Begin) Menu-list with select */
+.menu-list_type_default .menu-list__group-select
+{
+    transition: background .4s ease;
+}
+
+.menu-list_type_default .menu-list__group-select:hover
+{
+    background: rgba(255,235,160,.35);
+}
+
+.menu-list_type_default .menu-list__group-select_active_yes
+{
+    background: #ffeba0;
+}
+
+.menu-list_type_default .menu-list__group-select .menu-list__link,
+.menu-list_type_default .menu-list__group-select .menu-list__link:hover
+{
+    background: none;
+}
+/* (Begin) Menu-list with select */

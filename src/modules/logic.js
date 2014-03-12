@@ -145,6 +145,8 @@ module.exports = {
             traverseTreeNodesDown = function(_node, parent) {
                 result[_node.level] = result[_node.level] || [];
 
+                //logger.verbose('menu creation item level %s title %s type %s', _node.level, _node.title ? _node.title[req.prefLocale] : '', _node.type);
+
                 var o = {
                         title: _node.title ? _node.title[req.prefLocale]: '',
                         url: (_node.url && _.isObject(_node.url)) ? _node.url[req.prefLocale] : _node.url,
@@ -159,7 +161,7 @@ module.exports = {
                     isGroup = _node.type === _node.TYPE.GROUP,
                     isSelect = _node.type === _node.TYPE.SELECT,
 
-                    isNeedToDrawChildNodes = isGroup || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
+                    isNeedToDrawChildNodes = (isGroup || isSelect) || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
 
                 //if node is not hidden for current selected locale
                 //then we should draw it corresponded menu item
