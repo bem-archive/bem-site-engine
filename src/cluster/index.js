@@ -1,30 +1,46 @@
-var fs = require('fs'),
+var path = require('path'),
+    fs = require('fs'),
+
+    vow = require('vow'),
+    vowFs = require('vow-fs'),
     luster = require('luster'),
     logger = require('../logger')(module),
-    data_updater = require('../modules/data_updater'),
+    dataUpdater = require('../modules/data_updater'),
     config = require('../config'),
+    constants = require('../modules/constants'),
     socket = config.get('app:socket');
 
 if (luster.isMaster) {
-    logger.debug('luster: master process start');
+    logger.info('luster: master process start');
 
     var socket = config.get('app:socket');
 
     if (socket) {
         try {
-            logger.debug('luster: unlink socket');
+            logger.debug('luster: unlink socket %s', socket);
             fs.unlinkSync(socket);
         } catch (e) {
-            logger.error('Can\'t unlink socket');
+            logger.error('Can\'t unlink socket %s', socket);
         }
     }
 
-    //optional enable cron updater
-    if(config.get('update:enable')) {
-        data_updater.init(luster).start(luster);
-    }
+    vowFs.chmod(process.cwd(), '0777')
+        .then(function() {
+            logger.debug('Create cache directories and sub-directories');
 
-    logger.debug('luster: master process started');
+            return vow.all([
+                vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
+                vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.TAG))
+            ]);
+        })
+        .then(function() {
+            //optional enable cron updater
+            if(config.get('update:enable')) {
+                dataUpdater.init(luster).start(luster);
+            }
+
+            logger.info('luster: master process started');
+        });
 }
 
 luster.configure({

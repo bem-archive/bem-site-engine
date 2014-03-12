@@ -15,6 +15,7 @@ module.exports = {
     PROVIDER_GITHUB_API: 1,
     PROVIDER_GITHUB_HTTPS: 2,
     PROVIDER_YANDEX_DISK: 3,
+    PROVIDER_FILE_COMMON: 4,
 
     /**
      * Initialize github API and yandex disk API
@@ -43,6 +44,8 @@ module.exports = {
                 return providers.githubHTTPS.load(options);
             case this.PROVIDER_YANDEX_DISK:
                 return providers.yandexDisk.readFile(options);
+            case this.PROVIDER_FILE_COMMON:
+                return providers.commonFile.load(options);
             default:
                 logger.error('load data provider not recognized');
         }
@@ -60,6 +63,8 @@ module.exports = {
                 return providers.jsonFile.save(options);
             case this.PROVIDER_YANDEX_DISK:
                 return providers.yandexDisk.writeFile(options);
+            case this.PROVIDER_FILE_COMMON:
+                return providers.commonFile.save(options);
             default:
                 logger.error('save data provider not recognized');
         }

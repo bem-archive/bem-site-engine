@@ -3,11 +3,13 @@ var u = require('util'),
 
     cronJob = require('cron').CronJob,
     vow = require('vow'),
+    fs = require('vow-fs'),
     _ = require('lodash'),
     sha = require('sha1'),
 
     logger = require('../../logger')(module),
     config = require('../../config'),
+    constants = require('../constants'),
     data = require('../data');
 
 var job,
@@ -92,8 +94,14 @@ var checkForUpdate = function(master) {
 
             logger.info('Data has been changed. All application worker will be restarted');
 
-            //restart all cluster workers
-            master.softRestart();
+            fs.removeDir(path.resolve(constants.DIRS.CACHE, constants.DIRS.BRANCH))
+                .then(function() {
+                    fs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH));
+                })
+                .then(function() {
+                    //restart all cluster workers
+                    master.softRestart();
+                });
         }
 
         marker = content;

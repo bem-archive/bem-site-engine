@@ -1,5 +1,6 @@
-exports.jsonFile = require('./json_file');
-exports.githubAPI = require('./github_api');
-exports.githubHTTPS = require('./github_https');
-exports.yandexDisk = require('./yandex_disk');
+exports.commonFile = require('./common-file');
+exports.jsonFile = require('./json-file');
+exports.githubAPI = require('./github-api');
+exports.githubHTTPS = require('./github-https');
+exports.yandexDisk = require('./yandex-disk');
 
