@@ -24,6 +24,7 @@ if (luster.isMaster) {
         }
     }
 
+    /*
     vowFs.chmod(process.cwd(), '0777')
         .then(
             function() {
@@ -32,12 +33,7 @@ if (luster.isMaster) {
                 return vow.all([
                         vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
                         vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.TAG))
-                    ])
-                    .then(
-                        function() {
-                            logger.error('Can not create cache folder and it subfolders');
-                        }
-                    );
+                    ]);
             },
             function() {
                 logger.error('Can not set chmod for cwd folder');
@@ -51,6 +47,25 @@ if (luster.isMaster) {
 
             logger.info('luster: master process started');
         });
+    */
+
+    vow.all([
+            vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
+            vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.TAG))
+        ])
+        .then(
+            function() {
+                //optional enable cron updater
+                if(config.get('update:enable')) {
+                    dataUpdater.init(luster).start(luster);
+                }
+
+                logger.info('luster: master process started');
+            },
+            function() {
+                logger.error('Can not create cache folder and it subfolders');
+            }
+        );
 }
 
 luster.configure({
