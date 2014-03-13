@@ -2,7 +2,8 @@
 {
     position: relative;
 
-    height: 35px;
+    width: 110px;
+    height: 50px;
     margin-top: 5px;
 
     background-image: url('logo_type_lego.svg');

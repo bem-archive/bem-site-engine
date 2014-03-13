@@ -1,3 +1,8 @@
+.menu-list_type_default
+{
+    flex: 1 0 auto;
+}
+
 .menu-list_type_default .menu-list__link
 {
     padding: 8px 12px 7px 12px;

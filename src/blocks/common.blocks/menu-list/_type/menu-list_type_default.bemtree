@@ -1,4 +1,4 @@
-block menu-list {
+block menu-list, mod type default {
 
     this.ctx.content, content: {
 
