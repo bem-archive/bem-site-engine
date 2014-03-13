@@ -1,5 +1,8 @@
 .menu-list_type_default
 {
+    min-width: 150px;
+    max-width: 300px;
+
     flex: 1 0 auto;
 }
 
@@ -64,6 +67,8 @@
 /* (Begin) Menu-list with select */
 .menu-list_type_default .menu-list__group-select
 {
+    display: flex;
+
     transition: background .4s ease;
 }
 
