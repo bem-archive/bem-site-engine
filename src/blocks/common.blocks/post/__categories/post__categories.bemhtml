@@ -1,6 +1,6 @@
 block post, elem categories {
 
-    default, !(this.ctx && this.ctx.breadcrumbs && this.ctx.breadcrumbs.length > 0): {
+    default, !(this.ctx && this.ctx.breadcrumbs && this.ctx.breadcrumbs.length > 1): {
         return false;
     }
 
