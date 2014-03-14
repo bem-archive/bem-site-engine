@@ -1,15 +1,7 @@
 block content, mod view posts {
 
-    content: [
-        applyNext(),
-        {
-            elem: 'content-area',
-            content: [
-                {
-                    block: 'posts',
-                    node: this.data.node
-                }
-            ]
-        }
-    ]
+    content: {
+        block: 'posts',
+        node: this.data.node
+    }
 }

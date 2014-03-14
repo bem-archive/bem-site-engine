@@ -1,22 +1,12 @@
 block content, mod view author {
 
     content: [
-        applyNext(),
         {
-            elem: 'content-area',
-            content: [
-                {
-                    block: 'author',
-                    mods: { view: 'full' },
-                    id: this.data.req.params.id
-                },
-                apply('authorPosts')
-            ]
-        }
-    ]
-
-    authorPosts: {
-        return {
+            block: 'author',
+            mods: { view: 'full' },
+            id: this.data.req.params.id
+        },
+        {
             block: this.block,
             elem: 'author-posts',
             content: this.data.posts.map(function(node) {
@@ -26,6 +16,6 @@ block content, mod view author {
                     node: node
                 }
             })
-        };
-    }
+        }
+    ]
 }

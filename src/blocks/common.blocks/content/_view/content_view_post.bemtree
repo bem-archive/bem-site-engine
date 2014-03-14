@@ -1,11 +1,7 @@
 block content, mod view post {
 
-    content: [
-        {
-            elem: 'content-area',
-            content: [
-                { block: 'post', mods: { view: 'full' } }
-            ]
-        }
-    ]
+    content: {
+        block: 'post',
+        mods: { view: 'full' }
+    }
 }
