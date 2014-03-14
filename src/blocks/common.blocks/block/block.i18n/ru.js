@@ -2,7 +2,7 @@ module.exports = {
     "block": {
         "static-title": "Блок",
         "docs": "Документация",
-        "jsdoc": "Javasript API",
+        "jsdoc": "Javascript API",
         "examples": "Примеры",
     }
 };
