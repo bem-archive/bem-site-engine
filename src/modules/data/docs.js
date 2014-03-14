@@ -1,69 +1,54 @@
 'use strict';
 
-var u = require('util'),
-    path = require('path'),
-
-    vow = require('vow'),
+var vow = require('vow'),
     _ = require('lodash'),
 
-    util = require('../../util'),
-    logger = require('../../logger')(module),
     config = require('../../config'),
+    logger = require('../../logger')(module),
+    generic = require('./generic');
 
-    common = require('./common');
+var MSG = {
+    INFO: {
+        START: 'Load documentation start',
+        SUCCESS: 'Documentation data has been successfully loaded'
+    }
+};
 
 var authors,
     translators,
     tags,
-
     tagUrls = {};
 
 module.exports = {
 
     load: function(nodesWithSource) {
+        logger.info(MSG.INFO.START);
 
-        var docs;
+        return generic.load('data:docs:disk', 'data:docs:file')
+            .then(function(content) {
+                authors = content.authors;
+                translators = content.translators;
+                tags = content.tags;
 
-        if('production' === process.env.NODE_ENV) {
-            docs = common.loadData(common.PROVIDER_YANDEX_DISK, {
-                    path: config.get('data:docs:disk')
-                })
-                .then(function(content) {
-                    return JSON.parse(content);
+                nodesWithSource.forEach(function(node) {
+                    config.get('app:languages').forEach(function(lang) {
+                       if(node.source[lang]) {
+                           var f = _.find(content.docs, function(item) {
+                               return item.id === node.source[lang].content;
+                           });
+
+                           node.source[lang].content = f && f.source;
+                       }
+                    });
                 });
-        }else {
-            docs = common.loadData(common.PROVIDER_FILE, {
-                path: config.get('data:docs:file')
+
+                logger.info(MSG.INFO.SUCCESS);
+                return nodesWithSource;
             });
-        }
-
-        return docs.then(function(content) {
-            authors = content.authors;
-            translators = content.translators;
-            tags = content.tags;
-
-            nodesWithSource.forEach(function(node) {
-                ['en', 'ru'].forEach(function(lang) {
-                   if(node.source[lang]) {
-                       var f = _.find(content.docs, function(item) {
-                           return item.id === node.source[lang].content;
-                       });
-
-                       node.source[lang].content = f && f.source;
-                   }
-                });
-            });
-
-            return nodesWithSource;
-        });
-    },
-
-    reload: function(source) {
-
     },
 
     /**
-     * Returns array of collected authors from docs meta-information without dublicates
+     * Returns array of collected authors from docs meta-information without duplicates
      * @returns {Array}
      */
     getAuthors: function() {
@@ -71,7 +56,7 @@ module.exports = {
     },
 
     /**
-     * Returns array of collected translators from docs meta-information without dublicates
+     * Returns array of collected translators from docs meta-information without duplicates
      * @returns {Array}
      */
     getTranslators: function() {
@@ -79,7 +64,7 @@ module.exports = {
     },
 
     /**
-     * Returns array of collected tags from docs meta-information without dublicates
+     * Returns array of collected tags from docs meta-information without duplicates
      * @returns {Array}
      */
     getTags: function() {

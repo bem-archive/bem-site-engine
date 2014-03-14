@@ -1,43 +1,42 @@
-var u = require('util'),
+'use strict';
 
-    vow = require('vow'),
+var vow = require('vow'),
     _ = require('lodash'),
 
     logger = require('../../logger')(module),
-    config = require('../../config'),
+    generic = require('./generic');
 
-    common = require('./common');
+var MSG = {
+    INFO: {
+        START: 'Load libraries start',
+        SUCCESS: 'Libraries data has been successfully loaded'
+    }
+};
 
 var librariesHash = {};
 
 module.exports = {
 
+    /**
+     * Loads libraries data
+     * @returns {Promise}
+     */
     load: function() {
-        logger.info('Load libraries start');
+        logger.info(MSG.INFO.START);
 
-        var _load = function() {
-            if('production' === process.env.NODE_ENV) {
-                return common
-                    .loadData(common.PROVIDER_YANDEX_DISK, {
-                        path: config.get('data:libraries:disk')
-                    })
-                    .then(function(content) {
-                        return JSON.parse(content);
-                    });
-            }else {
-                return common
-                    .loadData(common.PROVIDER_FILE, {
-                        path: config.get('data:libraries:file')
-                    });
-            }
-        };
+        return generic.load('data:libraries:disk', 'data:libraries:file')
+            .then(function(content) {
+                logger.info(MSG.INFO.SUCCESS);
 
-        return _load().then(function(content) {
-            librariesHash = content;
-            return librariesHash;
-        })
+                librariesHash = content;
+                return librariesHash;
+            });
     },
 
+    /**
+     * Returns libraries map object
+     * @returns {Object}
+     */
     getLibraries: function() {
         return librariesHash;
     }
