@@ -24,31 +24,6 @@ if (luster.isMaster) {
         }
     }
 
-    /*
-    vowFs.chmod(process.cwd(), '0777')
-        .then(
-            function() {
-                logger.debug('Create cache directories and sub-directories');
-
-                return vow.all([
-                        vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
-                        vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.TAG))
-                    ]);
-            },
-            function() {
-                logger.error('Can not set chmod for cwd folder');
-            }
-        )
-        .then(function() {
-            //optional enable cron updater
-            if(config.get('update:enable')) {
-                dataUpdater.init(luster).start(luster);
-            }
-
-            logger.info('luster: master process started');
-        });
-    */
-
     vow.all([
             vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
             vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.TAG))
