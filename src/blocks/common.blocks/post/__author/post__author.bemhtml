@@ -1,6 +1,6 @@
 block post, elem author {
 
-    default, !(this.ctx && this.ctx.content): {
+    default, !(this.ctx && this.ctx.content && this.ctx.content.length): {
         return false;
     }
 }
