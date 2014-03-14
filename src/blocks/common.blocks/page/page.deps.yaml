@@ -13,7 +13,6 @@
 - mods: { fullscreen: true }
 
 - link
-- island
 - block: layout,
   mods: { type: serp }
 - block: layout

@@ -1,16 +1,10 @@
 block content, mod view authors {
 
-    content: [
-        applyNext(),
-        {
-            elem: 'content-area',
-            content: this.data.authors.map(function(author) {
-                return {
-                    block: 'author',
-                    mods: { view: 'grid-cell' },
-                    id: author
-                }
-            })
+    content: this.data.authors.map(function(author) {
+        return {
+            block: 'author',
+            mods: { view: 'grid-cell' },
+            id: author
         }
-    ]
+    })
 }

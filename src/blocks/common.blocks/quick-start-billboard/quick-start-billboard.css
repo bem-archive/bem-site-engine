@@ -6,4 +6,7 @@
     padding: 23px 0 105px;
 
     text-align: center;
+
+    flex: 1;
+    align-self: center;
 }

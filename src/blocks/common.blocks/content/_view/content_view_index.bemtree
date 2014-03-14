@@ -1,19 +1,9 @@
 block content, mod view index {
 
     content: [
-        applyNext(),
         {
-            elem: 'content-area',
-            content: [
-                {
-                    block: this.block,
-                    elem: 'quick-start-billboard',
-                    content: {
-                        block: 'quick-start-billboard',
-                        url: '/articles/start-with-project-stub'
-                    }
-                }
-            ]
+            block: 'quick-start-billboard',
+            url: '/articles/start-with-project-stub'
         },
         {
             block: 'link',

@@ -1,26 +1,14 @@
 block content, mod view tags {
 
-    content: [
-        applyNext(),
-        {
-            elem: 'content-area',
-            content: [
-                apply('tagPosts')
-            ]
-        }
-    ]
-
-    tagPosts: {
-        return {
-            block: this.block,
-            elem: 'tag-posts',
-            content: this.data.posts.map(function(node) {
-                return {
-                    block: 'posts',
-                    title: node.title,
-                    node: node
-                }
-            })
-        };
+    content: {
+        block: this.block,
+        elem: 'tag-posts',
+        content: this.data.posts.map(function(node) {
+            return {
+                block: 'posts',
+                title: node.title,
+                node: node
+            }
+        })
     }
 }

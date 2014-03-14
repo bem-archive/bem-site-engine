@@ -1,12 +1,7 @@
 block content, mod view block {
-    content: [
-        applyNext(),
-        {
-            elem: 'content-area',
-            content: {
-                block: 'block',
-                mix: { block: 'post', mods: { view: 'full' } }
-            }
-        }
-    ]
+
+    content: {
+        block: 'block',
+        mix: { block: 'post', mods: { view: 'full' } }
+    }
 }
