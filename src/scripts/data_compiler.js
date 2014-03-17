@@ -136,7 +136,7 @@ module.exports = {
  * Resolves sitemap js model
  * @returns vow promise
  */
-var getSitemap  = function(modelPath) {
+var getSitemap = function(modelPath) {
     logger.info(MSG.INFO.SITE_MAP.START);
 
     var def = vow.defer();
