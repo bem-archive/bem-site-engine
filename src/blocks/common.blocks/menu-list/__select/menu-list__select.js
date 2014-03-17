@@ -1,6 +1,6 @@
 modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
 
-BEMDOM.decl('menu-list', {
+BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'default' }, {
     onSetMod: {
         js: {
             inited: function() {
