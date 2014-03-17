@@ -122,7 +122,7 @@ exports.BaseNode.prototype = {
     createBreadcrumbs: function() {
         this.breadcrumbs = [];
 
-        var self = this;
+        var self = this,
             traverse = function(node) {
                 if(node.url) {
                     self.breadcrumbs.unshift({
