@@ -23,6 +23,9 @@ module.exports = function() {
                 menu: logic.getMenuByNode(req, node),
                 langSwitch: logic.getLangSwitchUrlByNode(req,node)
             };
+
+            // console.log(JSON.stringify(commonDataCtx.menu, null, 4));
+
             advancedDataCtx = logic.getAdvancedData(req, node);
 
             ctx = _.extend({}, baseCtx, commonDataCtx, advancedDataCtx);
