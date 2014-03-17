@@ -44,7 +44,7 @@ module.exports = {
 
                         prev[key] = people[key];
                         return prev;
-                    }, {})
+                    }, {});
 
                     logger.info(MSG.INFO.END);
                 }catch(err) {

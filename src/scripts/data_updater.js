@@ -67,8 +67,8 @@ var checkForUpdate = function(master) {
         promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
             path: config.get('data:marker:disk')
         }).then(function(content) {
-                return JSON.parse(content);
-            });
+            return JSON.parse(content);
+        });
     }else {
         promise = data.common.loadData(data.common.PROVIDER_FILE, {
             path: config.get('data:marker:file')

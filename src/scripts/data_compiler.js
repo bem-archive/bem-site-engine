@@ -38,6 +38,10 @@ var MSG = {
             START: 'Load sources for nodes start',
             SUCCESS: 'All loading operations for docs have been performed successfully'
         },
+        LOAD_PEOPLE: {
+            START: 'Load all people start',
+            SUCCESS: 'People succssfully loaded'
+        },
         SAVE_DATA: {
             START: 'Save data to file %s or upload it to Yandex Disk %s'
         }
@@ -55,6 +59,7 @@ var MSG = {
         COLLECT_SOURCE: 'Can not traverse through sitemap model and extrude source nodes',
         COLLECT_LIBRARY: 'Can not traverse through sitemap model and extrude source nodes',
         LOAD_SOURCES: 'Error occur while loading sources',
+        LOAD_PEOPLE: 'Error occur while loading people',
         SAVE_DATA: {
             DISK: 'Error occur while saving data to yandex disk %s',
             FILE: 'Error occur while saving data to file %s'
@@ -63,14 +68,21 @@ var MSG = {
 };
 
 module.exports = {
+
+    /**
+     * Start point for data compiler module
+     * @param modelPath - {String} relative path to model index file
+     */
     run: function(modelPath) {
         logger.info(MSG.INFO.START);
 
         var _sitemap;
 
-        data.common.init();
-
-        getSitemap(modelPath)
+        vow
+            .when(data.common.init())
+            .then(function() {
+                return getSitemap(modelPath)
+            })
             .then(function(sitemap) {
                 _sitemap = sitemap;
                 return vow.all([
@@ -81,10 +93,11 @@ module.exports = {
             .spread(function(sources, libraries) {
                 return vow.all([
                     loadSources(sources),
-                    loadLibraries(libraries)
+                    loadLibraries(libraries),
+                    loadPeople()
                 ]);
             })
-            .spread(function(docs, libraries) {
+            .spread(function(docs, libraries, people) {
                 return vow
                     .all([
                         saveAndUpload(_sitemap, {
@@ -98,10 +111,14 @@ module.exports = {
                         saveAndUpload(libraries, {
                             disk: 'data:libraries:disk',
                             file: 'data:libraries:file'
+                        }),
+                        saveAndUpload(people, {
+                            disk: 'data:people:disk',
+                            file: 'data:people:file'
                         })
                     ])
                     .then(function() {
-                        return createUpdateMarker(_sitemap, docs, libraries);
+                        return createUpdateMarker(_sitemap, docs, libraries, people);
                     })
             })
             .then(
@@ -229,7 +246,7 @@ var loadSources = function(nodesWithSource) {
         tags: []
     };
 
-    var LANGS = ['en', 'ru'];
+    var LANGS = config.get('app:languages');
 
     var promises = nodesWithSource.map(function(node) {
         var _promises = LANGS.map(function(lang) {
@@ -418,6 +435,37 @@ var loadLibraryVersions = function(repo, node, libraries) {
 };
 
 /**
+ * Loads people data from github repo
+ * @returns {Object} people hash
+ */
+var loadPeople = function() {
+    logger.info(MSG.INFO.LOAD_PEOPLE.START);
+
+    var peopleHash = {},
+        peopleRepository = config.get('github:peopleRepository');
+
+    return common
+        .loadData(common.PROVIDER_GITHUB_API, { repository: peopleRepository })
+        .then(function(result) {
+            try {
+                var content = (new Buffer(result.res.content, 'base64')).toString();
+                var people = JSON.parse(content);
+
+                peopleHash = Object.keys(people).reduce(function(prev, key) {
+                    prev[key] = people[key];
+                    return prev;
+                }, {});
+
+                logger.info(MSG.INFO.LOAD_PEOPLE.SUCCESS);
+
+                return peopleHash;
+            }catch(err) {
+                logger.error(MSG.ERR.LOAD_PEOPLE);
+            }
+        });
+};
+
+/**
  * Saves data object into *.json file in dev enviroment
  * or upload it to Yandex Disk in production enviroment
  * @param content - {Object} object with should be saved
@@ -471,15 +519,17 @@ var saveAndUpload = function(content, _path) {
  * @param sitemap - {Object} sitemap object
  * @param docs - {Object} documentation object
  * @param libraries - {Object} library object
+ * @param people - {Object} people object
  * @returns {*}
  */
-var createUpdateMarker = function(sitemap, docs, libraries) {
+var createUpdateMarker = function(sitemap, docs, libraries, people) {
     logger.debug('Create update marker start');
 
     var marker = {
         sitemap: sha(JSON.stringify(sitemap)),
         docs: sha(JSON.stringify(docs)),
-        libraries: sha(JSON.stringify(libraries))
+        libraries: sha(JSON.stringify(libraries)),
+        people: sha(JSON.stringify(people))
     };
 
     if ('production' === process.env.NODE_ENV) {
