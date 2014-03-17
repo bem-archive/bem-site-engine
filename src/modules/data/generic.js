@@ -6,10 +6,18 @@ var vow = require('vow'),
     common = require('./common');
 
 module.exports = {
+
+    /**
+     * Loads data from yandex disk or file depending on enviroment
+     * @param disk - {String} config key for yandex disk path
+     * @param file - {String} config key for local filesystem path
+     * @returns {Promise}
+     */
     load: function(disk, file) {
 
         /**
          * Load documentation data from Yandex disk through Yandex disk API
+         * @param file - {String} config key for yandex disk path
          * @returns {Promise}
          */
         var fromYandexDisk = function(file) {
@@ -24,6 +32,7 @@ module.exports = {
 
         /**
          * Load documentation data from local filesystem
+         * @param file - {String} config key for local filesystem path
          * @returns {Promise}
          */
         var fromLocalFile = function(file) {

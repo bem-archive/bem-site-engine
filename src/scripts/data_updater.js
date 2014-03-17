@@ -7,10 +7,10 @@ var u = require('util'),
     _ = require('lodash'),
     sha = require('sha1'),
 
-    logger = require('../../logger')(module),
-    config = require('../../config'),
-    constants = require('../constants'),
-    data = require('../data');
+    logger = require('../logger')(module),
+    config = require('../config'),
+    constants = require('../modules/constants'),
+    data = require('../modules/data');
 
 var job,
     marker;

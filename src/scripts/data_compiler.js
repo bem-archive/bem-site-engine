@@ -6,10 +6,10 @@ var u = require('util'),
     _ = require('lodash'),
     sha = require('sha1'),
 
-    logger = require('../../logger')(module),
-    config = require('../../config'),
-    util = require('../../util'),
-    data = require('../data'),
+    logger = require('../logger')(module),
+    config = require('../config'),
+    util = require('../util'),
+    data = require('../modules/data'),
     common = data.common;
 
 var MSG = {
