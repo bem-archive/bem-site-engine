@@ -13,11 +13,11 @@ $ cd bem-info
 
 # Собираем в dev-режиме
 $ make
-$ make sitemap_compiler
+$ make data
 
 # Собираем в production-режиме
 $ YENV=production make
-$ YENV=production sitemap_compiler
+$ YENV=production make data
 ```
 
 Запуск

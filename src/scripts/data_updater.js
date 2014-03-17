@@ -7,10 +7,10 @@ var u = require('util'),
     _ = require('lodash'),
     sha = require('sha1'),
 
-    logger = require('../../logger')(module),
-    config = require('../../config'),
-    constants = require('../constants'),
-    data = require('../data');
+    logger = require('../logger')(module),
+    config = require('../config'),
+    constants = require('../modules/constants'),
+    data = require('../modules/data');
 
 var job,
     marker;
@@ -67,8 +67,8 @@ var checkForUpdate = function(master) {
         promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
             path: config.get('data:marker:disk')
         }).then(function(content) {
-                return JSON.parse(content);
-            });
+            return JSON.parse(content);
+        });
     }else {
         promise = data.common.loadData(data.common.PROVIDER_FILE, {
             path: config.get('data:marker:file')

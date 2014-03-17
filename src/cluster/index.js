@@ -5,7 +5,7 @@ var path = require('path'),
     vowFs = require('vow-fs'),
     luster = require('luster'),
     logger = require('../logger')(module),
-    dataUpdater = require('../modules/data_updater'),
+    dataUpdater = require('../scripts/data_updater'),
     config = require('../config'),
     constants = require('../modules/constants'),
     socket = config.get('app:socket');
@@ -23,31 +23,6 @@ if (luster.isMaster) {
             logger.error('Can\'t unlink socket %s', socket);
         }
     }
-
-    /*
-    vowFs.chmod(process.cwd(), '0777')
-        .then(
-            function() {
-                logger.debug('Create cache directories and sub-directories');
-
-                return vow.all([
-                        vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
-                        vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.TAG))
-                    ]);
-            },
-            function() {
-                logger.error('Can not set chmod for cwd folder');
-            }
-        )
-        .then(function() {
-            //optional enable cron updater
-            if(config.get('update:enable')) {
-                dataUpdater.init(luster).start(luster);
-            }
-
-            logger.info('luster: master process started');
-        });
-    */
 
     vow.all([
             vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),

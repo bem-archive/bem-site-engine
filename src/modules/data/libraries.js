@@ -1,43 +1,59 @@
-var u = require('util'),
+'use strict';
 
-    vow = require('vow'),
+var vow = require('vow'),
     _ = require('lodash'),
 
     logger = require('../../logger')(module),
-    config = require('../../config'),
+    generic = require('./generic');
 
-    common = require('./common');
+var MSG = {
+    INFO: {
+        START: 'Load libraries start',
+        SUCCESS: 'Libraries data has been successfully loaded'
+    },
+    ERROR: 'Libraries data loading filed with error'
+};
 
 var librariesHash = {};
 
 module.exports = {
 
+    /**
+     * Loads libraries data
+     * @returns {Promise}
+     */
     load: function() {
-        logger.info('Load libraries start');
+        logger.info(MSG.INFO.START);
 
-        var _load = function() {
-            if('production' === process.env.NODE_ENV) {
-                return common
-                    .loadData(common.PROVIDER_YANDEX_DISK, {
-                        path: config.get('data:libraries:disk')
-                    })
-                    .then(function(content) {
-                        return JSON.parse(content);
-                    });
-            }else {
-                return common
-                    .loadData(common.PROVIDER_FILE, {
-                        path: config.get('data:libraries:file')
-                    });
-            }
-        };
+        /**
+         * Success callback for data loading
+         * @param content - {Object} loaded and parsed content
+         * @returns {*}
+         */
+        var  onSuccess = function(content) {
+            logger.info(MSG.INFO.SUCCESS);
 
-        return _load().then(function(content) {
             librariesHash = content;
             return librariesHash;
-        })
+        };
+
+        /**
+         * Error callback for data loading
+         * Simply log error message
+         */
+        var onError = function() {
+            logger.error(MSG.ERROR);
+        };
+
+        return generic
+            .load('data:libraries:disk', 'data:libraries:file')
+            .then(onSuccess, onError);
     },
 
+    /**
+     * Returns libraries map object
+     * @returns {Object}
+     */
     getLibraries: function() {
         return librariesHash;
     }

@@ -6,31 +6,83 @@ var u = require('util'),
     _ = require('lodash'),
     sha = require('sha1'),
 
-    logger = require('../../logger')(module),
-    config = require('../../config'),
-    util = require('../../util'),
-    data = require('../data'),
+    logger = require('../logger')(module),
+    config = require('../config'),
+    util = require('../util'),
+    data = require('../modules/data'),
     common = data.common;
 
 var MSG = {
+    DEBUG: {
+        SAVE_DATA: {
+            FILE_SUCCESS: 'Data has been saved to file %s',
+            DISK_SUCCESS: 'Data has been saved to yandex disk %s'
+        }
+    },
+    INFO: {
+        START: '-- sitemap_compiler module start --',
+        END: '-- sitemap_compiler successfully finished --',
+        SITE_MAP: {
+            START: 'Get sitemap start',
+            SUCCESS: 'Sitemap js model has been loaded successfully'
+        },
+        COLLECT_SOURCE: {
+            START: 'Collect nodes with source start',
+            SUCCESS: 'Collect nodes with source successfully finished'
+        },
+        COLLECT_LIBRARY: {
+            START: 'Collect library nodes start',
+            SUCCESS: 'Collect library nodes successfully finished'
+        },
+        LOAD_SOURCES: {
+            START: 'Load sources for nodes start',
+            SUCCESS: 'All loading operations for docs have been performed successfully'
+        },
+        LOAD_PEOPLE: {
+            START: 'Load all people start',
+            SUCCESS: 'People succssfully loaded'
+        },
+        SAVE_DATA: {
+            START: 'Save data to file %s or upload it to Yandex Disk %s'
+        }
+    },
     WARN: {
         META_NOT_EXIST: 'source with lang %s does not exists for node %s',
         MD_NOT_EXIST: 'markdown with lang %s does not exists for node %s',
         META_PARSING_ERROR: 'source for lang %s contains errors for node %s',
         MD_PARSING_ERROR: 'markdown for lang %s contains errors for node %s',
         DEPRECATED: 'remove deprecated field %s for source user: %s repo: %s ref: %s path: %s'
+    },
+    ERROR: {
+        FINAL: 'Error occur while compile models and loading documentation',
+        SITEMAP_RESOLVE: 'Can not resolve valid sitemap js model',
+        COLLECT_SOURCE: 'Can not traverse through sitemap model and extrude source nodes',
+        COLLECT_LIBRARY: 'Can not traverse through sitemap model and extrude source nodes',
+        LOAD_SOURCES: 'Error occur while loading sources',
+        LOAD_PEOPLE: 'Error occur while loading people',
+        SAVE_DATA: {
+            DISK: 'Error occur while saving data to yandex disk %s',
+            FILE: 'Error occur while saving data to file %s'
+        }
     }
 };
 
 module.exports = {
+
+    /**
+     * Start point for data compiler module
+     * @param modelPath - {String} relative path to model index file
+     */
     run: function(modelPath) {
-        logger.info('-- sitemap_compiler module start --');
+        logger.info(MSG.INFO.START);
 
         var _sitemap;
 
-        data.common.init();
-
-        getSitemap(modelPath)
+        vow
+            .when(data.common.init())
+            .then(function() {
+                return getSitemap(modelPath)
+            })
             .then(function(sitemap) {
                 _sitemap = sitemap;
                 return vow.all([
@@ -41,10 +93,11 @@ module.exports = {
             .spread(function(sources, libraries) {
                 return vow.all([
                     loadSources(sources),
-                    loadLibraries(libraries)
+                    loadLibraries(libraries),
+                    loadPeople()
                 ]);
             })
-            .spread(function(docs, libraries) {
+            .spread(function(docs, libraries, people) {
                 return vow
                     .all([
                         saveAndUpload(_sitemap, {
@@ -58,18 +111,22 @@ module.exports = {
                         saveAndUpload(libraries, {
                             disk: 'data:libraries:disk',
                             file: 'data:libraries:file'
+                        }),
+                        saveAndUpload(people, {
+                            disk: 'data:people:disk',
+                            file: 'data:people:file'
                         })
                     ])
                     .then(function() {
-                        return createUpdateMarker(_sitemap, docs, libraries);
+                        return createUpdateMarker(_sitemap, docs, libraries, people);
                     })
             })
             .then(
                 function() {
-                    logger.info('-- sitemap_compiler successfully finished --');
+                    logger.info(MSG.INFO.END);
                 },
-                function(err) {
-                    logger.error('Error occur while compile models and loading documentation');
+                function() {
+                    logger.error(MSG.ERROR.FINAL);
                 }
             );
     }
@@ -77,21 +134,19 @@ module.exports = {
 
 /**
  * Resolves sitemap js model
- * @returns {*|Q.Promise<T>}
+ * @returns vow promise
  */
-var getSitemap  = function(modelPath) {
-    logger.debug('Get sitemap start');
+var getSitemap = function(modelPath) {
+    logger.info(MSG.INFO.SITE_MAP.START);
 
-    var def = vow.defer(),
-        sitemap;
+    var def = vow.defer();
+
     try {
-        sitemap = require(modelPath).get();
-        def.resolve(sitemap);
-
-        logger.debug('Sitemap js model has been loaded successfully');
+        def.resolve(require(modelPath).get());
+        logger.info(MSG.INFO.SITE_MAP.SUCCESS);
     }catch(err) {
-        logger.error('Can not resolve valid sitemap js model');
         def.reject(err.message);
+        logger.error(MSG.ERROR.SITEMAP_RESOLVE);
     }
     return def.promise();
 };
@@ -102,7 +157,7 @@ var getSitemap  = function(modelPath) {
  * @returns {Array} - array of nodes
  */
 var collectSourceNodes = function(sitemap) {
-    logger.debug('Collect nodes with source start');
+    logger.info(MSG.INFO.COLLECT_SOURCE.START);
 
     var nodesWithSource = [];
 
@@ -128,9 +183,9 @@ var collectSourceNodes = function(sitemap) {
             traverseTreeNodes(item);
         });
 
-        logger.debug('Collect nodes with source successfully finished');
+        logger.info(MSG.INFO.COLLECT_SOURCE.SUCCESS);
     }catch(err) {
-        logger.error('Can not traverse throught sitemap model and extrude source nodes');
+        logger.error(MSG.ERROR.COLLECT_SOURCE);
     }
 
     return nodesWithSource;
@@ -142,7 +197,7 @@ var collectSourceNodes = function(sitemap) {
  * @returns {Array} - array of nodes
  */
 var collectLibraryNodes = function(sitemap) {
-    logger.debug('Collect library nodes start');
+    logger.info(MSG.INFO.COLLECT_LIBRARY.START);
 
     var libraryNodes = [];
 
@@ -168,9 +223,9 @@ var collectLibraryNodes = function(sitemap) {
             traverseTreeNodes(item);
         });
 
-        logger.debug('Collect library nodes successfully finished');
+        logger.info(MSG.INFO.COLLECT_LIBRARY.SUCCESS);
     }catch(err) {
-        logger.error('Can not traverse through sitemap model and extrude source nodes');
+        logger.error(MSG.ERROR.COLLECT_LIBRARY);
     }
 
     return libraryNodes;
@@ -182,7 +237,7 @@ var collectLibraryNodes = function(sitemap) {
  * @returns {*|Q.IPromise<U>|Q.Promise<U>}
  */
 var loadSources = function(nodesWithSource) {
-    logger.debug('Load sources for nodes start');
+    logger.info(MSG.INFO.LOAD_SOURCES.START);
 
     var collected = {
         docs: [],
@@ -191,45 +246,44 @@ var loadSources = function(nodesWithSource) {
         tags: []
     };
 
-    var LANG = {
-        EN: 'en',
-        RU: 'ru'
-    };
+    var LANGS = config.get('app:languages');
 
     var promises = nodesWithSource.map(function(node) {
-        return vow.allResolved({
-            en: analyzeMetaInformation(node, LANG.EN, collected)
+        var _promises = LANGS.map(function(lang) {
+            return analyzeMetaInformation(node, lang, collected)
                 .then(function(res) {
-                    return loadMDFile(res.node, LANG.EN, res.repo);
+                    return loadMDFile(res.node, lang, res.repo);
                 })
                 .then(function(res) {
-                    logger.verbose('Collect source for key %s', node.source[LANG.EN].content);
                     collected.docs.push({
-                        id: node.source[LANG.EN].content,
+                        id: node.source[lang].content,
                         source: res
                     });
-                })
-            ,
-            ru: analyzeMetaInformation(node, LANG.RU, collected)
-                .then(function(res) {
-                    return loadMDFile(res.node, LANG.RU, res.repo);
-                })
-                .then(function(res) {
-                    logger.verbose('Collect source for key %s', node.source[LANG.RU].content);
-                    collected.docs.push({
-                        id: node.source[LANG.RU].content,
-                        source: res
-                    });
-                })
-        })
+                });
+        });
+
+        return vow.allResolved(_promises);
     });
 
-    return vow.allResolved(promises).then(function() {
-        logger.debug('All loading operations for docs have been performed');
-        return collected;
-    });
+    return vow.all(promises)
+        .then(
+            function() {
+                logger.info(MSG.INFO.LOAD_SOURCES.SUCCESS);
+                return collected;
+            },
+            function() {
+                logger.error(MSG.ERROR.LOAD_SOURCES);
+            }
+        );
 };
 
+/**
+ * Analizes source for node, transform values and create repo links
+ * @param node - {Object} node
+ * @param lang - {String} language of source
+ * @param collected - {Object} result target object
+ * @returns {*}
+ */
 var analyzeMetaInformation = function(node, lang, collected) {
 
     var def = vow.defer();
@@ -289,9 +343,6 @@ var analyzeMetaInformation = function(node, lang, collected) {
         })(content);
 
         repo.type = repo.host === 'github.yandex-team.ru' ? 'private' : 'public';
-
-        //logger.verbose('get repo from source user: %s repo: %s ref: %s path: %s',
-        //    repo.user, repo.repo, repo.ref, repo.path);
 
         //set repo information for issues and prose.io links
         node.source[lang].repo = {
@@ -384,36 +435,101 @@ var loadLibraryVersions = function(repo, node, libraries) {
 };
 
 /**
+ * Loads people data from github repo
+ * @returns {Object} people hash
+ */
+var loadPeople = function() {
+    logger.info(MSG.INFO.LOAD_PEOPLE.START);
+
+    var peopleHash = {},
+        peopleRepository = config.get('github:peopleRepository');
+
+    return common
+        .loadData(common.PROVIDER_GITHUB_API, { repository: peopleRepository })
+        .then(function(result) {
+            try {
+                var content = (new Buffer(result.res.content, 'base64')).toString();
+                var people = JSON.parse(content);
+
+                peopleHash = Object.keys(people).reduce(function(prev, key) {
+                    prev[key] = people[key];
+                    return prev;
+                }, {});
+
+                logger.info(MSG.INFO.LOAD_PEOPLE.SUCCESS);
+
+                return peopleHash;
+            }catch(err) {
+                logger.error(MSG.ERR.LOAD_PEOPLE);
+            }
+        });
+};
+
+/**
  * Saves data object into *.json file in dev enviroment
  * or upload it to Yandex Disk in production enviroment
  * @param content - {Object} object with should be saved
  * @returns {*}
  */
 var saveAndUpload = function(content, _path) {
-    logger.debug('Save data to file %s or upload it to Yandex Disk %s',
-        config.get(_path.file), config.get(_path.disk));
+    logger.info(MSG.INFO.SAVE_DATA.START, config.get(_path.file), config.get(_path.disk));
+
+    var saveToYandexDisk = function() {
+            return common
+                .saveData(common.PROVIDER_YANDEX_DISK, {
+                    path: config.get(_path.disk),
+                    data: JSON.stringify(content)
+                })
+                .then(
+                    function() {
+                        logger.debug(MSG.DEBUG.SAVE_DATA.DISK_SUCCESS, config.get(_path.disk));
+                    },
+                    function() {
+                        logger.error(MSG.ERROR.SAVE_DATA.DISK, config.get(_path.disk));
+                    }
+                );
+        },
+        saveToLocalFile = function() {
+            return common
+                .saveData(common.PROVIDER_FILE, {
+                    path: config.get(_path.file),
+                    data: content,
+                    minimize: true
+                })
+                .then(
+                    function() {
+                        logger.debug(MSG.DEBUG.SAVE_DATA.FILE_SUCCESS, config.get(_path.file));
+                    },
+                    function() {
+                        logger.error(MSG.ERROR.SAVE_DATA.FILE, config.get(_path.file));
+                    }
+                );
+        };
 
     if ('production' === process.env.NODE_ENV) {
-        return common.saveData(common.PROVIDER_YANDEX_DISK, {
-            path: config.get(_path.disk),
-            data: JSON.stringify(content)
-        });
+        return saveToYandexDisk();
     }else {
-        return common.saveData(common.PROVIDER_FILE, {
-            path: config.get(_path.file),
-            data: content,
-            minimize: true
-        });
+        return saveToLocalFile();
     }
 };
 
-var createUpdateMarker = function(sitemap, docs, libraries) {
+/**
+ * Create small json file with hashes from sitemap, docs, libraries and people data
+ * It will be checked by application in runtime
+ * @param sitemap - {Object} sitemap object
+ * @param docs - {Object} documentation object
+ * @param libraries - {Object} library object
+ * @param people - {Object} people object
+ * @returns {*}
+ */
+var createUpdateMarker = function(sitemap, docs, libraries, people) {
     logger.debug('Create update marker start');
 
     var marker = {
         sitemap: sha(JSON.stringify(sitemap)),
         docs: sha(JSON.stringify(docs)),
-        libraries: sha(JSON.stringify(libraries))
+        libraries: sha(JSON.stringify(libraries)),
+        people: sha(JSON.stringify(people))
     };
 
     if ('production' === process.env.NODE_ENV) {

@@ -4,9 +4,7 @@ var path = require('path'),
     _ = require('lodash'),
 
     logger = require('../../logger')(module),
-    config = require('../../config'),
-
-    common = require('./common');
+    generic = require('./generic');
 
 var peopleHash = {},
     peopleUrls = {};
@@ -14,49 +12,57 @@ var peopleHash = {},
 var MSG = {
     INFO: {
         START: 'Load all people start',
-        END: 'People succssfully loaded'
+        SUCCESS: 'People succssfully loaded'
     },
-    ERR: 'Error while loading people occur',
-    VERBOSE: 'Load person %s'
+    ERROR: 'Error while loading people occur'
 };
 
 module.exports = {
 
     /**
-     * Loads people data from configured people repository
-     * for all unique names of people blocks
-     * @returns {*}
+     * Loads people data
+     * @returns {Promise}
      */
     load: function() {
         logger.info(MSG.INFO.START);
 
-        var peopleRepository = config.get('github:peopleRepository');
+        /**
+         * Success callback for data loading
+         * @param content - {Object} loaded and parsed content
+         * @returns {*}
+         */
+        var  onSuccess = function(content) {
+            logger.info(MSG.INFO.SUCCESS);
 
-        return common
-            .loadData(common.PROVIDER_GITHUB_API, { repository: peopleRepository })
-            .then(function(result) {
-                try {
-                    var content = (new Buffer(result.res.content, 'base64')).toString();
-                    var people = JSON.parse(content);
+            peopleHash = content;
+            return peopleHash;
+        };
 
-                    peopleHash = Object.keys(people).reduce(function(prev, key) {
-                        logger.verbose(MSG.VERBOSE, key);
+        /**
+         * Error callback for data loading
+         * Simply log error message
+         */
+        var onError = function() {
+            logger.error(MSG.ERROR);
+        };
 
-                        prev[key] = people[key];
-                        return prev;
-                    }, {})
-
-                    logger.info(MSG.INFO.END);
-                }catch(err) {
-                    logger.error(MSG.ERR);
-                }
-            });
+        return generic
+            .load('data:people:disk', 'data:people:file')
+            .then(onSuccess, onError);
     },
 
+    /**
+     * Returns people hash
+     * @returns {Object}
+     */
     getPeople: function() {
         return peopleHash;
     },
 
+    /**
+     * Returns people urls
+     * @returns {Object}
+     */
     getUrls: function() {
         return peopleUrls;
     }
