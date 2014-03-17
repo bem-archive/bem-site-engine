@@ -6,7 +6,9 @@ var u = require('util'),
 
     constants = require('./constants'),
     data = require('./data'),
-    model = require('./model');
+    model = require('./model'),
+
+    LevelNode = require('./nodes').level.LevelNode;
 
 module.exports = {
 
@@ -143,7 +145,19 @@ module.exports = {
                 }
             },
             traverseTreeNodesDown = function(_node, parent) {
-                result[_node.level] = result[_node.level] || [];
+                result[_node.level] = result[_node.level] ||
+                    {
+                        type: constants.MENU.DEFAULT,
+                        items: []
+                    };
+
+                if(_node.level === 0) {
+                    result[_node.level].type = constants.MENU.MAIN;
+                }
+
+                if(_node instanceof LevelNode) {
+                    result[_node.level].type = constants.MENU.LEVEL;
+                }
 
                 //logger.verbose('menu creation item level %s title %s type %s', _node.level, _node.title ? _node.title[req.prefLocale] : '', _node.type);
 
@@ -170,7 +184,7 @@ module.exports = {
                         parent.items = parent.items || [];
                         parent.items.push(o);
                     }else {
-                        result[_node.level].push(o);
+                        result[_node.level].items.push(o);
                     }
                 }
 

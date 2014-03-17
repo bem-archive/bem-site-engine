@@ -4,10 +4,8 @@ block menu, this.data.menu, default: {
         this.data.menu.map(function(column, index) {
             return {
                 block: 'menu-list',
-                content: column,
-                mods: index === 0 ?
-                    { type: 'main' } :
-                    { type: 'default' }
+                content: column.items,
+                mods: { type: column.type }
             }
         }),
         this.data.menu.length > 1 ? {
