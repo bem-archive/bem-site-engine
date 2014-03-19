@@ -48,7 +48,7 @@
     padding-top: 10px;
 }
 
-.menu-list_type_default .menu-list__title:before
+.menu-list_type_default .menu-list__title::before
 {
     position: absolute;
     top: 0;
@@ -59,9 +59,16 @@
 
     content: '';
 
-    background: #999;
-    background: -webkit-linear-gradient(left,  rgba(0,0,0,0.15) 20%,rgba(0,0,0,0) 100%);
-    background: linear-gradient(to right,  rgba(0,0,0,0.15) 20%,rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(left,  rgba(0,0,0,0.15) 20%,#fff 100%);
+    background: linear-gradient(to right,  rgba(0,0,0,0.15) 20%,#fff 100%);
+}
+
+.menu-list_type_default .menu-list__delimeter
+{
+    margin: 10px 12px;
+
+    background: -webkit-linear-gradient(left,  rgba(0,0,0,0.15) 20%,#fff 100%);
+    background: linear-gradient(to right,  rgba(0,0,0,0.15) 20%,#fff 100%);
 }
 
 /* (Begin) Menu-list with select */
