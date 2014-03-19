@@ -174,8 +174,16 @@ module.exports = {
                     isActive = activeIds.indexOf(_node.id) !== -1,
                     isGroup = _node.type === _node.TYPE.GROUP,
                     isSelect = _node.type === _node.TYPE.SELECT,
+                    isIndex = _node.view && _node.view === _node.VIEW.INDEX,
 
-                    isNeedToDrawChildNodes = (isGroup || isSelect) || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
+                    isNeedToDrawChildNodes = (isGroup || isSelect) || isIndex || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
+
+//                console.log('_node.id ' + _node.id);
+//                console.log('activeIds ' + activeIds);
+//                console.log('(isGroup || isSelect) ' + (isGroup || isSelect));
+//                console.log('isActive ' + isActive);
+//                console.log('(!isTargetNode || (isTargetNode && hasItems && hasSource)) ' + (!isTargetNode || (isTargetNode && hasItems && hasSource)));
+//                console.log('isNeedToDrawChildNodes ' + isNeedToDrawChildNodes);
 
                 //if node is not hidden for current selected locale
                 //then we should draw it corresponded menu item

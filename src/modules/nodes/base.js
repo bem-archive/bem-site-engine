@@ -15,6 +15,7 @@ exports.BaseNode = function(node, parent) {
 exports.BaseNode.prototype = {
 
     VIEW: {
+        INDEX: 'index',
         POST: 'post',
         POSTS: 'posts',
         AUTHOR: 'author',
