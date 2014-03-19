@@ -6,4 +6,4 @@
     type: [delimeter, select]
     size: [small, normal]
 - mods:
-    type: [main, default]
+    type: [main, default, header]

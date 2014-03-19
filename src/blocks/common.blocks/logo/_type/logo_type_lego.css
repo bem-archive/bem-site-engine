@@ -4,12 +4,8 @@
 
     width: 110px;
     height: 50px;
+
     margin: 0 auto 0 12px;
 
     background-image: url('logo_type_lego.svg');
-}
-
-.logo_type_lego:hover
-{
-    opacity: .9;
 }

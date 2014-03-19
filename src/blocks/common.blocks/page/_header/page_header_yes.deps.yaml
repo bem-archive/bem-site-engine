@@ -1,0 +1,5 @@
+- block: header
+  mods: { type: 'beminfo' }
+
+- block: flex
+  mods: { type: 'content' }
