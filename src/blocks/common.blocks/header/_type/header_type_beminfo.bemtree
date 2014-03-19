@@ -1,0 +1,41 @@
+block header, mod type beminfo {
+    this.ctx.content, content: [
+        {
+            block: 'logo',
+            mods: { type: 'bem' },
+            url: '/'
+        },
+        {
+            block: 'menu-list',
+            mods: { type: 'header' },
+            content: this.ctx.content.items
+                .filter(function(item, idx) {
+                    return idx > 0;
+                })
+                .map(function(item, idx) {
+                    return {
+                        block: 'link',
+                        url: item.url,
+                        mix: [{
+                            block: 'menu-list',
+                            elem: 'link',
+                            elemMods: {
+                                active: item.active,
+                                type: item.type,
+                                size: item.size
+                            }
+                        }],
+                        content: item.title
+                    };
+                })
+        },
+        {
+            block: 'lang-switch',
+            url: this.data.langSwitch
+        },
+        {
+            block: 'search'
+        }
+    ]
+
+}

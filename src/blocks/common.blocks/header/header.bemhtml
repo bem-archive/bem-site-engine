@@ -1,0 +1,4 @@
+block header {
+    tag: 'header',
+    mix: [{ block: 'flex' }]
+}

@@ -1,0 +1,27 @@
+.menu-list_type_header
+{
+    align-self: center;
+}
+
+.menu-list_type_header .menu-list__link
+{
+    font-size: 16px;
+
+    display: inline-block;
+
+    margin-right: 20px;
+
+    transition: .3s color;
+
+    color: #fff;
+}
+
+.menu-list_type_header .menu-list__link:hover
+{
+    color: #FFD94D;
+}
+
+.menu-list_type_header .menu-list__link_active
+{
+    color: #FFD94D;
+}

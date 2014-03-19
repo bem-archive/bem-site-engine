@@ -1,0 +1,19 @@
+block page {
+    content: [
+        {
+            block: 'header',
+            mods: { type: 'beminfo' },
+            content: this.data.menu.shift()
+        },
+        {
+            block: 'flex',
+            mods: { type: 'content' },
+            content: [
+                { block: 'menu' },
+                { block : 'content', mods: { view: this.data.node.view }, js: true }
+            ]
+        },
+        { block : 'metrika' },
+        { elem : 'js' }
+    ]
+}
