@@ -1,3 +1,4 @@
+- elem: group
 - elem: group-select
 - elem: select
 - elem: option
@@ -6,4 +7,4 @@
     type: [delimeter, select]
     size: [small, normal]
 - mods:
-    type: [main, default, header]
+    type: [main, default, header, level]

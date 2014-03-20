@@ -1,0 +1,56 @@
+block menu-list, mod type level {
+
+    this.ctx.content, content: {
+
+        var levels = ['all levels'];
+
+        var _content = this.ctx.content.map(function(item) {
+/*            logger.verbose('menu item: title: %s url: %s type: %s active: %s size: %s',
+                        item.title, item.url, item.type, item.active, item.size);*/
+
+            if(item.type === 'group' && item.items) {
+
+                levels.push(item.title);
+
+                return {
+                    elem: 'group',
+                    attrs: { 'data-level': item.title },
+                    content: [
+                        {
+                            elem: 'title',
+                            content: item.title
+                        },
+                        item.items.map(function(subitem) {
+                            return apply('item', this.ctx = subitem);
+                        })
+                    ]
+                }
+            }
+
+            return apply('item', this.ctx = item);
+
+        });
+
+        _content.unshift({
+            elem: 'select',
+            content: levels.map(function(level, idx) {
+                return {
+                    elem: 'option',
+                    content: level
+                }
+            })
+        });
+
+        return _content;
+    }
+
+    item: {
+        elem: 'link',
+        url: this.ctx.url,
+        title: this.ctx.title,
+        elemMods: {
+            active: this.ctx.active,
+            type: this.ctx.type
+        }
+    }
+}
