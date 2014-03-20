@@ -45,7 +45,7 @@
     "jscs": "1.2.2"
   },
   "scripts": {
-    "start": "node bin/app",
+    "start": "node bin/app.js",
     "build": "make build",
     "static": "make static",
     "test": "make lint"

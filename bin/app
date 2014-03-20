@@ -8,7 +8,7 @@ if ('production' === process.env.NODE_ENV) {
     var nodemon = require('nodemon'),
         config = require(path.join(process.cwd(), 'configs', 'current', 'nodemon'));
 
-    config.script = require.resolve('../src/app'),
+    config.script = require.resolve('../src/app.js'),
 
     nodemon(config)
         .on('start', function() {
