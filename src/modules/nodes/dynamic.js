@@ -25,16 +25,6 @@ DynamicNode.prototype.init = function(parent) {
 };
 
 /**
- * Sets level for node
- * @param parent - {Object} parent node
- * @returns {DynamicNode}
- */
-DynamicNode.prototype.setLevel = function(parent) {
-    this.level = (parent.type === this.TYPE.GROUP || parent.type === this.TYPE.SELECT) ? parent.level : parent.level + 1;
-    return this;
-};
-
-/**
  * Sets type for node
  * @returns {DynamicNode}
  */

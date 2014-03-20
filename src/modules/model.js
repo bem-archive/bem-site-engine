@@ -96,9 +96,8 @@ var createModel = function(sitemap) {
          * @param node {Object} - single node of sitemap model
          * @param level {Number} - menu deep level
          */
-        processRoute = function(node, level) {
+        processRoute = function(node) {
             node.params = _.extend({}, node.parent.params);
-            node.level = level;
 
             if(!node.route) {
                 node.route = {
@@ -106,7 +105,7 @@ var createModel = function(sitemap) {
                 };
                 node.type = node.type ||
                     (node.url ? node.TYPE.SIMPLE : node.TYPE.GROUP);
-                return;
+                return node;
             }
 
             var r = node.route;
@@ -136,20 +135,20 @@ var createModel = function(sitemap) {
             });
 
             node.type = node.type || node.TYPE.SIMPLE;
+
+            return node;
         },
 
         /**
          * Recursive function for traversing tree model
          * @param node {Object} - single node of sitemap model
          * @param parent {Object} - parent for current node
-         * @param level {Number} - menu deep level
          */
-        traverseTreeNodes = function(node, parent, level) {
+        traverseTreeNodes = function(node, parent) {
 
             node = new nodes.base.BaseNode(node, parent);
 
-            processRoute(node, level);
-            node.createBreadcrumbs();
+            processRoute(node).createBreadcrumbs();
 
             if(node.source) {
                 nodesWithSource.push(node);
@@ -163,8 +162,7 @@ var createModel = function(sitemap) {
             //deep into node items
             if(node.items) {
                 node.items = node.items.map(function(item) {
-                    return traverseTreeNodes(item, node,
-                        node.type === node.TYPE.GROUP ? level : level + 1);
+                    return traverseTreeNodes(item, node);
                 });
             }
 
@@ -174,9 +172,10 @@ var createModel = function(sitemap) {
     try {
         setSiteMap(sitemap.map(function(item) {
             return traverseTreeNodes(item, {
+                level: -1,
                 route: { name: null },
                 params: {}
-            }, 0);
+            });
         }));
 
         def.resolve({
@@ -436,6 +435,8 @@ var addLibraryNodes = function(nodesWithLib) {
                         block: block.name
                     }
                 };
+
+                logger.verbose('add block %s to level %s of version %s for worker %s', block.name, level.name, version.ref, worker.wid);
 
                 collectConditionsForBaseRoute(baseRoute, conditions);
 
