@@ -168,7 +168,7 @@ module.exports = {
                         type: _node.type,
                         size: _node.size
                     },
-                    hasSource = _node.source,
+                    hasSource = !!_node.source,
                     hasItems = _node.items,
                     isTargetNode = _node.id === node.id,
                     isActive = activeIds.indexOf(_node.id) !== -1,
@@ -176,7 +176,12 @@ module.exports = {
                     isSelect = _node.type === _node.TYPE.SELECT,
                     isIndex = _node.view && _node.view === _node.VIEW.INDEX,
 
+
+
                     isNeedToDrawChildNodes = (isGroup || isSelect) || isIndex || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
+
+                logger.verbose('isTargetNode %s isActive %s isGroup %s isSelect %s isIndex %s isNeedToDrawChildNodes %s title %s',
+                    isTargetNode, isActive, isGroup, isSelect, isIndex, JSON.stringify(isNeedToDrawChildNodes), _node.title ? _node.title[req.prefLocale] : 'NAN');
 
                 //if node is not hidden for current selected locale
                 //then we should draw it corresponded menu item

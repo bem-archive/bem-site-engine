@@ -4,12 +4,13 @@ var _ = require('lodash'),
 exports.BaseNode = function(node, parent) {
     Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
 
-    this.generateUniqueId();
-    this.setParent(parent);
-    this.setSize();
-    this.setTitle();
-    this.setHidden();
-    this.setView();
+    this.generateUniqueId()
+        .setParent(parent)
+        .setSize()
+        .setTitle()
+        .setHidden()
+        .setView()
+        .setLevel(parent);
 };
 
 exports.BaseNode.prototype = {
@@ -84,6 +85,17 @@ exports.BaseNode.prototype = {
 
     setSize: function() {
         this.size = this.size || this.SIZE.NORMAL;
+        return this;
+    },
+
+    /**
+     * Sets level for node
+     * @param parent - {Object} parent node
+     * @returns {DynamicNode}
+     */
+    setLevel: function(parent) {
+        this.level = (parent.type === this.TYPE.GROUP || parent.type === this.TYPE.SELECT) ?
+            parent.level : parent.level + 1;
         return this;
     },
 
