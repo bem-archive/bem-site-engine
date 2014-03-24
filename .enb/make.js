@@ -75,6 +75,18 @@ module.exports = function(config) {
     });
 
     // Обработка борщиком финальных файлов, получившихся в результате сборки
+    config.mode('test', function() {
+        config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
+            nodeConfig.addTechs([
+                use('borschik', { sourceTarget: '?.css', destTarget: '?.min.css', minify: true, freeze: true }),
+                use('borschik', { sourceTarget: '?.js', destTarget: '?.min.js', minify: true, freeze: true }),
+                use('borschik', { sourceTarget: '?.template.i18n.js', destTarget: '?.min.template.i18n.js',
+                    minify: true, freeze: false })
+            ]);
+        });
+    });
+
+    // Обработка борщиком финальных файлов, получившихся в результате сборки
     config.mode('production', function() {
         config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
             nodeConfig.addTechs([
