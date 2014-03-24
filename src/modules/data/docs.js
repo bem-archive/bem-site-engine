@@ -65,9 +65,7 @@ module.exports = {
             logger.error(MSG.ERROR);
         };
 
-        return generic
-            .load('data:docs:disk', 'data:docs:file')
-            .then(onSuccess, onError);
+        return generic.load('data:docs').then(onSuccess, onError);
     },
 
     /**

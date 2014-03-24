@@ -78,4 +78,4 @@ function devMiddleware() {
     };
 }
 
-module.exports = process.env.NODE_ENV === 'production' ? prodMiddleware : devMiddleware;
+module.exports = 'development' === config.get('NODE_ENV') ? devMiddleware : prodMiddleware;

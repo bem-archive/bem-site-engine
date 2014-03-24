@@ -5,6 +5,7 @@ var path = require('path'),
     stringify = require('json-stringify-safe'),
     target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
     config = require('./config'),
+    builder = require('./builder'),
     ctx = {
         Vow: vow,
         leStatics: new (require('../lib/Statics').Statics)(config.get('statics')),
@@ -34,22 +35,18 @@ function preprocess() {
     })
 }
 
-if (process.env.NODE_ENV === 'production') {
-    var preprocessed = preprocess();
-
-    exports.apply = function(ctx, lang, mode) {
-        return preprocessed.then(function(templateEngine) {
-            return apply.call(templateEngine, ctx, lang, mode);
-        });
-    };
-} else {
-    var builder = require('./builder');
-
+if ('development' === config.get('NODE_ENV')) {
     exports.apply = function(ctx, lang, mode) {
         return builder.build([target])
             .then(preprocess)
             .then(function(templateEngine) {
                 return apply.call(templateEngine, ctx, lang, mode);
             });
+    };
+} else {
+    exports.apply = function(ctx, lang, mode) {
+        return preprocess().then(function(templateEngine) {
+            return apply.call(templateEngine, ctx, lang, mode);
+        });
     };
 }

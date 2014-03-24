@@ -31,7 +31,7 @@ module.exports = {
          * @param content - {Object} loaded and parsed content
          * @returns {*}
          */
-        var  onSuccess = function(content) {
+        var onSuccess = function(content) {
             logger.info(MSG.INFO.SUCCESS);
 
             peopleHash = content;
@@ -46,9 +46,7 @@ module.exports = {
             logger.error(MSG.ERROR);
         };
 
-        return generic
-            .load('data:people:disk', 'data:people:file')
-            .then(onSuccess, onError);
+        return generic.load('data:people').then(onSuccess, onError);
     },
 
     /**
