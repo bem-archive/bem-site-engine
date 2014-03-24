@@ -60,20 +60,15 @@ module.exports = {
 var checkForUpdate = function(master) {
     logger.debug('Check for update for master process start');
 
-    var promise;
-
-    //load marker.json file from local filesystem or Yandex Disk
-    if('production' === process.env.NODE_ENV) {
-        promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
-            path: config.get('data:marker:disk')
-        }).then(function(content) {
-            return JSON.parse(content);
-        });
-    }else {
-        promise = data.common.loadData(data.common.PROVIDER_FILE, {
-            path: config.get('data:marker:file')
-        });
-    }
+    var promise = 'development' === config.get('NODE_ENV') ?
+            data.common.loadData(data.common.PROVIDER_FILE, {
+                path: config.get('data:marker')
+            }):
+            data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
+                path: config.get('data:marker')
+            }).then(function(content) {
+                return JSON.parse(content);
+            });
 
     return promise.then(function(content) {
         if(!content) {
