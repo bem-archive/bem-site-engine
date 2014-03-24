@@ -43,11 +43,18 @@ if (luster.isMaster) {
         );
 }
 
-luster.configure({
-    app: require.resolve('./worker'),
-    workers: config.get('luster:workers'),
-    control: config.get('luster:control'),
-    server: config.get('luster:server')
-}, true, __dirname);
+try {
+    logger.debug('Before luster configure');
+    luster.configure({
+        app: require.resolve('./worker'),
+        workers: config.get('luster:workers'),
+        control: config.get('luster:control'),
+        server: config.get('luster:server')
+    }, true, __dirname);
+}catch(err) {
+    logger.error('Error luster initialization');
+}
+
+logger.debug('After luster configure');
 
 module.exports = luster;
