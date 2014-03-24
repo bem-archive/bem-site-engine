@@ -13,7 +13,7 @@ var path = require('path'),
 if (luster.isMaster) {
     logger.info('luster: master process start');
 
-    var socket = config.get('app:socket');
+    var socket = config.get('luster:server:port');
 
     if (socket) {
         try {
