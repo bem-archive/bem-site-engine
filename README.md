@@ -15,9 +15,13 @@ $ cd bem-info
 $ make
 $ make data
 
+# Собираем в test-режиме
+$ YENV=test make
+$ make data_test
+
 # Собираем в production-режиме
 $ YENV=production make
-$ YENV=production make data
+$ make data_prod
 ```
 
 Запуск
