@@ -28,15 +28,15 @@ module.exports = {
 
         var promise;
 
-        if('production' === process.env.NODE_ENV) {
-            promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
-                    path: config.get('data:sitemap:disk')
-                }).then(function(content) {
-                    return JSON.parse(content);
-                });
-        }else {
+        if('development' === config.get('NODE_ENV')) {
             promise = data.common.loadData(data.common.PROVIDER_FILE, {
-                path: config.get('data:sitemap:file')
+                path: config.get('data:sitemap')
+            });
+        }else {
+            promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
+                path: config.get('data:sitemap')
+            }).then(function(content) {
+                return JSON.parse(content);
             });
         }
 

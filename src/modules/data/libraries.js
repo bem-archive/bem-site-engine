@@ -30,7 +30,7 @@ module.exports = {
          * @param content - {Object} loaded and parsed content
          * @returns {*}
          */
-        var  onSuccess = function(content) {
+        var onSuccess = function(content) {
             logger.info(MSG.INFO.SUCCESS);
 
             librariesHash = content;
@@ -45,9 +45,7 @@ module.exports = {
             logger.error(MSG.ERROR);
         };
 
-        return generic
-            .load('data:libraries:disk', 'data:libraries:file')
-            .then(onSuccess, onError);
+        return generic.load('data:libraries').then(onSuccess, onError);
     },
 
     /**

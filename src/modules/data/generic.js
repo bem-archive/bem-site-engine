@@ -9,21 +9,20 @@ module.exports = {
 
     /**
      * Loads data from yandex disk or file depending on enviroment
-     * @param disk - {String} config key for yandex disk path
-     * @param file - {String} config key for local filesystem path
+     * @param key - {String} config key for yandex disk of file path
      * @returns {Promise}
      */
-    load: function(disk, file) {
+    load: function(key) {
 
         /**
          * Load documentation data from Yandex disk through Yandex disk API
          * @param file - {String} config key for yandex disk path
          * @returns {Promise}
          */
-        var fromYandexDisk = function(file) {
+        var fromYandexDisk = function(key) {
             return common
                 .loadData(common.PROVIDER_YANDEX_DISK, {
-                    path: config.get(file)
+                    path: config.get(key)
                 })
                 .then(function(content) {
                     return JSON.parse(content);
@@ -35,13 +34,13 @@ module.exports = {
          * @param file - {String} config key for local filesystem path
          * @returns {Promise}
          */
-        var fromLocalFile = function(file) {
+        var fromLocalFile = function(key) {
             return common
                 .loadData(common.PROVIDER_FILE, {
-                    path: config.get(file)
+                    path: config.get(key)
                 });
         };
 
-        return 'production' === process.env.NODE_ENV ? fromYandexDisk(disk) : fromLocalFile(file);
+        return 'development' === config.get('NODE_ENV') ? fromLocalFile(key) : fromYandexDisk(key);
     }
 };

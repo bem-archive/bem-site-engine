@@ -43,7 +43,8 @@ var MSG = {
             SUCCESS: 'People succssfully loaded'
         },
         SAVE_DATA: {
-            START: 'Save data to file %s or upload it to Yandex Disk %s'
+            START_FILE: 'Save data to file %s',
+            START_DISK: 'Save data to Yandex Disk %s'
         }
     },
     WARN: {
@@ -100,22 +101,10 @@ module.exports = {
             .spread(function(docs, libraries, people) {
                 return vow
                     .all([
-                        saveAndUpload(_sitemap, {
-                            disk: 'data:sitemap:disk',
-                            file: 'data:sitemap:file'
-                        }),
-                        saveAndUpload(docs, {
-                            disk: 'data:docs:disk',
-                            file: 'data:docs:file'
-                        }),
-                        saveAndUpload(libraries, {
-                            disk: 'data:libraries:disk',
-                            file: 'data:libraries:file'
-                        }),
-                        saveAndUpload(people, {
-                            disk: 'data:people:disk',
-                            file: 'data:people:file'
-                        })
+                        saveAndUpload(_sitemap, 'data:sitemap'),
+                        saveAndUpload(docs, 'data:docs'),
+                        saveAndUpload(libraries, 'data:libraries'),
+                        saveAndUpload(people, 'data:people')
                     ])
                     .then(function() {
                         return createUpdateMarker(_sitemap, docs, libraries, people);
@@ -472,45 +461,36 @@ var loadPeople = function() {
  * @returns {*}
  */
 var saveAndUpload = function(content, _path) {
-    logger.info(MSG.INFO.SAVE_DATA.START, config.get(_path.file), config.get(_path.disk));
 
     var saveToYandexDisk = function() {
+            logger.info(MSG.INFO.SAVE_DATA.START_DISK, config.get(_path));
+
             return common
                 .saveData(common.PROVIDER_YANDEX_DISK, {
-                    path: config.get(_path.disk),
+                    path: config.get(_path),
                     data: JSON.stringify(content)
                 })
                 .then(
-                    function() {
-                        logger.debug(MSG.DEBUG.SAVE_DATA.DISK_SUCCESS, config.get(_path.disk));
-                    },
-                    function() {
-                        logger.error(MSG.ERROR.SAVE_DATA.DISK, config.get(_path.disk));
-                    }
+                    function() { logger.debug(MSG.DEBUG.SAVE_DATA.DISK_SUCCESS, config.get(_path)); },
+                    function() { logger.error(MSG.ERROR.SAVE_DATA.DISK, config.get(_path)); }
                 );
         },
         saveToLocalFile = function() {
+            logger.info(MSG.INFO.SAVE_DATA.START_FILE, config.get(_path));
+
             return common
                 .saveData(common.PROVIDER_FILE, {
-                    path: config.get(_path.file),
+                    path: config.get(_path),
                     data: content,
                     minimize: true
                 })
                 .then(
-                    function() {
-                        logger.debug(MSG.DEBUG.SAVE_DATA.FILE_SUCCESS, config.get(_path.file));
-                    },
-                    function() {
-                        logger.error(MSG.ERROR.SAVE_DATA.FILE, config.get(_path.file));
-                    }
+                    function() { logger.debug(MSG.DEBUG.SAVE_DATA.FILE_SUCCESS, config.get(_path)); },
+                    function() { logger.error(MSG.ERROR.SAVE_DATA.FILE, config.get(_path)); }
                 );
         };
 
-    if ('production' === process.env.NODE_ENV) {
-        return saveToYandexDisk();
-    }else {
-        return saveToLocalFile();
-    }
+    return 'development' === config.get('NODE_ENV') ? saveToLocalFile() : saveToYandexDisk();
 };
 
 /**
@@ -525,23 +505,10 @@ var saveAndUpload = function(content, _path) {
 var createUpdateMarker = function(sitemap, docs, libraries, people) {
     logger.debug('Create update marker start');
 
-    var marker = {
+    return saveAndUpload({
         sitemap: sha(JSON.stringify(sitemap)),
         docs: sha(JSON.stringify(docs)),
         libraries: sha(JSON.stringify(libraries)),
         people: sha(JSON.stringify(people))
-    };
-
-    if ('production' === process.env.NODE_ENV) {
-        return common.saveData(common.PROVIDER_YANDEX_DISK, {
-            path: config.get('data:marker:disk'),
-            data: JSON.stringify(marker, null, 4)
-        });
-    }else {
-        return common.saveData(common.PROVIDER_FILE, {
-            path: config.get('data:marker:file'),
-            data: marker,
-            minimize: false
-        });
-    }
+    }, 'data:marker');
 };

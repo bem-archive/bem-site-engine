@@ -1,0 +1,11 @@
+{
+    "paths" : {
+        "./": "/m/",
+        "freeze/": "/m/_/",
+        "libs/romochka/freeze/": "//yandex.st/lego/_/"
+    },
+    "freeze_paths" : {
+        "./": "freeze/",
+        "libs/romochka": "freeze/"
+    }
+}

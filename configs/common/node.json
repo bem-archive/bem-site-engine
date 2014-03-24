@@ -22,7 +22,7 @@
             "token": ""
         },
         "librariesRepository": {
-            "type": "public",
+            "type": "",
             "user": "",
             "repo": "",
             "ref": ""
@@ -38,24 +38,6 @@
     "yandexApi": {
         "login": "",
         "password": ""
-    },
-    "data": {
-        "sitemap": {
-            "file": "backups/sitemap.json",
-            "disk": ""
-        },
-        "docs": {
-            "file": "backups/docs.json",
-            "disk": ""
-        },
-        "libraries": {
-            "file": "backups/libraries.json",
-            "disk": ""
-        },
-        "marker": {
-            "file": "backups/marker.json",
-            "disk": ""
-        }
     }
-
 }
+
