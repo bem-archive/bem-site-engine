@@ -5,7 +5,6 @@ var path = require('path'),
     stringify = require('json-stringify-safe'),
     target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
     config = require('./config'),
-    builder = require('./builder'),
     ctx = {
         Vow: vow,
         leStatics: new (require('../lib/Statics').Statics)(config.get('statics')),
@@ -36,6 +35,8 @@ function preprocess() {
 }
 
 if ('development' === config.get('NODE_ENV')) {
+    var builder = require('./builder');
+
     exports.apply = function(ctx, lang, mode) {
         return builder.build([target])
             .then(preprocess)
