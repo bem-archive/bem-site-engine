@@ -28,13 +28,20 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'default' }, {
         var _this = this;
 
         _this.elem('select').each(function() {
-            var lib = _this.getStorage( $(this).prev('.menu-list__link').text() );
+            var libname = $(this).prev('.menu-list__link').text(),
+                lib = _this.getStorage(libname),
+                path = location.pathname.match(/\/l\w*\/[\w-]*\/[\w.]*/);
 
             if(lib) {
-                $(this).val(lib);
+                if(path && path[0].indexOf(libname) !== -1 ) {
+                    $(this).val(path);
+
+                    _this.setStorage(libname, path);
+                } else {
+                    $(this).val(lib);
+                }
             }
         });
-
     },
 
     setLinksUrl: function() {
