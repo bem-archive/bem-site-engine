@@ -1,5 +1,9 @@
 block post, elem title {
 
+    default, (!this.ctx.content || this.ctx.content.length == 0): {
+        return false;
+    }
+
     content: this.ctx.content
 
     content, this.ctx.url: {
