@@ -1,12 +1,4 @@
 .author__skype > .author__label
 {
-    width: 23px;
-    height: 23px;
-
     background: url('skype.png') no-repeat;
-}
-
-.author__skype .link
-{
-    line-height: 23px;
 }

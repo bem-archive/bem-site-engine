@@ -1,12 +1,4 @@
 .author__e-mail > .author__label
 {
-    width: 23px;
-    height: 23px;
-
     background: url('mail.png') no-repeat;
-}
-
-.author__e-mail .link
-{
-    line-height: 23px;
 }

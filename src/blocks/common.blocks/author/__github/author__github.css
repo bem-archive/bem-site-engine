@@ -1,12 +1,4 @@
 .author__github > .author__label
 {
-    width: 23px;
-    height: 23px;
-
     background: url('github.png') no-repeat;
-}
-
-.author__github .link
-{
-    line-height: 23px;
 }
