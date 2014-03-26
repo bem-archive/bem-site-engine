@@ -35,7 +35,8 @@ module.exports = {
         "translate": "перевод",
 
         "repo-text": "Если вы заметили ошибку или хотите чем-то дополнить статью, вы всегда можете или ",
-        "repo-on-github": " на Гитхабе, или ",
+        "repo-on-github": " на Гитхабе",
+        "repo-alternative": ", или ",
         "repo-with-prose": " с помощью prose.io.",
         "repo-issue": "написать об этом",
         "repo-prose": "поправить статью"

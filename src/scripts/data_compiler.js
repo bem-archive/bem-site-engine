@@ -335,10 +335,9 @@ var analyzeMetaInformation = function(node, lang, collected) {
 
         //set repo information for issues and prose.io links
         node.source[lang].repo = {
-            issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
-                repo.host, repo.user, repo.repo, meta.title),
-            prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",
-                repo.user, repo.repo, repo.ref, repo.path)
+            type: repo.type,
+            issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"", repo.host, repo.user, repo.repo, meta.title),
+            prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",repo.user, repo.repo, repo.ref, repo.path)
         };
 
         def.resolve({ node: node, repo: repo });
