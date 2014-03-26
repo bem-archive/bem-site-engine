@@ -84,7 +84,7 @@ block post, mod view full {
 
         if(!repo) return [];
 
-        var buf = [
+        var issueContent = [
             {
                 tag: 'span',
                 content: BEM.I18N('post', 'repo-text')
@@ -100,27 +100,26 @@ block post, mod view full {
             }
         ];
 
-        if(repo.type === 'public') {
-            buf.push({
+        repo.type === 'public' && issueContent.concat([
+            {
                 tag: 'span',
                 content: BEM.I18N('post', 'repo-alternative')
-            });
-
-            buf.push({
+            },
+            {
                 block: 'link',
                 url: repo.prose,
                 content: BEM.I18N('post', 'repo-prose')
-            });
-
-            buf.push({
+            },
+            {
                 tag: 'span',
                 content: BEM.I18N('post', 'repo-with-prose')
-            });
-        }
+            }
+        ]);
+
 
         return {
             elem: 'issue',
-            content: buf
+            content: issueContent
         }
     }
 
