@@ -74,8 +74,9 @@ module.exports = {
         }
 
         var traverseTreeNodes = function(node) {
-            if(node.title && node.title[req.prefLocale]) {
-                title += node.title[req.prefLocale] + '/';
+            if((node.url && node.url !== '/') && (node.title && node.title[req.prefLocale])) {
+                title += node.title[req.prefLocale] + ' / ';
+                logger.verbose('title: %s', title);
             }
             if(node.parent) {
                 traverseTreeNodes(node.parent);
@@ -84,7 +85,10 @@ module.exports = {
 
         traverseTreeNodes(node);
 
-        title += 'BEM';
+        title += {
+            en: 'BEM',
+            ru: 'БЭМ'
+        }[req.prefLocale];
 
         logger.debug('page title: %s', title);
         return title;
