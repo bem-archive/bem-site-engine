@@ -1,11 +1,11 @@
 block quick-start-billboard, elem logo {
 
     default: {
-        var index = Math.round(10 * Math.random()),
+        var index = Math.round(9 * Math.random()),
             ctx = this.ctx,
             mod = ['batman', 'breaks', 'captain-america',
-                    'generated', 'motion', 'robin',
-                    'scheme', 'spots', 'stripe', 'waves'][index];
+                    'generated', 'robin', 'scheme', 'spots',
+                    'stripe', 'waves'][index];
 
         ctx.mix || (ctx.mix = []);
         ctx.mix.push({ mods: { theme: mod }});
