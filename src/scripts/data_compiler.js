@@ -320,14 +320,14 @@ var analyzeMetaInformation = function(node, lang, collected) {
         var content = meta.content;
 
         var repo = (function(_source) {
-            var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+)/,
+            var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/,
                 parsedSource = _source.match(re);
             return {
                 host: parsedSource[1],
                 user: parsedSource[2],
                 repo: parsedSource[3],
-                ref: parsedSource[4],
-                path: parsedSource[5]
+                ref: parsedSource[5],
+                path: parsedSource[6]
             };
         })(content);
 
@@ -335,10 +335,9 @@ var analyzeMetaInformation = function(node, lang, collected) {
 
         //set repo information for issues and prose.io links
         node.source[lang].repo = {
-            issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
-                repo.host, repo.user, repo.repo, meta.title),
-            prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",
-                repo.user, repo.repo, repo.ref, repo.path)
+            type: repo.type,
+            issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"", repo.host, repo.user, repo.repo, meta.title),
+            prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",repo.user, repo.repo, repo.ref, repo.path)
         };
 
         def.resolve({ node: node, repo: repo });

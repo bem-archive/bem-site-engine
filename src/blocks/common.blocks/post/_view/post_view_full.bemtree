@@ -84,32 +84,42 @@ block post, mod view full {
 
         if(!repo) return [];
 
+        var issueContent = [
+            {
+                tag: 'span',
+                content: BEM.I18N('post', 'repo-text')
+            },
+            {
+                block: 'link',
+                url: repo.issue,
+                content: BEM.I18N('post', 'repo-issue')
+            },
+            {
+                tag: 'span',
+                content: BEM.I18N('post', 'repo-on-github')
+            }
+        ];
+
+        repo.type === 'public' && issueContent.concat([
+            {
+                tag: 'span',
+                content: BEM.I18N('post', 'repo-alternative')
+            },
+            {
+                block: 'link',
+                url: repo.prose,
+                content: BEM.I18N('post', 'repo-prose')
+            },
+            {
+                tag: 'span',
+                content: BEM.I18N('post', 'repo-with-prose')
+            }
+        ]);
+
+
         return {
             elem: 'issue',
-            content: [
-                {
-                    tag: 'span',
-                    content: BEM.I18N('post', 'repo-text')
-                },
-                {
-                    block: 'link',
-                    url: repo.issue,
-                    content: BEM.I18N('post', 'repo-issue')
-                },
-                {
-                    tag: 'span',
-                    content: BEM.I18N('post', 'repo-on-github')
-                },
-                {
-                    block: 'link',
-                    url: repo.prose,
-                    content: BEM.I18N('post', 'repo-prose')
-                },
-                {
-                    tag: 'span',
-                    content: BEM.I18N('post', 'repo-with-prose')
-                }
-            ]
+            content: issueContent
         }
     }
 
