@@ -326,8 +326,8 @@ var analyzeMetaInformation = function(node, lang, collected) {
                 host: parsedSource[1],
                 user: parsedSource[2],
                 repo: parsedSource[3],
-                ref: parsedSource[4],
-                path: parsedSource[5]
+                ref: parsedSource[5],
+                path: parsedSource[6]
             };
         })(content);
 
