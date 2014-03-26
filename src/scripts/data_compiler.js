@@ -320,7 +320,7 @@ var analyzeMetaInformation = function(node, lang, collected) {
         var content = meta.content;
 
         var repo = (function(_source) {
-            var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/tree\/(.+?)\/(.+)/,
+            var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/,
                 parsedSource = _source.match(re);
             return {
                 host: parsedSource[1],
