@@ -6,9 +6,7 @@ var u = require('util'),
 
     constants = require('./constants'),
     data = require('./data'),
-    model = require('./model'),
-
-    LevelNode = require('./nodes').level.LevelNode;
+    model = require('./model');
 
 module.exports = {
 
@@ -159,14 +157,14 @@ module.exports = {
                     result[_node.level].type = constants.MENU.MAIN;
                 }
 
-                if(_node instanceof LevelNode) {
+                if(_node.class && _node.class === 'level') {
                     result[_node.level].type = constants.MENU.LEVEL;
                 }
 
-                //logger.verbose('menu creation item level %s title %s type %s', _node.level, _node.title ? _node.title[req.prefLocale] : '', _node.type);
+                logger.verbose('menu creation item level %s title %s type %s', _node.level, _node.title ? _node.title[req.prefLocale] : '', _node.type);
 
                 var o = {
-                        title: _node.title ? _node.title[req.prefLocale]: '',
+                        title: _node.title ? _node.title[req.prefLocale] : '',
                         url: (_node.url && _.isObject(_node.url)) ? _node.url[req.prefLocale] : _node.url,
                         active: _.indexOf(activeIds, _node.id) !== -1,
                         type: _node.type,
@@ -181,11 +179,10 @@ module.exports = {
                     isIndex = _node.view && _node.view === _node.VIEW.INDEX,
 
 
-
                     isNeedToDrawChildNodes = (isGroup || isSelect) || isIndex || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
 
                 logger.verbose('isTargetNode %s isActive %s isGroup %s isSelect %s isIndex %s isNeedToDrawChildNodes %s title %s',
-                    isTargetNode, isActive, isGroup, isSelect, isIndex, JSON.stringify(isNeedToDrawChildNodes), _node.title ? _node.title[req.prefLocale] : 'NAN');
+                    isTargetNode, isActive, isGroup, isSelect, isIndex, isNeedToDrawChildNodes, _node.title ? _node.title[req.prefLocale] : 'NAN');
 
                 //if node is not hidden for current selected locale
                 //then we should draw it corresponded menu item
@@ -208,7 +205,7 @@ module.exports = {
             };
 
         traverseTreeNodesUp(node);
-        //logger.verbose('active ids %s', activeIds.join(', '));
+        logger.verbose('active ids %s', activeIds.join(', '));
 
         model.getSitemap().forEach(function(item) {
             traverseTreeNodesDown(item, null);
@@ -289,8 +286,8 @@ module.exports = {
      */
     getAdvancedData: function(req, node) {
         var  result = {
-            people: data.people.getPeople(),
-            peopleUrls: data.people.getUrls()
+            people: model.getPeople(),
+            peopleUrls: model.getPeopleUrls()
         };
 
         if(node.view === node.VIEW.AUTHOR) {
@@ -305,7 +302,7 @@ module.exports = {
 
         if(node.view === node.VIEW.AUTHORS) {
             return _.extend(result, {
-                authors: data.docs.getAuthors() });
+                authors: model.getAuthors() });
         }
 
         return result;

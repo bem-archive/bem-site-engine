@@ -19,7 +19,8 @@ DynamicNode.prototype.init = function(parent) {
         .setSize()
         .setView()
         .setHidden()
-        .setLevel(parent);
+        .setLevel(parent)
+        .setClass();
 
     return this;
 };
@@ -57,6 +58,11 @@ DynamicNode.prototype.setView = function() {
  */
 DynamicNode.prototype.setHidden = function() {
     this.hidden = {};
+    return this;
+};
+
+DynamicNode.prototype.setClass = function() {
+    this.class = 'dynamic';
     return this;
 };
 

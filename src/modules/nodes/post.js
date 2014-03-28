@@ -53,4 +53,9 @@ PostNode.prototype.setSource = function(version, config) {
     return this;
 };
 
+PostNode.prototype.setClass = function() {
+    this.class = 'post';
+    return this;
+};
+
 exports.PostNode = PostNode;
