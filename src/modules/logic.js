@@ -181,8 +181,8 @@ module.exports = {
 
                     isNeedToDrawChildNodes = (isGroup || isSelect) || isIndex || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
 
-                logger.verbose('isTargetNode %s isActive %s isGroup %s isSelect %s isIndex %s isNeedToDrawChildNodes %s title %s',
-                    isTargetNode, isActive, isGroup, isSelect, isIndex, isNeedToDrawChildNodes, _node.title ? _node.title[req.prefLocale] : 'NAN');
+                //logger.verbose('isTargetNode %s isActive %s isGroup %s isSelect %s isIndex %s isNeedToDrawChildNodes %s title %s',
+                //    isTargetNode, isActive, isGroup, isSelect, isIndex, isNeedToDrawChildNodes, _node.title ? _node.title[req.prefLocale] : 'NAN');
 
                 //if node is not hidden for current selected locale
                 //then we should draw it corresponded menu item
@@ -205,7 +205,7 @@ module.exports = {
             };
 
         traverseTreeNodesUp(node);
-        logger.verbose('active ids %s', activeIds.join(', '));
+        //logger.verbose('active ids %s', activeIds.join(', '));
 
         model.getSitemap().forEach(function(item) {
             traverseTreeNodesDown(item, null);
