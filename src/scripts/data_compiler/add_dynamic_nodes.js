@@ -3,6 +3,7 @@ var _ = require('lodash'),
     vow = require('vow'),
 
     logger = require('../../logger')(module),
+    config = require('../../config'),
     constants = require('../../modules/constants'),
     nodes = require('../../modules/nodes');
 

@@ -6,12 +6,12 @@ var u = require('util'),
 
     logger = require('./logger')(module);
 
-exports.mdToHtml = function(content) {
-    return md(content, {
+exports.mdToHtml = function(content, config) {
+    return md(content, _.extend({
         gfm: true,
         pedantic: false,
         sanitize: false
-    });
+    }, config));
 };
 
 /**

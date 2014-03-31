@@ -52,7 +52,7 @@ module.exports = {
                 }
 
                 people = content.people;
-                
+
                 peopleUrls = content.urls.people;
                 tagUrls = content.urls.tags;
             }catch(err) {

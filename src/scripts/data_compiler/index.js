@@ -42,7 +42,7 @@ module.exports = {
             .then(function(obj) {
                 return vow.all([
                     obj,
-                    loadSources(obj.sourceNodes),
+                    loadSources(obj.sourceNodes, obj.sourceRouteHash),
                     loadLibraries(obj.libraryNodes),
                     loadPeople()
                 ]);

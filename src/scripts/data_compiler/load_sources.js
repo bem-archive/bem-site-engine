@@ -1,6 +1,7 @@
 var u = require('util'),
     _ = require('lodash'),
     vow = require('vow'),
+    md = require('marked'),
 
     logger = require('../../logger')(module),
     config = require('../../config'),
@@ -30,31 +31,28 @@ var MSG = {
  * @returns {*|Q.IPromise<U>|Q.Promise<U>}
  */
 module.exports = {
-    run: function (nodesWithSource) {
+    run: function (nodesWithSource, sourceRouteHash) {
         logger.info(MSG.INFO.START);
 
         var collected = {
-            authors: [],
-            translators: [],
-            tags: []
-        };
+                authors: [],
+                translators: [],
+                tags: []
+            },
+            promises = nodesWithSource.map(function (node) {
+                var _promises = config.get('app:languages').map(function (lang) {
+                    return analyzeMetaInformation(node, lang, collected)
+                        .then(function (res) {
+                            return loadMDFile(res.node, lang, res.repo, sourceRouteHash);
+                        })
+                        .then(function (res) {
+                            node.source[lang].url = node.source[lang].content;
+                            node.source[lang].content = res;
+                        });
+                });
 
-        var LANGS = config.get('app:languages');
-
-        var promises = nodesWithSource.map(function (node) {
-            var _promises = LANGS.map(function (lang) {
-                return analyzeMetaInformation(node, lang, collected)
-                    .then(function (res) {
-                        return loadMDFile(res.node, lang, res.repo);
-                    })
-                    .then(function (res) {
-                        node.source[lang].url = node.source[lang].content;
-                        node.source[lang].content = res;
-                    });
+                return vow.allResolved(_promises);
             });
-
-            return vow.allResolved(_promises);
-        });
 
         return vow
             .all(promises)
@@ -75,6 +73,7 @@ module.exports = {
  * @param node - {Object} node
  * @param lang - {String} language of source
  * @param collected - {Object} result target object
+ * urls of nodes as values
  * @returns {*}
  */
 var analyzeMetaInformation = function(node, lang, collected) {
@@ -130,7 +129,7 @@ var analyzeMetaInformation = function(node, lang, collected) {
                 host: parsedSource[1],
                 user: parsedSource[2],
                 repo: parsedSource[3],
-                ref: parsedSource[5],
+                ref:  parsedSource[5],
                 path: parsedSource[6]
             };
         })(content);
@@ -163,7 +162,42 @@ var analyzeMetaInformation = function(node, lang, collected) {
  * @param repo - {Object} repository object
  * @returns {*|Q.IPromise<U>|Q.Promise<U>}
  */
-var loadMDFile = function(node, lang, repo) {
+var loadMDFile = function(node, lang, repo, sourceRouteHash) {
+    var renderer = new md.Renderer();
+
+    renderer.link = function(href, title, text) {
+
+        try {
+            if (href.indexOf('http://') === -1 && href.indexOf('https://') === -1) {
+                var baseTree = u.format('https://%s/%s/%s/tree/%s/', repo.host, repo.user, repo.repo, repo.ref),
+                    baseBlob = u.format('https://%s/%s/%s/blob/%s/', repo.host, repo.user, repo.repo, repo.ref);
+
+                href = href.replace(/^\.?\//, '');
+
+                var hrefTree = baseTree + href,
+                    hrefBlob = baseBlob + href,
+                    href = hrefTree;
+
+                if (sourceRouteHash[hrefTree]) {
+                    href = sourceRouteHash[hrefTree];
+                }
+
+                if (sourceRouteHash[hrefBlob]) {
+                    href = sourceRouteHash[hrefBlob];
+                }
+            }
+        }catch(err) {
+            logger.warn('Error occured while link replacement %s', href);
+        }
+
+        var out = '<a href="' + href + '"';
+        if(title) {
+            out += ' title="' + title + '"';
+        }
+        out += '>' + text + '</a>';
+        return out;
+    };
+
     return common.loadData(common.PROVIDER_GITHUB_API, { repository: repo })
         .then(function(md) {
             try {
@@ -172,7 +206,7 @@ var loadMDFile = function(node, lang, repo) {
                     md = null;
                 }else {
                     md = (new Buffer(md.res.content, 'base64')).toString();
-                    md = util.mdToHtml(md);
+                    md = util.mdToHtml(md, { renderer: renderer });
                 }
             } catch(err) {
                 logger.warn(MSG.WARN.MD_PARSING_ERROR, lang, node.title);

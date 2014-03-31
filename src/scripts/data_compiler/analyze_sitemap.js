@@ -3,6 +3,7 @@ var _ = require('lodash'),
     vow = require('vow'),
 
     logger = require('../../logger')(module),
+    config = require('../../config'),
     constants = require('../../modules/constants'),
     nodes = require('../../modules/nodes');
 
@@ -15,6 +16,7 @@ var MSG = {
 };
 
 var routes = {},
+    sourceRouteHash = {},
     sourceNodes = [],
     libraryNodes = [];
 
@@ -28,6 +30,7 @@ module.exports = {
             def.resolve({
                 sourceNodes: sourceNodes,
                 libraryNodes: libraryNodes,
+                sourceRouteHash: sourceRouteHash,
                 routes: routes,
                 sitemap: sitemap.map(function(item) {
                     return traverseTreeNodes(item, {
@@ -117,6 +120,14 @@ var processRoute = function(node) {
             });
         }
     });
+
+    if(node.url && node.source) {
+        config.get('app:languages').forEach(function(lang) {
+            if(node.source[lang] && node.source[lang].content) {
+                sourceRouteHash[node.source[lang].content] = node.url;
+            }
+        });
+    }
 
     node.type = node.type || node.TYPE.SIMPLE;
     return node;
