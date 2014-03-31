@@ -165,26 +165,29 @@ var analyzeMetaInformation = function(node, lang, collected) {
 var loadMDFile = function(node, lang, repo, sourceRouteHash) {
     var renderer = new md.Renderer();
 
+    /**
+     * Replace relative links in md documents to app route links or absolute links to github sources
+     * @param href - {String} href string
+     * @param title - {String} href title
+     * @param text - {String} href text
+     * @returns {String} result string for a link
+     */
     renderer.link = function(href, title, text) {
 
         try {
             if (href.indexOf('http://') === -1 && href.indexOf('https://') === -1) {
-                var baseTree = u.format('https://%s/%s/%s/tree/%s/', repo.host, repo.user, repo.repo, repo.ref),
-                    baseBlob = u.format('https://%s/%s/%s/blob/%s/', repo.host, repo.user, repo.repo, repo.ref);
 
                 href = href.replace(/^\.?\.?\//, '');
 
-                var hrefTree = baseTree + href,
-                    hrefBlob = baseBlob + href,
-                    href = hrefTree;
+                href = ['blob', 'tree'].reduce(function(prev, item) {
+                    prev = u.format('https://%s/%s/%s/%s/%s/', repo.host, repo.user, repo.repo, item, repo.ref) + href;
 
-                if (sourceRouteHash[hrefTree]) {
-                    href = sourceRouteHash[hrefTree];
-                }
+                    if (sourceRouteHash[prev]) {
+                        prev = sourceRouteHash[prev];
+                    }
 
-                if (sourceRouteHash[hrefBlob]) {
-                    href = sourceRouteHash[hrefBlob];
-                }
+                    return prev;
+                }, '');
             }
         }catch(err) {
             logger.warn('Error occured while link replacement %s', href);
@@ -196,6 +199,24 @@ var loadMDFile = function(node, lang, repo, sourceRouteHash) {
         }
         out += '>' + text + '</a>';
         return out;
+    };
+
+    /**
+     * Fix marked issue with cyrillic symbols replacing
+     * @param text - {String} test of header
+     * @param level - {Number} index of header
+     * @param raw
+     * @param options - {Object} options
+     * @returns {String} - result header string
+     */
+    renderer.heading = function(text, level, raw, options) {
+        var specials = ['-','[',']','/','{','}','(',')','*','+','?','.','\\','^','$','|','\ ','\'','\"'];
+
+        options.headerPrefix = options.headerPrefix || '';
+
+        return '<h' + level + ' id="' + options.headerPrefix
+            + raw.toLowerCase().replace(RegExp('[' + specials.join('\\') + ']', 'g'), '-') + '">'
+            + text + '</h' + level + '>\n';
     };
 
     return common.loadData(common.PROVIDER_GITHUB_API, { repository: repo })

@@ -25,7 +25,7 @@
     "intel": "0.4.0",
     "sha1": "1.0.0",
     "ometajs": "3.1.4",
-    "marked": "git://github.com/dab/marked.git",
+    "marked": "0.3.2",
     "yandex-disk": "0.0.4",
     "semver": "2.2.1",
     "nodemon": "1.0.8",
