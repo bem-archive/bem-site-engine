@@ -9,7 +9,7 @@ module.exports = function(config) {
             use('deps', { target: '?.bemdecl.js' }),
             use('roole', { target: '?.noprefix.css' }),
             use('autoprefixer', {
-                browsers: ['last 2 versions', 'last 3 Chrome versions'],
+                browserSupport: ['last 2 versions', 'last 3 Chrome versions'],
                 sourceTarget: '?.noprefix.css'
             }),
             use('bemhtml', { devMode: false }),
@@ -111,7 +111,7 @@ var techs = {
     modules         : require('enb-modules/techs/prepend-modules'),
     js              : require('enb/techs/browser-js'),
     roole           : require('enb-roole/techs/css-roole'),
-    autoprefixer    : require('enb-autoprefixer-techs/techs/css-autoprefixer'),
+    autoprefixer    : require('enb-autoprefixer/techs/css-autoprefixer'),
     bemhtml         : require('enb-bemxjst/techs/bemhtml-old'),
     bemtree         : require('enb-bemxjst/techs/bemtree-old'),
     'template-i18n' : require('./techs/template-i18n'),
