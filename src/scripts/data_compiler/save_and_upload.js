@@ -25,8 +25,8 @@ var MSG = {
 
 module.exports = {
     run: function(content) {
-        return saveAndUpload(content, 'data:sitemap').then(function() {
-            return createUpdateMarker(data);
+        return saveAndUpload(content, 'data:data').then(function() {
+            return createUpdateMarker(content);
         });
     }
 };
