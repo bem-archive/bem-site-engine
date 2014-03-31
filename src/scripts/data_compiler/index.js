@@ -50,7 +50,7 @@ module.exports = {
             .spread(function(obj, docs, libraries, people) {
                 return vow
                     .all([
-                        addDynamicNodes.call(null, obj.sitemap, obj.routes, docs),
+                        addDynamicNodes.call(null, obj.sitemap, obj.routes, docs, people),
                         addLibraryNodes.call(null, obj.sitemap, obj.routes, obj.libraryNodes, libraries)
                     ]).spread(function(dynamic, libraries) {
                         return {

@@ -8,7 +8,7 @@ var _ = require('lodash'),
 
 module.exports = {
 
-    run: function(sitemap, routes, docs) {
+    run: function(sitemap, routes, docs, people) {
         logger.info('Add dynamic nodes to sitemap start');
 
         var urls = {
@@ -21,12 +21,14 @@ module.exports = {
                 addDynamicNodesFor({
                     key: 'authors',
                     data: docs.authors,
-                    urlHash: urls.people
+                    urlHash: urls.people,
+                    people: people
                 }, sitemap, routes),
                 addDynamicNodesFor({
                     key: 'translators',
                     data: docs.translators,
-                    urlHash: urls.people
+                    urlHash: urls.people,
+                    people: people
                 }, sitemap, routes),
                 addDynamicNodesFor({
                     key: 'tags',
@@ -62,7 +64,7 @@ var addDynamicNodesFor = function(config, sitemap, routes) {
         targetNode.items = targetNode.items || [];
         routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
 
-        config.data.apply(null).forEach(function(item) {
+        config.data.forEach(function(item) {
             var conditions = {
                 conditions: {
                     id: item
@@ -81,7 +83,7 @@ var addDynamicNodesFor = function(config, sitemap, routes) {
                 };
 
             if('authors' === config.key || 'translators' === config.key) {
-                _node = new nodes.person.PersonNode(_route, targetNode, item);
+                _node = new nodes.person.PersonNode(_route, targetNode, item, config.people);
             }else if('tags' === config.key) {
                 _node = new nodes.tag.TagNode(_route, targetNode, item);
             }

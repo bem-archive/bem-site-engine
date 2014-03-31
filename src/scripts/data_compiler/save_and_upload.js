@@ -59,7 +59,7 @@ var saveAndUpload = function(content, path) {
                 .saveData(common.PROVIDER_FILE, {
                     path: config.get(path),
                     data: content,
-                    minimize: false
+                    minimize: true
                 })
                 .then(
                     function() { logger.debug(MSG.DEBUG.FILE_SUCCESS, config.get(path)); },
