@@ -78,7 +78,7 @@ var traverseTreeNodes = function(node, parent) {
  * @param node {Object} - single node of sitemap model
  * @param level {Number} - menu deep level
  */
-processRoute = function(node) {
+var processRoute = function(node) {
     node.params = _.extend({}, node.parent.params);
 
     if(!node.route) {

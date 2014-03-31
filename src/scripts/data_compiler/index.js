@@ -34,24 +34,24 @@ module.exports = {
         vow
             .when(data.common.init())
             .then(function() {
-                return getSitemap.call(null, modelPath);
+                return getSitemap(modelPath);
             })
             .then(function(sitemap) {
-                return analyzeSitemap.call(null, sitemap);
+                return analyzeSitemap(sitemap);
             })
             .then(function(obj) {
                 return vow.all([
                     obj,
-                    loadSources.call(null, obj.sourceNodes),
-                    loadLibraries.call(null, obj.libraryNodes),
-                    loadPeople.call(null)
+                    loadSources(obj.sourceNodes),
+                    loadLibraries(obj.libraryNodes),
+                    loadPeople()
                 ]);
             })
             .spread(function(obj, docs, libraries, people) {
                 return vow
                     .all([
-                        addDynamicNodes.call(null, obj.sitemap, obj.routes, docs, people),
-                        addLibraryNodes.call(null, obj.sitemap, obj.routes, obj.libraryNodes, libraries)
+                        addDynamicNodes(obj.sitemap, obj.routes, docs, people),
+                        addLibraryNodes(obj.sitemap, obj.routes, obj.libraryNodes, libraries)
                     ]).spread(function(dynamic, libraries) {
                         return {
                             sitemap: removeCircularReferences(obj.sitemap),
@@ -63,7 +63,7 @@ module.exports = {
                     });
             })
             .then(function(content) {
-                return saveAndUpload.call(null, content);
+                return saveAndUpload(content);
             })
             .then(
                 function() { logger.info(MSG.INFO.END); },
@@ -72,6 +72,12 @@ module.exports = {
     }
 };
 
+/**
+ * Remove circular references for parent nodes
+ * for get ability to save sitemap object to json file
+ * @param tree - {Object} sitemap object with removed circular references
+ * @returns {Object}
+ */
 var removeCircularReferences = function(tree) {
     var traverseTreeNodes = function(node) {
         if(node.parent) {
