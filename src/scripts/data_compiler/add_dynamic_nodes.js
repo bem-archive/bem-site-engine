@@ -11,23 +11,32 @@ module.exports = {
     run: function(sitemap, routes, docs) {
         logger.info('Add dynamic nodes to sitemap start');
 
-        return vow.all([
-            addDynamicNodesFor({
-                key: 'authors',
-                data: docs.authors,
-                urlHash: {}
-            }, sitemap, routes),
-            addDynamicNodesFor({
-                key: 'translators',
-                data: docs.translators,
-                urlHash: {}
-            }, sitemap, routes),
-            addDynamicNodesFor({
-                key: 'tags',
-                data: docs.tags,
-                urlHash: {}
-            }, sitemap, routes)
-        ]);
+        var urls = {
+            people: {},
+            tags: {}
+        };
+
+        return vow
+            .all([
+                addDynamicNodesFor({
+                    key: 'authors',
+                    data: docs.authors,
+                    urlHash: urls.people
+                }, sitemap, routes),
+                addDynamicNodesFor({
+                    key: 'translators',
+                    data: docs.translators,
+                    urlHash: urls.people
+                }, sitemap, routes),
+                addDynamicNodesFor({
+                    key: 'tags',
+                    data: docs.tags,
+                    urlHash: urls.tags
+                }, sitemap, routes)
+            ])
+            .then(function() {
+                return urls;
+            });
     }
 };
 

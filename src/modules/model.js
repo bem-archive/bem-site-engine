@@ -32,21 +32,32 @@ module.exports = {
             promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
                 path: config.get('data:sitemap')
             }).then(function(content) {
-                return JSON.parse(content);
+                try {
+                    return JSON.parse(content);
+                }catch(err) {
+                    logger.error('Error occur while parsing sitemap object');
+                }
             });
         }
 
         return promise.then(function(content) {
-            sitemap = addCircularReferences(content.sitemap);
-            routes = _.values(content.routes);
+            try {
+                sitemap = addCircularReferences(content.sitemap);
+                routes = _.values(content.routes);
 
-            if(content.docs) {
-                authors = content.docs.authors;
-                translators = content.docs.translators;
-                tags = content.docs.tags;
+                if (content.docs) {
+                    authors = content.docs.authors;
+                    translators = content.docs.translators;
+                    tags = content.docs.tags;
+                }
+
+                people = content.people;
+                
+                peopleUrls = content.urls.people;
+                tagUrls = content.urls.tags;
+            }catch(err) {
+                logger.error('Error occur while filling model');
             }
-
-            people = content.people;
         });
     },
 

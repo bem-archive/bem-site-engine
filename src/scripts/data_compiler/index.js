@@ -52,12 +52,12 @@ module.exports = {
                     .all([
                         addDynamicNodes.call(null, obj.sitemap, obj.routes, docs),
                         addLibraryNodes.call(null, obj.sitemap, obj.routes, obj.libraryNodes, libraries)
-                    ]).then(function() {
+                    ]).spread(function(dynamic, libraries) {
                         return {
                             sitemap: removeCircularReferences(obj.sitemap),
                             routes: obj.routes,
                             docs: docs,
-                            //libraries: libraries,
+                            urls: dynamic,
                             people: people
                         };
                     });
