@@ -172,7 +172,7 @@ var loadMDFile = function(node, lang, repo, sourceRouteHash) {
                 var baseTree = u.format('https://%s/%s/%s/tree/%s/', repo.host, repo.user, repo.repo, repo.ref),
                     baseBlob = u.format('https://%s/%s/%s/blob/%s/', repo.host, repo.user, repo.repo, repo.ref);
 
-                href = href.replace(/^\.?\//, '');
+                href = href.replace(/^\.?\.?\//, '');
 
                 var hrefTree = baseTree + href,
                     hrefBlob = baseBlob + href,
