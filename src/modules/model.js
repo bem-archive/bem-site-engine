@@ -26,16 +26,16 @@ module.exports = {
 
         if('development' === config.get('NODE_ENV')) {
             promise = data.common.loadData(data.common.PROVIDER_FILE, {
-                path: config.get('data:sitemap')
+                path: config.get('data:data')
             });
         }else {
             promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
-                path: config.get('data:sitemap')
+                path: config.get('data:data')
             }).then(function(content) {
                 try {
                     return JSON.parse(content);
                 }catch(err) {
-                    logger.error('Error occur while parsing sitemap object');
+                    logger.error('Error occur while parsing data object');
                 }
             });
         }
