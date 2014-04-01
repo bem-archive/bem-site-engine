@@ -20,7 +20,7 @@ function run(worker) {
         .then(function() {
             router.init();
 
-            if (process.env.NODE_ENV !== 'production') {
+            if (config.get('NODE_ENV') === 'development') {
                 var enbServer = require('enb/lib/server/server-middleware'),
                     rootPath = process.cwd();
 
