@@ -4,19 +4,6 @@ block post, mod view list-item {
         var node = this.ctx.node,
             source = node.source && node.source[this.data.lang];
 
-        if(!source) {
-            return [
-                apply('title', this.ctx = {
-                    node: node,
-                    content: { title: node.title[this.data.lang] }
-                }),
-                apply('categories', this.ctx = {
-                    breadcrumbs: node.breadcrumbs,
-                    lang: this.data.lang
-                })
-            ];
-        }
-
         return [
             apply('author', this.ctx = {
                 authors: source.authors,
