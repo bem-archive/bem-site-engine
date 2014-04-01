@@ -212,6 +212,7 @@ var loadMDFile = function(node, lang, repo, sourceRouteHash) {
     renderer.heading = function(text, level, raw, options) {
         var specials = ['-','[',']','/','{','}','(',')','*','+','?','.','\\','^','$','|','\ ','\'','\"'];
 
+        options = options || {};
         options.headerPrefix = options.headerPrefix || '';
 
         return '<h' + level + ' id="' + options.headerPrefix
