@@ -6,9 +6,11 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'level' }, {
             inited: function() {
                 var _this = this;
 
-                if(_this.getStorage()) {
+                _this.__base();
+
+                if(_this.getStorage('level')) {
                     _this
-                        .setSelect()
+                        ._setSelectFromStorage()
                         .showLevel();
                 }
 
@@ -21,15 +23,6 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'level' }, {
         }
     },
 
-    setSelect: function() {
-        var _this = this,
-            level = _this.getStorage();
-
-         _this.elem('select').val(level);
-
-        return _this;
-    },
-
     showLevel: function(level) {
 
         var _this = this,
@@ -37,10 +30,10 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'level' }, {
 
 
         if (!level) {
-            var level = _this.getStorage();
+            var level = _this.getStorage('level');
         }
 
-        _this.setStorage(level);
+        _this.setStorage('level', level);
 
         if(level === 'all levels') {
             _this.delMod(groups, 'hide');
@@ -61,12 +54,13 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'level' }, {
         return _this;
     },
 
-    getStorage: function() {
-        return localStorage.getItem('level');
-    },
+    _setSelectFromStorage: function() {
+        var _this = this,
+            level = _this.getStorage('level');
 
-    setStorage: function(levelName) {
-        return localStorage.setItem('level', levelName);
+         _this.elem('select').val(level);
+
+        return _this;
     }
 });
 
