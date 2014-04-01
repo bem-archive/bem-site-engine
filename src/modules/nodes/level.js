@@ -41,4 +41,9 @@ LevelNode.prototype.setType = function() {
     return this;
 };
 
+LevelNode.prototype.setClass = function() {
+    this.class = 'level';
+    return this;
+};
+
 exports.LevelNode = LevelNode;

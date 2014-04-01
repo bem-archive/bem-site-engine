@@ -83,9 +83,7 @@ var checkForUpdate = function(master) {
         }
 
         //compare sha sums for libraries, docs and sitemap
-        if(marker.sitemap !== content.sitemap ||
-            marker.docs !== content.docs ||
-            marker.libraries !== content.libraries) {
+        if(marker.data !== content.data) {
 
             logger.info('Data has been changed. All application worker will be restarted');
 

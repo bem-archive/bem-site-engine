@@ -52,4 +52,9 @@ VersionNode.prototype.setSource = function(version) {
     return this;
 };
 
+VersionNode.prototype.setClass = function() {
+    this.class = 'version';
+    return this;
+};
+
 exports.VersionNode = VersionNode;

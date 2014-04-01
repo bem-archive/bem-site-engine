@@ -52,4 +52,9 @@ BlockNode.prototype.setView = function() {
     return this;
 };
 
+BlockNode.prototype.setClass = function() {
+    this.class = 'block';
+    return this;
+};
+
 exports.BlockNode = BlockNode;

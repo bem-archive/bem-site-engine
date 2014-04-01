@@ -1,26 +1,22 @@
-var u = require('util'),
-    path = require('path'),
-
-    vow = require('vow'),
-    fs = require('vow-fs'),
+var vow = require('vow'),
     _ = require('lodash'),
-    sha = require('sha1'),
-    susanin = require('susanin'),
 
-    logger = require('../logger')(module),
-    util  = require('../util'),
-    config = require('../config'),
-    constants = require('./constants'),
     nodes = require('./nodes'),
+    logger = require('../logger')(module),
+    config = require('../config'),
     data = require('./data');
 
-var worker,
-    sitemap,
-    routes = {};
+var sitemap,
+    routes,
+    authors,
+    translators,
+    tags,
+    tagUrls,
+    people,
+    peopleUrls;
 
 module.exports = {
-    init: function(_worker) {
-        worker = _worker;
+    init: function(worker) {
 
         logger.info('Init site structure and load data for worker %s', worker.wid);
 
@@ -30,37 +26,39 @@ module.exports = {
 
         if('development' === config.get('NODE_ENV')) {
             promise = data.common.loadData(data.common.PROVIDER_FILE, {
-                path: config.get('data:sitemap')
+                path: config.get('data:data')
             });
         }else {
             promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
-                path: config.get('data:sitemap')
+                path: config.get('data:data')
             }).then(function(content) {
-                return JSON.parse(content);
+                try {
+                    return JSON.parse(content);
+                }catch(err) {
+                    logger.error('Error occur while parsing data object');
+                }
             });
         }
 
-        return promise
-            .then(function(content) {
-                sitemap = content;
-                return createModel(sitemap);
-            })
-            .then(function(res) {
-                return vow.all([
-                    data.docs.load(res.docs),
-                    data.libraries.load(res.libs),
-                    data.people.load()
-                ]).then(function() {
-                    return res;
-                });
-            })
-            .then(function(res) {
-                logger.debug('All data has been loaded for worker %s', worker.wid);
-                return vow.all([
-                    addLibraryNodes(res.libs),
-                    addDynamicNodes()
-                ]);
-            });
+        return promise.then(function(content) {
+            try {
+                sitemap = addCircularReferences(content.sitemap);
+                routes = _.values(content.routes);
+
+                if (content.docs) {
+                    authors = content.docs.authors;
+                    translators = content.docs.translators;
+                    tags = content.docs.tags;
+                }
+
+                people = content.people;
+
+                peopleUrls = content.urls.people;
+                tagUrls = content.urls.tags;
+            }catch(err) {
+                logger.error('Error occur while filling model');
+            }
+        });
     },
 
     /**
@@ -68,7 +66,7 @@ module.exports = {
      * @returns {Array}
      */
     getRoutes: function() {
-        return _.values(routes);
+        return routes;
     },
 
     /**
@@ -77,419 +75,67 @@ module.exports = {
      */
     getSitemap: function() {
         return sitemap;
+    },
+
+    /**
+     * Returns array of collected authors from docs meta-information without duplicates
+     * @returns {Array}
+     */
+    getAuthors: function() {
+        return authors;
+    },
+
+    /**
+     * Returns array of collected translators from docs meta-information without duplicates
+     * @returns {Array}
+     */
+    getTranslators: function() {
+        return translators;
+    },
+
+    /**
+     * Returns array of collected tags from docs meta-information without duplicates
+     * @returns {Array}
+     */
+    getTags: function() {
+        return tags;
+    },
+
+    getTagUrls: function() {
+        return tagUrls;
+    },
+
+    /**
+     * Returns people hash
+     * @returns {Object}
+     */
+    getPeople: function() {
+        return people;
+    },
+
+    /**
+     * Returns people urls
+     * @returns {Object}
+     */
+    getPeopleUrls: function() {
+        return peopleUrls;
     }
 };
 
-var setSiteMap = function(_sitemap) {
-    sitemap = _sitemap;
-};
+var addCircularReferences = function(tree) {
+    var traverseTreeNodes = function(node, parent) {
+        node = new nodes.runtime.RuntimeNode(node, parent);
 
-var createModel = function(sitemap) {
-    logger.info('Process site map for worker %s', worker.wid);
-
-    var def = vow.defer(),
-        nodesWithSource = [],
-        nodesWithLib = [],
-
-        /**
-         * Collects routes rules for nodes
-         * @param node {Object} - single node of sitemap model
-         * @param level {Number} - menu deep level
-         */
-        processRoute = function(node) {
-            node.params = _.extend({}, node.parent.params);
-
-            if(!node.route) {
-                node.route = {
-                    name: node.parent.route.name
-                };
-                node.type = node.type ||
-                    (node.url ? node.TYPE.SIMPLE : node.TYPE.GROUP);
-                return node;
-            }
-
-            var r = node.route;
-
-            if(r[constants.ROUTE.NAME]) {
-                routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
-                node.url = susanin.Route(routes[r.name]).build(node.params);
-            }else {
-                r.name = node.parent.route.name;
-            }
-
-            [constants.ROUTE.DEFAULTS, constants.ROUTE.CONDITIONS, constants.ROUTE.DATA].forEach(function(item) {
-                routes[r.name][item] = routes[r.name][item] || {};
-
-                if(r[item]) {
-                    Object.keys(r[item]).forEach(function(key) {
-                        if(item === constants.ROUTE.CONDITIONS) {
-                            routes[r.name][item][key] = routes[r.name][item][key] || [];
-                            routes[r.name][item][key].push(r[item][key]);
-
-                            node.url = susanin.Route(routes[r.name]).build(_.extend(node.params, r[item]));
-                        }else {
-                            routes[r.name][item][key] = r[item][key];
-                        }
-                    });
-                }
+        if(node.items) {
+            node.items = node.items.map(function(item) {
+                return traverseTreeNodes(item, node);
             });
-
-            node.type = node.type || node.TYPE.SIMPLE;
-
-            return node;
-        },
-
-        /**
-         * Recursive function for traversing tree model
-         * @param node {Object} - single node of sitemap model
-         * @param parent {Object} - parent for current node
-         */
-        traverseTreeNodes = function(node, parent) {
-
-            node = new nodes.base.BaseNode(node, parent);
-
-            processRoute(node).createBreadcrumbs();
-
-            if(node.source) {
-                nodesWithSource.push(node);
-            }
-            if(node.lib) {
-                nodesWithLib.push(node);
-            }
-
-            logger.verbose('id = %s level = %s url = %s', node.id, node.level, node.url);
-
-            //deep into node items
-            if(node.items) {
-                node.items = node.items.map(function(item) {
-                    return traverseTreeNodes(item, node);
-                });
-            }
-
-            return node;
-        };
-
-    try {
-        setSiteMap(sitemap.map(function(item) {
-            return traverseTreeNodes(item, {
-                level: -1,
-                route: { name: null },
-                params: {}
-            });
-        }));
-
-        def.resolve({
-            docs: nodesWithSource,
-            libs: nodesWithLib
-        });
-    } catch(e) {
-        logger.error(e.message);
-        def.reject(e);
-    }
-
-    return def.promise();
-};
-
-/**
- * Dynamic addition of nodes for authors, translators and tags
- * grouped menu items
- */
-var addDynamicNodes = function() {
-    logger.info('Add dynamic nodes to sitemap for worker %s', worker.wid);
-
-    var addDynamicNodesFor = function(_config) {
-        logger.debug('add dynamic nodes for %s for worker %s', _config.key, worker.wid);
-
-        var def = vow.defer(),
-            targetNode,
-            baseRoute;
-
-        try {
-            targetNode = findNodeByCriteria('dynamic', _config.key);
-
-            if(!targetNode) {
-                logger.warn('target node for %s was not found for worker %s', _config.key, worker.wid);
-
-                def.resolve();
-                return def.promise();
-            }
-
-            baseRoute = targetNode.getBaseRoute();
-
-            targetNode.items = targetNode.items || [];
-            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
-
-            _config.data.apply(null).forEach(function(item) {
-                var conditions = {
-                    conditions: {
-                        id: item
-                    }
-                };
-
-                Object.keys(conditions.conditions).forEach(function(key) {
-                    routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
-                    routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
-                });
-
-                var _node,
-                    _route = {
-                        route: _.extend({}, { name: baseRoute.name }, conditions),
-                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
-                    };
-
-                if('authors' === _config.key || 'translators' === _config.key) {
-                    _node = new nodes.person.PersonNode(_route, targetNode, item);
-                }else if('tags' === _config.key) {
-                    _node = new nodes.tag.TagNode(_route, targetNode, item);
-                }
-
-                _config.urlHash[item] = _node.url;
-                targetNode.items.push(_node);
-
-                logger.verbose('add dynamic node for %s with id = %s level = %s url = %s for worker %s',
-                    _config.key, _node.id, _node.level, _node.url, worker.wid);
-
-                def.resolve(_node);
-            });
-        }catch(err) {
-            logger.error(err.message);
-            def.reject(err);
         }
 
-        return def.promise();
+        return node;
     };
 
-    return vow.all([
-        addDynamicNodesFor({
-            key: 'authors',
-            data: data.docs.getAuthors,
-            urlHash: data.people.getUrls()
-        }),
-        addDynamicNodesFor({
-            key: 'translators',
-            data: data.docs.getTranslators,
-            urlHash: data.people.getUrls()
-        }),
-        addDynamicNodesFor({
-            key: 'tags',
-            data: data.docs.getTags,
-            urlHash: data.docs.getTagUrls()
-        })
-    ]);
-};
-
-var addLibraryNodes = function(nodesWithLib) {
-    logger.info('add library nodes for worker %s', worker.wid);
-
-    if(!nodesWithLib || !_.isArray(nodesWithLib) || nodesWithLib.length === 0) {
-        logger.warn('nodes with lib not found');
-        return;
-    }
-
-    var collectConditionsForBaseRoute = function(baseRoute, conditions) {
-            Object.keys(conditions.conditions).forEach(function(key) {
-                routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
-                routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
-            });
-        },
-
-        addVersionsToLibrary = function(targetNode) {
-            logger.verbose('add versions to library %s', targetNode.lib);
-
-            var baseRoute = targetNode.getBaseRoute();
-
-            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
-            targetNode.items = targetNode.items || [];
-
-            var versions = data.libraries.getLibraries()[targetNode.lib];
-            if(!versions) return;
-
-            Object.keys(versions).sort(util.sortLibraryVerions).forEach(function(key) {
-
-                var version = versions[key],
-                    conditions = {
-                        conditions: {
-                            lib: version.repo,
-                            version: version.ref
-                        }
-                    };
-
-                collectConditionsForBaseRoute(baseRoute, conditions);
-
-                //create node
-                var _route = {
-                        route: _.extend({}, { name: baseRoute.name }, conditions),
-                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
-                    },
-                    _node = new nodes.version.VersionNode(_route, targetNode, version);
-
-                targetNode.items.push(_node);
-
-                addPostToVersion(_node, version, {
-                    key: 'migration',
-                    title: {
-                        en: 'Migration',
-                        ru: 'Migration'
-                    }
-                });
-
-                addPostToVersion(_node, version, {
-                    key: 'changelog',
-                    title: {
-                        en: 'Changelog',
-                        ru: 'Changelog'
-                    }
-                });
-
-                addLevelsToVersion(_node, version);
-            });
-        },
-
-        addPostToVersion = function(targetNode, version, _config) {
-            logger.verbose('add post %s to version %s of library %s for worker %s', _config.key, version.ref, version.repo, worker.wid);
-
-            var baseRoute = targetNode.getBaseRoute();
-
-            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
-            targetNode.items = targetNode.items || [];
-
-            var conditions = {
-                conditions: {
-                    lib: version.repo,
-                    version: version.ref,
-                    id: _config.key
-                }
-            };
-
-            //verify existed docs
-            if(!version[_config.key]) {
-                return;
-            }
-
-            collectConditionsForBaseRoute(baseRoute, conditions);
-
-            //create node
-            var _route = {
-                    route: _.extend({}, { name: baseRoute.name }, conditions),
-                    url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
-                },
-                _node = new nodes.post.PostNode(_route, targetNode, version, _config);
-
-            targetNode.items.push(_node);
-        },
-
-        addLevelsToVersion = function(targetNode, version) {
-
-            var baseRoute = targetNode.getBaseRoute();
-
-            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
-            targetNode.items = targetNode.items || [];
-
-            var levels = version.levels;
-            if(!levels) return;
-
-            levels.forEach(function(level) {
-                var conditions = {
-                    conditions: {
-                        lib: version.repo,
-                        version: version.ref,
-                        level: level.name
-                    }
-                };
-
-                //verify existed blocks for level
-                if(level.blocks) {
-                    collectConditionsForBaseRoute(baseRoute, conditions);
-
-                    //create node
-                    var _route = {
-                            route: _.extend({}, { name: baseRoute.name }, conditions),
-                            url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
-                        },
-                        _node = new nodes.level.LevelNode(_route, targetNode, level);
-
-                    targetNode.items.push(_node);
-
-                    addBlocksToLevel(_node, version, level);
-                }
-            });
-        },
-
-        addBlocksToLevel = function(targetNode, version, level) {
-            logger.verbose('add blocks to level %s of version %s for worker %s', level.name, version.ref, worker.wid);
-
-            var baseRoute = targetNode.getBaseRoute();
-
-            routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
-            targetNode.items = targetNode.items || [];
-
-            var blocks = level.blocks;
-            if(!blocks) return;
-
-            blocks.forEach(function(block) {
-                var conditions = {
-                    conditions: {
-                        lib: version.repo,
-                        version: version.ref,
-                        level: level.name,
-                        block: block.name
-                    }
-                };
-
-                logger.verbose('add block %s to level %s of version %s for worker %s', block.name, level.name, version.ref, worker.wid);
-
-                collectConditionsForBaseRoute(baseRoute, conditions);
-
-                //create node
-                var _route = {
-                        route: _.extend({}, { name: baseRoute.name }, conditions),
-                        url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
-                    },
-                    _node = new nodes.block.BlockNode(_route, targetNode, block);
-
-                    _node.setSource({
-                        prefix: u.format('/__example/%s/%s/%s/%s',
-                            version.repo, version.ref, level.name, block.name),
-                        data: block.data,
-                        jsdoc: block.jsdoc
-                    });
-
-                targetNode.items.push(_node);
-            });
-        };
-
-    nodesWithLib.forEach(function(node) {
-        addVersionsToLibrary(node);
+    return tree.map(function(item) {
+        return traverseTreeNodes(item, null);
     });
-};
-
-/**
- * Finds node by attribute and its value
- * @param field - {Stirng} name of attribute
- * @param value - {String} value of attribute
- * @returns {Object} node
- */
-var findNodeByCriteria = function(field, value) {
-
-    var result = null,
-        traverseTreeNodes = function(node) {
-            if(node[field] && node[field] === value) {
-                result = node;
-            }
-
-            if(!result && node.items) {
-                node.items.forEach(function(item) {
-                    traverseTreeNodes(item);
-                });
-            }
-        };
-
-    sitemap.forEach(function(node) {
-        if(result) {
-            return;
-        }
-        traverseTreeNodes(node);
-    });
-
-    return result;
 };

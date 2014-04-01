@@ -1,7 +1,7 @@
 var _ = require('lodash'),
     sha = require('sha1');
 
-exports.BaseNode = function(node, parent) {
+var BaseNode = function(node, parent) {
     Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
 
     this.generateUniqueId()
@@ -10,10 +10,11 @@ exports.BaseNode = function(node, parent) {
         .setTitle()
         .setHidden()
         .setView()
-        .setLevel(parent);
+        .setLevel(parent)
+        .setClass();
 };
 
-exports.BaseNode.prototype = {
+BaseNode.prototype = {
 
     VIEW: {
         INDEX: 'index',
@@ -33,12 +34,12 @@ exports.BaseNode.prototype = {
         NORMAL: 'normal'
     },
 
-    getBaseRoute: function() {
-        if(this.route && this.route.pattern) {
+    getBaseRoute: function () {
+        if (this.route && this.route.pattern) {
             return this.route;
         }
 
-        if(this.parent) {
+        if (this.parent) {
             return this.parent.getBaseRoute();
         }
     },
@@ -46,7 +47,7 @@ exports.BaseNode.prototype = {
     /**
      * Generate unique id for node as sha sum of node object
      */
-    generateUniqueId: function() {
+    generateUniqueId: function () {
         this.id = sha(JSON.stringify(this));
         return this;
     },
@@ -54,7 +55,7 @@ exports.BaseNode.prototype = {
     /**
      * Set parent for current node
      */
-    setParent: function(parent) {
+    setParent: function (parent) {
         this.parent = parent;
         return this;
     },
@@ -63,8 +64,8 @@ exports.BaseNode.prototype = {
      * Makes title consistent
      * @param node {Object} - single node of sitemap model
      */
-    setTitle: function() {
-        if(this.title && _.isString(this.title)) {
+    setTitle: function () {
+        if (this.title && _.isString(this.title)) {
             this.title = {
                 en: this.title,
                 ru: this.title
@@ -77,13 +78,13 @@ exports.BaseNode.prototype = {
      * Select view for node
      * @param node {Object} - single node of sitemap model
      */
-    setView: function() {
+    setView: function () {
         this.view = this.view ||
             (this.source ? this.VIEW.POST : this.VIEW.POSTS);
         return this;
     },
 
-    setSize: function() {
+    setSize: function () {
         this.size = this.size || this.SIZE.NORMAL;
         return this;
     },
@@ -93,7 +94,7 @@ exports.BaseNode.prototype = {
      * @param parent - {Object} parent node
      * @returns {DynamicNode}
      */
-    setLevel: function(parent) {
+    setLevel: function (parent) {
         this.level = (parent.type === this.TYPE.GROUP || parent.type === this.TYPE.SELECT) ?
             parent.level : parent.level + 1;
         return this;
@@ -103,16 +104,16 @@ exports.BaseNode.prototype = {
      * Set hidden state for node
      * @param node {Object} - single node of sitemap model
      */
-    setHidden: function() {
+    setHidden: function () {
 
         //show node for all locales
-        if(!this.hidden) {
+        if (!this.hidden) {
             this.hidden = {};
             return this;
         }
 
         //hide node for locales that exists in node hidden array
-        if(_.isArray(this.hidden)) {
+        if (_.isArray(this.hidden)) {
             this.hidden = {
                 en: this.hidden.indexOf('en') !== -1,
                 ru: this.hidden.indexOf('ru') !== -1
@@ -121,7 +122,7 @@ exports.BaseNode.prototype = {
         }
 
         //hide node for all locales
-        if(this.hidden === true) {
+        if (this.hidden === true) {
             this.hidden = {
                 en: true,
                 ru: true
@@ -132,19 +133,23 @@ exports.BaseNode.prototype = {
         return this;
     },
 
-    createBreadcrumbs: function() {
+    setClass: function () {
+        this.class = 'base';
+    },
+
+    createBreadcrumbs: function () {
         this.breadcrumbs = [];
 
         var self = this,
-            traverse = function(node) {
-                if(node.url) {
+            traverse = function (node) {
+                if (node.url) {
                     self.breadcrumbs.unshift({
                         title: node.title,
                         url: node !== self ? node.url : null
                     });
                 }
 
-                if(node.parent) {
+                if (node.parent) {
                     traverse(node.parent);
                 }
             };
@@ -153,3 +158,5 @@ exports.BaseNode.prototype = {
 
     }
 };
+
+exports.BaseNode = BaseNode;
