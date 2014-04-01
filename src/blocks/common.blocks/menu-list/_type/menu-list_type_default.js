@@ -6,6 +6,8 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'default' }, {
             inited: function() {
                 var _this = this;
 
+                _this.__base();
+
                 _this.setSelectUrl();
 
                 _this.setLinksUrl();
@@ -15,10 +17,10 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'default' }, {
                         url = $this.val(),
 
                         // TODO: придумать другой способ получать текст ссылки
-                        lib = $this.prev('.menu-list__link').text();
+                        libname = $this.prev('.menu-list__link').text();
 
                     _this.showLibPage(url);
-                    _this.setStorage(lib, url);
+                    _this.setStorage(libname, url);
                 });
             }
         }
@@ -57,14 +59,6 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'default' }, {
 
     showLibPage: function(url) {
         location.href = location.origin + url;
-    },
-
-    getStorage: function(lib) {
-        return localStorage.getItem(lib);
-    },
-
-    setStorage: function(lib, url) {
-        return localStorage.setItem(lib, url);
     }
 });
 
