@@ -52,6 +52,10 @@ BlockNode.prototype.setView = function() {
     return this;
 };
 
+/**
+ * Sets class for node
+ * @returns {BlockNode}
+ */
 BlockNode.prototype.setClass = function() {
     this.class = 'block';
     return this;
