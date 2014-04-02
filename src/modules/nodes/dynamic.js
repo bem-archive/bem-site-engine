@@ -2,6 +2,11 @@ var u = require('util'),
     _ = require('lodash'),
     BaseNode = require('./base').BaseNode;
 
+/**
+ * Subclass of BaseNode class
+ * Base class for all dynamic nodes
+ * @constructor
+ */
 DynamicNode = function() {};
 
 DynamicNode.prototype = Object.create(BaseNode.prototype);
@@ -61,6 +66,10 @@ DynamicNode.prototype.setHidden = function() {
     return this;
 };
 
+/**
+ * Sets class for node
+ * @returns {DynamicNode}
+ */
 DynamicNode.prototype.setClass = function() {
     this.class = 'dynamic';
     return this;
