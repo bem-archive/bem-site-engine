@@ -9,20 +9,20 @@ module.exports = {
      * Returns loaded and parsed content of json file
      * @param options - {Object} with fields
      * - path {String} path to file
-     * @returns {Object}
+     * @returns {Object} content of json file
      */
     load: function(options) {
         logger.debug('load data from json file %s', options.path);
 
         return fs.read(options.path, 'utf-8')
             .then(
-            function(content) {
-                return JSON.parse(content);
-            },
-            function() {
-                logger.warn('cannot read content of %s file', options.path);
-            }
-        );
+                function(content) {
+                    return JSON.parse(content);
+                },
+                function() {
+                    logger.warn('cannot read content of %s file', options.path);
+                }
+            );
     },
 
     /**
