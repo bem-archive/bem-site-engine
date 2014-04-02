@@ -13,6 +13,10 @@ var util = require('util'),
 var PATTERN = '/__example',
     VERSION_REGEXP = /\/v?\d+\.\d+\.\d+\//;
 
+/**
+ * Middleware for handling block examples requests
+ * @returns {Function}
+ */
 module.exports = function() {
 
     return function(req, res, next) {
@@ -30,6 +34,8 @@ module.exports = function() {
 
         logger.verbose('request block example by url %s', url);
 
+        //try to load cached example from local filesystem
+        //try to load example from github if no cached file were found
         data.common
             .loadData(data.common.PROVIDER_FILE_COMMON, {
                 path: path.resolve(constants.DIRS.CACHE, ref, sha(url))
