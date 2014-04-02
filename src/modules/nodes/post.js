@@ -53,6 +53,10 @@ PostNode.prototype.setSource = function(version, config) {
     return this;
 };
 
+/**
+ * Sets class for node
+ * @returns {PostNode}
+ */
 PostNode.prototype.setClass = function() {
     this.class = 'post';
     return this;
