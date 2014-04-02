@@ -1,16 +1,21 @@
 var Susanin = require('susanin'),
-    _modules = require('./modules');
+    modules = require('./modules');
 
 module.exports = {
 
     router: null,
 
+    /**
+     * Initialize application routes
+     * Iterates through compiled model route objects and creates Susanin routes
+     * @returns {exports}
+     */
     init: function() {
         var self = this;
 
         this.router = Susanin();
 
-        _modules.model.getRoutes().forEach(function(route) {
+        modules.model.getRoutes().forEach(function(route) {
             self.router.addRoute(route);
         });
 
