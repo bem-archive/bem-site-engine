@@ -3,16 +3,23 @@ var vow = require('vow'),
 
     logger = require('../../../logger')(module);
 
+var MSG = {
+    DEBUG: {
+        LOAD: 'load data from file file %s',
+        SAVE: 'save data to file file %s'
+    }
+};
+
 module.exports = {
 
     /**
      * Returns loaded and parsed content of json file
      * @param options - {Object} with fields
      * - path {String} path to file
-     * @returns {Object}
+     * @returns {vow promise object}
      */
     load: function(options) {
-        logger.debug('load data from file file %s', options.path);
+        logger.debug(MSG.DEBUG.LOAD, options.path);
         return fs.read(options.path, 'utf-8');
     },
 
@@ -20,11 +27,11 @@ module.exports = {
      * Stringify and save data object into json file
      * @param options - {Object} with fields:
      * - path {String} path to target file
-     * - data {Object} content for file
-     * @returns {*}
+     * - data {String} content for file
+     * @returns {vow promise object}
      */
     save:  function(options) {
-        logger.debug('save data to file file %s', options.path ? options.path : 'unknown file');
+        logger.debug(MSG.DEBUG.SAVE, options.path ? options.path : 'unknown file');
         return fs.write(options.path, options.data, 'utf8');
     }
 };
