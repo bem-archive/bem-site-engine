@@ -16,6 +16,13 @@ var sitemap,
     peopleUrls;
 
 module.exports = {
+
+    /**
+     * Loads data model from local filesystem or yandex Disk depending on enviroment
+     * and fills the model
+     * @param worker - {Object} worker object
+     * @returns {*}
+     */
     init: function(worker) {
 
         logger.info('Init site structure and load data for worker %s', worker.wid);
@@ -101,6 +108,10 @@ module.exports = {
         return tags;
     },
 
+    /**
+     * Returns tag urls
+     * @returns {Object}
+     */
     getTagUrls: function() {
         return tagUrls;
     },
@@ -122,6 +133,11 @@ module.exports = {
     }
 };
 
+/**
+ * Restore circular references between nodes and their parents
+ * @param tree - {Object} model tree object
+ * @returns {Object} modified tree object
+ */
 var addCircularReferences = function(tree) {
     var traverseTreeNodes = function(node, parent) {
         node = new nodes.runtime.RuntimeNode(node, parent);
