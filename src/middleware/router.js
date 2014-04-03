@@ -1,5 +1,10 @@
 var HttpError = require('../errors').HttpError;
 
+/**
+ * Router middleware
+ * @param router - {Object} router module
+ * @returns {Function}
+ */
 module.exports = function(router) {
     return function(req, res, next) {
         var route = router.findFirst(req._parsedUrl.path);

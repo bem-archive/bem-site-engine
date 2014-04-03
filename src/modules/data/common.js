@@ -9,6 +9,13 @@ var u = require('util'),
 
     providers = require('./providers');
 
+var MSG = {
+    ERROR: {
+        LOAD: 'Load data provider not recognized',
+        SAVE: 'Save data provider not recognized'
+    }
+};
+
 module.exports = {
 
     PROVIDER_FILE: 0,
@@ -47,7 +54,7 @@ module.exports = {
             case this.PROVIDER_FILE_COMMON:
                 return providers.commonFile.load(options);
             default:
-                logger.error('load data provider not recognized');
+                logger.error(MSG.ERROR.LOAD);
         }
     },
 
@@ -66,7 +73,7 @@ module.exports = {
             case this.PROVIDER_FILE_COMMON:
                 return providers.commonFile.save(options);
             default:
-                logger.error('save data provider not recognized');
+                logger.error(MSG.ERROR.SAVE);
         }
     }
 };

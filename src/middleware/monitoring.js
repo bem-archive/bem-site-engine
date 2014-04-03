@@ -1,6 +1,10 @@
 var logger = require('../logger')(module),
     config = require('../config');
 
+/**
+ * Middleware for handling monitoring requests
+ * @returns {Function}
+ */
 module.exports = function() {
 
     var REQ = config.get('monitoringUrl') || '/monitoring';

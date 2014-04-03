@@ -80,8 +80,7 @@ exports.run = run;
 if (!module.parent) {
     run()
         .then(function() {
-            logger.info('start application on %s %s',
-                socket && 'socket' || port && 'port', socket || port);
+            logger.info('start application on %s %s', socket && 'socket' || port && 'port', socket || port);
         })
         .fail(function(err) {
             logger.error(err);

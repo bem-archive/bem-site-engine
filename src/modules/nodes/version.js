@@ -52,6 +52,10 @@ VersionNode.prototype.setSource = function(version) {
     return this;
 };
 
+/**
+ * Sets class for node
+ * @returns {VersionNode}
+ */
 VersionNode.prototype.setClass = function() {
     this.class = 'version';
     return this;

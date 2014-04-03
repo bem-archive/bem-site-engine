@@ -43,6 +43,10 @@ PersonNode.prototype.setView = function() {
     return this;
 };
 
+/**
+ * Sets class for node
+ * @returns {PersonNode}
+ */
 PersonNode.prototype.setClass = function() {
     this.class = 'person';
     return this;

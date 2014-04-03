@@ -41,6 +41,10 @@ TagNode.prototype.setView = function() {
     return this;
 };
 
+/**
+ * Sets class for node
+ * @returns {TagNode}
+ */
 TagNode.prototype.setClass = function() {
     this.class = 'tag';
     return this;

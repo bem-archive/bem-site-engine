@@ -6,12 +6,25 @@ var https = require('https'),
 
     logger = require('../../../logger')(module);
 
+var MSG = {
+    DEBUG: {
+        START: 'load data by https from: %s',
+        SUCCESS: 'load data successfully finished from url %s'
+    },
+    ERROR: 'load data failed with error %s from url %s'
+};
+
+var GITHUB_PATTERN = {
+    PRIVATE: 'https://github.yandex-team.ru/%s/%s/raw/%s/%s',
+    PUBLIC: 'https://raw.github.com/%s/%s/%s/%s'
+};
 
 module.exports = {
 
     /**
      * Returns raw content of file loaded by github https protocol
      * @param repository - {Object} with fields:
+     * - type {String} type of repository privacy ('public'|'private')
      * - user {String} name of user or organization which this repository is belong to
      * - repo {String} name of repository
      * - ref {String} name of branch
@@ -22,11 +35,11 @@ module.exports = {
         var def = vow.defer(),
             repository = options.repository,
             url = u.format({
-                'public': 'https://raw.github.com/%s/%s/%s/%s',
-                'private': 'https://github.yandex-team.ru/%s/%s/raw/%s/%s'
+                'public': GITHUB_PATTERN.PUBLIC,
+                'private': GITHUB_PATTERN.PRIVATE
             }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
 
-        logger.debug('load data by https from: %s', url);
+        logger.debug(MSG.DEBUG.START, url);
 
         https.get(url, function(res) {
             var data = '';
@@ -36,7 +49,7 @@ module.exports = {
             });
 
             res.on('end', function() {
-                logger.debug('load data successfully finished from url %s', url);
+                logger.debug(MSG.DEBUG.SUCCESS, url);
                 var res;
                 try {
                     res = JSON.parse(data);
@@ -47,7 +60,7 @@ module.exports = {
 
             });
         }).on('error', function(e) {
-            logger.error('load data failed with error %s from url %s', e.message, url);
+            logger.error(MSG.ERROR, e.message, url);
             def.reject(e);
         });
 

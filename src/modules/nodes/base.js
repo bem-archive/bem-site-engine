@@ -1,6 +1,12 @@
 var _ = require('lodash'),
     sha = require('sha1');
 
+/**
+ * Base class for nodes with common nodes methods
+ * @param node - {Object} source node object
+ * @param parent - {Object} parent node object
+ * @constructor
+ */
 var BaseNode = function(node, parent) {
     Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
 
@@ -34,6 +40,11 @@ BaseNode.prototype = {
         NORMAL: 'normal'
     },
 
+    /**
+     * Return base route for node
+     * Route of one of parent nodes which have route pattern
+     * @returns {Object}
+     */
     getBaseRoute: function () {
         if (this.route && this.route.pattern) {
             return this.route;
@@ -46,6 +57,7 @@ BaseNode.prototype = {
 
     /**
      * Generate unique id for node as sha sum of node object
+     * @returns {BaseNode}
      */
     generateUniqueId: function () {
         this.id = sha(JSON.stringify(this));
@@ -53,7 +65,9 @@ BaseNode.prototype = {
     },
 
     /**
-     * Set parent for current node
+     * Sets parent for current node
+     * @param parent - {Object} parent node
+     * @returns {BaseNode}
      */
     setParent: function (parent) {
         this.parent = parent;
@@ -62,7 +76,7 @@ BaseNode.prototype = {
 
     /**
      * Makes title consistent
-     * @param node {Object} - single node of sitemap model
+     * @param node {BaseNode}
      */
     setTitle: function () {
         if (this.title && _.isString(this.title)) {
@@ -75,8 +89,8 @@ BaseNode.prototype = {
     },
 
     /**
-     * Select view for node
-     * @param node {Object} - single node of sitemap model
+     * Sets view for node
+     * @returns {BaseNode}
      */
     setView: function () {
         this.view = this.view ||
@@ -84,6 +98,10 @@ BaseNode.prototype = {
         return this;
     },
 
+    /**
+     * Sets size for node
+     * @returns {BaseNode}
+     */
     setSize: function () {
         this.size = this.size || this.SIZE.NORMAL;
         return this;
@@ -92,7 +110,7 @@ BaseNode.prototype = {
     /**
      * Sets level for node
      * @param parent - {Object} parent node
-     * @returns {DynamicNode}
+     * @returns {BaseNode}
      */
     setLevel: function (parent) {
         this.level = (parent.type === this.TYPE.GROUP || parent.type === this.TYPE.SELECT) ?
@@ -133,10 +151,19 @@ BaseNode.prototype = {
         return this;
     },
 
+    /**
+     * Sets class for node
+     * @returns {BaseNode}
+     */
     setClass: function () {
         this.class = 'base';
+        return this;
     },
 
+    /**
+     * Creates breadcrumbs for current node
+     * as suitable structure for templating
+     */
     createBreadcrumbs: function () {
         this.breadcrumbs = [];
 

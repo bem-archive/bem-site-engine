@@ -13,7 +13,7 @@ module.exports = {
     /**
      * Returns node by request
      * @param req - {Object} http request object
-     * @returns {Object} founded node
+     * @returns {RuntimeNode} founded node
      */
     getNodeByRequest: function(req) {
         logger.debug('get node by request %s', req._parsedUrl.pathname);
@@ -59,7 +59,7 @@ module.exports = {
     /**
      * Returns title for request by request and current node
      * @param req - {Object} http request object
-     * @param node - {Object} node from sitemap model
+     * @param node - {RuntimeNode} node from sitemap model
      * @returns {String} page title
      */
     getTitleByNode: function(req, node) {
@@ -95,7 +95,7 @@ module.exports = {
     /**
      * Retrieves meta-information for request by request and current node
      * @param req - {Object} http request object
-     * @param node - {Object} node from sitemap model
+     * @param node - {RuntimeNode} node from sitemap model
      * @returns {Object} object with fields:
      * description - {String} meta-description attribute
      * ogDescription - {String} og:description attribute
@@ -135,17 +135,34 @@ module.exports = {
         }
     },
 
+    /**
+     * Creates menu structure for current request and node
+     * @param req - {Object} http request object
+     * @param node - {RuntimeNode} node from sitemap model
+     * @returns {Array} array of menu groups
+     */
     getMenuByNode: function(req, node) {
         logger.debug('get menu by request %s and node %s', req.url, node.id);
 
         var result = [],
             activeIds = [],
+
+            /**
+             * Recursively finds all id of parent nodes for current
+             * @param _node - {RuntimeNode} current node
+             */
             traverseTreeNodesUp = function(_node) {
                 activeIds.push(_node.id);
                 if(_node.parent && _node.parent.id) {
                     traverseTreeNodesUp(_node.parent);
                 }
             },
+
+            /**
+             * Recursively traversing through nodes tree and creating menu structure
+             * @param _node - {RuntimeNode} current node
+             * @param parent - {RuntimeNode} parent node
+             */
             traverseTreeNodesDown = function(_node, parent) {
                 result[_node.level] = result[_node.level] ||
                     {
@@ -153,16 +170,19 @@ module.exports = {
                         items: []
                     };
 
+                //all items with zero level become to be a items of main menu
                 if(_node.level === 0) {
                     result[_node.level].type = constants.MENU.MAIN;
                 }
 
+                //if level node was found then we should mark menu group as level group
                 if(_node.class && _node.class === 'level') {
                     result[_node.level].type = constants.MENU.LEVEL;
                 }
 
                 logger.verbose('menu creation item level %s title %s type %s', _node.level, _node.title ? _node.title[req.prefLocale] : '', _node.type);
 
+                //create base menu item object
                 var o = {
                         title: _node.title ? _node.title[req.prefLocale] : '',
                         url: (_node.url && _.isObject(_node.url)) ? _node.url[req.prefLocale] : _node.url,
@@ -170,15 +190,16 @@ module.exports = {
                         type: _node.type,
                         size: _node.size
                     },
-                    hasSource = !!_node.source,
-                    hasItems = _node.items,
-                    isTargetNode = _node.id === node.id,
-                    isActive = activeIds.indexOf(_node.id) !== -1,
-                    isGroup = _node.type === _node.TYPE.GROUP,
-                    isSelect = _node.type === _node.TYPE.SELECT,
-                    isIndex = _node.view && _node.view === _node.VIEW.INDEX,
+                    hasSource = !!_node.source, //detect if node has source
+                    hasItems = _node.items, //detect if node has items
+                    isTargetNode = _node.id === node.id, // detect if node is target final node
+                    isActive = activeIds.indexOf(_node.id) !== -1, //detect if node is in active nodes
+                    isGroup = _node.type === _node.TYPE.GROUP, // detect if node is group
+                    isSelect = _node.type === _node.TYPE.SELECT, //detect if node is select
+                    isIndex = _node.view && _node.view === _node.VIEW.INDEX, //detect if node has index view
 
 
+                    //its a terrible condition for detect if we should create or not create the next menu group
                     isNeedToDrawChildNodes = (isGroup || isSelect) || isIndex || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
 
                 //logger.verbose('isTargetNode %s isActive %s isGroup %s isSelect %s isIndex %s isNeedToDrawChildNodes %s title %s',
@@ -261,7 +282,7 @@ module.exports = {
     /**
      * Returns url for lang-switch block link
      * @param req - {Object} http request object
-     * @param node - {Object} node from sitemap model
+     * @param node - {RuntimeNode} node from sitemap model
      * @returns {String} compiled url
      */
     getLangSwitchUrlByNode: function(req, node) {
@@ -281,7 +302,7 @@ module.exports = {
     /**
      * Loads advanced data for nodes with exotic views
      * @param req - {Object} http request object
-     * @param node - {Object} node from sitemap model
+     * @param node - {RuntimeNode} node from sitemap model
      * @returns {*}
      */
     getAdvancedData: function(req, node) {

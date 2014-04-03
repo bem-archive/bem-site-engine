@@ -12,6 +12,10 @@ var gitPrivate = null,
 
 module.exports = {
 
+    /**
+     * Initialize github api connections to public and private repositories
+     * with configured credentials
+     */
     init: function() {
         logger.info('Init');
 
@@ -27,6 +31,7 @@ module.exports = {
     /**
      * Returns content of repository directory or file loaded by github api
      * @param repository - {Object} with fields:
+     * - type {String} type of repository privacy ('public'|'private')
      * - user {String} name of user or organization which this repository is belong to
      * - repo {String} name of repository
      * - ref {String} name of branch
