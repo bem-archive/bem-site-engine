@@ -100,7 +100,7 @@ block post, mod view full {
             }
         ];
 
-        repo.type === 'public' && issueContent.concat([
+        issueContent = repo.type === 'public' ? issueContent.concat([
             {
                 tag: 'span',
                 content: BEM.I18N('post', 'repo-alternative')
@@ -114,7 +114,7 @@ block post, mod view full {
                 tag: 'span',
                 content: BEM.I18N('post', 'repo-with-prose')
             }
-        ]);
+        ]) : issueContent;
 
 
         return {
