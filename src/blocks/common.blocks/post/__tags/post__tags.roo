@@ -1,0 +1,27 @@
+.post__tags
+{
+	font-size: 12px;
+
+	.link
+	{
+		margin-left: 2px;
+		padding: 4px 10px;
+
+		opacity: .5;
+		color: #000;
+		border-radius: 2px;
+		background-color: #eee;
+
+		&:hover
+		{
+			opacity: 1;
+		}
+	}
+
+	.post_view_full &
+	{
+	    line-height: 20px;
+
+	    margin-left: 20px;
+	}
+}

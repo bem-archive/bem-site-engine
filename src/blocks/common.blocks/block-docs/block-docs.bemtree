@@ -32,7 +32,7 @@ block block-docs {
                             {
                                 elem: 'title',
                                 mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
-                                tag: 'h3',
+                                tag: 'h6',
                                 content: {
                                     elem: 'selection',
                                     elemMods: { color: 'gold' },
@@ -56,7 +56,7 @@ block block-docs {
 
     mods-title: {
         elem: 'title',
-        tag: 'h2',
+        tag: 'h4',
         mix: [{ block: 'post', elem: 'title' }],
         content: BEM.I18N('block-docs', 'mods')
     }
@@ -102,7 +102,7 @@ block block-docs {
                             {
                                 elem: 'title',
                                 mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
-                                tag: 'h3',
+                                tag: 'h6',
                                 content: {
                                     elem: 'selection',
                                     elemMods: { color: 'gold' },
@@ -126,7 +126,7 @@ block block-docs {
 
     elems-title: {
         elem: 'title',
-        tag: 'h2',
+        tag: 'h4',
         mix: [{ block: 'post', elem: 'title' }],
         content: BEM.I18N('block-docs', 'elems')
     }
@@ -144,7 +144,7 @@ block block-docs {
                             {
                                 elem: 'title',
                                 mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
-                                tag: 'h3',
+                                tag: 'h6',
                                 content: {
                                     elem: 'selection',
                                     elemMods: { color: 'gold' },

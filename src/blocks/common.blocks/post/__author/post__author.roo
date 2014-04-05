@@ -1,0 +1,9 @@
+.post__author
+{
+	font-size: 12px;
+
+	.post_view_full &
+	{
+	    line-height: 20px;
+	}
+}
