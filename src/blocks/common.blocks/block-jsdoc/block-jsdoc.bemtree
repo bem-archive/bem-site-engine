@@ -40,7 +40,7 @@ block block-jsdoc {
                             {
                                 elem: 'title',
                                 mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
-                                tag: 'h3',
+                                tag: 'h5',
                                 content: {
                                     elem: 'selection',
                                     elemMods: { color: 'gold' },
@@ -81,7 +81,7 @@ block block-jsdoc {
                 {
                     elem: 'title',
                     mix: [{ block: 'post', elem: 'title' }],
-                    tag: 'h4',
+                    tag: 'h6',
                     content: BEM.I18N('block-jsdoc', 'params') + ':'
                 },
 
@@ -132,7 +132,7 @@ block block-jsdoc {
                 {
                     elem: 'title',
                     mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
-                    tag: 'h4',
+                    tag: 'h6',
                     content: BEM.I18N('block-jsdoc', 'returns') + ':'
                 },
 
@@ -177,7 +177,7 @@ block block-jsdoc {
                             {
                                 elem: 'title',
                                 mix: [{ block: 'post', elem: 'title' }],
-                                tag: 'h3',
+                                tag: 'h5',
                                 content: {
                                     elem: 'selection',
                                     elemMods: { color: 'gold' },
@@ -215,7 +215,7 @@ block block-jsdoc {
                 {
                     elem: 'title',
                     mix: [{ block: 'post', elem: 'title' }],
-                    tag: 'h4',
+                    tag: 'h6',
                     content: BEM.I18N('block-jsdoc', 'params') + ':'
                 },
                 this.ctx.event.params.map(function(param) {

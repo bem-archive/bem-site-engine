@@ -12,13 +12,6 @@
     display: inline-block;
 }
 
-.post_view_full  .post__date
-{
-    float: right;
-
-    color: #AAA;
-}
-
 .post_view_full h1.post__title
 {
     margin-top: 20px;
@@ -26,5 +19,5 @@
 
 .post_view_full .post__issueLink
 {
-    color: #555;
+    color: #333;
 }

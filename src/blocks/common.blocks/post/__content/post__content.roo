@@ -1,0 +1,16 @@
+.post__content
+{
+    font-size: 14px;
+    line-height: 1.7;
+
+    max-width: 1050px;
+    padding: 5px 20px 25px 0;
+
+    h1
+    {
+        &:first-child
+        {
+            display: none;
+        }
+    }
+}

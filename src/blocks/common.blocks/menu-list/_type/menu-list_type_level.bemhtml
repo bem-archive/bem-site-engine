@@ -1,7 +1,5 @@
-block menu-list, mod type level {
-
-    mix: (this.ctx.mix || []).concat({
-        block: 'menu-list',
-        mods: { type: 'default' }
-    })
-}
+block('menu-list').mod('type', 'level').mix()(function() {
+	return [{
+		mods: { type: 'default' }
+	}];
+});

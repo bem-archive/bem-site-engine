@@ -5,8 +5,16 @@
     margin-top: 38px;
     padding: 14px 30px;
 
-    color: #111111;
-    border: 1px solid #CCCCCC;
-    border-radius: 5px 5px 5px 5px;
-    background-color: #EEEEEE;
+    transition: background .4s ease;
+
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background-color: #f6f5f3;
+
+    &:hover
+    {
+    	border-color: #ffd94d;
+    	background-color: #ffeba0;
+    }
 }

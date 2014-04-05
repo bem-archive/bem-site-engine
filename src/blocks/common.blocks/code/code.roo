@@ -1,0 +1,38 @@
+$bg-color = #f6f5f3;
+$border-color = #e6e5e3;
+
+.code,
+code
+{
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.6;
+
+    display: inline-block;
+
+    margin: 0 2px 0;
+    padding: 0 6px;
+
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    background-color: $bg-color;
+
+    li &
+    {
+        margin-bottom: 5px;
+    }
+}
+
+pre code
+{
+    font-family: Consolas, "Liberation Mono", Courier, monospace;
+
+    display: block;
+    overflow: auto;
+
+    padding: 8px 10px;
+
+    white-space: pre;
+    border-radius: 1px;
+    background-color: $bg-color;
+}

@@ -1,0 +1,16 @@
+.post__date
+{
+	.post_view_full &
+	{
+		font-size: 12px;
+	    line-height: 20px;
+
+	    display: inline-block;
+		float: right;
+
+	    margin-right: 10px;
+	    margin-left: 20px;
+
+		color: #333;
+	}
+}
