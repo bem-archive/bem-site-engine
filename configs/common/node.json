@@ -3,6 +3,10 @@
         "languages": ["en", "ru"],
         "defaultLanguage": "en"
     },
+    "title": {
+        "en": "",
+        "ru": ""
+    },
     "github": {
         "common": {
             "version": "3.0.0",

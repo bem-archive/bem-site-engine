@@ -5,6 +5,7 @@ var u = require('util'),
     HttpError = require('../errors').HttpError,
 
     constants = require('./constants'),
+    config = require('../config'),
     data = require('./data'),
     model = require('./model');
 
@@ -83,10 +84,7 @@ module.exports = {
 
         traverseTreeNodes(node);
 
-        title += {
-            en: 'BEM',
-            ru: 'БЭМ'
-        }[req.prefLocale];
+        title += config.get('title')[req.prefLocale];
 
         logger.debug('page title: %s', title);
         return title;
