@@ -221,20 +221,28 @@ var loadMDFile = function(node, lang, repo, sourceRouteHash) {
     };
 
     return common.loadData(common.PROVIDER_GITHUB_API, { repository: repo })
-        .then(function(md) {
-            try {
-                if(!md.res) {
-                    logger.warn(MSG.WARN.MD_NOT_EXIST, lang, node.title);
+        .then(
+            function(md) {
+                try {
+                    if(!md.res) {
+                        logger.warn(MSG.WARN.MD_NOT_EXIST, lang,
+                            (node.title && node.title[lang]) ? node.title[lang] : node.title);
+                        md = null;
+                    }else {
+                        md = (new Buffer(md.res.content, 'base64')).toString();
+                        md = util.mdToHtml(md, { renderer: renderer });
+                    }
+                } catch(err) {
+                    logger.warn(MSG.WARN.MD_PARSING_ERROR, lang, node.title);
                     md = null;
-                }else {
-                    md = (new Buffer(md.res.content, 'base64')).toString();
-                    md = util.mdToHtml(md, { renderer: renderer });
                 }
-            } catch(err) {
-                logger.warn(MSG.WARN.MD_PARSING_ERROR, lang, node.title);
-                md = null;
-            }
 
-            return md;
-        });
+                return md;
+            },
+            function(err) {
+                logger.warn(MSG.WARN.MD_NOT_EXIST, lang,
+                    (node.title && node.title[lang]) ? node.title[lang] : node.title);
+                return null;
+            }
+        );
 };
