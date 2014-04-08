@@ -2,9 +2,9 @@ var vow = require('vow'),
     _ = require('lodash'),
     sha = require('sha1'),
 
-    logger = require('../../logger')(module),
-    config = require('../../config'),
-    data = require('../../modules/data'),
+    logger = require('./../lib/logger')(module),
+    config = require('../../../config'),
+    data = require('../../../modules/data/index'),
     common = data.common;
 
 

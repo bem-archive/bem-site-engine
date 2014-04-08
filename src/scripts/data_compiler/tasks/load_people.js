@@ -2,9 +2,9 @@ var u = require('util'),
     _ = require('lodash'),
     vow = require('vow'),
 
-    logger = require('../../logger')(module),
-    config = require('../../config'),
-    data = require('../../modules/data'),
+    logger = require('./../lib/logger')(module),
+    config = require('../../../config'),
+    data = require('../../../modules/data/index'),
     common = data.common;
 
 var MSG = {

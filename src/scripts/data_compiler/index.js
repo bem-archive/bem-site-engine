@@ -1,18 +1,18 @@
 var vow = require('vow'),
     _ = require('lodash'),
 
-    logger = require('../../logger')(module),
+    logger = require('./lib/logger')(module),
     data = require('../../modules/data'),
     common = data.common,
 
-    getSitemap = require('./get_sitemap').run,
-    analyzeSitemap = require('./analyze_sitemap').run,
-    loadSources = require('./load_sources').run,
-    loadLibraries = require('./load_libraries').run,
-    loadPeople = require('./load_people').run,
-    addDynamicNodes = require('./add_dynamic_nodes').run,
-    addLibraryNodes = require('./add_library_nodes').run,
-    saveAndUpload = require('./save_and_upload').run;
+    getSitemap = require('./tasks/get_sitemap').run,
+    analyzeSitemap = require('./tasks/analyze_sitemap').run,
+    loadSources = require('./tasks/load_sources').run,
+    loadLibraries = require('./tasks/load_libraries').run,
+    loadPeople = require('./tasks/load_people').run,
+    addDynamicNodes = require('./tasks/add_dynamic_nodes').run,
+    addLibraryNodes = require('./tasks/add_library_nodes').run,
+    saveAndUpload = require('./tasks/save_and_upload').run;
 
 var MSG = {
     INFO: {

@@ -2,10 +2,10 @@ var _ = require('lodash'),
     susanin = require('susanin'),
     vow = require('vow'),
 
-    logger = require('../../logger')(module),
-    config = require('../../config'),
-    constants = require('../../modules/constants'),
-    nodes = require('../../modules/nodes');
+    logger = require('./../lib/logger')(module),
+    config = require('../../../config'),
+    constants = require('../../../modules/constants'),
+    nodes = require('../../../modules/nodes/index');
 
 module.exports = {
 

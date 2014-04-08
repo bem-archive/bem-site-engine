@@ -3,10 +3,10 @@ var u = require('util'),
     susanin = require('susanin'),
     vow = require('vow'),
 
-    logger = require('../../logger')(module),
-    constants = require('../../modules/constants'),
-    util  = require('../../util'),
-    nodes = require('../../modules/nodes');
+    logger = require('./../lib/logger')(module),
+    constants = require('../../../modules/constants'),
+    util  = require('../../../util'),
+    nodes = require('../../../modules/nodes/index');
 
 module.exports = {
     run: function(sitemap, routes, nodesWithLib, libraries) {

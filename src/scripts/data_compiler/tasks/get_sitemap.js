@@ -1,5 +1,5 @@
 var vow = require('vow'),
-    logger = require('../../logger')(module);
+    logger = require('./../lib/logger')(module);
 
 var MSG = {
     INFO: {

@@ -3,10 +3,10 @@ var u = require('util'),
     vow = require('vow'),
     md = require('marked'),
 
-    logger = require('../../logger')(module),
-    config = require('../../config'),
-    util = require('../../util'),
-    data = require('../../modules/data'),
+    logger = require('./../lib/logger')(module),
+    config = require('../../../config'),
+    util = require('../../../util'),
+    data = require('../../../modules/data/index'),
     common = data.common;
 
 var MSG = {
