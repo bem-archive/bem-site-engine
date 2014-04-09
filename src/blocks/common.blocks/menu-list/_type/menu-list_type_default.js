@@ -32,7 +32,7 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'default' }, {
         _this.elem('select').each(function() {
             var libname = $(this).prev('.menu-list__link').text(),
                 lib = _this.getStorage(libname),
-                path = location.pathname.match(/\/l\w*\/[\w-]*\/[\w.]*/);
+                path = location.pathname.match(/\/libs\S+?\/[\w.-]+/);
 
             if(lib) {
                 if(path && path[0].indexOf(libname) !== -1 ) {
