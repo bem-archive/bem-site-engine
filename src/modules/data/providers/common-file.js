@@ -1,6 +1,4 @@
-var vow = require('vow'),
-    fs = require('vow-fs'),
-
+var fs = require('vow-fs'),
     logger = require('../../../logger')(module);
 
 var MSG = {

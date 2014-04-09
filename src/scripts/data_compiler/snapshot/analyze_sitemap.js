@@ -2,8 +2,8 @@ var _ = require('lodash'),
     susanin = require('susanin'),
     vow = require('vow'),
 
-    logger = require('./../lib/logger')(module),
-    config = require('../../../config'),
+    logger = require('../lib/logger')(module),
+    config = require('../lib/config'),
     constants = require('../../../modules/constants'),
     nodes = require('../../../modules/nodes/index');
 

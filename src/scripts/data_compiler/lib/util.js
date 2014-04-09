@@ -2,9 +2,7 @@ var u = require('util'),
 
     _ = require('lodash'),
     md = require('marked'),
-    semver = require('semver'),
-
-    logger = require('./logger')(module);
+    semver = require('semver');
 
 /**
  * Compile *.md files to html with marked module

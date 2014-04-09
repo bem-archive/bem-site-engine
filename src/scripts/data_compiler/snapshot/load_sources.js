@@ -3,11 +3,10 @@ var u = require('util'),
     vow = require('vow'),
     md = require('marked'),
 
-    logger = require('./../lib/logger')(module),
-    config = require('../../../config'),
-    util = require('../../../util'),
-    data = require('../../../modules/data/index'),
-    common = data.common;
+    logger = require('../lib/logger')(module),
+    config = require('../lib/config'),
+    util = require('../lib/util'),
+    providers = require('../providers');
 
 var MSG = {
     INFO: {
@@ -220,7 +219,8 @@ var loadMDFile = function(node, lang, repo, sourceRouteHash) {
             + text + '</h' + level + '>\n';
     };
 
-    return common.loadData(common.PROVIDER_GITHUB_API, { repository: repo })
+    return providers.getProviderGhApi()
+        .load({ repository: repo })
         .then(
             function(md) {
                 try {

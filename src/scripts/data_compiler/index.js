@@ -1,26 +1,24 @@
-var vow = require('vow'),
-    _ = require('lodash'),
-
+var _ = require('lodash'),
+    config = require('./lib/config'),
     logger = require('./lib/logger')(module),
-    data = require('../../modules/data'),
-    common = data.common,
+    snapshot = require('./snapshot');
 
-    getSitemap = require('./tasks/get_sitemap').run,
-    analyzeSitemap = require('./tasks/analyze_sitemap').run,
-    loadSources = require('./tasks/load_sources').run,
-    loadLibraries = require('./tasks/load_libraries').run,
-    loadPeople = require('./tasks/load_people').run,
-    addDynamicNodes = require('./tasks/add_dynamic_nodes').run,
-    addLibraryNodes = require('./tasks/add_library_nodes').run,
-    saveAndUpload = require('./tasks/save_and_upload').run;
-
-var MSG = {
-    INFO: {
-        START: '-- sitemap_compiler module start --',
-        END: '-- sitemap_compiler successfully finished --'
+var ENV = {
+        DEVELOPMENT: 'development',
+        TESTING: 'testing',
+        PRODUCTION: 'production'
     },
-    ERROR: 'Error occur while compile models and loading documentation'
-};
+    VERSION = {
+        LATEST: 'latest',
+        PREVIOUS: 'previous'
+    },
+    MSG = {
+        INFO: {
+            START: '-- data compiler module start --',
+            END: '-- data compiler successfully finished --'
+        },
+        ERROR: 'Error occur while compile models and loading documentation'
+    };
 
 module.exports = {
 
@@ -29,71 +27,52 @@ module.exports = {
      * @param modelPath - {String} relative path to model index file
      */
     run: function(modelPath) {
-        logger.info(MSG.INFO.START);
+        logger.info(''.toUpperCase.apply(MSG.INFO.START));
 
-        vow
-            .when(data.common.init())
-            .then(function() {
-                return getSitemap(modelPath);
-            })
-            .then(function(sitemap) {
-                return analyzeSitemap(sitemap);
-            })
-            .then(function(obj) {
-                return vow.all([
-                    obj,
-                    loadSources(obj.sourceNodes, obj.sourceRouteHash),
-                    loadLibraries(obj.libraryNodes),
-                    loadPeople()
-                ]);
-            })
-            .spread(function(obj, docs, libraries, people) {
-                return vow
-                    .all([
-                        addDynamicNodes(obj.sitemap, obj.routes, docs, people),
-                        addLibraryNodes(obj.sitemap, obj.routes, obj.libraryNodes, libraries)
-                    ]).spread(function(dynamic, libraries) {
-                        return {
-                            sitemap: removeCircularReferences(obj.sitemap),
-                            routes: obj.routes,
-                            docs: docs,
-                            urls: dynamic,
-                            people: people
-                        };
-                    });
-            })
-            .then(function(content) {
-                return saveAndUpload(content);
-            })
-            .then(
-                function() { logger.info(MSG.INFO.END); },
-                function() { logger.error(MSG.ERROR); }
-            );
+        var environment = config.get('NODE_ENV') || ENV.DEVELOPMENT,
+            version = process.argv[3] || VERSION.LATEST;
+
+        logger.debug('enviroment: %s', environment);
+
+        if(!_.isNumber(version) && !_.isString(version)) {
+            logger.warn('Invalid version format. Will be settled latest data version')
+            version = 0;
+        }
+
+        if(VERSION.LATEST === version) {
+            logger.debug('Latest version of data will be settled');
+            version = 0;
+        }
+
+        if(VERSION.PREVIOUS === version) {
+            logger.debug('Previous version of data will be settled');
+            version = -1;
+        }
+
+        if(_.isString(version)) {
+            logger.debug('Version %s of data will be settled', version);
+        }
+
+        switch (environment) {
+            case ENV.TESTING:
+                return compileForTesting(modelPath, version);
+            case ENV.PRODUCTION:
+                return compileForProduction(modelPath, version);
+            default:
+                return compileForDevelopment(modelPath, version);
+        }
     }
 };
 
-/**
- * Remove circular references for parent nodes
- * for get ability to save sitemap object to json file
- * @param tree - {Object} sitemap object with removed circular references
- * @returns {Object}
- */
-var removeCircularReferences = function(tree) {
-    var traverseTreeNodes = function(node) {
-        if(node.parent) {
-            node.parent = node.parent.id;
-        }
+var compileForDevelopment = function(modelPath, version) {
+    logger.debug('start compile data for development environment');
+    return snapshot.run(modelPath);
+};
 
-        if(node.items) {
-            node.items = node.items.map(function(item) {
-                return traverseTreeNodes(item);
-            });
-        }
+var compileForTesting = function(modelPath, version) {
+    logger.debug('start compile data for testing environment');
+};
 
-        return node;
-    };
-
-    return tree.map(function(item) {
-        return traverseTreeNodes(item);
-    });
+var compileForProduction = function(modelPath, version) {
+    logger.debug('start compile data for production environment');
 };

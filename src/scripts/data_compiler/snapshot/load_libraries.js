@@ -2,23 +2,14 @@ var u = require('util'),
     _ = require('lodash'),
     vow = require('vow'),
 
-    logger = require('./../lib/logger')(module),
-    config = require('../../../config'),
-    data = require('../../../modules/data/index'),
-    common = data.common;
-
-var MSG = {
-    INFO: {
-        START: 'Load all libraries start',
-        SUCCESS: 'Libraries successfully loaded'
-    },
-    ERROR: 'Error occur while loading libraries'
-};
+    logger = require('../lib/logger')(module),
+    config = require('../lib/config'),
+    providers = require('../providers');
 
 module.exports = {
 
     run: function(libraryNodes) {
-        logger.info(MSG.INFO.START);
+        logger.info('Load all libraries start');
 
         var libraries = {};
         return vow
@@ -27,10 +18,10 @@ module.exports = {
             }))
             .then(
                 function() {
-                    logger.info(MSG.INFO.SUCCESS);
+                    logger.info('Libraries successfully loaded');
                     return libraries;
                 },
-                function() { logger.error(MSG.ERROR); }
+                function() { logger.error('Error occur while loading libraries'); }
             );
     }
 };
@@ -45,13 +36,13 @@ module.exports = {
 var loadLibraryVersions = function(repo, node, libraries) {
     libraries[node.lib] = libraries[node.lib] || {};
 
-    return common
-        .loadData(common.PROVIDER_GITHUB_API, { repository: _.extend({ path: node.lib }, repo) })
+    return providers.getProviderGhApi()
+        .load({ repository: _.extend({ path: node.lib }, repo) })
         .then(function(result) {
             var promises = result.res.map(function(version) {
                 var _path = u.format('%s/%s/data.json', node.lib, version.name);
-                return common
-                    .loadData(common.PROVIDER_GITHUB_HTTPS, { repository: _.extend({ path: _path }, repo) })
+                return providers.getProviderGhHttps()
+                    .load({ repository: _.extend({ path: _path }, repo) })
                     .then(function(result) {
                         libraries[node.lib][version.name] = result;
                     });

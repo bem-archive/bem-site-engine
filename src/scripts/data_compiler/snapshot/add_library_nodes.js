@@ -3,9 +3,9 @@ var u = require('util'),
     susanin = require('susanin'),
     vow = require('vow'),
 
-    logger = require('./../lib/logger')(module),
+    logger = require('../lib/logger')(module),
+    util  = require('../lib/util'),
     constants = require('../../../modules/constants'),
-    util  = require('../../../util'),
     nodes = require('../../../modules/nodes/index');
 
 module.exports = {
