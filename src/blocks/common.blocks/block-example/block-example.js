@@ -8,7 +8,6 @@ BEMDOM.decl('block-example', {
                 this.loadComplete = {};
             }
         }
-
     },
 
     changeHeight: function(el) {
