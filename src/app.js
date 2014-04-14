@@ -29,7 +29,9 @@ function run(worker) {
                 app.use(express.favicon(path.resolve(rootPath, 'www/favicon.ico')));
             }
 
-            app.use(express.query())
+            app
+                .use(require('connect-slashes')())
+                .use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.logger())
                 .use(middleware.monitoring())
