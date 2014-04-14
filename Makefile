@@ -45,17 +45,10 @@ bower_npm_deps: npm_deps
 npm_deps:
 	npm install
 
-.PHONY: data_dev
-data_dev:
-	cd configs && ln -snf dev current
-	node bin/data.js
+.PHONY: data
+data: set_config
+	node bin/data.js -v $(version)
 
-.PHONY: data_test
-data_test:
-	cd configs && ln -snf test current
-	node bin/data.js
-
-.PHONY: data_prod
-data_prod:
-	cd configs && ln -snf production current
-	node bin/data.js
+.PHONY: set_config
+set_config:
+	cd configs && ln -snf $(YENV) current
