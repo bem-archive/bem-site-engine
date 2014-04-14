@@ -1,10 +1,12 @@
-var vow = require('vow'),
+var p = require('path'),
+
+    vow = require('vow'),
     _ = require('lodash'),
 
-    nodes = require('./nodes'),
+    nodes = require('./nodes/runtime'),
     logger = require('../logger')(module),
     config = require('../config'),
-    data = require('./data');
+    provider = require('./providers');
 
 var sitemap,
     routes,
@@ -27,45 +29,43 @@ module.exports = {
 
         logger.info('Init site structure and load data for worker %s', worker.wid);
 
-        data.common.init();
+        provider.init();
 
-        var promise;
-
-        if('development' === config.get('NODE_ENV')) {
-            promise = data.common.loadData(data.common.PROVIDER_FILE, {
-                path: config.get('data:data')
+        var isDev = 'development' === config.get('NODE_ENV'),
+            promise = provider.load(isDev ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, {
+                path: p.join(config.get('data:dir'), isDev ? null : config.get('NODE_ENV'), config.get('data:data'))
             });
-        }else {
-            promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
-                path: config.get('data:data')
-            }).then(function(content) {
+
+        return promise
+            .then(function(content) {
                 try {
                     return JSON.parse(content);
                 }catch(err) {
                     logger.error('Error occur while parsing data object');
                 }
-            });
-        }
+            })
+            .then(function(content) {
+                logger.debug('Start filling the application model');
+                try {
+                    sitemap = addCircularReferences(content.sitemap);
+                    routes = _.values(content.routes);
 
-        return promise.then(function(content) {
-            try {
-                sitemap = addCircularReferences(content.sitemap);
-                routes = _.values(content.routes);
+                    if (content.docs) {
+                        authors = content.docs.authors;
+                        translators = content.docs.translators;
+                        tags = content.docs.tags;
+                    }
 
-                if (content.docs) {
-                    authors = content.docs.authors;
-                    translators = content.docs.translators;
-                    tags = content.docs.tags;
+                    people = content.people;
+
+                    peopleUrls = content.urls.people;
+                    tagUrls = content.urls.tags;
+
+                    logger.debug('Model has been filled successfully');
+                }catch(err) {
+                    logger.error('Error occur while filling model');
                 }
-
-                people = content.people;
-
-                peopleUrls = content.urls.people;
-                tagUrls = content.urls.tags;
-            }catch(err) {
-                logger.error('Error occur while filling model');
-            }
-        });
+            });
     },
 
     /**
@@ -140,7 +140,7 @@ module.exports = {
  */
 var addCircularReferences = function(tree) {
     var traverseTreeNodes = function(node, parent) {
-        node = new nodes.runtime.RuntimeNode(node, parent);
+        node = new nodes.RuntimeNode(node, parent);
 
         if(node.items) {
             node.items = node.items.map(function(item) {

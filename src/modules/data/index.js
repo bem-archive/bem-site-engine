@@ -1,1 +1,0 @@
-exports.common = require('./common');

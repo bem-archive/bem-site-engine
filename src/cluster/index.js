@@ -4,11 +4,10 @@ var path = require('path'),
     vow = require('vow'),
     vowFs = require('vow-fs'),
     luster = require('luster'),
+
     logger = require('../logger')(module),
-    dataUpdater = require('../scripts/data_updater'),
-    config = require('../config'),
-    constants = require('../modules/constants'),
-    socket = config.get('app:socket');
+    modules = require('../modules'),
+    config = require('../config');
 
 if (luster.isMaster) {
     logger.info('luster: master process start');
@@ -25,14 +24,14 @@ if (luster.isMaster) {
     }
 
     vow.all([
-            vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
-            vowFs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.TAG))
+            vowFs.makeDir(path.join(modules.constants.DIRS.CACHE, modules.constants.DIRS.BRANCH)),
+            vowFs.makeDir(path.join(modules.constants.DIRS.CACHE, modules.constants.DIRS.TAG))
         ])
         .then(
             function() {
                 //optional enable cron updater
                 if(config.get('update:enable')) {
-                    dataUpdater.init(luster).start(luster);
+                    modules.updater.init(luster).start(luster);
                 }
 
                 logger.info('luster: master process started');
@@ -44,7 +43,6 @@ if (luster.isMaster) {
 }
 
 try {
-    logger.debug('Before luster configure');
     luster.configure({
         app: require.resolve('./worker'),
         workers: config.get('luster:workers'),
@@ -54,7 +52,5 @@ try {
 }catch(err) {
     logger.error('Error luster initialization');
 }
-
-logger.debug('After luster configure');
 
 module.exports = luster;
