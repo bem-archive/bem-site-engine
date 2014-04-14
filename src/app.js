@@ -37,6 +37,7 @@ function run(worker) {
                 .use(middleware.router(router.router))
                 .use(middleware.page());
 
+            /*
             if (config.get('forum')) {
                 var forum = require('bem-forum/src/middleware/forum'),
                     forumConfig = {
@@ -52,6 +53,7 @@ function run(worker) {
 
                 app.use(forum(forumConfig, BEMHTML));
             }
+            */
 
             app.use(middleware.error());
 
@@ -68,6 +70,8 @@ function run(worker) {
                         logger.error('Can\'t chmod 0777 to socket');
                     }
                 }
+
+                logger.info('start application on %s %s', socket && 'socket' || port && 'port', socket || port);
                 deferred.resolve();
             });
 
@@ -76,13 +80,3 @@ function run(worker) {
 }
 
 exports.run = run;
-
-if (!module.parent) {
-    run()
-        .then(function() {
-            logger.info('start application on %s %s', socket && 'socket' || port && 'port', socket || port);
-        })
-        .fail(function(err) {
-            logger.error(err);
-        });
-}

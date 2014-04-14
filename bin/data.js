@@ -1,1 +1,1 @@
-//require('../libs/bem-data-compiler').run(process.cwd() + '/model');
+require('../node_modules/bem-data-compiler').run(process.cwd() + '/model');

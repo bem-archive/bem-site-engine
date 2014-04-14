@@ -6,7 +6,6 @@ var u = require('util'),
 
     constants = require('./constants'),
     config = require('../config'),
-    data = require('./data'),
     model = require('./model');
 
 module.exports = {

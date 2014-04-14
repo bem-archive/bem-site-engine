@@ -1,12 +1,5 @@
 var fs = require('vow-fs'),
-    logger = require('../../../logger')(module);
-
-var MSG = {
-    DEBUG: {
-        LOAD: 'load data from file file %s',
-        SAVE: 'save data to file file %s'
-    }
-};
+    logger = require('../../logger')(module);
 
 module.exports = {
 
@@ -17,7 +10,7 @@ module.exports = {
      * @returns {vow promise object}
      */
     load: function(options) {
-        logger.debug(MSG.DEBUG.LOAD, options.path);
+        logger.debug('load data from file file %s', options.path);
         return fs.read(options.path, 'utf-8');
     },
 
@@ -29,7 +22,7 @@ module.exports = {
      * @returns {vow promise object}
      */
     save:  function(options) {
-        logger.debug(MSG.DEBUG.SAVE, options.path ? options.path : 'unknown file');
+        logger.debug('save data to file file %s', options.path ? options.path : 'unknown file');
         return fs.write(options.path, options.data, 'utf8');
     }
 };

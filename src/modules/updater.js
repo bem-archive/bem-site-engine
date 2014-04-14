@@ -1,5 +1,5 @@
 var u = require('util'),
-    path = require('path'),
+    p = require('path'),
 
     cronJob = require('cron').CronJob,
     vow = require('vow'),
@@ -9,26 +9,8 @@ var u = require('util'),
 
     logger = require('../logger')(module),
     config = require('../config'),
-    constants = require('../modules/constants'),
-    data = require('../modules/data');
-
-
-var MSG = {
-    DEBUG: {
-        CHECK_START: 'Check for update for master process start'
-    },
-    INFO: {
-        INIT: 'Init data updater for master process',
-        START: 'Start data updater for master process',
-        DATA_CHANGED: 'Data has been changed. All application worker will be restarted'
-    },
-    WARN: {
-        MARKER_NOT_LOADED: 'Marker file has not been loaded'
-    },
-    ERROR: {
-        MARKER_LOAD: 'Error occur while loading and parsing marker file'
-    }
-};
+    constants = require('./constants'),
+    provider = require('./providers/index');
 
 var job,
     marker;
@@ -41,10 +23,10 @@ module.exports = {
      * @returns {exports}
      */
     init: function(master) {
-        logger.info(MSG.INFO.INIT);
+        logger.info('Init data updater for master process');
 
         //initialize data providers with configured credentials
-        data.common.init();
+        provider.init();
 
         job = new cronJob({
             cronTime: config.get('update:cron'),
@@ -60,7 +42,7 @@ module.exports = {
      * @returns {exports}
      */
     start: function() {
-        logger.info(MSG.INFO.START);
+        logger.info('Start data updater for master process');
         job.start();
 
         return this;
@@ -75,25 +57,22 @@ module.exports = {
  * @returns {*}
  */
 var checkForUpdate = function(master) {
-    logger.debug(MSG.DEBUG.CHECK_START);
+    logger.debug('Check for update for master process start');
 
-    var promise;
+    var isDev = 'development' === config.get('NODE_ENV'),
+        env = isDev ? null : config.get('NODE_ENV');
 
-    if('development' === config.get('NODE_ENV')) {
-        promise = data.common.loadData(data.common.PROVIDER_FILE, {
-            path: config.get('data:marker')
+    var promise = isDev ?
+        provider.load(provider.PROVIDER_FILE, {
+            path: p.join(config.get('data:marker'), env, config.get('data:marker'))
+        }):
+        provider.load(data.common.PROVIDER_DISK, {
+            path: p.join(config.get('data:marker'), env, config.get('data:marker'))
         });
-    }else {
-        promise = data.common.loadData(data.common.PROVIDER_YANDEX_DISK, {
-            path: config.get('data:marker')
-        }).then(function (content) {
-            return JSON.parse(content);
-        });
-    }
 
     var onSuccessLoading = function(content) {
             if(!content) {
-                logger.warn(MSG.WARN.MARKER_NOT_LOADED);
+                logger.warn('Marker file has not been loaded');
                 return;
             }
 
@@ -106,22 +85,26 @@ var checkForUpdate = function(master) {
             //compare sha sums for data objects
             if(marker.data !== content.data) {
 
-                logger.info(MSG.INFO.DATA_CHANGED);
+                logger.info('Data has been changed. All application worker will be restarted');
 
-                fs.removeDir(path.resolve(constants.DIRS.CACHE, constants.DIRS.BRANCH))
+                return fs.removeDir(p.resolve(constants.DIRS.CACHE, constants.DIRS.BRANCH))
                     .then(function() {
-                        fs.makeDir(path.join(constants.DIRS.CACHE, constants.DIRS.BRANCH));
+                        return fs.makeDir(p.join(constants.DIRS.CACHE, constants.DIRS.BRANCH));
                     })
                     .then(function() {
-                        master.softRestart(); //restart all cluster workers
+                        return master.softRestart(); //restart all cluster workers
                     });
             }
 
             marker = content;
         },
         onErrorLoading = function() {
-            logger.error(MSG.ERROR.MARKER_LOAD);
+            logger.error('Error occur while loading and parsing marker file');
         };
 
-    return promise.then(onSuccessLoading, onErrorLoading);
+    return promise
+        .then(function (content) {
+            return JSON.parse(content);
+        })
+        .then(onSuccessLoading, onErrorLoading);
 };
