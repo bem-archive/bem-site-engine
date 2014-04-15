@@ -35,7 +35,7 @@ module.exports = {
 
         var isDev = 'development' === config.get('NODE_ENV'),
             promise = provider.load(isDev ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, {
-                path: p.join(config.get('data:dir'), isDev ? null : config.get('NODE_ENV'), config.get('data:data'))
+                path: p.join(config.get('data:dir'), isDev ? '' : config.get('NODE_ENV'), config.get('data:data'))
             });
 
         return promise

@@ -6,7 +6,7 @@ var util = require('util'),
 
     logger = require('../logger')(module),
     constants = require('../modules').constants,
-    provider = require('..modules/providers'),
+    provider = require('../modules/providers'),
 
     libRepo = require('../config').get('github:librariesRepository');
 
