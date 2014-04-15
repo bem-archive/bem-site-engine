@@ -66,7 +66,7 @@ var checkForUpdate = function(master) {
         provider.load(provider.PROVIDER_FILE, {
             path: p.join(config.get('data:dir'), env, config.get('data:marker'))
         }):
-        provider.load(data.common.PROVIDER_DISK, {
+        provider.load(provider.PROVIDER_DISK, {
             path: p.join(config.get('data:dir'), env, config.get('data:marker'))
         });
 

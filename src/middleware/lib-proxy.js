@@ -6,7 +6,7 @@ var util = require('util'),
 
     logger = require('../logger')(module),
     constants = require('../modules').constants,
-    data = require('../modules').data,
+    provider = require('..modules/providers'),
 
     libRepo = require('../config').get('github:librariesRepository');
 
@@ -36,8 +36,7 @@ module.exports = function() {
 
         //try to load cached example from local filesystem
         //try to load example from github if no cached file were found
-        data.common
-            .loadData(data.common.PROVIDER_FILE_COMMON, {
+        provider.load(provider.PROVIDER_FILE, {
                 path: path.resolve(constants.DIRS.CACHE, ref, sha(url))
             })
             .then(
@@ -51,7 +50,7 @@ module.exports = function() {
                             logger.verbose('content has been loaded from github for url %s ', url);
 
                             //cache examples to filesystem
-                            data.common.saveData(data.common.PROVIDER_FILE_COMMON, {
+                            provider.save(provider.PROVIDER_FILE, {
                                 path: path.resolve(constants.DIRS.CACHE, ref, sha(url)),
                                 data: body
                             });

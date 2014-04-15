@@ -28,6 +28,8 @@ module.exports = {
     init: function(worker) {
 
         logger.info('Init site structure and load data for worker %s', worker.wid);
+        logger.debug('Enviroment: %s', config.get('NODE_ENV'));
+        logger.debug('Path to data file: %s', p.join(config.get('data:dir'), config.get('NODE_ENV'), config.get('data:data')));
 
         provider.init();
 
