@@ -11,6 +11,8 @@ BEMDOM.decl('block', {
                 // open active tab on load page
                 if(window.location.hash !== '') {
                     _this.openSavedTab(tabs);
+                } else {
+                    tabs.setActiveTab(0);
                 }
 
                 // save active tab

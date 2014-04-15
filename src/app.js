@@ -30,7 +30,6 @@ function run(worker) {
             }
 
             app
-                .use(require('connect-slashes')())
                 .use(express.query())
                 .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
                 .use(middleware.logger())

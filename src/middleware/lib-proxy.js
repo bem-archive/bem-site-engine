@@ -2,7 +2,7 @@ var util = require('util'),
     path = require('path'),
 
     request = require('request'),
-    sha = require('sha1')
+    sha = require('sha1'),
 
     logger = require('../logger')(module),
     constants = require('../modules').constants,
@@ -29,10 +29,17 @@ module.exports = function() {
 
         var ref = VERSION_REGEXP.test(requestUrl) ? constants.DIRS.TAG : constants.DIRS.BRANCH;
 
-        var url = util.format(libRepo.pattern, libRepo.user, libRepo.repo,
-            libRepo.ref, requestUrl.replace(PATTERN, ''));
+        requestUrl = requestUrl.replace(PATTERN, '');
 
-        logger.verbose('request block example by url %s', url);
+        var url = util.format(libRepo.pattern, libRepo.user, libRepo.repo,
+            libRepo.ref, requestUrl);
+
+        logger.verbose('libRepo.pattern %s', libRepo.pattern);
+        logger.verbose('libRepo.user %s', libRepo.user);
+        logger.verbose('libRepo.repo %s', libRepo.repo);
+        logger.verbose('libRepo.ref %s', libRepo.ref);
+        logger.verbose('requestUrl.replace(PATTERN, ) %s', requestUrl);
+        logger.verbose('url %s', url);
 
         //try to load cached example from local filesystem
         //try to load example from github if no cached file were found
