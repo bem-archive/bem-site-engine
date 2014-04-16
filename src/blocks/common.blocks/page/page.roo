@@ -15,7 +15,6 @@ html
     display: flex;
 
     min-width: 1000px;
-    min-height: 700px;
     margin: 0;
     padding: 0;
 

@@ -13,6 +13,16 @@ block quick-start-billboard {
             content: BEM.I18N('quick-start-billboard', 'subtitle')
         },
         {
+            block: 'likes',
+            opts: {
+                l10n: 'ru',
+                quickServices: 'yaru,vkontakte,twitter,facebook',
+                theme: 'counter',
+                title: BEM.I18N('quick-start-billboard', 'likes-title'),
+                image: 'http://avatars.yandex.net/get-yaevents/fbd94638d43ccf96eb203538181f8897/150x150'
+            }
+        },
+        {
             block : 'link',
             mix: [{ block: 'quick-start-billboard', elem: 'link' }],
             url: this.ctx.url,
@@ -20,10 +30,10 @@ block quick-start-billboard {
         },
         {
             block: 'link',
+            mix: [{ block: 'quick-start-billboard', elem: 'yandex-logo' }],
             url: BEM.I18N('quick-start-billboard', 'url'),
             content: {
-                block: 'yandex-logo',
-                mix: [{ block: 'quick-start-billboard', elem: 'yandex-logo' }]
+                block: 'yandex-logo'
             }
         }
     ]

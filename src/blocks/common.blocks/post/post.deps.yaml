@@ -5,6 +5,8 @@
 - block: author
   mods: { view: [full, menu-item, simple, avatar-only] }
 
+- block: likes
+
 - mods: { view: [full, list-item] }
 - mods: { fullscreen: yes }
 

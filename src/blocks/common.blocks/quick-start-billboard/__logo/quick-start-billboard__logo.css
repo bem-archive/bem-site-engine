@@ -2,7 +2,7 @@
 {
     width: 500px;
     height: 300px;
-    margin: 0 auto;
+    margin: 20px auto 0 auto;
 
     background: url('quick-start-billboard__logo.svg') no-repeat center;
     background-size: auto 300px;
