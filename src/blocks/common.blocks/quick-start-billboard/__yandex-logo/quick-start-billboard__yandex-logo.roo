@@ -1,0 +1,11 @@
+.quick-start-billboard__yandex-logo
+{
+	display: block;
+
+	margin-top: 40px;
+
+    .yandex-logo
+    {
+		margin: 0 auto;
+    }
+}
