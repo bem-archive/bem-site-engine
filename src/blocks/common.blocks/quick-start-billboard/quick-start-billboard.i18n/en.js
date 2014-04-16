@@ -5,6 +5,7 @@ module.exports = {
         "project-stub": "Quick start",
         "ya" : "Yandex",
         "url": "//www.yandex.com/",
-        "yaLogoSrc": "//yandex.st/lego/_/w3fZdbIEslxR_9CQRR-ezRNUZ_Q.png"
+        "yaLogoSrc": "//yandex.st/lego/_/w3fZdbIEslxR_9CQRR-ezRNUZ_Q.png",
+        "likes-title": "BEM - Technology for creating web applications"
     }
 };

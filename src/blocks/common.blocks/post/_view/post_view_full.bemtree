@@ -1,7 +1,8 @@
 block post, mod view full {
 
     content: {
-        var source = this.data.node.source[this.data.req.prefLocale];
+        var source = this.data.node.source[this.data.req.prefLocale],
+            node = this.data.node;
 
         if(!source) {
             logger.error('source not found for node %s and locale %s', this.data.node.id, this.data.req.prefLocale);
@@ -29,7 +30,11 @@ block post, mod view full {
 
             apply('title', this.ctx.content = source),
             apply('contentFull', this.ctx.content = source.content),
-            apply('issue', this.ctx.content = source.repo)
+            apply('issue', this.ctx.content = source.repo),
+            apply('likes', this.ctx = {
+                title: source.title,
+                url: node.url
+            })
         ];
     }
 
@@ -77,6 +82,20 @@ block post, mod view full {
         elem: 'content',
         url: apply('getUrl'),
         content: this.ctx.content
+    }
+
+    likes: {
+        block: 'likes',
+        text: BEM.I18N('post', 'likes'),
+        opts: {
+            l10n: 'ru',
+            quickServices: 'yaru,vkontakte,twitter,facebook',
+            theme: 'counter',
+            type: 'small',
+            title: 'BEM - ' + this.ctx.title,
+            link: 'http://' + this.data.req.headers.host + this.ctx.url,
+            image: 'http://avatars.yandex.net/get-yaevents/fbd94638d43ccf96eb203538181f8897/150x150'
+        }
     }
 
     issue: {
