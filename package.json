@@ -38,6 +38,7 @@
     "enb-roole": "0.1.1",
     "roole": "0.9.x",
     "bower": "1.2.8",
+    "bower-npm-install": "0.5.4",
     "inherit": "2.1.0",
     "jshint": "2.4.1",
     "jscs": "1.2.2"
