@@ -87,6 +87,7 @@ var checkForUpdate = function(master) {
 
                 logger.info('Data has been changed. All application worker will be restarted');
 
+                /*
                 return fs.removeDir(p.resolve(constants.DIRS.CACHE, constants.DIRS.BRANCH))
                     .then(function() {
                         return fs.makeDir(p.join(constants.DIRS.CACHE, constants.DIRS.BRANCH));
@@ -94,6 +95,9 @@ var checkForUpdate = function(master) {
                     .then(function() {
                         return master.softRestart(); //restart all cluster workers
                     });
+                */
+
+                return master.softRestart(); //restart all cluster workers
             }
 
             marker = content;
