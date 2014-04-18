@@ -26,7 +26,7 @@ var getMain = function() {
                 authors: [],
                 tags: [],
                 translators: [],
-                content: "https://github.yandex-team.ru/bem/bem-engine/tree/README.md"
+                content: "https://github.yandex-team.ru/bem/bem-engine/tree/dev/README.md"
             },
             ru: {
                 title: "Привет Bem-Engine",
@@ -37,7 +37,7 @@ var getMain = function() {
                 authors: [],
                 tags: [],
                 translators: [],
-                content: "https://github.yandex-team.ru/bem/bem-engine/tree/README.md"
+                content: "https://github.yandex-team.ru/bem/bem-engine/tree/dev/README.md"
             }
         }
     };
