@@ -30,11 +30,7 @@ block post, mod view full {
 
             apply('title', this.ctx.content = source),
             apply('contentFull', this.ctx.content = source.content),
-            apply('issue', this.ctx.content = source.repo),
-            apply('likes', this.ctx = {
-                title: source.title,
-                url: node.url
-            })
+            apply('issue', this.ctx.content = source.repo)
         ];
     }
 
@@ -82,20 +78,6 @@ block post, mod view full {
         elem: 'content',
         url: apply('getUrl'),
         content: this.ctx.content
-    }
-
-    likes: {
-        block: 'likes',
-        text: BEM.I18N('post', 'likes'),
-        opts: {
-            l10n: 'ru',
-            quickServices: 'yaru,vkontakte,twitter,facebook',
-            theme: 'counter',
-            type: 'small',
-            title: 'BEM - ' + this.ctx.title,
-            link: 'http://' + this.data.req.headers.host + this.ctx.url,
-            image: 'http://avatars.yandex.net/get-yaevents/fbd94638d43ccf96eb203538181f8897/150x150'
-        }
     }
 
     issue: {

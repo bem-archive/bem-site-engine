@@ -39,9 +39,7 @@ module.exports = {
         "repo-alternative": ", или ",
         "repo-with-prose": " с помощью prose.io.",
         "repo-issue": "написать об этом",
-        "repo-prose": "поправить статью",
-
-        "likes": "Поделиться c миром:"
+        "repo-prose": "поправить статью"
     }
 };
 

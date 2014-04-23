@@ -14,13 +14,7 @@ block quick-start-billboard {
         },
         {
             block: 'likes',
-            opts: {
-                l10n: 'ru',
-                quickServices: 'yaru,vkontakte,twitter,facebook',
-                theme: 'counter',
-                title: BEM.I18N('quick-start-billboard', 'likes-title'),
-                image: 'http://avatars.yandex.net/get-yaevents/fbd94638d43ccf96eb203538181f8897/150x150'
-            }
+            title: BEM.I18N('quick-start-billboard', 'subtitle')
         },
         {
             block : 'link',

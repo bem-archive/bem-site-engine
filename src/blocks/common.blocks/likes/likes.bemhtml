@@ -1,5 +1,4 @@
 block('likes')(
-
     def().match(!this.ctx._wrapped)(function() {
         var opts = this.ctx.opts,
             dataAttrs = {};
@@ -15,7 +14,7 @@ block('likes')(
                 {
                     tag: 'script',
                     attrs: {
-                        src: '//yandex.st/share/share.js',
+                        src: '//yastatic.net/share/share.js',
                         charset: 'utf-8'
                     }
                 },
