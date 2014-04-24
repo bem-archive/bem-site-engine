@@ -8,49 +8,75 @@ BEMDOM.decl('block', {
                 var _this = this,
                     tabs = _this.findBlockInside('tabs');
 
-                // open active tab on load page
-                if(window.location.hash !== '') {
-                    _this.openSavedTab(tabs);
-                } else {
-                    tabs.setActiveTab(0);
-                }
+                _this._openTabFromUrl(tabs);
 
-                // save active tab
-                tabs.bindTo(tabs.elem('tab'), 'pointerclick', function(e) {
-                    _this.saveTabHash($(e.currentTarget).data('tab'));
+                // support back/next button in browser (html5 history api)
+                _this.bindToWin('popstate', function() {
+                    _this._openTabFromUrl(tabs);
                 });
 
-                // lazy examples load
+                // set url for the current tab (html5 history api)
                 tabs.on('select', function(e, data) {
-                    if(tabs.hasMod(data.newTab, 'examples', 'yes')) {
-                        _this.loadExamples();
+                    var tabName = data.newTab.data('tab');
 
-                        tabs.un('select');
+                    _this._setTabUrl(tabName);
+
+                    if(tabName === 'examples') {
+                        _this._loadExamples();
                     }
                 });
             }
         }
     },
 
-    openSavedTab: function(tabs) {
+    // When page load, first time open tabs
+    // if the name of a tab in the location.pathname
+    _openTabFromUrl: function(tabs) {
+        if(this._isTabNameInPath()) {
+            this._openTabByDataName(tabs, this._getTabName());
+        } else {
+            tabs.setActiveTab(0);
+        }
+    },
+
+    _isTabNameInPath: function() {
+        return this._getTabName() ? true : false;
+    },
+
+    _openTabByDataName: function(tabs, tabName) {
         var _this = this;
 
         tabs.elem('tab').each(function(idx, tab) {
-            if($(tab).data('tab') === window.location.hash) {
+            if($(tab).data('tab') === tabName) {
                 tabs.setActiveTab($(tab));
             }
 
             if(tabs.hasMod(tabs.getCurrentTab(), 'examples', 'yes')) {
-                _this.loadExamples();
+                _this._loadExamples();
             }
         });
     },
 
-    saveTabHash: function(hash) {
-        window.location.hash = hash;
+    _getTabName: function() {
+        // get tabName without slashes
+        var tabName = window.location.pathname.match(/\/(docs|jsdoc|examples)\/$/);
+
+        return tabName ? tabName[1] : false;
     },
 
-    loadExamples: function() {
+
+    _setTabUrl: function(tabName) {
+        // Fix duplicate name tab in location.pathname, 'button/docs/jsdoc/examples/docs/'
+        // when tabname is isset in location.pathname,
+        // in this case get direct block path with regexp + tab name
+        if(this._isTabNameInPath()) {
+            tabName = window.location.pathname.match(/\S+(?=(docs)|(jsdoc)|(examples))/)[0] + tabName;
+        }
+
+        window.history.pushState(null, null, tabName + '/');
+    },
+
+    _loadExamples: function() {
         this.findBlocksInside('block-example').forEach(function(example) {
             example.loadIframe('live');
         });

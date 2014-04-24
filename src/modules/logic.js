@@ -19,24 +19,27 @@ module.exports = {
         logger.debug('get node by request %s', req._parsedUrl.pathname);
 
         var result,
-            url = req._parsedUrl.pathname,
-            traverseTreeNodes = function(node) {
+            url = req._parsedUrl.pathname;
 
-                if(node.url === url) {
-                    if(node.hidden[req.prefLocale]) {
-                        throw HttpError.createError(404);
-                    }
-                    result = node;
-                    return result;
-                }
+        // Exclude from url the name of the tabs on 'block' page
+        url = url.replace(/\/(docs|jsdoc|examples)\/?/gi, '');
 
-                //deep into node items
-                if(!result && node.items) {
-                    node.items.some(function(item) {
-                        return traverseTreeNodes(item);
-                    });
+        var traverseTreeNodes = function(node) {
+            if(node.url === url) {
+                if(node.hidden[req.prefLocale]) {
+                    throw HttpError.createError(404);
                 }
-            };
+                result = node;
+                return result;
+            }
+
+            //deep into node items
+            if(!result && node.items) {
+                node.items.some(function(item) {
+                    return traverseTreeNodes(item);
+                });
+            }
+        };
 
         //if not index page then remove possible multiple trailing slashes
         if(url !== '/') {
