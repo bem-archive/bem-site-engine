@@ -2,6 +2,7 @@ var path = require('path'),
     vow = require('vow'),
     fs = require('fs'),
     express = require('express'),
+    slashes = require('connect-slashes'),
     config = require('./config'),
     logger = require('./logger')(module),
     router = require('./router'),
@@ -36,6 +37,7 @@ function run(worker) {
                 .use(middleware.monitoring())
                 .use(middleware.libProxy())
                 .use(middleware.router(router.router))
+                .use(slashes())
                 .use(middleware.page());
 
             /*

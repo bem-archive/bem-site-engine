@@ -31,14 +31,13 @@ block block {
         if(this.ctx.data) {
             tabsHeader.push({
                 elem: 'tab',
-                attrs: { 'data-tab': '#docs' },
-                mods: { 'side': 'left', 'state': 'current' },
+                attrs: { 'data-tab': 'docs' },
+                mods: { 'side': 'left' },
                 content: BEM.I18N('block', 'docs')
             });
 
             tabsContent.push({
                 elem: 'pane',
-                mods: { 'state': 'current' },
                 content: {
                     block: 'block-docs'
                 }
@@ -48,7 +47,7 @@ block block {
         if(this.ctx.jsdoc) {
             tabsHeader.push({
                 elem: 'tab',
-                attrs: { 'data-tab': '#jsdoc' },
+                attrs: { 'data-tab': 'jsdoc' },
                 content: BEM.I18N('block', 'jsdoc')
             });
 
@@ -63,7 +62,7 @@ block block {
         if(this.ctx.data && this.ctx.data.examples && this.ctx.data.examples[0].content.length > 0) {
             tabsHeader.push({
                 elem: 'tab',
-                attrs: { 'data-tab': '#examples' },
+                attrs: { 'data-tab': 'examples' },
                 mods: { 'side': 'right', 'examples': 'yes' },
                 content: BEM.I18N('block', 'examples')
             });
