@@ -60,17 +60,9 @@ var checkForUpdate = function(master) {
     logger.debug('Check for update for master process start');
 
     var isDev = 'development' === config.get('NODE_ENV'),
-        env = isDev ? null : config.get('NODE_ENV');
+        opts = { path: p.join(config.get('data:dir'), isDev ? '' : config.get('NODE_ENV'), config.get('data:marker')) },
 
-    var promise = isDev ?
-        provider.load(provider.PROVIDER_FILE, {
-            path: p.join(config.get('data:dir'), env, config.get('data:marker'))
-        }):
-        provider.load(provider.PROVIDER_DISK, {
-            path: p.join(config.get('data:dir'), env, config.get('data:marker'))
-        });
-
-    var onSuccessLoading = function(content) {
+        onSuccessLoading = function(content) {
             if(!content) {
                 logger.warn('Marker file has not been loaded');
                 return;
@@ -106,7 +98,7 @@ var checkForUpdate = function(master) {
             logger.error('Error occur while loading and parsing marker file');
         };
 
-    return promise
+    return provider.load(isDev ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts)
         .then(function (content) {
             return JSON.parse(content);
         })
