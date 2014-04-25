@@ -3,6 +3,7 @@ var path = require('path'),
     fs = require('fs'),
     express = require('express'),
     config = require('./config'),
+    slashes = require('connect-slashes'),
     logger = require('./logger')(module),
     router = require('./router'),
     middleware = require('./middleware'),
@@ -47,6 +48,7 @@ var addCommonMW = function(app) {
         .use(middleware.monitoring())
         .use(middleware.libProxy())
         .use(middleware.router(router.router))
+        .use(slashes())
         .use(middleware.page())
         .use(middleware.error());
 
