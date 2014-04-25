@@ -6,12 +6,15 @@ var path = require('path'),
     logger = require('./logger')(module),
     router = require('./router'),
     middleware = require('./middleware'),
+    provider = require('./modules/providers'),
     model = require('./modules').model;
 
 
 exports.run = function(worker) {
     worker = worker || { wid: 0 };
-    return model.init(worker).then(startServer);
+    return model.init(worker).then(function() {
+        return vow.allResolved([startServer(), loadSitemapXml()]);
+    });
 };
 
 /**
@@ -51,7 +54,7 @@ var addCommonMW = function(app) {
 };
 
 /**
- * Starts appliction server
+ * Starts application server
  * @returns {*}
  */
 var startServer = function() {
@@ -62,17 +65,19 @@ var startServer = function() {
         socket = config.get('app:socket'),
         port = config.get('app:port') || process.env.port || 8080;
 
+    //add dev middlewares for dev environment
     config.get('NODE_ENV') === 'development' && addDevelopmentMW(app);
 
+    //add common middlewares
     addCommonMW(app);
 
     app.listen(port || socket, function(err) {
-        if (err) {
+        if(err) {
             def.reject(err);
             return;
         }
 
-        if (socket) {
+        if(socket) {
             try {
                 fs.chmod(socket, '0777');
             } catch(e) {
@@ -85,4 +90,21 @@ var startServer = function() {
     });
 
     return def.promise();
+};
+
+/**
+ * Loads sitemap xml file and saves it to application root directory
+ * @returns {*}
+ */
+var loadSitemapXml = function() {
+    var SITEMAP_FILENAME = 'sitemap.xml',
+        isDev = 'development' === config.get('NODE_ENV'),
+        opts = { path: path.join(config.get('data:dir'), isDev ? '' : config.get('NODE_ENV'), SITEMAP_FILENAME) };
+
+        return provider.load(isDev ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts).then(function(content) {
+            return provider.save(provider.PROVIDER_FILE, {
+                data: content,
+                path: path.join(process.cwd(), SITEMAP_FILENAME)
+            });
+        });
 };
