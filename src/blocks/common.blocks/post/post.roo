@@ -56,6 +56,11 @@ $table-padding-size = 5px 10px;
     /* (END)Headers */
 
     /* Tables */
+    .table-container
+    {
+        overflow-x: scroll;
+    }
+
      table
     {
         margin: 20px auto;
