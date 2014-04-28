@@ -24,8 +24,32 @@ module.exports = {
         // Exclude from url the name of the tabs on 'block' page
         url = url.replace(/\/(docs|jsdoc|examples)\/?/gi, '');
 
-        var traverseTreeNodes = function(node) {
-            if(node.url === url) {
+        if(/\/current\//.test(url)) {
+            logger.debug('request for current');
+            var libUrl = url.replace(/\/current\/.*/, '');
+
+            model.getSitemap().some(function(item) {
+                return traverseTreeNodes(item, libUrl);
+            });
+
+            if(result && result.items && result.items.length > 0) {
+                var versions = result.items.map(function(item) {
+                    return _.isObject(item.title) ? item.title[config.get('app:defaultLanguage')] : item.title;
+                });
+
+                logger.debug('library versions: %s', versions);
+
+                result = null;
+            }
+        }
+
+        //if not index page then remove possible multiple trailing slashes
+        if(url !== '/') {
+            url = url.replace(/(\/)+$/, '');
+        }
+
+        var traverseTreeNodes = function(node, _url) {
+            if(node.url === _url) {
                 if(node.hidden[req.prefLocale]) {
                     throw HttpError.createError(404);
                 }
@@ -41,13 +65,8 @@ module.exports = {
             }
         };
 
-        //if not index page then remove possible multiple trailing slashes
-        if(url !== '/') {
-            url = url.replace(/(\/)+$/, '');
-        }
-
         model.getSitemap().some(function(item) {
-            return traverseTreeNodes(item);
+            return traverseTreeNodes(item, url);
         });
 
         if(result) {
