@@ -7,6 +7,7 @@ var util = require('util'),
     logger = require('../logger')(module),
     constants = require('../modules').constants,
     provider = require('../modules/providers'),
+    mime = require('mime'),
 
     libRepo = require('../config').get('github:librariesRepository');
 
@@ -41,6 +42,10 @@ module.exports = function() {
         logger.verbose('requestUrl.replace(PATTERN, ) %s', requestUrl);
         logger.verbose('url %s', url);
 
+        //set the content-types by mime type
+        var type = mime.lookup(requestUrl);
+        res.contentType(type);
+
         //try to load cached example from local filesystem
         //try to load example from github if no cached file were found
         provider.load(provider.PROVIDER_FILE, {
@@ -53,7 +58,7 @@ module.exports = function() {
                 },
                 function() {
                     request(url, function (error, response, body) {
-                        if (!error && response.statusCode == 200) {
+                        if (!error && response.statusCode === 200) {
                             logger.verbose('content has been loaded from github for url %s ', url);
 
                             //cache examples to filesystem
