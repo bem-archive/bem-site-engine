@@ -25,6 +25,7 @@
     "sha1": "1.0.0",
     "cron": "1.0.1",
     "request": "2.33.0",
+    "mime": "1.2.11",
     "github": "git://github.com/mikedeboer/node-github.git",
     "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.3",
     "yandex-disk": "git://github.com/tormozz48/yandex-disk.git",
