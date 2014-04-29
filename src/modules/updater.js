@@ -76,6 +76,7 @@ var checkForUpdate = function(master) {
 
             //compare sha sums for data objects
             if(marker.data !== content.data) {
+                marker = content;
 
                 logger.info('Data has been changed. All application worker will be restarted');
 
@@ -91,8 +92,6 @@ var checkForUpdate = function(master) {
 
                 return master.softRestart(); //restart all cluster workers
             }
-
-            marker = content;
         },
         onErrorLoading = function() {
             logger.error('Error occur while loading and parsing marker file');
