@@ -42,7 +42,7 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'default' }, {
 
                 if(storage) {
 
-                    if(libLocPath && libLocPath[0].indexOf(libname) !== -1) {
+                    if(libLocPath && libLocPath[0].indexOf(libname + '/') !== -1) {
 
                         // check if href contains key word 'current'
                         if(locPath.match(/\/current\//)) {
