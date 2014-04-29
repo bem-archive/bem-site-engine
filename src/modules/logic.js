@@ -6,6 +6,7 @@ var u = require('util'),
 
     constants = require('./constants'),
     config = require('../config'),
+    router = require('./router'),
     model = require('./model');
 
 module.exports = {
@@ -16,66 +17,7 @@ module.exports = {
      * @returns {RuntimeNode} founded node
      */
     getNodeByRequest: function(req) {
-        logger.debug('get node by request %s', req._parsedUrl.pathname);
-
-        var result,
-            url = req._parsedUrl.pathname;
-
-        // Exclude from url the name of the tabs on 'block' page
-        url = url.replace(/\/(docs|jsdoc|examples)\/?/gi, '');
-
-        if(/\/current\//.test(url)) {
-            logger.debug('request for current');
-            var libUrl = url.replace(/\/current\/.*/, '');
-
-            model.getSitemap().some(function(item) {
-                return traverseTreeNodes(item, libUrl);
-            });
-
-            if(result && result.items && result.items.length > 0) {
-                var versions = result.items.map(function(item) {
-                    return _.isObject(item.title) ? item.title[config.get('app:defaultLanguage')] : item.title;
-                });
-
-                logger.debug('library versions: %s', versions);
-
-                result = null;
-            }
-        }
-
-        //if not index page then remove possible multiple trailing slashes
-        if(url !== '/') {
-            url = url.replace(/(\/)+$/, '');
-        }
-
-        var traverseTreeNodes = function(node, _url) {
-            if(node.url === _url) {
-                if(node.hidden[req.prefLocale]) {
-                    throw HttpError.createError(404);
-                }
-                result = node;
-                return result;
-            }
-
-            //deep into node items
-            if(!result && node.items) {
-                node.items.some(function(item) {
-                    return traverseTreeNodes(item);
-                });
-            }
-        };
-
-        model.getSitemap().some(function(item) {
-            return traverseTreeNodes(item, url);
-        });
-
-        if(result) {
-            logger.debug('find node %s %s', result.id, result.source);
-            return result;
-        }else {
-            logger.error('cannot find node by url %s', req._parsedUrl.pathname);
-            throw HttpError.createError(404);
-        }
+        return router.run(req);
     },
 
     /**
