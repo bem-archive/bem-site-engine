@@ -3,7 +3,7 @@
     position: relative;
 
     display: block;
-    overflow: auto;
+    overflow-y: auto;
 
     box-sizing: border-box;
 

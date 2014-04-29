@@ -1,5 +1,7 @@
 .menu-list_type_header
 {
+    overflow: hidden;
+
     align-self: center;
 }
 
