@@ -20,7 +20,7 @@ exports.run = function(req, res) {
         url += '/' + (_.isObject(result.items[0].title) ?
             result.items[0].title[config.get('app:defaultLanguage')] : result.items[0].title);
 
-        return findNode(req, url);
+        return findNode(req, url, null);
     });
 };
 
