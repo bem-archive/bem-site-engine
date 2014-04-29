@@ -20,7 +20,7 @@ var sitemap,
 module.exports = {
 
     /**
-     * Loads data model from local filesystem or yandex Disk depending on enviroment
+     * Loads data model from local filesystem or yandex Disk depending on environment
      * and fills the model
      * @param worker - {Object} worker object
      * @returns {*}
