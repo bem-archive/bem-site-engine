@@ -27,23 +27,40 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'default' }, {
     },
 
     setSelectUrl: function() {
-        var _this = this;
+        var isLibsPath = location.pathname.match(/\/libs\//);
 
-        _this.elem('select').each(function() {
-            var libname = $(this).prev('.menu-list__link').text(),
-                lib = _this.getStorage(libname),
-                path = location.pathname.match(/\/libs\S+?\/[\w.-]+/);
+        if(isLibsPath) {
 
-            if(lib) {
-                if(path && path[0].indexOf(libname) !== -1 ) {
-                    $(this).val(path);
+            var _this = this,
+                locPath = location.pathname,
+                libLocPath = locPath.match(/\/libs\S+?\/[\w.-]+/);
 
-                    _this.setStorage(libname, path);
+            _this.elem('select').each(function() {
+                var libname = $(this).prev('.menu-list__link').text(),
+                    storage = _this.getStorage(libname),
+                    defaultVal = $(this).val();
+
+                if(storage) {
+
+                    if(libLocPath && libLocPath[0].indexOf(libname) !== -1) {
+
+                        // check if href contains key word 'current'
+                        if(locPath.match(/\/current\//)) {
+                            libLocPath[0] = defaultVal;
+                        } else {
+                            $(this).val(libLocPath[0]);
+                        }
+
+                        _this.setStorage(libname, libLocPath[0]);
+
+                    } else {
+                        $(this).val(storage);
+                    }
                 } else {
-                    $(this).val(lib);
+                    _this.setStorage(libname, defaultVal);
                 }
-            }
-        });
+            });
+        }
     },
 
     setLinksUrl: function() {
