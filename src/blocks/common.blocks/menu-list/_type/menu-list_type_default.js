@@ -58,7 +58,11 @@ BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'default' }, {
     },
 
     showLibPage: function(url) {
-        location.href = location.origin + url;
+        var loc = window.location;
+
+        loc.origin = loc.origin || loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port: '');
+
+        loc.href = loc.origin + url;
     }
 });
 
