@@ -78,19 +78,26 @@ var checkForUpdate = function(master) {
             if(marker.data !== content.data) {
                 marker = content;
 
-                logger.info('Data has been changed. All application worker will be restarted');
+                logger.debug('Clear cache folders ...');
 
-                /*
-                return fs.removeDir(p.resolve(constants.DIRS.CACHE, constants.DIRS.BRANCH))
+                return vow.all([
+                        fs.removeDir(p.resolve(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
+                        fs.removeDir(p.resolve(constants.DIRS.CACHE, constants.DIRS.TAG))
+                    ])
                     .then(function() {
-                        return fs.makeDir(p.join(constants.DIRS.CACHE, constants.DIRS.BRANCH));
+                        logger.debug('Create cache folders ...');
+
+                        return vow.all([
+                            fs.makeDir(p.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
+                            fs.makeDir(p.join(constants.DIRS.CACHE, constants.DIRS.TAG))
+                        ]);
                     })
                     .then(function() {
+                        logger.info('Data has been changed. All application workers will be restarted');
                         return master.softRestart(); //restart all cluster workers
                     });
-                */
 
-                return master.softRestart(); //restart all cluster workers
+                //return master.softRestart(); //restart all cluster workers
             }
         },
         onErrorLoading = function() {
