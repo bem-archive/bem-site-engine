@@ -1,7 +1,1 @@
-block content, mod view block {
-
-    content: {
-        block: 'block',
-        mix: { block: 'post', mods: { view: 'full' } }
-    }
-}
+block('content').mod('view', 'block').content()({ block: 'block' });

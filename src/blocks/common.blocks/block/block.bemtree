@@ -7,20 +7,12 @@ block block {
             _source = node.source;
 
         return [
-            apply('header', this.ctx.name = node.title[lang]),
-            apply('contents', this.ctx = _source)
+            apply('contents', this.ctx = {
+                source: _source,
+                node: node,
+                lang: lang
+            })
         ];
-
-    }
-
-    header: {
-        elem: 'header',
-        content: {
-            elem: 'title',
-            tag: 'h1',
-            mix: [{ block: 'post', elem: 'title' }],
-            content: BEM.I18N('block', 'static-title') + ' ' + this.ctx.name
-        }
     }
 
     contents: {
@@ -28,7 +20,7 @@ block block {
         var tabsHeader = [],
             tabsContent = [];
 
-        if(this.ctx.data) {
+        if(this.ctx.source.data) {
             tabsHeader.push({
                 elem: 'tab',
                 attrs: { 'data-tab': 'docs' },
@@ -38,13 +30,21 @@ block block {
 
             tabsContent.push({
                 elem: 'pane',
-                content: {
-                    block: 'block-docs'
-                }
+                content: [
+                    {
+                        block: this.block,
+                        elem: 'title',
+                        content: BEM.I18N('block', 'static-title') + ' ' + this.ctx.node.title[this.ctx.lang]
+                    },
+                    {
+                        block: 'block-docs',
+                        mix: { block: 'post', elem: 'content' }
+                    }
+                ]
             });
         }
 
-        if(this.ctx.jsdoc) {
+        if(this.ctx.source.jsdoc) {
             tabsHeader.push({
                 elem: 'tab',
                 attrs: { 'data-tab': 'jsdoc' },
@@ -54,12 +54,13 @@ block block {
             tabsContent.push({
                 elem: 'pane',
                 content: {
-                    block: 'block-jsdoc'
+                    block: 'block-jsdoc',
+                    mix: { block: 'post', elem: 'content' }
                 }
             });
         }
 
-        if(this.ctx.data && this.ctx.data.examples && this.ctx.data.examples[0].content.length > 0) {
+        if(this.ctx.source.data && this.ctx.source.data.examples && this.ctx.source.data.examples[0].content.length > 0) {
             tabsHeader.push({
                 elem: 'tab',
                 attrs: { 'data-tab': 'examples' },
@@ -69,52 +70,33 @@ block block {
 
             tabsContent.push({
                 elem: 'pane',
-                content: [
-                    apply('examples-title'),
-                    apply('examples-items')
-                ]
+                content: apply('examples-items')
             });
         }
 
-        return [
-            {
-                elem: 'content',
-                mix: [{ block: 'post', elem: 'content' }],
-                content: {
-                    block: 'tabs',
-                    mods: { theme: 'default' },
-                    content: [
-                        {
-                            elem: 'header',
-                            content: tabsHeader
-                        },
-                        {
-                            elem: 'content',
-                            content: tabsContent
-                        }
-                    ]
-                }
-            }
-        ]
-    }
-
-    examples-title: {
         return {
-            block: 'block-example',
-            elem: 'title',
-            tag: 'h2',
-            mix: [{ block: 'post', elem: 'title' }],
-            content: BEM.I18N('block-example', 'examples-title')
+            block: 'tabs',
+            mods: { theme: 'default' },
+            content: [
+                {
+                    elem: 'header',
+                    content: tabsHeader
+                },
+                {
+                    elem: 'content',
+                    content: tabsContent
+                }
+            ]
         }
     }
 
     examples-items: {
 
-        if(this.ctx.data.examples && this.ctx.data.examples.length > 0) {
+        if(this.ctx.source.data.examples && this.ctx.source.data.examples.length > 0) {
 
-            var prefix = this.ctx.prefix;
+            var prefix = this.ctx.source.prefix;
 
-            return this.ctx.data.examples[0].content.map(function(example) {
+            return this.ctx.source.data.examples[0].content.map(function(example) {
                 var exampleUrl = prefix + '/' + example.url + '.ru.html',
                     bemjson = prefix + '/' + example.url + '.bemjson.js',
                     exampleName = example.url.replace(/.+\//, '');

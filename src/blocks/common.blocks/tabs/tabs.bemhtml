@@ -1,1 +1,1 @@
-block tabs, js: true
+block('tabs').js()(true)
