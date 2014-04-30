@@ -11,7 +11,10 @@ var util = require('util'),
 
     libRepo = require('../config').get('github:librariesRepository');
 
-var PATTERN = '/__example',
+var PATTERN = {
+        EXAMPLE: '/__example',
+        FREEZE: '/output'
+    },
     VERSION_REGEXP = /\/v?\d+\.\d+\.\d+\//;
 
 /**
@@ -21,57 +24,62 @@ var PATTERN = '/__example',
 module.exports = function() {
 
     return function(req, res, next) {
-        var requestUrl = req._parsedUrl.path;
+        var url = req._parsedUrl.path;
 
-        //check for example url. if not then call next middleware
-        if(requestUrl.indexOf(PATTERN) === -1) {
+        //check for example or freeze url. if not then call next middleware
+        if(url.indexOf(PATTERN.EXAMPLE) === -1 && url.indexOf(PATTERN.FREEZE) === -1) {
             return next();
         }
 
-        var ref = VERSION_REGEXP.test(requestUrl) ? constants.DIRS.TAG : constants.DIRS.BRANCH;
+        if(url.indexOf(PATTERN.EXAMPLE) > -1) {
+            return load(url.replace(PATTERN.EXAMPLE, ''),
+                VERSION_REGEXP.test(url) ? constants.DIRS.TAG : constants.DIRS.BRANCH, res);
+        }
 
-        requestUrl = requestUrl.replace(PATTERN, '');
-
-        var url = util.format(libRepo.pattern, libRepo.user, libRepo.repo,
-            libRepo.ref, requestUrl);
-
-        logger.verbose('libRepo.pattern %s', libRepo.pattern);
-        logger.verbose('libRepo.user %s', libRepo.user);
-        logger.verbose('libRepo.repo %s', libRepo.repo);
-        logger.verbose('libRepo.ref %s', libRepo.ref);
-        logger.verbose('requestUrl.replace(PATTERN, ) %s', requestUrl);
-        logger.verbose('url %s', url);
-
-        //set the content-types by mime type
-        var type = mime.lookup(requestUrl);
-        res.contentType(type);
-
-        //try to load cached example from local filesystem
-        //try to load example from github if no cached file were found
-        provider.load(provider.PROVIDER_FILE, {
-                path: path.resolve(constants.DIRS.CACHE, ref, sha(url))
-            })
-            .then(
-                function(content) {
-                    logger.verbose('content has been loaded from file cache for url %s', url);
-                    res.end(content);
-                },
-                function() {
-                    request(url, function (error, response, body) {
-                        if (!error && response.statusCode === 200) {
-                            logger.verbose('content has been loaded from github for url %s ', url);
-
-                            //cache examples to filesystem
-                            provider.save(provider.PROVIDER_FILE, {
-                                path: path.resolve(constants.DIRS.CACHE, ref, sha(url)),
-                                data: body
-                            });
-                            res.end(body);
-                        }else {
-                            res.end('Error while loading example');
-                        }
-                    });
-                }
-            );
+        if(url.indexOf(PATTERN.FREEZE) > -1) {
+            return load(url.replace(PATTERN.FREEZE, ''), '', res);
+        }
     };
+};
+
+/**
+ * Loads sources for url and sent them to response
+ * @param url - {String} url of request
+ * @param ref - {String} value of reference (branch or tag)
+ * @param res - {Object} response
+ * @returns {*}
+ */
+var load = function(url, ref, res) {
+    //set the content-types by mime type
+    res.contentType(mime.lookup(url));
+    url = util.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
+
+    var returnFromCache = function(content) {
+            logger.verbose('content has been loaded from file cache for url %s', url);
+            res.end(content);
+        },
+        sendRequest = function() {
+            request(url, function (error, response, body) {
+                if (!error && response.statusCode === 200) {
+                    logger.verbose('content has been loaded from github for url %s ', url);
+
+                    //cache examples to filesystem
+                    provider.save(provider.PROVIDER_FILE, {
+                        path: path.resolve(constants.DIRS.CACHE, ref, sha(url)),
+                        data: body
+                    });
+                    res.end(body);
+                }else {
+                    res.end('Error while loading example');
+                }
+            });
+        };
+
+    /*
+    try to load cached source from local filesystem
+    try to load source from github repository if no cached file was found
+    */
+    return provider
+        .load(provider.PROVIDER_FILE, { path: path.resolve(constants.DIRS.CACHE, ref, sha(url)) })
+        .then(returnFromCache, sendRequest);
 };
