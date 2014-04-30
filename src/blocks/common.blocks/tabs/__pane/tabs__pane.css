@@ -1,6 +1,8 @@
 .tabs__pane
 {
     display: none;
+
+    padding-top: 20px;
 }
 
 .tabs__pane_state_current

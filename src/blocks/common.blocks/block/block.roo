@@ -1,0 +1,24 @@
+.block
+{
+    .tabs__header,
+    .tabs__content
+    {
+        padding: 0 30px;
+    }
+
+    .tabs__content
+    {
+        padding-bottom: 20px;
+    }
+
+    .post__content
+    {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    table
+    {
+        text-align: center;
+    }
+}

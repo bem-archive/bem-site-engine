@@ -12,18 +12,8 @@ block block-jsdoc {
     }
 
     description: {
-        return [
-            {
-                elem: 'title',
-                tag: 'h2',
-                mix: [{ block: 'post', elem: 'title' }],
-                content: BEM.I18N('block-jsdoc', 'description-title')
-            },
-            {
-                elem: 'description',
-                content: this.ctx.description
-            }
-        ]
+        elem: 'description',
+        content: this.ctx.description
     }
 
     methods: {
