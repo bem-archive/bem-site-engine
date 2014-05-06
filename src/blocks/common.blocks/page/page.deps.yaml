@@ -7,16 +7,11 @@
   mods: { type: pointer }
 
 - elems: [css, js, fullscreen]
-- mods: { theme: white }
 - mods: { page: error }
 - mods: { touch: yes }
 - mods: { fullscreen: true }
 
 - link
-- block: layout,
-  mods: { type: serp }
-- block: layout
-  mods: { section: 100 }
 - menu
 - content
 - metrika
