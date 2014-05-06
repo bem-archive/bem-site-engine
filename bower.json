@@ -3,12 +3,17 @@
   "version": "3.0.0",
   "private": true,
   "dependencies": {
-    "bem-core": "git://github.com/bem/bem-core.git#v1.1.0",
+    "bem-core": "git://github.com/bem/bem-core.git#v2.1.0",
+    "bem-components": "git://github.com/bem/bem-components.git#845ba685b647030289442d243ca52997e2617a9f",
     "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.3"
   },
   "ignore": [
     "node_modules",
     "configs/current",
     ".enb/tmp"
-  ]
+  ],
+  "resolutions": {
+    "bem-core": "v2",
+    "bem-components": "845ba685b647030289442d243ca52997e2617a9f"
+  }
 }

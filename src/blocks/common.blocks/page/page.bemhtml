@@ -1,1 +1,1 @@
-block('page').js()(true);
+block('page').elem('body').js()(true);
