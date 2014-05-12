@@ -1,0 +1,23 @@
+.header_type_beminfo
+{
+	background-color: #000;
+
+    .logo_type_bem
+    {
+        width: 61px;
+        height: 38px;
+        margin: 12px auto 4px 12px;
+
+        background-size: 38px;
+    }
+
+    .search-action
+    {
+        margin-left: 30px;
+
+        &__text
+        {
+            color: #999;
+        }
+    }
+}

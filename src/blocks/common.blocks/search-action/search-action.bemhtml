@@ -1,0 +1,1 @@
+block('search-action').js()(true);

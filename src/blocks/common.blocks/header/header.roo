@@ -1,0 +1,13 @@
+.header
+{
+    .search-action
+    {
+        align-self: center;
+        margin-right: 20px;
+
+        &__icon
+        {
+            margin-left: 10px;
+        }
+    }
+}

@@ -34,7 +34,28 @@ block header, mod type beminfo {
             url: this.data.langSwitch
         },
         {
-            block: 'search'
+            block: 'search-action',
+            mods: { 'form': 'hidden' },
+            mix: { block: 'flex' },
+            content: [
+                {
+                    block: 'form',
+                    attrs: { method: 'get' },
+                    content: {
+                        block : 'input',
+                        mods : { theme : 'normal', size: 's', 'has-clear': true },
+                        name: 'text',
+                        placeholder : 'Search'
+                    }
+                },
+                {
+                    elem: 'text',
+                    content: [
+                        'alt + F',
+                        { elem: 'icon' }
+                    ]
+                }
+            ]
         }
     ]
 

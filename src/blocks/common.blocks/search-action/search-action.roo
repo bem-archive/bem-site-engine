@@ -1,0 +1,16 @@
+.search-action
+{
+    position: relative;
+
+    &_form_hidden
+    {
+        .search-action__text
+        {
+            display: block;
+        }
+        .form
+        {
+            display: none;
+        }
+    }
+}
