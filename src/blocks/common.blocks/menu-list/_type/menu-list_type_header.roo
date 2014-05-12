@@ -1,0 +1,27 @@
+.menu-list_type_header
+{
+    overflow: hidden;
+
+    border-right: none;
+
+    align-self: center;
+
+    .menu-list__link
+    {
+        font-size: 15px;
+
+        display: inline-block;
+
+        margin-right: 20px;
+
+        transition: .3s color;
+
+        color: #fff;
+
+        &:hover,
+        &_active
+        {
+            color: #FFD94D;
+        }
+    }
+}

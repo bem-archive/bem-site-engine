@@ -28,7 +28,31 @@ block header, mod type lego {
                         content: item.title
                     };
                 })
-        }
+        },
+        // {
+        //     block: 'search-action',
+        //     mods: { 'form': 'hidden' },
+        //     mix: { block: 'flex' },
+        //     content: [
+        //         {
+        //             block: 'form',
+        //             attrs: { method: 'get' },
+        //             content: {
+        //                 block : 'input',
+        //                 attrs: { accesskey: 'f' },
+        //                 mods : { theme : 'normal', size: 's', 'has-clear': true },
+        //                 placeholder : 'Search'
+        //             }
+        //         },
+        //         {
+        //             elem: 'text',
+        //             content: [
+        //                 'alt + F',
+        //                 { elem: 'icon' }
+        //             ]
+        //         }
+        //     ]
+        // }
     ]
 
 }

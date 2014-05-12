@@ -1,4 +1,4 @@
-block header {
-    tag: 'header',
-    mix: [{ block: 'flex' }]
-}
+block('header')(
+    tag()('header'),
+    mix()({ block: 'flex' })
+);

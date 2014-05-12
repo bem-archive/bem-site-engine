@@ -1,0 +1,10 @@
+$icon-size = 24px;
+
+.icon_action_search
+{
+    width: $icon-size;
+    height: $icon-size;
+
+    background: url('icon_action_search.svg');
+    background-size: $icon-size;
+}
