@@ -104,7 +104,7 @@ var replaceCurrentVersion = function(req, url) {
  * @returns {String} url with removed tab parts
  */
 var removeTabs = function(url) {
-    return url.replace(/\/(docs|jsdoc|examples)\/?/gi, '');
+    return url.replace(/(\/docs\/)|(\/jsdoc\/)|(\/examples\/)?/gi, '');
 };
 
 /**
