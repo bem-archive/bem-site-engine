@@ -93,6 +93,8 @@ module.exports = {
 
             meta.ogType = source.type === 'post' ? 'article': null;
             meta.ogUrl = req.url;
+
+            return meta;
         }
     },
 
