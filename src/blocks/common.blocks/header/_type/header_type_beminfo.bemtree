@@ -45,7 +45,7 @@ block header, mod type beminfo {
                         block : 'input',
                         mods : { theme : 'normal', size: 's', 'has-clear': true },
                         name: 'text',
-                        placeholder : 'Search'
+                        placeholder : BEM.I18N('input', 'placeholder')
                     }
                 },
                 {
