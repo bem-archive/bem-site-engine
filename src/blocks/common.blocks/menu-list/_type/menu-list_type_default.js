@@ -17,7 +17,7 @@ modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
                             url = $this.val(),
 
                         // TODO: придумать другой способ получать текст ссылки
-                            libname = $this.prev('.menu-list__link').text();
+                        libname = $this.prev('.menu-list__link').text();
 
                         _this.showLibPage(url);
                         _this.setStorage(libname, url);
@@ -40,7 +40,11 @@ modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
                         storage = _this.getStorage(libname),
                         defaultVal = $(this).val();
 
-                    if(storage) {
+                    // HACK, reset dev-docs branch, to delete a month
+                    if(storage && storage.indexOf('dev-docs') !== -1) {
+                        localStorage.removeItem(libname);
+                        storage = false;
+                    } else if(storage) {
 
                         if(libLocPath && libLocPath[0].indexOf(libname + '/') !== -1) {
 
@@ -56,9 +60,11 @@ modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
                         } else {
                             $(this).val(storage);
                         }
+
                     } else {
                         _this.setStorage(libname, defaultVal);
                     }
+
                 });
             }
         },
