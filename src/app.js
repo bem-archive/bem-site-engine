@@ -47,6 +47,7 @@ var addCommonMW = function(app) {
         .use(middleware.logger())
         .use(middleware.monitoring())
         .use(middleware.libProxy())
+        .use(middleware.search())
         .use(middleware.router(router.router))
         .use(slashes())
         .use(middleware.page())
