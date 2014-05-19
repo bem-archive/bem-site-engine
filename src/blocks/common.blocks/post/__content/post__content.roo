@@ -67,7 +67,7 @@ $table-padding-size = 5px 10px;
     /* Tables */
     .table-container
     {
-        overflow-x: scroll;
+        overflow-x: auto;
     }
 
      table
