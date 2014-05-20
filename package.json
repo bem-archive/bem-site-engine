@@ -27,9 +27,7 @@
     "request": "2.33.0",
     "mime": "1.2.11",
     "fs-extra": "~0.8.1",
-    "github": "git://github.com/mikedeboer/node-github.git",
-    "bem-forum": "git://github.yandex-team.ru/blond/bem-forum.git#v0.0.3",
-    "yandex-disk": "git://github.com/tormozz48/yandex-disk.git",
+    "yandex-disk": "0.0.6",
     "bem-data-compiler": "git://github.yandex-team.ru/bem/bem-data-compiler.git"
   },
   "devDependencies": {
