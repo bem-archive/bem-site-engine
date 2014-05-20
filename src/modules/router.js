@@ -15,12 +15,22 @@ exports.run = function(req, res) {
     url = removeTrailingSlash(url);
 
     return findNode(req, url, function(result) {
-        if(!result.lib || !result.items) return result;
+        if(result.lib && result.items) {
+            var items = result.items,
+                title = items[0].title;
 
-        url += '/' + (_.isObject(result.items[0].title) ?
-            result.items[0].title[config.get('app:defaultLanguage')] : result.items[0].title);
+            url += '/' + (_.isObject(title) ? title[config.get('app:defaultLanguage')] : title);
+            return findNode(req, url, null);
+        }
 
-        return findNode(req, url, null);
+        if((result.VIEW.POSTS === result.view) && result.items && result.items.length) {
+            url = result.items.filter(function(item) {
+                return !item.hidden[req.prefLocale];
+            })[0].url;
+            return findNode(req, url, null);
+        }
+
+        return result;
     });
 };
 
