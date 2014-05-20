@@ -16,13 +16,14 @@ exports.run = function(req, res) {
 
     return findNode(req, url, function(result) {
         if(result.lib && result.items) {
-            url += '/' + (_.isObject(result.items[0].title) ?
-                result.items[0].title[config.get('app:defaultLanguage')] : result.items[0].title);
+            var items = result.items,
+                title = items[0].title;
 
+            url += '/' + (_.isObject(title) ? title[config.get('app:defaultLanguage')] : title);
             return findNode(req, url, null);
         }
 
-        if(result.VIEW.POSTS === result.view && result.items && result.items.length) {
+        if((result.VIEW.POSTS === result.view) && result.items && result.items.length) {
             url = result.items.filter(function(item) {
                 return !item.hidden[req.prefLocale];
             })[0].url;
