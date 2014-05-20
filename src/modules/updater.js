@@ -80,10 +80,7 @@ var checkForUpdate = function(master) {
 
                 logger.debug('Clear cache folders ...');
 
-                return vow.all([
-                        fs.removeDir(p.resolve(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
-                        fs.removeDir(p.resolve(constants.DIRS.CACHE, constants.DIRS.TAG))
-                    ])
+                return provider.removeDir(provider.PROVIDER_FILE, { path: constants.DIRS.CACHE })
                     .then(function() {
                         logger.debug('Create cache folders ...');
 

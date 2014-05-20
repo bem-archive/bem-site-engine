@@ -24,5 +24,24 @@ module.exports = {
     save:  function(options) {
         logger.debug('save data to file file %s', options.path ? options.path : 'unknown file');
         return fs.write(options.path, options.data, 'utf8');
+    },
+
+    /**
+     * Removes directory with all files and subdirectories
+     * @param options - {Object} with fields:
+     * - path {String} path to target file
+     * @returns {*}
+     */
+    removeDir: function(options) {
+        var def = vow.defer();
+        fs.remove(options.path, function(err) {
+            if(err) {
+                def.reject(err);
+            }
+
+            def.resolve();
+        });
+
+        return def.promise();
     }
 };

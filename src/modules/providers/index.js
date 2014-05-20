@@ -59,5 +59,20 @@ module.exports = {
             default:
                 logger.error(MSG.ERROR.SAVE);
         }
+    },
+
+    /**
+     * Removes directory
+     * @param provider - {String} name of data provider
+     * @param options - {Object} options
+     * @returns {}
+     */
+    removeDir: function(provider, options) {
+        switch (provider) {
+            case this.PROVIDER_FILE:
+                return file.removeDir(options);
+            default:
+                logger.error(MSG.ERROR.SAVE);
+        }
     }
 };
