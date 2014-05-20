@@ -1,5 +1,6 @@
 var util = require('util'),
     path = require('path'),
+    fs = require('fs'),
 
     request = require('request'),
     sha = require('sha1'),
@@ -32,12 +33,12 @@ module.exports = function() {
         }
 
         if(url.indexOf(PATTERN.EXAMPLE) > -1) {
-            return load(url.replace(PATTERN.EXAMPLE, ''),
+            return proxyTextFiles(url.replace(PATTERN.EXAMPLE, ''),
                 VERSION_REGEXP.test(url) ? constants.DIRS.TAG : constants.DIRS.BRANCH, res);
         }
 
         if(url.indexOf(PATTERN.FREEZE) > -1) {
-            return load(url.replace(PATTERN.FREEZE, ''), '', res);
+            return proxyImageFiles(url.replace(PATTERN.FREEZE, ''), res);
         }
     };
 };
@@ -49,9 +50,10 @@ module.exports = function() {
  * @param res - {Object} response
  * @returns {*}
  */
-var load = function(url, ref, res) {
+var proxyTextFiles = function(url, ref, res) {
+
     //set the content-types by mime type
-    res.contentType(mime.lookup(url));
+    res.type(mime.lookup(url));
     url = util.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
     var returnFromCache = function(content) {
@@ -69,7 +71,7 @@ var load = function(url, ref, res) {
                         data: body
                     });
                     res.end(body);
-                }else {
+                } else {
                     res.end('Error while loading example');
                 }
             });
@@ -82,4 +84,28 @@ var load = function(url, ref, res) {
     return provider
         .load(provider.PROVIDER_FILE, { path: path.resolve(constants.DIRS.CACHE, ref, sha(url)) })
         .then(returnFromCache, sendRequest);
+};
+
+var proxyImageFiles = function(url, res) {
+    //set the content-types by mime type
+    res.type(mime.lookup(url));
+    url = util.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
+
+    var p = path.resolve(constants.DIRS.CACHE, sha(url));
+    /*
+     try to load cached source from local filesystem
+     try to load source from github repository if no cached file was found
+     */
+    return provider
+        .load(provider.PROVIDER_FILE, { path: p })
+        .then(
+            function(content) {
+                res.end(content);
+            },
+            function() {
+                var x = request.get(url);
+                x.pipe(fs.createWriteStream(p));
+                x.pipe(res)
+            }
+        );
 };
