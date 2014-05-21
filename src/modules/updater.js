@@ -78,11 +78,11 @@ var checkForUpdate = function(master) {
             if(marker.data !== content.data) {
                 marker = content;
 
-                logger.debug('Clear cache folders ...');
+                logger.info('Clear cache folders ...');
 
                 return provider.removeDir(provider.PROVIDER_FILE, { path: constants.DIRS.CACHE })
                     .then(function() {
-                        logger.debug('Create cache folders ...');
+                        logger.info('Create cache folders ...');
 
                         return vow.all([
                             fs.makeDir(p.join(constants.DIRS.CACHE, constants.DIRS.BRANCH)),
