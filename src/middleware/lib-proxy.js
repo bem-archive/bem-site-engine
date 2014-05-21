@@ -2,6 +2,7 @@ var util = require('util'),
     path = require('path'),
     fs = require('fs'),
 
+    vowFs = require('vow-fs'),
     request = require('request'),
     sha = require('sha1'),
 
@@ -92,20 +93,34 @@ var proxyImageFiles = function(url, res) {
     url = util.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
     var p = path.resolve(constants.DIRS.CACHE, sha(url));
+
+    vowFs.exists(p).then(function(exists) {
+        if(exists) {
+            fs.createReadStream(p).pipe(res);
+        }else {
+            var x = request.get(url);
+            x.pipe(fs.createWriteStream(p));
+            x.pipe(res);
+        }
+    });
+
+
+
     /*
      try to load cached source from local filesystem
      try to load source from github repository if no cached file was found
      */
-    return provider
-        .load(provider.PROVIDER_FILE, { path: p })
-        .then(
-            function(content) {
-                res.end(content);
-            },
-            function() {
-                var x = request.get(url);
-                x.pipe(fs.createWriteStream(p));
-                x.pipe(res)
-            }
-        );
+//    return provider
+//        .load(provider.PROVIDER_FILE, { path: p })
+//        .then(
+//            function(content) {
+//                console.log(content);
+//                res.end(content);
+//            },
+//            function() {
+//                var x = request.get(url);
+//                x.pipe(fs.createWriteStream(p));
+//                x.pipe(res)
+//            }
+//        );
 };
