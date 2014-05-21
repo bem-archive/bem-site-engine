@@ -1,4 +1,5 @@
 var fs = require('vow-fs'),
+    fsExtra = require('fs-extra'),
     logger = require('../../logger')(module);
 
 module.exports = {
@@ -34,7 +35,7 @@ module.exports = {
      */
     removeDir: function(options) {
         var def = vow.defer();
-        fs.remove(options.path, function(err) {
+        fsExtra.remove(options.path, function(err) {
             if(err) {
                 def.reject(err);
             }
