@@ -1,4 +1,5 @@
-var fs = require('vow-fs'),
+var vow = require('vow'),
+    fs = require('vow-fs'),
     fsExtra = require('fs-extra'),
     logger = require('../../logger')(module);
 
