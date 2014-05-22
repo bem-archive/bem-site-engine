@@ -72,11 +72,24 @@ $table-padding-size = 5px 10px;
 
      table
     {
-        margin: 20px auto;
+        margin: 20px 0;
 
         border-spacing: 0;
 
         border: 2px solid $table-border-color;
+
+        pre
+        {
+            margin: 0;
+
+            code
+            {
+                padding: 0;
+
+                border: none;
+                background: transparent;
+            }
+        }
     }
 
     th

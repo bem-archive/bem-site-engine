@@ -8,6 +8,8 @@ BEMDOM.decl('block', {
                 var _this = this,
                     tabs = _this.findBlockInside('tabs');
 
+                _this.wrapTables();
+
                 _this._openTabFromUrl(tabs);
 
                 // support back/next button in browser (html5 history api)
@@ -26,6 +28,16 @@ BEMDOM.decl('block', {
                     }
                 });
             }
+        }
+    },
+
+    wrapTables: function() {
+        var tables = this.domElem.find('table');
+
+        if(tables.length) {
+            tables.each(function() {
+                $(this).wrap('<div class="table-container"></div>');
+            });
         }
     },
 
