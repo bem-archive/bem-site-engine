@@ -1,0 +1,14 @@
+.menu-list__group-select
+{
+    .link
+    {
+        display: table-cell;
+
+        vertical-align: middle;
+    }
+
+    .menu-list__select
+    {
+        float: right;
+    }
+}

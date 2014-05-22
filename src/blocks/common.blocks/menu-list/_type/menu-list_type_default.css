@@ -78,8 +78,6 @@
 /* (Begin) Menu-list with select */
 .menu-list_type_default .menu-list__group-select
 {
-    display: flex;
-
     transition: background .4s ease;
 }
 

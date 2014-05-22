@@ -1,0 +1,4 @@
+.icon_action_search
+{
+    background-image: url('icon_action_search.png');
+}

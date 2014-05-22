@@ -10,23 +10,26 @@ BEMDOM.decl('block', {
 
                 _this.wrapTables();
 
-                _this._openTabFromUrl(tabs);
+                if(tabs) {
 
-                // support back/next button in browser (html5 history api)
-                _this.bindToWin('popstate', function() {
                     _this._openTabFromUrl(tabs);
-                });
 
-                // set url for the current tab (html5 history api)
-                tabs.on('select', function(e, data) {
-                    var tabName = data.newTab.data('tab');
+                    // support back/next button in browser (html5 history api)
+                    _this.bindToWin('popstate', function() {
+                        _this._openTabFromUrl(tabs);
+                    });
 
-                    _this._setTabUrl(tabName);
+                    // set url for the current tab (html5 history api)
+                    tabs.on('select', function(e, data) {
+                        var tabName = data.newTab.data('tab');
 
-                    if(tabName === 'examples') {
-                        _this._loadExamples();
-                    }
-                });
+                        _this._setTabUrl(tabName);
+
+                        if(tabName === 'examples') {
+                            _this._loadExamples();
+                        }
+                    });
+                }
             }
         }
     },
@@ -78,6 +81,9 @@ BEMDOM.decl('block', {
 
 
     _setTabUrl: function(tabName) {
+        // inherit form page block
+        if(window.legacyIE) return;
+
         // Fix duplicate name tab in location.pathname, 'button/docs/jsdoc/examples/docs/'
         // when tabname is isset in location.pathname,
         // in this case get direct block path with regexp + tab name

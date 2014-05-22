@@ -4,9 +4,18 @@ BEMDOM.decl('page', {
     onSetMod: {
         js: {
             inited: function() {
-                $('pre code').each(function(idx, el) {
-                    hljs.highlightBlock(el);
-                });
+
+                var userAgent = navigator.userAgent;
+
+                if (userAgent.indexOf('MSIE 8') > -1 || userAgent.indexOf('MSIE 9') > -1) {
+                    window.legacyIE = true;
+                }
+
+                if(!window.legacyIE) {
+                    $('pre code').each(function(idx, el) {
+                        hljs.highlightBlock(el);
+                    });
+                }
 
                 this._isTouch() && this.setMod('touch', 'yes');
             }

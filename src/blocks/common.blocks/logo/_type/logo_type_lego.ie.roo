@@ -1,0 +1,4 @@
+.logo_type_lego
+{
+    background-image: url('logo_type_lego.png');
+}

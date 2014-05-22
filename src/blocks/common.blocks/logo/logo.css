@@ -1,9 +1,11 @@
 .logo
 {
     display: block;
+
+    background-repeat: no-repeat;
 }
 
 .logo:hover
 {
-	opacity: .9;
+    opacity: .9;
 }
