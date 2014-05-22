@@ -1,0 +1,4 @@
+.logo_type_bem
+{
+    background-image: url('logo_type_bem.png');
+}

@@ -1,4 +1,1 @@
-block menu-list {
-    tag: 'aside',
-    js: true
-}
+block('menu-list').js()(true);

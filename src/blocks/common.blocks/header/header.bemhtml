@@ -1,4 +1,1 @@
-block('header')(
-    tag()('header'),
-    mix()({ block: 'flex' })
-);
+block('header').mix()({ block: 'flex' });

@@ -1,0 +1,23 @@
+.flex_type_content
+{
+    height: 100%;
+
+    .content,
+    .menu-list
+    {
+        display: table-cell;
+
+        vertical-align: top;
+    }
+
+    .menu-list__group-select
+    {
+        width: 230px;
+
+        .menu-list__select
+        {
+            position: relative;
+            top: 5px;
+        }
+    }
+}
