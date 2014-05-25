@@ -3,9 +3,10 @@
     position: relative;
 
     width: 110px;
-    height: 50px;
+    height: 34px;
 
     margin: 0 auto 0 12px;
 
     background-image: url('logo_type_lego.svg');
+    background-position: center;
 }
