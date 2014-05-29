@@ -1,26 +1,29 @@
 var path = require('path'),
     vow = require('vow'),
     vfs = require('vow-fs'),
-    enbBuilder = require('enb/lib/server/server-middleware').createBuilder({ cdir: process.cwd() }),
+    serverMiddleware = require('enb/lib/server/server-middleware'),
     dropRequireCache = require('enb/lib/fs/drop-require-cache');
 
-function build(targets, process) {
+var enbBuilder;
+
+/**
+ * Rebuilds techs
+ * @param targets - {Array} array of paths to tech files for rebuild
+ * @returns {*}
+ */
+exports.build = function(targets) {
+    enbBuilder = enbBuilder || serverMiddleware.createBuilder({
+        cdir: process.cwd(),
+        noLog: true
+    });
+
     return vow.all(
         targets.map(function (target) {
-            return enbBuilder(target)
-                .then(process);
+            return enbBuilder(target).then(function() {
+                dropRequireCache(require, target);
+                return target;
+            });
         })
     );
-}
-
-function buildAndRequire(targets) {
-    return build(targets, function(fullpath) {
-        return vfs.read(fullpath);
-    });
-}
-
-exports.build = function(target) {
-    return build(target);
 };
 
-exports.buildAndRequire = buildAndRequire;
