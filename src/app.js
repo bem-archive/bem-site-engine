@@ -28,7 +28,7 @@ var addDevelopmentMW = function(app) {
         rootPath = process.cwd();
 
     app
-        .use(enbServer.createMiddleware({ cdir: rootPath }))
+        .use(enbServer.createMiddleware({ cdir: rootPath, noLog: true }))
         .use(express.static(rootPath))
         .use(express.favicon(path.resolve(rootPath, 'www/favicon.ico')));
 
