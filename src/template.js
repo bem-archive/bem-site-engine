@@ -26,7 +26,7 @@ var path = require('path'),
  */
 exports.apply = function(ctx, lang, mode) {
     var builder = 'development' === config.get('NODE_ENV') ?
-        require('./builder') : { build: function() { return vow.resolve(); } }
+        require('./builder') : { build: function() { return vow.resolve(); } };
 
     return builder
         .build([target])

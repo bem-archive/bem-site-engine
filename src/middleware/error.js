@@ -56,26 +56,32 @@ function preparation(err, req, res) {
     res.statusCode = code;
 }
 
-function prodMiddleware() {
-    return function(err, req, res, next) {
-        /*jshint unused:false */
-        loadErrorPages()
+/**
+ * Returns middleware function for testing and production environments
+ * @returns {Function}
+ */
+var prodMiddleware = function() {
+    return function(err, req, res) {
+        return loadErrorPages()
             .then(function(errorPages) {
                 preparation(err, req, res);
                 res.end(errorPages[req.prefLocale][res.statusCode === 404 ? 'error404' : 'error500']);
             });
     };
-}
+};
 
-function devMiddleware() {
-    return function(err, req, res, next) {
-        /*jshint unused:false */
-        buildErrorPage(err.code, req.prefLocale)
+/**
+ * Returns middleware function for development environment
+ * @returns {Function}
+ */
+var devMiddleware = function() {
+    return function(err, req, res) {
+        return buildErrorPage(err.code, req.prefLocale)
             .then(function(errorHtml) {
                 preparation(err, req, res);
                 res.end(errorHtml);
             });
     };
-}
+};
 
 module.exports = 'development' === config.get('NODE_ENV') ? devMiddleware : prodMiddleware;
