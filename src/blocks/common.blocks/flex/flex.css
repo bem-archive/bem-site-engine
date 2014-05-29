@@ -1,4 +1,5 @@
 .flex
 {
+    position: relative;
     display: flex;
 }

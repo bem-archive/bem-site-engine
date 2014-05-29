@@ -1,13 +1,13 @@
 .page__fullscreen
 {
-    position: relative;
+    position: absolute;
     z-index: 100;
-    left: 5px;
+    top: 8px;
+    right: 8px;
 
     box-sizing: border-box;
     width: 20px;
     height: 20px;
-    margin: 9px -20px 0 0;
 
     cursor: pointer;
 
@@ -17,8 +17,9 @@
     background-size: 20px;
 
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    user-select: none;
 
-    flex: 0 0 20px;
+    flex: none;
 }
 
 .page__fullscreen:hover
