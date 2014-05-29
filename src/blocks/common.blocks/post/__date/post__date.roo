@@ -6,10 +6,8 @@
 	    line-height: 20px;
 
 	    display: inline-block;
-		float: right;
 
 	    margin-right: 10px;
-	    margin-left: 20px;
 
 		color: #333;
 	}

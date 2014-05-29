@@ -1,0 +1,9 @@
+.post__title-line
+{
+    align-items: center;
+
+    .post__tags
+    {
+        margin-top: 10px;
+    }
+}

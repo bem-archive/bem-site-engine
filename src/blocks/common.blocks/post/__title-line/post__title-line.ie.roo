@@ -1,0 +1,8 @@
+.post__title-line
+{
+    .post__title,
+    .post__tags
+    {
+        display: inline-block;
+    }
+}
