@@ -10,6 +10,7 @@ exports.run = function(req, res) {
     logger.debug('get node by request %s', req._parsedUrl.pathname);
 
     var url = req._parsedUrl.pathname;
+    url = decodeURIComponent(url);
     url = removeTabs(url);
     url = replaceCurrentVersion(req, url);
     url = removeTrailingSlash(url);

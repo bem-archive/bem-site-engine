@@ -7,7 +7,7 @@ var HttpError = require('../errors').HttpError;
  */
 module.exports = function(router) {
     return function(req, res, next) {
-        var route = router.findFirst(req._parsedUrl.path);
+        var route = router.findFirst(decodeURIComponent(req._parsedUrl.path));
 
         if (route) {
             req.route = route[0].getName();
