@@ -25,6 +25,7 @@ block post, elem date, elemMod type human {
     content {
 
         (this.ctx.createDate && (!this.ctx.editDate || this.ctx.editDate < this.ctx.createDate)): {
+
             return [
                 BEM.I18N('post', 'createDate'),
                 ' ',
@@ -32,7 +33,8 @@ block post, elem date, elemMod type human {
             ]
         }
 
-        (this.ctx.createDate && this.ctx.editDate && this.ctx.editDate > this.ctx.createDate): {
+        (this.ctx.createDate && this.ctx.editDate && this.ctx.editDate >= this.ctx.createDate): {
+
             return [
                 BEM.I18N('post', 'editDate'),
                 ' ',
