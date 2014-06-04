@@ -7,7 +7,13 @@ var path = require('path'),
     logger = require('../logger')(module),
     staticsUrl = url.format(config.get('statics'));
 
-function buildErrorPage(code, lang) {
+/**
+ * Rebuilds error-{code} html page for each request for development environment
+ * @param code - {Number} error code
+ * @param lang - {String} lang
+ * @returns {*}
+ */
+var buildErrorPage = function(code, lang) {
     var builder = require('../builder'),
         targetName = (code && code === 404) ? 'error-404' : 'error-500',
         target = path.resolve(process.cwd(), 'src', 'bundles', 'errors.bundles') + '/'
@@ -20,8 +26,12 @@ function buildErrorPage(code, lang) {
         .then(function(page) {
             return page.replace(/\{STATICS_HOST\}/g, staticsUrl);
         });
-}
+};
 
+/**
+ * Loads compiled error pages for testing and production environments
+ * @returns {*}
+ */
 function loadErrorPages() {
     var langs = config.get('app:languages'),
         errorBundlesPath = path.join(process.cwd(), 'src', 'bundles', 'errors.bundles'),
@@ -43,39 +53,51 @@ function loadErrorPages() {
         });
 }
 
+/**
+ * Log error message and set statusCode to response
+ * @param err - {Error} error
+ * @param req - {Object} request object
+ * @param res - {Object} response object
+ */
 function preparation(err, req, res) {
     var code = err.code || 500,
         terr = terror.ensureError(err);
 
-    if (terr) {
+    if(terr) {
         logger.error('%s %s', code, terr.message);
-    } else {
+    }else {
         logger.error(err);
     }
 
     res.statusCode = code;
 }
 
-function prodMiddleware() {
-    return function(err, req, res, next) {
-        /*jshint unused:false */
-        loadErrorPages()
+/**
+ * Returns middleware function for testing and production environments
+ * @returns {Function}
+ */
+var prodMiddleware = function() {
+    return function(err, req, res) {
+        return loadErrorPages()
             .then(function(errorPages) {
                 preparation(err, req, res);
                 res.end(errorPages[req.prefLocale][res.statusCode === 404 ? 'error404' : 'error500']);
             });
     };
-}
+};
 
-function devMiddleware() {
-    return function(err, req, res, next) {
-        /*jshint unused:false */
-        buildErrorPage(err.code, req.prefLocale)
+/**
+ * Returns middleware function for development environment
+ * @returns {Function}
+ */
+var devMiddleware = function() {
+    return function(err, req, res) {
+        return buildErrorPage(err.code, req.prefLocale)
             .then(function(errorHtml) {
                 preparation(err, req, res);
                 res.end(errorHtml);
             });
     };
-}
+};
 
 module.exports = 'development' === config.get('NODE_ENV') ? devMiddleware : prodMiddleware;

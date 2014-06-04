@@ -1,53 +1,48 @@
 var path = require('path'),
     vm = require('vm'),
+
     vow = require('vow'),
     vfs = require('vow-fs'),
     stringify = require('json-stringify-safe'),
-    target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
+
     config = require('./config'),
-    ctx = {
+
+    target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
+    context = {
         Vow: vow,
         leStatics: new (require('../lib/Statics').Statics)(config.get('statics')),
         leBundles: new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' }),
         logger: require('./logger')(module)
     };
 
-function apply(ctx, lang, mode) {
-    this.BEM.I18N.lang(lang);
+/**
+ * Rebuilds templates in dev mode
+ * pass context to bemtree template
+ * run templates with ctx and return compiled html or bemjson depending on mode flag
+ * @param ctx - {Object} context for templates
+ * @param lang - {String} localization
+ * @param mode - {String} mode for return format
+ * @returns {*}
+ */
+exports.apply = function(ctx, lang, mode) {
+    var builder = 'development' === config.get('NODE_ENV') ?
+        require('./builder') : { build: function() { return vow.resolve(); } };
 
-    return this.BEMTREE.apply(ctx)
-        .then(function(bemjson) {
-            if (mode === 'bemjson') {
-                return stringify(bemjson, null, 2);
-            }
+    return builder
+        .build([target])
+        .then(function() {
+            return vfs.read(path.join(process.cwd(), target)).then(function(source) {
+                vm.runInNewContext(source, context);
+                return context;
+            })
+        })
+        .then(function(engine) {
+            engine.BEM.I18N.lang(lang);
 
-            return this.BEMHTML.apply(bemjson);
-        }, this);
-}
-
-function preprocess() {
-    var fullpath = path.join(process.cwd(), target);
-
-    return vfs.read(fullpath).then(function(source) {
-        vm.runInNewContext(source, ctx);
-        return ctx;
-    })
-}
-
-if ('development' === config.get('NODE_ENV')) {
-    var builder = require('./builder');
-
-    exports.apply = function(ctx, lang, mode) {
-        return builder.build([target])
-            .then(preprocess)
-            .then(function(templateEngine) {
-                return apply.call(templateEngine, ctx, lang, mode);
-            });
-    };
-} else {
-    exports.apply = function(ctx, lang, mode) {
-        return preprocess().then(function(templateEngine) {
-            return apply.call(templateEngine, ctx, lang, mode);
+            return engine.BEMTREE.apply(ctx)
+                .then(function(bemjson) {
+                    return mode === 'bemjson' ?
+                        stringify(bemjson, null, 2) : engine.BEMHTML.apply(bemjson);
+                });
         });
-    };
-}
+};
