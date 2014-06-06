@@ -12,7 +12,7 @@ var path = require('path'),
 if (luster.isMaster) {
     logger.info('luster: master process start');
 
-    var socket = config.get('luster:server:port');
+    var socket = config.get('app:luster:server:port');
 
     if (socket) {
         try {
@@ -30,7 +30,7 @@ if (luster.isMaster) {
         .then(
             function() {
                 //optional enable cron updater
-                if(config.get('update:enable')) {
+                if(config.get('app:update:enable')) {
                     modules.updater.init(luster).start(luster);
                 }
 
@@ -45,9 +45,9 @@ if (luster.isMaster) {
 try {
     luster.configure({
         app: require.resolve('./worker'),
-        workers: config.get('luster:workers'),
-        control: config.get('luster:control'),
-        server: config.get('luster:server')
+        workers: config.get('app:luster:workers'),
+        control: config.get('app:luster:control'),
+        server: config.get('app:luster:server')
     }, true, __dirname);
 }catch(err) {
     logger.error('Error luster initialization');

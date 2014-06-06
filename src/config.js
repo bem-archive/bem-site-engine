@@ -4,8 +4,10 @@ var nconf = require('nconf'),
 
 nconf
     .argv()
-    .env()
-    .add('common', { type: 'file', file: path.resolve(configsDir, 'common/node.json')})
-    .add('current', { type: 'file', file: path.resolve(configsDir, 'current/node.json')});
+    .env();
+
+['common/common', 'common/app', 'current/common', 'current/app'].forEach(function(item) {
+    nconf.add(item,   { type: 'file', file: path.resolve(configsDir, (item + '.json')) });
+});
 
 module.exports = nconf;

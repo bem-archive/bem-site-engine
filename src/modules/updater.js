@@ -29,7 +29,7 @@ module.exports = {
         provider.init();
 
         job = new cronJob({
-            cronTime: config.get('update:cron'),
+            cronTime: config.get('app:update:cron'),
             onTick: function() { checkForUpdate(master) },
             start: false
         });
@@ -60,7 +60,8 @@ var checkForUpdate = function(master) {
     logger.debug('Check for update for master process start');
 
     var isDev = 'development' === config.get('NODE_ENV'),
-        opts = { path: p.join(config.get('data:dir'), isDev ? '' : config.get('NODE_ENV'), config.get('data:marker')) },
+        opts = { path: p.join(config.get('common.model:dir'),
+            isDev ? '' : config.get('NODE_ENV'), config.get('common.model:marker')) },
 
         onSuccessLoading = function(content) {
             if(!content) {

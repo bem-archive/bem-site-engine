@@ -25,7 +25,7 @@ module.exports = function() {
          */
         var load = function(key) {
                 var isDev = 'development' === config.get('NODE_ENV'),
-                    opts = { path: path.join(config.get('data:dir'), isDev ?
+                    opts = { path: path.join(config.get('common:model:dir'), isDev ?
                         '' : config.get('NODE_ENV'), config.get(key)) };
 
                 return provider

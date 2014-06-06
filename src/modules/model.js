@@ -29,13 +29,13 @@ module.exports = {
 
         logger.info('Init site structure and load data for worker %s', worker.wid);
         logger.debug('Enviroment: %s', config.get('NODE_ENV'));
-        logger.debug('Path to data file: %s', p.join(config.get('data:dir'), config.get('NODE_ENV'), config.get('data:data')));
+        logger.debug('Path to data file: %s', p.join(config.get('common:model:dir'), config.get('NODE_ENV'), config.get('common:model:data')));
 
         provider.init();
 
         var isDev = 'development' === config.get('NODE_ENV'),
             promise = provider.load(isDev ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, {
-                path: p.join(config.get('data:dir'), isDev ? '' : config.get('NODE_ENV'), config.get('data:data'))
+                path: p.join(config.get('common:model:dir'), isDev ? '' : config.get('NODE_ENV'), config.get('common:model:data'))
             });
 
         return promise

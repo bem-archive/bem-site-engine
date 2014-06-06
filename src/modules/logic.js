@@ -47,7 +47,7 @@ module.exports = {
 
         traverseTreeNodes(node);
 
-        title += config.get('title')[req.prefLocale];
+        title += config.get('app:title')[req.prefLocale];
 
         logger.debug('page title: %s', title);
         return title;

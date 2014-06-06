@@ -10,7 +10,7 @@ var path = require('path'),
     target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
     context = {
         Vow: vow,
-        leStatics: new (require('../lib/Statics').Statics)(config.get('statics')),
+        leStatics: new (require('../lib/Statics').Statics)(config.get('app:statics')),
         leBundles: new (require('../lib/Bundles').Bundles)({ defaultLOD: 'desktop' }),
         logger: require('./logger')(module)
     };

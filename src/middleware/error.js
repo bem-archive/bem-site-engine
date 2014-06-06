@@ -5,7 +5,7 @@ var path = require('path'),
     config = require('../config'),
     terror = require('terror'),
     logger = require('../logger')(module),
-    staticsUrl = url.format(config.get('statics'));
+    staticsUrl = url.format(config.get('app:statics'));
 
 /**
  * Rebuilds error-{code} html page for each request for development environment

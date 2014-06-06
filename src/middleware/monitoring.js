@@ -7,7 +7,7 @@ var logger = require('../logger')(module),
  */
 module.exports = function() {
 
-    var REQ = config.get('monitoringUrl') || '/monitoring';
+    var REQ = config.get('app:monitoringUrl') || '/monitoring';
 
     return function(req, res, next) {
         if(req._parsedUrl.path.substring(0, REQ.length) !== REQ) {
