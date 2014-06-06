@@ -26,12 +26,7 @@ var PATTERN = {
 module.exports = function() {
 
     return function(req, res, next) {
-        var url = req._parsedUrl.path;
-
-        //check for example or freeze url. if not then call next middleware
-        if(url.indexOf(PATTERN.EXAMPLE) === -1 && url.indexOf(PATTERN.FREEZE) === -1) {
-            return next();
-        }
+        var url = req.path;
 
         if(url.indexOf(PATTERN.EXAMPLE) > -1) {
             return proxyTextFiles(url.replace(PATTERN.EXAMPLE, ''),
@@ -41,6 +36,8 @@ module.exports = function() {
         if(url.indexOf(PATTERN.FREEZE) > -1) {
             return proxyImageFiles(url.replace(PATTERN.FREEZE, ''), res);
         }
+
+        return next();
     };
 };
 
@@ -58,15 +55,11 @@ var proxyTextFiles = function(url, ref, res) {
     url = util.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
     var returnFromCache = function(content) {
-            logger.verbose('content has been loaded from file cache for url %s', url);
             res.end(content);
         },
         sendRequest = function() {
             request(url, function (error, response, body) {
                 if (!error && response.statusCode === 200) {
-                    logger.verbose('content has been loaded from github for url %s ', url);
-
-                    //cache examples to filesystem
                     provider.save(provider.PROVIDER_FILE, {
                         path: path.resolve(constants.DIRS.CACHE, ref, sha(url)),
                         data: body
@@ -84,7 +77,8 @@ var proxyTextFiles = function(url, ref, res) {
     */
     return provider
         .load(provider.PROVIDER_FILE, { path: path.resolve(constants.DIRS.CACHE, ref, sha(url)) })
-        .then(returnFromCache, sendRequest);
+        .then(returnFromCache)
+        .fail(sendRequest);
 };
 
 var proxyImageFiles = function(url, res) {
@@ -103,24 +97,4 @@ var proxyImageFiles = function(url, res) {
             x.pipe(res);
         }
     });
-
-
-
-    /*
-     try to load cached source from local filesystem
-     try to load source from github repository if no cached file was found
-     */
-//    return provider
-//        .load(provider.PROVIDER_FILE, { path: p })
-//        .then(
-//            function(content) {
-//                console.log(content);
-//                res.end(content);
-//            },
-//            function() {
-//                var x = request.get(url);
-//                x.pipe(fs.createWriteStream(p));
-//                x.pipe(res)
-//            }
-//        );
 };
