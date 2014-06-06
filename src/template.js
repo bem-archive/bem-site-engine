@@ -5,6 +5,7 @@ var path = require('path'),
     vfs = require('vow-fs'),
     stringify = require('json-stringify-safe'),
 
+    util = require('./util'),
     config = require('./config'),
 
     target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
@@ -25,8 +26,7 @@ var path = require('path'),
  * @returns {*}
  */
 exports.apply = function(ctx, lang, mode) {
-    var builder = 'development' === config.get('NODE_ENV') ?
-        require('./builder') : { build: function() { return vow.resolve(); } };
+    var builder =  util.isDev() ? require('./builder') : { build: function() { return vow.resolve(); } };
 
     return builder
         .build([target])

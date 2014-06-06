@@ -2,6 +2,7 @@ var path = require('path'),
     util = require('util'),
     vow = require('vow'),
 
+    u = require('../util'),
     config = require('../config'),
     logger = require('../logger')(module),
     provider = require('../modules/providers');
@@ -24,12 +25,11 @@ module.exports = function() {
          * @returns {*}
          */
         var load = function(key) {
-                var isDev = 'development' === config.get('NODE_ENV'),
-                    opts = { path: path.join(config.get('common:model:dir'), isDev ?
+                var opts = { path: path.join(config.get('common:model:dir'), u.isDev() ?
                         '' : config.get('NODE_ENV'), config.get(key)) };
 
                 return provider
-                    .load(isDev ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts)
+                    .load(u.isDev() ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts)
                     .then(function (content) {
                         return res.end(content);
                     });
@@ -37,11 +37,11 @@ module.exports = function() {
             url = req._parsedUrl.path;
 
         if(url.indexOf(SEARCH.PING) > -1) {
-            return load('data:marker');
+            return load('common:model:marker');
         }else if(url.indexOf(SEARCH.LOAD.LIBS) > -1){
-            return load('data:search:libraries');
+            return load('common:model:search:libraries');
         }else if(url.indexOf(SEARCH.LOAD.BLOCKS) > -1){
-            return load('data:search:blocks');
+            return load('common:model:search:blocks');
         }else {
             return next();
         }

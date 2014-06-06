@@ -5,6 +5,7 @@ var path = require('path'),
     config = require('../config'),
     terror = require('terror'),
     logger = require('../logger')(module),
+    util = require('../util.js'),
     staticsUrl = url.format(config.get('app:statics'));
 
 /**
@@ -100,4 +101,4 @@ var devMiddleware = function() {
     };
 };
 
-module.exports = 'development' === config.get('NODE_ENV') ? devMiddleware : prodMiddleware;
+module.exports = util.isDev() ? devMiddleware : prodMiddleware;

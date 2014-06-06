@@ -7,6 +7,7 @@ var u = require('util'),
     _ = require('lodash'),
     sha = require('sha1'),
 
+    util = require('../util'),
     logger = require('../logger')(module),
     config = require('../config'),
     constants = require('./constants'),
@@ -59,9 +60,8 @@ module.exports = {
 var checkForUpdate = function(master) {
     logger.debug('Check for update for master process start');
 
-    var isDev = 'development' === config.get('NODE_ENV'),
-        opts = { path: p.join(config.get('common.model:dir'),
-            isDev ? '' : config.get('NODE_ENV'), config.get('common.model:marker')) },
+    var opts = { path: p.join(config.get('common.model:dir'),
+            util.isDev() ? '' : config.get('NODE_ENV'), config.get('common.model:marker')) },
 
         onSuccessLoading = function(content) {
             if(!content) {
@@ -102,7 +102,7 @@ var checkForUpdate = function(master) {
             logger.error('Error occur while loading and parsing marker file');
         };
 
-    return provider.load(isDev ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts)
+    return provider.load(util.isDev() ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts)
         .then(function (content) {
             return JSON.parse(content);
         })

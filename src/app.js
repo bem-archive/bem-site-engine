@@ -8,6 +8,7 @@ var path = require('path'),
     router = require('./router'),
     middleware = require('./middleware'),
     provider = require('./modules/providers'),
+    util = require('./util'),
     model = require('./modules').model;
 
 
@@ -101,10 +102,10 @@ var startServer = function() {
  */
 var loadSitemapXml = function() {
     var SITEMAP_FILENAME = 'sitemap.xml',
-        isDev = 'development' === config.get('NODE_ENV'),
-        opts = { path: path.join(config.get('common:model:dir'), isDev ? '' : config.get('NODE_ENV'), SITEMAP_FILENAME) };
+        opts = { path: path.join(config.get('common:model:dir'),
+            util.isDev() ? '' : config.get('NODE_ENV'), SITEMAP_FILENAME) };
 
-        return provider.load(isDev ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts).then(function(content) {
+        return provider.load(util.isDev() ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts).then(function(content) {
             return provider.save(provider.PROVIDER_FILE, {
                 data: content,
                 path: path.join(process.cwd(), SITEMAP_FILENAME)

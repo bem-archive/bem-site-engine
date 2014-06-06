@@ -4,6 +4,7 @@ var p = require('path'),
     _ = require('lodash'),
 
     nodes = require('./nodes/runtime'),
+    util = require('../util'),
     logger = require('../logger')(module),
     config = require('../config'),
     provider = require('./providers');
@@ -33,9 +34,9 @@ module.exports = {
 
         provider.init();
 
-        var isDev = 'development' === config.get('NODE_ENV'),
-            promise = provider.load(isDev ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, {
-                path: p.join(config.get('common:model:dir'), isDev ? '' : config.get('NODE_ENV'), config.get('common:model:data'))
+        var promise = provider.load(util.isDev() ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, {
+                path: p.join(config.get('common:model:dir'),
+                    util.isDev() ? '' : config.get('NODE_ENV'), config.get('common:model:data'))
             });
 
         return promise
