@@ -1,7 +1,7 @@
 block('likes').def().match(!this.ctx.opts)(function() {
 
     var data = this.data,
-        lang = data.req.prefLocale,
+        lang = data.req.lang,
         services = {
             ru: 'yaru,vkontakte,twitter,facebook',
             en: 'twitter,facebook'

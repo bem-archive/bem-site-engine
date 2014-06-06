@@ -82,7 +82,7 @@ var prodMiddleware = function() {
         return loadErrorPages()
             .then(function(errorPages) {
                 preparation(err, req, res);
-                res.end(errorPages[req.prefLocale][res.statusCode === 404 ? 'error404' : 'error500']);
+                res.end(errorPages[req.lang][res.statusCode === 404 ? 'error404' : 'error500']);
             });
     };
 };
@@ -93,7 +93,7 @@ var prodMiddleware = function() {
  */
 var devMiddleware = function() {
     return function(err, req, res) {
-        return buildErrorPage(err.code, req.prefLocale)
+        return buildErrorPage(err.code, req.lang)
             .then(function(errorHtml) {
                 preparation(err, req, res);
                 res.end(errorHtml);

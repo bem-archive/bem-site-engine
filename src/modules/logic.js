@@ -32,12 +32,12 @@ module.exports = {
         var title = '';
 
         if(req.url === '/') {
-            return node.title[req.prefLocale];
+            return node.title[req.lang];
         }
 
         var traverseTreeNodes = function(node) {
-            if((node.url && node.url !== '/') && (node.title && node.title[req.prefLocale])) {
-                title += node.title[req.prefLocale] + ' / ';
+            if((node.url && node.url !== '/') && (node.title && node.title[req.lang])) {
+                title += node.title[req.lang] + ' / ';
                 logger.verbose('title: %s', title);
             }
             if(node.parent) {
@@ -47,7 +47,7 @@ module.exports = {
 
         traverseTreeNodes(node);
 
-        title += config.get('app:title')[req.prefLocale];
+        title += config.get('app:title')[req.lang];
 
         logger.debug('page title: %s', title);
         return title;
@@ -73,13 +73,13 @@ module.exports = {
             meta = {};
 
         if(!node.source) {
-            meta.description = node.title[req.prefLocale];
+            meta.description = node.title[req.lang];
             meta.ogUrl = req.url;
 
             return meta;
         }
 
-        source = node.source[req.prefLocale];
+        source = node.source[req.lang];
 
         if(source) {
             meta.description = meta.ogDescription = source.summary;
@@ -143,12 +143,12 @@ module.exports = {
                     result[_node.level].type = constants.MENU.LEVEL;
                 }
 
-                logger.verbose('menu creation item level %s title %s type %s', _node.level, _node.title ? _node.title[req.prefLocale] : '', _node.type);
+                logger.verbose('menu creation item level %s title %s type %s', _node.level, _node.title ? _node.title[req.lang] : '', _node.type);
 
                 //create base menu item object
                 var o = {
-                        title: _node.title ? _node.title[req.prefLocale] : '',
-                        url: (_node.url && _.isObject(_node.url)) ? _node.url[req.prefLocale] : _node.url,
+                        title: _node.title ? _node.title[req.lang] : '',
+                        url: (_node.url && _.isObject(_node.url)) ? _node.url[req.lang] : _node.url,
                         active: _.indexOf(activeIds, _node.id) !== -1,
                         type: _node.type,
                         size: _node.size
@@ -166,11 +166,11 @@ module.exports = {
                     isNeedToDrawChildNodes = (isGroup || isSelect) || isIndex || isActive && (!isTargetNode || (isTargetNode && hasItems && hasSource));
 
                 //logger.verbose('isTargetNode %s isActive %s isGroup %s isSelect %s isIndex %s isNeedToDrawChildNodes %s title %s',
-                //    isTargetNode, isActive, isGroup, isSelect, isIndex, isNeedToDrawChildNodes, _node.title ? _node.title[req.prefLocale] : 'NAN');
+                //    isTargetNode, isActive, isGroup, isSelect, isIndex, isNeedToDrawChildNodes, _node.title ? _node.title[req.lang] : 'NAN');
 
                 //if node is not hidden for current selected locale
                 //then we should draw it corresponded menu item
-                if(!_node.hidden[req.prefLocale]) {
+                if(!_node.hidden[req.lang]) {
                     if (parent) {
                         parent.items = parent.items || [];
                         parent.items.push(o);
@@ -249,7 +249,7 @@ module.exports = {
      * @returns {String} compiled url
      */
     getLangSwitchUrlByNode: function(req, node) {
-        var currentLang = req.prefLocale,
+        var currentLang = req.lang,
             targetLang = {
                 en: 'ru',
                 ru: 'en'
@@ -276,12 +276,12 @@ module.exports = {
 
         if(node.view === node.VIEW.AUTHOR) {
             return _.extend(result, {
-                posts: this.getNodesBySourceCriteria(req.prefLocale, ['authors', 'translators'], req.params.id) });
+                posts: this.getNodesBySourceCriteria(req.lang, ['authors', 'translators'], req.params.id) });
         }
 
         if(node.view === node.VIEW.TAGS) {
             return _.extend(result, {
-                posts: this.getNodesBySourceCriteria(req.prefLocale, ['tags'], req.params.id) });
+                posts: this.getNodesBySourceCriteria(req.lang, ['tags'], req.params.id) });
         }
 
         if(node.view === node.VIEW.AUTHORS) {

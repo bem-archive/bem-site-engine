@@ -19,7 +19,7 @@ module.exports = function() {
             baseCtx = {
                 req: req, //request object
                 bundleName: BUNDLE_NAME,
-                lang: req.prefLocale, //selected language
+                lang: req.lang, //selected language
                 statics: config.get('app:statics:www')
             };
             commonDataCtx = {
@@ -36,7 +36,7 @@ module.exports = function() {
 
             ctx = _.extend({}, baseCtx, commonDataCtx, advancedDataCtx);
 
-            return template.apply(ctx, req.prefLocale, req.query.__mode)
+            return template.apply(ctx, req.lang, req.query.__mode)
                 .then(function(html) {
                     res.end(html);
                 })

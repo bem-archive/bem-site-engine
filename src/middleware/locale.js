@@ -12,7 +12,7 @@ module.exports = function() {
         var host = req.headers.host,
             lang = host ? host.split('.')[0] : defaultLanguage;
 
-        req.prefLocale = languages.indexOf(lang) > -1 ? lang : defaultLanguage;
+        req.lang = languages.indexOf(lang) > -1 ? lang : defaultLanguage;
 
         next();
     };

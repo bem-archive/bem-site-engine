@@ -1,11 +1,11 @@
 block post, mod view full {
 
     content: {
-        var source = this.data.node.source[this.data.req.prefLocale],
+        var source = this.data.node.source[this.data.req.lang],
             node = this.data.node;
 
         if(!source) {
-            logger.error('source not found for node %s and locale %s', this.data.node.id, this.data.req.prefLocale);
+            logger.error('source not found for node %s and locale %s', this.data.node.id, this.data.req.lang);
             return [];
         }
 
@@ -144,12 +144,12 @@ block post, mod view full {
     }
 
     getUrl: {
-        var lang = this.data.req.prefLocale == 'en' ? 'ru' : 'en',
+        var lang = this.data.req.lang == 'en' ? 'ru' : 'en',
             host = this.data.req.headers.host,
             path = this.data.req._parsedUrl.pathname;
 
             return 'http://' + lang +
-                (host.indexOf(this.data.req.prefLocale) == 0 ? host.slice(host.indexOf('.')) : ('.' + host)) + path;
+                (host.indexOf(this.data.req.lang) == 0 ? host.slice(host.indexOf('.')) : ('.' + host)) + path;
     }
 }
 

@@ -26,7 +26,7 @@ exports.run = function(req, res) {
 
         if((result.VIEW.POSTS === result.view) && result.items && result.items.length) {
             url = result.items.filter(function(item) {
-                return !item.hidden[req.prefLocale];
+                return !item.hidden[req.lang];
             })[0].url;
             return findNode(req, url, null);
         }
@@ -54,7 +54,7 @@ var findNode = function(req, url, callback) {
      */
     var traverseTreeNodes = function(node, url) {
         if(node.url === url) {
-            if(node.hidden[req.prefLocale]) {
+            if(node.hidden[req.lang]) {
                 throw HttpError.createError(404);
             }
             result = node;
