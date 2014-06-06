@@ -96,6 +96,7 @@ $table-padding-size = 5px 10px;
     {
         padding: $table-padding-size;
 
+        border-right: 1px solid $table-border-color;
         border-bottom: 2px solid $table-border-color;
     }
 
