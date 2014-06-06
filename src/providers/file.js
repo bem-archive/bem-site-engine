@@ -1,7 +1,7 @@
 var vow = require('vow'),
     fs = require('vow-fs'),
     fsExtra = require('fs-extra'),
-    logger = require('../../logger')(module);
+    logger = require('../logger')(module);
 
 module.exports = {
 

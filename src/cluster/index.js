@@ -6,8 +6,10 @@ var path = require('path'),
     luster = require('luster'),
 
     logger = require('../logger')(module),
-    modules = require('../modules'),
-    config = require('../config');
+    constants = require('../constants'),
+    updater = require('./updater'),
+    config = require('../config'),
+    util = require('../util');
 
 if (luster.isMaster) {
     logger.info('luster: master process start');
@@ -23,23 +25,13 @@ if (luster.isMaster) {
         }
     }
 
-    vow.all([
-            vowFs.makeDir(path.join(modules.constants.DIRS.CACHE, modules.constants.DIRS.BRANCH)),
-            vowFs.makeDir(path.join(modules.constants.DIRS.CACHE, modules.constants.DIRS.TAG))
-        ])
-        .then(
-            function() {
-                //optional enable cron updater
-                if(config.get('app:update:enable')) {
-                    modules.updater.init(luster).start(luster);
-                }
-
-                logger.info('luster: master process started');
-            },
-            function() {
-                logger.error('Can not create cache folder and it subfolders');
-            }
-        );
+    util.makeCache()
+        .then(function() {
+            config.get('app:update:enable') && updater.init(luster).start(luster);
+        })
+        .fail(function() {
+            logger.error('Can not create cache folder and it subfolders');
+        });
 }
 
 try {

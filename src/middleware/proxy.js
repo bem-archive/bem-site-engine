@@ -5,11 +5,11 @@ var util = require('util'),
     vowFs = require('vow-fs'),
     request = require('request'),
     sha = require('sha1'),
+    mime = require('mime'),
 
     logger = require('../logger')(module),
-    constants = require('../modules').constants,
-    provider = require('../modules/providers'),
-    mime = require('mime'),
+    constants = require('../constants'),
+    providers = require('../providers'),
 
     libRepo = require('../config').get('github:librariesRepository');
 
@@ -60,7 +60,7 @@ var proxyTextFiles = function(url, ref, res) {
         sendRequest = function() {
             request(url, function (error, response, body) {
                 if (!error && response.statusCode === 200) {
-                    provider.save(provider.PROVIDER_FILE, {
+                    providers.getFileProvider().save({
                         path: path.resolve(constants.DIRS.CACHE, ref, sha(url)),
                         data: body
                     });
@@ -75,8 +75,8 @@ var proxyTextFiles = function(url, ref, res) {
     try to load cached source from local filesystem
     try to load source from github repository if no cached file was found
     */
-    return provider
-        .load(provider.PROVIDER_FILE, { path: path.resolve(constants.DIRS.CACHE, ref, sha(url)) })
+    return providers.getFileProvider()
+        .load({ path: path.resolve(constants.DIRS.CACHE, ref, sha(url)) })
         .then(returnFromCache)
         .fail(sendRequest);
 };

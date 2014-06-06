@@ -4,8 +4,8 @@ var path = require('path'),
     yandex_disk = require('yandex-disk'),
     vow = require('vow'),
 
-    logger = require('../../logger')(module),
-    config = require('../../config');
+    logger = require('../logger')(module),
+    config = require('../config');
 
 var disk;
 

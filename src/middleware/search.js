@@ -4,7 +4,7 @@ var path = require('path'),
     util = require('../util'),
     config = require('../config'),
     logger = require('../logger')(module),
-    provider = require('../modules/providers');
+    providers = require('../providers');
 
 var SEARCH = {
     PING: '/__search/ping',
@@ -21,16 +21,12 @@ module.exports = function() {
          * @returns {*}
          */
         var load = function(key) {
-                var opts = {
-                    path: path.join(config.get('common:model:dir'),
+                var provider = util.isDev() ? providers.getFileProvider() : providers.getYaDiskProvider(),
+                    opts = { path: path.join(config.get('common:model:dir'),
                         util.isDev() ? '' : config.get('NODE_ENV'), config.get(key))
-                };
+                    };
 
-                return provider
-                    .load(util.isDev() ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts)
-                    .then(function (content) {
-                        return res.end(content);
-                    });
+                return provider.load(opts).then(res.end);
             },
             url = req.path;
 

@@ -14,5 +14,6 @@ module.exports = {
         DEFAULT: 'default',
         MAIN: 'main',
         LEVEL: 'level'
-    }
+    },
+    SITEMAP: 'sitemap.xml'
 };

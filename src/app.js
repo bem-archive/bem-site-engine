@@ -1,21 +1,22 @@
 var path = require('path'),
-    vow = require('vow'),
     fs = require('fs'),
+
+    vow = require('vow'),
     express = require('express'),
-    config = require('./config'),
     slashes = require('connect-slashes'),
+
+    config = require('./config'),
     logger = require('./logger')(module),
-    router = require('./router'),
     middleware = require('./middleware'),
-    provider = require('./modules/providers'),
+    provider = require('./providers'),
     util = require('./util'),
-    model = require('./modules').model;
+    model = require('./model');
 
 
 exports.run = function(worker) {
     worker = worker || { wid: 0 };
     return model.init(worker).then(function() {
-        return vow.allResolved([startServer(), loadSitemapXml()]);
+        return startServer();
     });
 };
 
@@ -49,7 +50,7 @@ var addCommonMW = function(app) {
         .use(middleware.monitoring())
         .use(middleware.proxy())
         .use(middleware.search())
-        .use(middleware.router(router.router))
+        .use(middleware.router())
         .use(slashes())
         .use(middleware.page())
         .use(middleware.error());
@@ -62,8 +63,6 @@ var addCommonMW = function(app) {
  * @returns {*}
  */
 var startServer = function() {
-    router.init();
-
     var def = vow.defer(),
         app = express(),
         socket = config.get('app:socket'),
@@ -94,21 +93,4 @@ var startServer = function() {
     });
 
     return def.promise();
-};
-
-/**
- * Loads sitemap xml file and saves it to application root directory
- * @returns {*}
- */
-var loadSitemapXml = function() {
-    var SITEMAP_FILENAME = 'sitemap.xml',
-        opts = { path: path.join(config.get('common:model:dir'),
-            util.isDev() ? '' : config.get('NODE_ENV'), SITEMAP_FILENAME) };
-
-        return provider.load(util.isDev() ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, opts).then(function(content) {
-            return provider.save(provider.PROVIDER_FILE, {
-                data: content,
-                path: path.join(process.cwd(), SITEMAP_FILENAME)
-            });
-        });
 };

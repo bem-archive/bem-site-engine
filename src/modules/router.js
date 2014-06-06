@@ -4,7 +4,7 @@ var _ = require('lodash'),
     HttpError = require('../errors').HttpError,
 
     config = require('../config'),
-    model = require('./model');
+    model = require('../model');
 
 exports.run = function(req, res) {
     logger.debug('get node by request %s', req._parsedUrl.pathname);

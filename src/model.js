@@ -1,13 +1,12 @@
-var p = require('path'),
+var path = require('path'),
 
     vow = require('vow'),
     _ = require('lodash'),
 
-    nodes = require('./node'),
-    util = require('../util'),
-    logger = require('../logger')(module),
-    config = require('../config'),
-    provider = require('./providers');
+    util = require('util'),
+    config = require('config'),
+    logger = require('logger')(module),
+    providers = require('./providers');
 
 var sitemap,
     routes,
@@ -21,25 +20,19 @@ var sitemap,
 module.exports = {
 
     /**
-     * Loads data model from local filesystem or yandex Disk depending on environment
-     * and fills the model
-     * @param worker - {Object} worker object
+     * Loads data model from local filesystem or yandex Disk depending on environment and fills the model
      * @returns {*}
      */
-    init: function(worker) {
+    init: function() {
 
-        logger.info('Init site structure and load data for worker %s', worker.wid);
-        logger.debug('Enviroment: %s', config.get('NODE_ENV'));
-        logger.debug('Path to data file: %s', p.join(config.get('common:model:dir'), config.get('NODE_ENV'), config.get('common:model:data')));
+        providers.init();
 
-        provider.init();
-
-        var promise = provider.load(util.isDev() ? provider.PROVIDER_FILE : provider.PROVIDER_DISK, {
-                path: p.join(config.get('common:model:dir'),
+        var provider = util.isDev() ? providers.getFileProvider() : providers.getYaDiskProvider(),
+            opts = { path: path.join(config.get('common:model:dir'),
                     util.isDev() ? '' : config.get('NODE_ENV'), config.get('common:model:data'))
-            });
+            };
 
-        return promise
+        return provider.load(opts)
             .then(function(content) {
                 try {
                     return JSON.parse(content);
@@ -48,7 +41,6 @@ module.exports = {
                 }
             })
             .then(function(content) {
-                logger.debug('Start filling the application model');
                 try {
                     sitemap = addCircularReferences(content.sitemap);
                     routes = _.values(content.routes);
@@ -64,7 +56,6 @@ module.exports = {
                     peopleUrls = content.urls.people;
                     tagUrls = content.urls.tags;
 
-                    logger.debug('Model has been filled successfully');
                 }catch(err) {
                     logger.error('Error occur while filling model');
                 }
@@ -143,7 +134,7 @@ module.exports = {
  */
 var addCircularReferences = function(tree) {
     var traverseTreeNodes = function(node, parent) {
-        node = new nodes.Node(node, parent);
+        node = new Node(node, parent);
 
         if(node.items) {
             node.items = node.items.map(function(item) {
@@ -157,4 +148,49 @@ var addCircularReferences = function(tree) {
     return tree.map(function(item) {
         return traverseTreeNodes(item, null);
     });
+};
+
+/**
+ * Node OOP presentation for runtime
+ * @param node - {Object} source node object
+ * @param parent - {Object} parent node object
+ * @constructor
+ */
+var Node = function(node, parent) {
+    Object.keys(node).forEach(function(key) {
+        this[key] = node[key];
+    }, this);
+
+    this.setParent(parent);
+};
+
+Node.prototype = {
+
+    VIEW: {
+        INDEX: 'index',
+        POST: 'post',
+        POSTS: 'posts',
+        AUTHOR: 'author',
+        AUTHORS: 'authors',
+        TAGS: 'tags',
+        BLOCK: 'block'
+    },
+    TYPE: {
+        SIMPLE: 'simple',
+        GROUP: 'group',
+        SELECT: 'select'
+    },
+    SIZE: {
+        NORMAL: 'normal'
+    },
+
+    /**
+     * Sets parent for current node
+     * @param parent - {Object} parent node
+     * @returns {Node}
+     */
+    setParent: function (parent) {
+        this.parent = parent;
+        return this;
+    }
 };
