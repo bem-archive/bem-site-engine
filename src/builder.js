@@ -14,7 +14,7 @@ var enbBuilder;
 exports.build = function(targets) {
     enbBuilder = enbBuilder || serverMiddleware.createBuilder({
         cdir: process.cwd(),
-        noLog: true
+        noLog: false
     });
 
     return vow.all(

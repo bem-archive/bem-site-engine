@@ -29,7 +29,7 @@ var addDevelopmentMW = function(app) {
         rootPath = process.cwd();
 
     app
-        .use(enbServer.createMiddleware({ cdir: rootPath, noLog: true }))
+        .use(enbServer.createMiddleware({ cdir: rootPath, noLog: false }))
         .use(express.static(rootPath))
         .use(express.favicon(path.resolve(rootPath, 'www/favicon.ico')));
 
@@ -70,7 +70,7 @@ var startServer = function() {
         port = config.get('app:port') || process.env.port || 8080;
 
     //add dev middlewares for dev environment
-    config.get('NODE_ENV') === 'development' && addDevelopmentMW(app);
+    util.isDev() && addDevelopmentMW(app);
 
     //add common middlewares
     addCommonMW(app);
