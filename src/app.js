@@ -31,7 +31,7 @@ var addDevelopmentMW = function(app) {
     app
         .use(enbServer.createMiddleware({ cdir: rootPath, noLog: false }))
         .use(express.static(rootPath))
-        .use(express.favicon(path.resolve(rootPath, 'www/favicon.ico')));
+        .use(express.favicon(path.resolve(rootPath, 'www', 'favicon.ico')));
 
     return app;
 };
@@ -44,7 +44,7 @@ var addDevelopmentMW = function(app) {
 var addCommonMW = function(app) {
     app
         .use(express.query())
-        .use(middleware.prefLocale(config.get('app:languages'), config.get('app:defaultLanguage')))
+        .use(middleware.prefLocale())
         .use(middleware.logger())
         .use(middleware.monitoring())
         .use(middleware.libProxy())

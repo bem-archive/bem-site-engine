@@ -1,16 +1,18 @@
+var config = require('../config');
+
 /**
  * Middleware for lang detection by subdomain
- * @param langs - {Array} array of configured languages
- * @param def - {String} default language
  * @returns {Function}
  */
-module.exports = function(langs, def) {
-    return function(req, res, next) {
-        var headers = req.headers,
-            host = headers.host,
-            lang = host ? host.split('.')[0] : def;
+module.exports = function() {
+    var languages = config.get('app:languages'),
+        defaultLanguage = config.get('app:defaultLanguage');
 
-        req.prefLocale = langs.indexOf(lang) > -1 ? lang : def;
+    return function(req, res, next) {
+        var host = req.headers.host,
+            lang = host ? host.split('.')[0] : defaultLanguage;
+
+        req.prefLocale = languages.indexOf(lang) > -1 ? lang : defaultLanguage;
 
         next();
     };
