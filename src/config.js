@@ -1,13 +1,20 @@
 var nconf = require('nconf'),
-    path = require('path'),
-    configsDir = path.resolve(process.cwd(), 'configs');
+    path = require('path');
 
 nconf
     .argv()
     .env();
 
-['common/common', 'common/app', 'current/common', 'current/app'].forEach(function(item) {
-    nconf.add(item,   { type: 'file', file: path.resolve(configsDir, (item + '.json')) });
+[
+    'current/common',
+    'current/app',
+    'common/common',
+    'common/app'
+].forEach(function(item) {
+    nconf.add(item,   {
+        type: 'file',
+        file: path.resolve(process.cwd(), 'configs', (item + '.json'))
+    });
 });
 
 module.exports = nconf;
