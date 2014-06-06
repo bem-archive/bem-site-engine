@@ -3,7 +3,7 @@ var p = require('path'),
     vow = require('vow'),
     _ = require('lodash'),
 
-    nodes = require('./nodes/runtime'),
+    nodes = require('./node'),
     util = require('../util'),
     logger = require('../logger')(module),
     config = require('../config'),
@@ -143,7 +143,7 @@ module.exports = {
  */
 var addCircularReferences = function(tree) {
     var traverseTreeNodes = function(node, parent) {
-        node = new nodes.RuntimeNode(node, parent);
+        node = new nodes.Node(node, parent);
 
         if(node.items) {
             node.items = node.items.map(function(item) {

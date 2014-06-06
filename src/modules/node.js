@@ -2,14 +2,20 @@ var _ = require('lodash'),
     sha = require('sha1');
 
 /**
- * Base class for nodes with common nodes methods
+ * Node OOP presentation for runtime
  * @param node - {Object} source node object
  * @param parent - {Object} parent node object
  * @constructor
  */
-var BaseNode = function(node, parent) {};
+var Node = function(node, parent) {
+    Object.keys(node).forEach(function(key) {
+        this[key] = node[key];
+    }, this);
 
-BaseNode.prototype = {
+    this.setParent(parent);
+};
+
+Node.prototype = {
 
     VIEW: {
         INDEX: 'index',
@@ -32,7 +38,7 @@ BaseNode.prototype = {
     /**
      * Sets parent for current node
      * @param parent - {Object} parent node
-     * @returns {BaseNode}
+     * @returns {Node}
      */
     setParent: function (parent) {
         this.parent = parent;
@@ -40,4 +46,4 @@ BaseNode.prototype = {
     }
 };
 
-exports.BaseNode = BaseNode;
+exports.Node = Node;
