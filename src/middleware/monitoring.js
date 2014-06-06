@@ -1,5 +1,4 @@
-var logger = require('../logger')(module),
-    config = require('../config');
+var config = require('../config');
 
 /**
  * Middleware for handling monitoring requests
@@ -7,14 +6,12 @@ var logger = require('../logger')(module),
  */
 module.exports = function() {
 
-    var REQ = config.get('app:monitoringUrl') || '/monitoring';
+    var monitoring = config.get('app:monitoring') || '/monitoring';
 
     return function(req, res, next) {
-        if(req._parsedUrl.path.substring(0, REQ.length) !== REQ) {
+        if(req.url.indexOf(monitoring) == -1) {
             return next();
         }
-
-        logger.info('Monitoring request has been received');
 
         res.writeHead(200, { 'Content-Type' : 'text/plain' });
         res.end('Pong');
