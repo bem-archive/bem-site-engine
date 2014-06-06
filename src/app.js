@@ -44,7 +44,7 @@ var addDevelopmentMW = function(app) {
 var addCommonMW = function(app) {
     app
         .use(express.query())
-        .use(middleware.prefLocale())
+        .use(middleware.locale())
         .use(middleware.logger())
         .use(middleware.monitoring())
         .use(middleware.libProxy())
