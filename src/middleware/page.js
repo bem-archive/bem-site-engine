@@ -20,7 +20,7 @@ module.exports = function() {
                 req: req, //request object
                 bundleName: BUNDLE_NAME,
                 lang: req.prefLocale, //selected language
-                statics: config.get('statics:www')
+                statics: config.get('app:statics:www')
             };
             commonDataCtx = {
                 node: node, //current node
