@@ -20,7 +20,7 @@ var getActiveNodeIds = function(node) {
     traverse(node);
 
     return activeIds;
-}
+};
 
 var MenuItem = function(node, lang, activeIds) {
     this.title = node.title ? node.title[lang] : '';
@@ -30,7 +30,7 @@ var MenuItem = function(node, lang, activeIds) {
     this.type = node.type;
     this.size = node.size;
     this.hasSource = !!node.source; //detect if node has source
-    this.hasItems = node.items; //detect if node has items
+    this.hasItems = (node.items && node.items.length); //detect if node has items
     this.isTargetNode = node.id === node.id; // detect if node is target final node
     this.isGroup = node.TYPE.GROUP === node.type; // detect if node is group
     this.isSelect = node.TYPE.SELECT === node.type; //detect if node is select
@@ -38,7 +38,9 @@ var MenuItem = function(node, lang, activeIds) {
 
     //its a terrible condition for detect if we should create or not create the next menu group
     this.isNeedToDrawChildNodes = (this.isGroup || this.isSelect) ||
-        this.isIndex || this.isActive && (!this.isTargetNode || (this.isTargetNode && this.hasItems && this.hasSource));
+        this.isIndex || this.active && (!this.isTargetNode || (this.isTargetNode && this.hasItems && this.hasSource));
+
+    console.log(this);
 };
 
 /**
