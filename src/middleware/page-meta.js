@@ -23,7 +23,7 @@ module.exports = function() {
             meta.ogUrl = req.url;
 
             req.__data.meta = meta;
-            next();
+            return next();
         }
 
         source = node.source[req.lang];
@@ -42,7 +42,7 @@ module.exports = function() {
             meta.ogUrl = req.url;
 
             req.__data.meta = meta;
-            next();
+            return next();
         }
     };
 };

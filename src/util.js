@@ -1,7 +1,7 @@
 var path = require('path'),
 
     vow = require('vow'),
-    vowFs = require('vowFs'),
+    vowFs = require('vow-fs'),
 
     config = require('./config'),
     constants = require('./constants'),

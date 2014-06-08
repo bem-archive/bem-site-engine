@@ -13,7 +13,6 @@ module.exports = function() {
             lang = host ? host.split('.')[0] : defaultLanguage;
 
         req.lang = languages.indexOf(lang) > -1 ? lang : defaultLanguage;
-
-        next();
+        return next();
     };
 };

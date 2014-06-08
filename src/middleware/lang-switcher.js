@@ -16,6 +16,6 @@ module.exports = function() {
             url = util.format('//%s.%s%s', lang, host, node.hidden[lang] ? '/' : req.path);
 
         req.__data.langSwitch = url;
-        next();
+        return next();
     };
 };

@@ -1,8 +1,8 @@
 var _ = require('lodash'),
+
+    model = require('../model'),
     template = require('../template'),
-    config = require('../config'),
-    logic = require('../modules').logic,
-    BUNDLE_NAME = 'common';
+    config = require('../config')
 
 /**
  * Middleware which performs all logic operations for request
@@ -12,39 +12,51 @@ var _ = require('lodash'),
  */
 module.exports = function() {
     return function(req, res, next) {
-        var node, baseCtx, commonDataCtx, advancedDataCtx, ctx;
+        var ctx = {
+            req: req, //request object
+            bundleName: 'common',
+            lang: req.lang, //selected language
+            statics: config.get('app:statics:www')
+        };
 
-        try {
-            node = logic.getNodeByRequest(req);
-            baseCtx = {
-                req: req, //request object
-                bundleName: BUNDLE_NAME,
-                lang: req.lang, //selected language
-                statics: config.get('app:statics:www')
-            };
-            commonDataCtx = {
-                node: node, //current node
-                title: logic.getTitleByNode(req, node), //page title
-                meta: logic.getMetaByNode(req, node), // page meta-information
-                menu: logic.getMenuByNode(req, node), //menu structure
-                langSwitch: logic.getLangSwitchUrlByNode(req,node) //url for lang switcher
-            };
+        ctx = _.extend(ctx, req.__data, getAdvancedData(req, req.__data.node));
 
-            // console.log(JSON.stringify(commonDataCtx.menu, null, 4));
-
-            advancedDataCtx = logic.getAdvancedData(req, node);
-
-            ctx = _.extend({}, baseCtx, commonDataCtx, advancedDataCtx);
-
-            return template.apply(ctx, req.lang, req.query.__mode)
-                .then(function(html) {
-                    res.end(html);
-                })
-                .fail(function(err) {
-                    next(err);
-                });
-        }catch(err) {
-            return next(err);
-        }
+        return template.apply(ctx, req.lang, req.query.__mode)
+            .then(function(html) {
+                res.end(html);
+            })
+            .fail(function(err) {
+                next(err);
+            });
     };
 };
+
+/**
+ * Loads advanced data for nodes with exotic views
+ * @param req - {Object} http request object
+ * @param node - {RuntimeNode} node from sitemap model
+ * @returns {*}
+ */
+var getAdvancedData = function(req, node) {
+    var result = {
+        people: model.getPeople(),
+        peopleUrls: model.getPeopleUrls()
+    };
+
+    if(node.view === node.VIEW.AUTHOR) {
+        return _.extend(result, {
+            posts: model.getNodesBySourceCriteria(req.lang, ['authors', 'translators'], req.params.id) });
+    }
+
+    if(node.view === node.VIEW.TAGS) {
+        return _.extend(result, {
+            posts: model.getNodesBySourceCriteria(req.lang, ['tags'], req.params.id) });
+    }
+
+    if(node.view === node.VIEW.AUTHORS) {
+        return _.extend(result, {
+            authors: model.getAuthors() });
+    }
+
+    return result;
+}

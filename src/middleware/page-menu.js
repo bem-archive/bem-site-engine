@@ -23,18 +23,18 @@ var getActiveNodeIds = function(node) {
 }
 
 var MenuItem = function(node, lang, activeIds) {
-    this.title =_node.title ? _node.title[lang] : '';
-    this.url = (_node.url && _.isObject(_node.url)) ? _node.url[lang] : _node.url;
+    this.title = node.title ? node.title[lang] : '';
+    this.url = (node.url && _.isObject(node.url)) ? node.url[lang] : node.url;
 
-    this.active = activeIds.indexOf(_node.id) !== -1; //detect if node is in active nodes
-    this.type = _node.type;
-    this.size = _node.size;
-    this.hasSource = !!_node.source; //detect if node has source
-    this.hasItems = _node.items; //detect if node has items
-    this.isTargetNode = _node.id === node.id; // detect if node is target final node
-    this.isGroup = _node.TYPE.GROUP === _node.type; // detect if node is group
-    this.isSelect = _node.TYPE.SELECT === _node.type; //detect if node is select
-    this.isIndex = _node.VIEW.INDEX === _node.view; //detect if node has index view
+    this.active = activeIds.indexOf(node.id) !== -1; //detect if node is in active nodes
+    this.type = node.type;
+    this.size = node.size;
+    this.hasSource = !!node.source; //detect if node has source
+    this.hasItems = node.items; //detect if node has items
+    this.isTargetNode = node.id === node.id; // detect if node is target final node
+    this.isGroup = node.TYPE.GROUP === node.type; // detect if node is group
+    this.isSelect = node.TYPE.SELECT === node.type; //detect if node is select
+    this.isIndex = node.VIEW.INDEX === node.view; //detect if node has index view
 
     //its a terrible condition for detect if we should create or not create the next menu group
     this.isNeedToDrawChildNodes = (this.isGroup || this.isSelect) ||
@@ -100,6 +100,6 @@ module.exports = function() {
         });
 
         req.__data.menu = result;
-        next();
+        return next();
     }
 };

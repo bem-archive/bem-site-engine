@@ -1,1 +1,0 @@
-exports.logic = require('./logic');

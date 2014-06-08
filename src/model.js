@@ -3,9 +3,9 @@ var path = require('path'),
     vow = require('vow'),
     _ = require('lodash'),
 
-    util = require('util'),
-    config = require('config'),
-    logger = require('logger')(module),
+    util = require('./util'),
+    config = require('./config'),
+    logger = require('./logger')(module),
     providers = require('./providers');
 
 var sitemap,

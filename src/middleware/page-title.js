@@ -15,7 +15,7 @@ module.exports = function() {
 
         if(req.url === '/') {
             req.__data.title = node.title[req.lang];
-            next();
+            return next();
         }
 
         var traverseTreeNodes = function(node) {
@@ -34,6 +34,6 @@ module.exports = function() {
         titles.push(config.get('app:title')[req.lang]);
 
         req.__data.title = titles.join(' / ');
-        next();
+        return next();
     };
 };
