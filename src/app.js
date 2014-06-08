@@ -48,10 +48,14 @@ var addCommonMW = function(app) {
         .use(middleware.locale())
         .use(middleware.logger())
         .use(middleware.monitoring())
-        .use(middleware.proxy())
-        .use(middleware.search())
-        .use(middleware.router())
+        .use(middleware.proxyExample())
+        .use(middleware.proxySearch())
         .use(slashes())
+        .use(middleware.router())
+        .use(middleware.pageTitle())
+        .use(middleware.pageMeta())
+        .use(middleware.pageMenu())
+        .use(middleware.langSwitcher())
         .use(middleware.page())
         .use(middleware.error());
 

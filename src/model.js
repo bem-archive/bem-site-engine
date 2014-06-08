@@ -63,6 +63,50 @@ module.exports = {
     },
 
     /**
+     * Returns array of pseudo-nodes with title attribute
+     * and pseudo-node items with id and url attributes which
+     * is necessary to build posts block
+     * @param lang - {String} lang
+     * @param field - {Array|String} array or string with criteria source field
+     * @param value - {Array|String} array or string with search value
+     * @returns {Array}
+     */
+    getNodesBySourceCriteria : function(lang, field, value) {
+        logger.debug('get nodes by criteria start %s %s %s', lang, field, value);
+
+        var result = {},
+            traverseTreeNodes = function(node) {
+                if(node.route.pattern) {
+                    result[node.route.name] = {
+                        title: node.title[lang]
+                    };
+                }
+
+                if(node.source && node.view !== node.VIEW.TAGS) {
+                    result[node.route.name].items = result[node.route.name].items || [];
+
+                    if(criteria(node.source[lang], field, value)) {
+                        result[node.route.name].items.push(node);
+                    }
+                }
+
+                if(node.items) {
+                    node.items.forEach(function(item) {
+                        traverseTreeNodes(item);
+                    });
+                }
+            };
+
+        sitemap.forEach(function(node) {
+            traverseTreeNodes(node);
+        });
+
+        return _.values(result).filter(function(item) {
+            return item.items && item.items.length > 0;
+        });
+    },
+
+    /**
      * Returns array of objects for susanin routes creation
      * @returns {Array}
      */
@@ -148,6 +192,53 @@ var addCircularReferences = function(tree) {
     return tree.map(function(item) {
         return traverseTreeNodes(item, null);
     });
+};
+
+/**
+ * Returns true if value of field of data is equal to value
+ * @param data - {Object} data  object
+ * @param field - {Array || String} name of field or array of fields
+ * @param value - {Array || String} value or array of values
+ * @returns {boolean} - Boolean result
+ */
+var criteria = function(data, field, value) {
+    if(!data) {
+        return false;
+    }
+
+    if(_.isUndefined(value) || _.isNull(value)) {
+        return true;
+    }
+
+    if(_.isArray(field) && _.isArray(value)) {
+        return field.filter(function(f) {
+            if(_.isArray(data[f])) {
+                return _.intersection(data[f], value).length > 0;
+            }else {
+                return value.indexOf(data[f]) !== -1;
+            }
+        }).length > 0;
+    } else if(_.isArray(field)) {
+        return field.filter(function(f) {
+            if(_.isArray(data[f])) {
+                return data[f].indexOf(value) !== -1;
+            }else {
+                return data[f] === value;
+            }
+        }).length > 0;
+    } else if(_.isArray(value)) {
+        if(_.isArray(data[field])) {
+            return _.intersection(data[field], value).length > 0;
+        }else {
+            return value.indexOf(data[field]) !== -1;
+        }
+    } else {
+        if(_.isArray(data[field])) {
+            return data[field].indexOf(value) !== -1;
+        }else {
+            return data[field] === value;
+        }
+    }
 };
 
 /**

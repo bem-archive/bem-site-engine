@@ -10,8 +10,7 @@ var router = null;
  * Iterates through compiled model route objects and creates Susanin routes
  * @returns {exports}
  */
-var init = function() {
-
+function init() {
     router = model.getRoutes().reduce(function(prev, item) {
         prev.addRoute(item);
         return prev
@@ -27,14 +26,14 @@ module.exports = function() {
     init();
 
     return function(req, res, next) {
-        var route = router.findFirst(decodeURIComponent(req._parsedUrl.path));
+        var route = router.findFirst(decodeURIComponent(req.path));
 
-        if (route) {
-            req.route = route[0].getName();
-            req.params = route[1];
-        } else {
+        if(!route) {
             return next(new HttpError(HttpError.CODES.NOT_FOUND));
         }
+
+        req.route = route[0].getName();
+        req.params = route[1];
 
         next();
     };
