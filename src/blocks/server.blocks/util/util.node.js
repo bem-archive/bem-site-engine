@@ -3,11 +3,7 @@ var path = require('path'),
     vow = require('vow'),
     vowFs = require('vow-fs');
 
-    //config = require('./config'),
-    //constants = require('./constants'),
-    //providers = require('./providers');
-
-modules.define('util', function(provide) {
+modules.define('util', ['constants', 'config', 'providerFile', 'providerDisk'], function(provide, constants, config, providerFile, providerDisk) {
 
     provide({
 
@@ -16,7 +12,7 @@ modules.define('util', function(provide) {
         },
 
         clearCache: function() {
-            return providers.getFileProvider().removeDir({ path: constants.DIRS.CACHE }).then(this.makeCache);
+            return providerFile.removeDir({ path: constants.DIRS.CACHE }).then(this.makeCache);
         },
 
         makeCache: function() {
@@ -27,9 +23,9 @@ modules.define('util', function(provide) {
         },
 
         loadSitemapXml: function() {
-            var provider = util.isDev() ? providers.getFileProvider() : providers.getYaDiskProvider(),
+            var provider = util.isDev() ? providerFile : providerDisk,
                 opts = { path: path.join(config.get('common:model:dir'),
-                    util.isDev() ? '' : config.get('NODE_ENV'), constants.SITEMAP) };
+                    this.isDev() ? '' : config.get('NODE_ENV'), constants.SITEMAP) };
 
 
             return provider.load(opts).then(function(content) {
