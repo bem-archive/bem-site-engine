@@ -1,0 +1,13 @@
+- elems:
+    - lang-switcher
+    - locale
+    - logger
+    - error
+    - monitoring
+    - page
+    - page-title
+    - page-meta
+    - page-menu
+    - proxy-search
+    - proxy-example
+    - router
