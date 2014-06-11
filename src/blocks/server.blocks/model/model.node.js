@@ -6,6 +6,8 @@ var path = require('path'),
 modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDisk'],
         function(provide, config, logger, util, providerFile, providerDisk) {
 
+    logger = logger(module);
+
     var model;
 
     /**
