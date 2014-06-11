@@ -1,1 +1,0 @@
-exports.HttpError = require('./HttpError');

@@ -20,7 +20,7 @@ modules.define('template', ['config', 'logger', 'util', 'builder', 'bundles', 's
 
         provide({
             apply: function(ctx, lang, mode) {
-                var builder =  util.isDev() ? builder : { build: function() { return vow.resolve(); } };
+                builder =  util.isDev() ? builder : { build: function() { return vow.resolve(); } };
 
                 return builder
                     .build([target])
