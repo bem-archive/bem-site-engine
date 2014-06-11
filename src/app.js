@@ -8,14 +8,12 @@ var path = require('path'),
     config = require('./config'),
     logger = require('./logger')(module),
     middleware = require('./middleware'),
-    provider = require('./providers'),
     util = require('./util'),
     model = require('./model');
 
 
 exports.run = function(worker) {
-    worker = worker || { wid: 0 };
-    return model.init(worker).then(function() {
+    return model.init().then(function() {
         return startServer();
     });
 };
