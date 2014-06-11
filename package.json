@@ -17,7 +17,6 @@
     "nconf": "0.6.9",
     "vow": "0.4.1",
     "vow-fs": "0.3.0",
-    "ym": "0.0.12",
     "json-stringify-safe": "5.0.0",
     "lodash": "2.4.1",
     "luster": "0.2.0",
