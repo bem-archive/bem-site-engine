@@ -27,7 +27,7 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware'],
             run: function() {
                 return model.init().then(function() {
                     return this.startServer();
-                });
+                }, this);
             },
 
             startServer: function() {
