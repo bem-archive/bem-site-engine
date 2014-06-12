@@ -23,7 +23,7 @@ modules.define('middleware__page-menu', ['logger', 'constants', 'model'], functi
 
     provide(function() {
 
-        var MenuItem = function(node, lang, activeIds) {
+        var MenuItem = function(node, lang, activeIds, isTarget) {
             this.title = node.title ? node.title[lang] : '';
             this.url = (node.url && _.isObject(node.url)) ? node.url[lang] : node.url;
 
@@ -32,7 +32,7 @@ modules.define('middleware__page-menu', ['logger', 'constants', 'model'], functi
             this.size = node.size;
             this.hasSource = !!node.source; //detect if node has source
             this.hasItems = (node.items && node.items.length); //detect if node has items
-            this.isTargetNode = node.id === node.id; // detect if node is target final node
+            this.isTargetNode = isTarget; // detect if node is target final node
             this.isGroup = node.TYPE.GROUP === node.type; // detect if node is group
             this.isSelect = node.TYPE.SELECT === node.type; //detect if node is select
             this.isIndex = node.VIEW.INDEX === node.view; //detect if node has index view
@@ -67,7 +67,7 @@ modules.define('middleware__page-menu', ['logger', 'constants', 'model'], functi
                     (result[_node.level].type = constants.MENU.LEVEL);
 
                     //create base menu item object
-                    var menuItem = new MenuItem(_node, req.lang, activeIds);
+                    var menuItem = new MenuItem(_node, req.lang, activeIds, _node.id === node.id);
 
                     //if node is not hidden for current selected locale
                     //then we should draw it corresponded menu item
