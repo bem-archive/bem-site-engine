@@ -7,6 +7,10 @@ modules.define('util', ['constants', 'config', 'providerFile', 'providerDisk'], 
 
     provide({
 
+        /**
+         * Checks if current environment is development
+         * @returns {boolean}
+         */
         isDev: function() {
             return 'development' === config.get('NODE_ENV');
         }
