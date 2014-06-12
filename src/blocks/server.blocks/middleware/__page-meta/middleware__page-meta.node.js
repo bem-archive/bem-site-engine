@@ -47,6 +47,8 @@ modules.define('middleware__page-meta', ['logger'], function(provide, logger) {
                 req.__data.meta = meta;
                 return next();
             }
+
+            next();
         };
     });
 });

@@ -4,7 +4,7 @@ modules.define('middleware__page-title', ['config', 'logger'], function(provide,
 
     provide(function() {
         return function(req, res, next) {
-            logger.debug('get title by request %s and node %s', req.url);
+            logger.debug('get title by request %s', req.url);
 
             var node = req.__data.node,
                 titles = [];
