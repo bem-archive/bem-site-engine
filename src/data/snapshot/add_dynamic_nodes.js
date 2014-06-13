@@ -7,27 +7,24 @@ var _ = require('lodash'),
     constants = require('../lib/constants'),
     nodes = require('../model');
 
-module.exports = {
+module.exports = function(sitemap, routes, docs, people) {
+    logger.info('Add dynamic nodes to sitemap start');
 
-    run: function(sitemap, routes, docs, people) {
-        logger.info('Add dynamic nodes to sitemap start');
+    var urls = {
+        people: {},
+        tags: {}
+    };
 
-        var urls = {
-            people: {},
-            tags: {}
-        };
-
-        return vow
-            .all([
-                addDynamicNodesFor({ key: 'authors', data: docs.authors, urlHash: urls.people, people: people }, sitemap, routes),
-                addDynamicNodesFor({ key: 'translators', data: docs.translators, urlHash: urls.people, people: people }, sitemap, routes),
-                addDynamicNodesFor({ key: 'tags:en', data: docs.tags.en, urlHash: urls.tags }, sitemap, routes),
-                addDynamicNodesFor({ key: 'tags:ru', data: docs.tags.ru, urlHash: urls.tags }, sitemap, routes)
-            ])
-            .then(function() {
-                return urls;
-            });
-    }
+    return vow
+        .all([
+            addDynamicNodesFor({ key: 'authors', data: docs.authors, urlHash: urls.people, people: people }, sitemap, routes),
+            addDynamicNodesFor({ key: 'translators', data: docs.translators, urlHash: urls.people, people: people }, sitemap, routes),
+            addDynamicNodesFor({ key: 'tags:en', data: docs.tags.en, urlHash: urls.tags }, sitemap, routes),
+            addDynamicNodesFor({ key: 'tags:ru', data: docs.tags.ru, urlHash: urls.tags }, sitemap, routes)
+        ])
+        .then(function() {
+            return urls;
+        });
 };
 
 var addDynamicNodesFor = function(config, sitemap, routes) {

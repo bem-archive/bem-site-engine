@@ -1,1 +1,1 @@
-require('../src/data').run(process.cwd() + '/model');
+require('../src/data/coa').run();

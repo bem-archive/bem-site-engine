@@ -3,27 +3,25 @@ var vow = require('vow'),
     config = require('../lib/config'),
     logger = require('../lib/logger')(module);
 
-module.exports = {
-    run: function(sitemap) {
-        var urls = getAllUrls(sitemap),
-            hosts = config.get('data:hosts'),
-            jsonUrls = [];
+module.exports = function(sitemap) {
+    var urls = getAllUrls(sitemap),
+        hosts = config.get('data:hosts'),
+        jsonUrls = [];
 
-        if(hosts) {
-            Object.keys(hosts).forEach(function (lang) {
-                urls.forEach(function (url) {
-                    if (!url.hidden[lang]) {
-                        jsonUrls.push({
-                            loc: hosts[lang] + url.url,
-                            changefreq: 'weekly'
-                        });
-                    }
-                });
+    if(hosts) {
+        Object.keys(hosts).forEach(function (lang) {
+            urls.forEach(function (url) {
+                if (!url.hidden[lang]) {
+                    jsonUrls.push({
+                        loc: hosts[lang] + url.url,
+                        changefreq: 'weekly'
+                    });
+                }
             });
-        }
-
-        return js2xml('urlset', {url: jsonUrls});
+        });
     }
+
+    return js2xml('urlset', {url: jsonUrls});
 };
 
 /**

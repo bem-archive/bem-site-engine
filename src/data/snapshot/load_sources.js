@@ -10,18 +10,13 @@ var p = require('path'),
     providers = require('../providers');
 
 var MSG = {
-    INFO: {
-        START: 'Load sources for nodes start',
-        SUCCESS: 'All loading operations for docs have been performed successfully'
-    },
     WARN: {
         META_NOT_EXIST: 'source with lang %s does not exists for node %s',
         MD_NOT_EXIST: 'markdown with lang %s does not exists for node %s',
         META_PARSING_ERROR: 'source for lang %s contains errors for node %s',
         MD_PARSING_ERROR: 'markdown for lang %s contains errors for node %s',
         DEPRECATED: 'remove deprecated field %s for source user: %s repo: %s ref: %s path: %s'
-    },
-    ERROR: 'Error occur while loading sources'
+    }
 };
 
 
@@ -30,42 +25,38 @@ var MSG = {
  * @param nodesWithSource - {Array} sources with nodes
  * @returns {*|Q.IPromise<U>|Q.Promise<U>}
  */
-module.exports = {
-    run: function (nodesWithSource, sourceRouteHash) {
-        logger.info(MSG.INFO.START);
+module.exports = function(nodesWithSource, sourceRouteHash) {
+    logger.info('Load sources for nodes start');
 
-        var collected = {
-                authors: [],
-                translators: [],
-                tags: {}
-            },
-            promises = nodesWithSource.map(function (node) {
-                var _promises = config.get('common:languages').map(function (lang) {
-                    return analyzeMetaInformation(node, lang, collected)
-                        .then(function (res) {
-                            return loadMDFile(res.node, lang, res.repo, sourceRouteHash);
-                        })
-                        .then(function (res) {
-                            node.source[lang].url = node.source[lang].content;
-                            node.source[lang].content = res;
-                        });
-                });
-
-                return vow.allResolved(_promises);
+    var collected = {
+            authors: [],
+            translators: [],
+            tags: {}
+        },
+        promises = nodesWithSource.map(function (node) {
+            var _promises = config.get('common:languages').map(function (lang) {
+                return analyzeMetaInformation(node, lang, collected)
+                    .then(function (res) {
+                        return loadMDFile(res.node, lang, res.repo, sourceRouteHash);
+                    })
+                    .then(function (res) {
+                        node.source[lang].url = node.source[lang].content;
+                        node.source[lang].content = res;
+                    });
             });
 
-        return vow
-            .all(promises)
-            .then(
-                function () {
-                    logger.info(MSG.INFO.SUCCESS);
-                    return collected;
-                },
-                function () {
-                    logger.error(MSG.ERROR);
-                }
-            );
-    }
+            return vow.allResolved(_promises);
+        });
+
+    return vow
+        .all(promises)
+        .then(function() {
+            logger.info('All loading operations for docs have been performed successfully');
+            return collected;
+        })
+        .fail(function() {
+            logger.error('Error occur while loading sources');
+        });
 };
 
 /**

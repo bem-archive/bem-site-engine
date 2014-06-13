@@ -6,26 +6,6 @@ var u = require('util'),
     config = require('../lib/config'),
     providers = require('../providers');
 
-module.exports = {
-
-    run: function(libraryNodes) {
-        logger.info('Load all libraries start');
-
-        var libraries = {};
-        return vow
-            .all(libraryNodes.map(function(node) {
-                return loadLibraryVersions(config.get('common:github:libraries'), node, libraries);
-            }))
-            .then(
-                function() {
-                    logger.info('Libraries successfully loaded');
-                    return libraries;
-                },
-                function() { logger.error('Error occur while loading libraries'); }
-            );
-    }
-};
-
 /**
  * Load data for single version of library
  * @param repo - {Object} libraries repository
@@ -33,7 +13,7 @@ module.exports = {
  * @param libraries - {Object} libraries hash
  * @returns {*|Q.IPromise<U>|Q.Promise<U>}
  */
-var loadLibraryVersions = function(repo, node, libraries) {
+function loadLibraryVersions(repo, node, libraries) {
     libraries[node.lib] = libraries[node.lib] || {};
 
     return providers.getProviderGhApi()
@@ -44,15 +24,65 @@ var loadLibraryVersions = function(repo, node, libraries) {
                 return providers.getProviderGhHttps()
                     .load({ repository: _.extend({ path: _path }, repo) })
                     .then(
-                        function(result) {
-                            libraries[node.lib][version.name] = result;
-                        },
-                        function(err) {
-                            logger.error('Error %s while loading data for library %s version %s', err, node.lib, version.name);
-                        }
-                    );
+                    function(result) {
+                        libraries[node.lib][version.name] = result;
+                    },
+                    function(err) {
+                        logger.error('Error %s while loading data for library %s version %s', err, node.lib, version.name);
+                    }
+                );
             });
 
             return vow.all(promises);
+        });
+}
+
+module.exports = function(libraryNodes) {
+
+    logger.info('Load all libraries start');
+
+    var err,
+        libraries = {},
+        lr = config.get('common:github:libraries');
+
+    if(!lr) {
+        err = 'Libraries repository was not set in configuration'
+    }
+
+    if(!lr.type || !_.isString(lr.type) || !lr.type.length) {
+        err = 'Type of libraries repository was not set in configuration';
+    }
+
+    if(!lr.user || !_.isString(lr.user) || !lr.user.length) {
+        err = 'User field of libraries repository was not set in configuration';
+    }
+
+    if(!lr.repo || !_.isString(lr.repo) || !lr.repo.length) {
+        err = 'Name of libraries repository was not set in configuration';
+    }
+
+    if(!lr.ref  || !_.isString(lr.ref)  || !lr.ref.length) {
+        err = 'Reference of libraries repository was not set in configuration';
+    }
+
+    if(!lr.pattern || !_.isString(lr.pattern) || !lr.pattern.length) {
+        err = 'Pattern for libraries repository was not set in configuration';
+    }
+
+    if(err) {
+        logger.error(err);
+        return vow.resolve(libraries);
+    }
+
+    return vow
+        .all(libraryNodes.map(function(node) {
+            return loadLibraryVersions(lr, node, libraries);
+        }))
+        .then(function() {
+            logger.info('Libraries successfully loaded');
+            return libraries;
+        })
+        .fail(function() {
+            logger.error('Error occur while loading libraries');
         });
 };

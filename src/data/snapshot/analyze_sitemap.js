@@ -7,48 +7,38 @@ var _ = require('lodash'),
     constants = require('../lib/constants'),
     nodes = require('../model');
 
-var MSG = {
-    INFO: {
-        START: 'analyze sitemap start',
-        SUCCESS: 'sitemap object has been analyzed successfully'
-    },
-    ERROR: 'Error occur while analyze sitemap object'
-};
-
 var routes = {},
     sourceRouteHash = {},
     sourceNodes = [],
     libraryNodes = [];
 
-module.exports = {
-    run: function(sitemap) {
-        logger.info(MSG.INFO.START);
+module.exports = function(sitemap) {
+    logger.info('analyze sitemap start');
 
-        var def = vow.defer();
+    var def = vow.defer();
 
-        try {
-            def.resolve({
-                sourceNodes: sourceNodes,
-                libraryNodes: libraryNodes,
-                sourceRouteHash: sourceRouteHash,
-                routes: routes,
-                sitemap: sitemap.map(function(item) {
-                    return traverseTreeNodes(item, {
-                        level: -1,
-                        route: { name: null },
-                        params: {}
-                    });
-                })
-            });
+    try {
+        def.resolve({
+            sourceNodes: sourceNodes,
+            libraryNodes: libraryNodes,
+            sourceRouteHash: sourceRouteHash,
+            routes: routes,
+            sitemap: sitemap.map(function(item) {
+                return traverseTreeNodes(item, {
+                    level: -1,
+                    route: { name: null },
+                    params: {}
+                });
+            })
+        });
 
-            logger.info(MSG.INFO.SUCCESS);
-        } catch(e) {
-            logger.error(MSG.ERROR);
-            def.reject(e);
-        }
-
-        return def.promise();
+        logger.info('sitemap object has been analyzed successfully');
+    } catch(e) {
+        logger.error('Error occur while analyze sitemap object');
+        def.reject(e);
     }
+
+    return def.promise();
 };
 
 /**
@@ -90,6 +80,15 @@ var processRoute = function(node) {
         };
         node.type = node.type || (node.url ? node.TYPE.SIMPLE : node.TYPE.GROUP);
         return node;
+    }
+
+    //BEMINFO-195
+    if(_.isString(node.route)) {
+        node.route = {
+            conditions: {
+                id: node.route
+            }
+        };
     }
 
     var r = node.route;

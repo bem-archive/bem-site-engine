@@ -1,28 +1,20 @@
-var p = require('path'),
+var path = require('path'),
     _ = require('lodash'),
     vow = require('vow'),
+    vowFs = require('vow-fs'),
 
     config = require('./lib/config'),
     logger = require('./lib/logger')(module),
     providers = require('./providers'),
     snapshot = require('./snapshot');
 
-var ENV = {
-        DEVELOPMENT: 'development',
-        TESTING: 'testing',
-        PRODUCTION: 'production'
+var MSG = {
+    INFO: {
+        START: '-- data compiler module start --',
+        END: '-- data compiler successfully finished --'
     },
-    VERSION = {
-        LATEST: 'latest',
-        PREVIOUS: 'previous'
-    },
-    MSG = {
-        INFO: {
-            START: '-- data compiler module start --',
-            END: '-- data compiler successfully finished --'
-        },
-        ERROR: 'Error'
-    };
+    ERROR: 'Error'
+};
 
 module.exports = {
 
@@ -30,65 +22,60 @@ module.exports = {
      * Start point for data compiler module
      * @param modelPath - {String} relative path to model index file
      */
-    run: function(modelPath) {
+    run: function(modelPath, opts) {
         logger.info(''.toUpperCase.apply(MSG.INFO.START));
 
-        var environment = config.get('NODE_ENV') || ENV.DEVELOPMENT,
-            version = process.argv[3] || VERSION.LATEST;
+        logger.debug('Version %s of data will be settled', opts.version);
+        logger.debug('Start compile data for %s environment', opts.environment);
 
-        logger.debug('enviroment: %s', environment);
-
-        if(!_.isString(version)) {
-            logger.warn('Invalid version format. Will be settled latest data version');
-            version = 0;
-        }
-
-        if(VERSION.LATEST === version) {
-            logger.debug('Latest version of data will be settled');
-            version = 0;
-        }
-
-        if(VERSION.PREVIOUS === version) {
-            logger.debug('Previous version of data will be settled');
-            version = -1;
-        }
-
-        logger.debug('Version %s of data will be settled', version);
-
-        logger.debug('start compile data for %s environment', environment);
-
-        var provider = ENV.DEVELOPMENT === environment ?
+        var isDev = 'dev' === opts.environment,
+            provider =  isDev ?
                 providers.getProviderFile() : providers.getProviderYaDisk(),
-            promise = !process.argv[3] ? snapshot.run(modelPath) : vow.resolve(),
-            env = ENV.DEVELOPMENT === environment ? '' : environment;
+            env = isDev ? '' : opts.environment,
+            symlinkPath = path.join(process.cwd(), 'configs', 'current');
 
-        return promise
+        return vowFs.exists(symlinkPath)
+            .then(function(exists) {
+                return exists ? vowFs.remove(symlinkPath) : vow.resolve();
+            })
+            .then(function() {
+                return vowFs.symLink(path.join(process.cwd(), 'configs', opts.environment), symlinkPath, 'dir');
+            })
+            .then(function() {
+                return opts.version ? vow.resolve() : snapshot.run(modelPath);
+            })
             .then(function() {
                 return provider
-                    .listDir({ path: p.join(config.get('common:model:dir')) })
+                    .listDir({ path: path.join(config.get('common:model:dir')) })
                     .then(function(snapshots) {
-                        var targetSnapshot = getTargetShaphot(snapshots, version);
+                        if('latest' === opts.version)
+                            opts.version = 0;
+                        if('previous' === opts.version)
+                            opts.version = -1;
+
+                        var targetSnapshot = getTargetShaphot(snapshots, opts.version || 0);
 
                         if(!targetSnapshot) {
                             return vow.reject('Target snapshot was not found');
                         }
 
                         logger.info('Data will be updated to %s snapshot version', targetSnapshot);
-
                         return replaceFiles(provider, env, targetSnapshot);
                     });
             })
-            .then(
-                function() { logger.info(''.toUpperCase.apply(MSG.INFO.END)) },
-                function(err) { logger.error(''.toUpperCase.apply(MSG.ERROR), err) }
-            );
+            .then(function() {
+                logger.info(''.toUpperCase.apply(MSG.INFO.END))
+            })
+            .fail(function(err) {
+                logger.error(''.toUpperCase.apply(MSG.ERROR), err)
+            });
     }
 };
 
 /**
  * Method for resolving name of snapshot folder
  * @param snapshots - {Array} array with names of snapshot folders
- * @param version - {String} name of version
+ * @param version - {Number} name of version
  * @returns {*}
  */
 var getTargetShaphot = function(snapshots, version) {
@@ -146,8 +133,8 @@ var replaceFiles = function(provider, environment, targetSnapshot) {
     return vow
         .all(targetFiles.map(function(item) {
             return  provider.copy({
-                source: p.join(config.get('common:model:dir'), targetSnapshot, item),
-                target: p.join(config.get('common:model:dir'), environment, item)
+                source: path.join(config.get('common:model:dir'), targetSnapshot, item),
+                target: path.join(config.get('common:model:dir'), environment, item)
             });
         }))
         .then(
