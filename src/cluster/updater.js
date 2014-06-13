@@ -3,7 +3,7 @@ var path = require('path'),
     cronJob = require('cron').CronJob,
 
     config = require('./config'),
-    providers = require('bem-data-compiler/providers');
+    providers = require('../data/providers');
 
 var job,
     marker;
