@@ -36,7 +36,7 @@ modules.define('middleware__error', ['config', 'logger', 'util', 'builder'], fun
      * @returns {*}
      */
     function loadErrorPages() {
-        var langs = config.get('app:languages'),
+        var langs = config.get('common:languages'),
             errorBundlesPath = path.join(process.cwd(), 'src', 'bundles', 'errors.bundles'),
             errorPages = {};
 
