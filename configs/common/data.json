@@ -1,0 +1,24 @@
+{
+    "data": {
+        "hosts": {
+            "en": "",
+            "ru": ""
+        },
+        "github": {
+            "public": {
+                "host": "api.github.com",
+                "auth": {
+                    "type": "",
+                    "token": ""
+                }
+            },
+            "people": {
+                "type": "public",
+                "user": "",
+                "repo": "",
+                "ref": "",
+                "path": ""
+            }
+        }
+    }
+}

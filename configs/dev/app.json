@@ -1,0 +1,14 @@
+{
+    "app": {
+        "port": 3015,
+        "logger": {
+            "level": "debug",
+            "stdout": "logs/output.log",
+            "stderr": "logs/errors.log"
+        },
+        "statics": {
+            "www": "/www",
+            "pathname": "/src"
+        }
+    }
+}
