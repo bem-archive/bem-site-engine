@@ -1,5 +1,6 @@
 var _ = require('lodash'),
     fs = require('vow-fs'),
+    fsExtra = require('fs-extra'),
 
     logger = require('../lib/logger')(module),
     BaseProvider = require('./provider-base').BaseProvider;
@@ -65,5 +66,23 @@ FileProvider.prototype.listDir = function(options) {
     return fs.listDir(options.path);
 };
 
+/**
+ * Removes directory with all files and subdirectories
+ * @param options - {Object} with fields:
+ * - path {String} path to target file
+ * @returns {*}
+ */
+FileProvider.prototype.removeDir = function(options) {
+    var def = vow.defer();
+    fsExtra.remove(options.path, function(err) {
+        if(err) {
+            def.reject(err);
+        }
+
+        def.resolve();
+    });
+
+    return def.promise();
+};
 
 exports.FileProvider = FileProvider;
