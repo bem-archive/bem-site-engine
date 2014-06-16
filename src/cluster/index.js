@@ -40,10 +40,11 @@ if (luster.isMaster) {
         });
 }
 
-try {
-    var workerPath = path.join(process.cwd(), 'src', 'bundles',
-        'desktop.bundles', 'common', 'common.node.js');
+var workerPath = path.join(process.cwd(),
+    'src', 'bundles', 'desktop.bundles', 'common', 'common.node.js');
+console.log(workerPath);
 
+try {
     luster.configure({
         app: workerPath,
         workers: config.get('app:luster:workers'),
@@ -53,3 +54,5 @@ try {
 }catch(err) {
     console.error('Error luster initialization');
 }
+
+module.exports = luster;

@@ -1,1 +1,1 @@
-require('../src/cluster');
+require('../src/cluster').run();
