@@ -29,10 +29,15 @@ GhApiProvider.prototype.common = {
 GhApiProvider.prototype.init = function() {
     logger.info('Init Github API provider');
 
-    this.gitPublic  = new api(_.extend(config.get('data:github:public'), this.common));
-    this.gitPrivate = new api(_.extend(config.get('data:github:private'), this.common));
+    if(config.get('data:github:public'))
+        this.gitPublic  = new api(_.extend(config.get('data:github:public'), this.common));
 
-    this.gitPublic.authenticate(config.get('data:github:public:auth'));
+    if(config.get('data:github:private'))
+        this.gitPrivate = new api(_.extend(config.get('data:github:private'), this.common));
+
+    var auth = config.get('data:github:public:auth');
+    if(auth && _.isString(auth.type) && _.isString(auth.token) && auth.type.length && auth.token.length)
+        this.gitPublic.authenticate(config.get('data:github:public:auth'));
 
     return this;
 };
