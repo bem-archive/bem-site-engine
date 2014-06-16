@@ -1,9 +1,8 @@
 var path = require('path'),
 
-    vow = require('vow'),
-    vowFs = require('vow-fs');
+    vow = require('vow');
 
-modules.define('util', ['constants', 'config', 'providerFile', 'providerDisk'], function(provide, constants, config, providerFile, providerDisk) {
+modules.define('util', ['constants', 'config'], function(provide, constants, config) {
 
     provide({
 
