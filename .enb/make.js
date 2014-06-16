@@ -32,7 +32,8 @@ module.exports = function(config) {
             use('js', { target: '?.pre.js' }),
             use('modules', { target: '?.js', source: '?.pre.js' }),
             use('bemtree', { devMode: false }),
-            use('nodejs', {target: '?.node.js' }),
+            use('nodejs', {target: '?.pre.node.js' }),
+            use('modules', {target: '?.node.js', source: '?.pre.node.js' }),
             use('merge', {
                 target: '?.template.js',
                 sources: ['?.bemtree.js', '?.bemhtml.js']
