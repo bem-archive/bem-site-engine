@@ -57,7 +57,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
         var proxyImageFiles = function(url, res) {
             //set the content-types by mime type
             res.type(mime.lookup(url));
-            url = util.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
+            url = u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
             var p = path.resolve(constants.DIRS.CACHE, sha(url));
 
