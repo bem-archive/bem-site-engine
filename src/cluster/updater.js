@@ -47,7 +47,7 @@ module.exports = {
 var checkForUpdate = function(master) {
     console.info('Check for update for master process start');
 
-    return loadFile(config.get('common.model:marker'))
+    return loadFile(config.get('common:model:marker'))
         .then(function (content) {
             return JSON.parse(content);
         })
@@ -104,7 +104,7 @@ var loadFile = function(fileName) {
     var provider = isDev() ?
             providers.getProviderFile() :
             providers.getProviderYaDisk(),
-        opts = { path: path.join(config.get('common.model:dir'),
+        opts = { path: path.join(config.get('common:model:dir'),
             isDev() ? '' : config.get('NODE_ENV'), fileName) };
 
     return provider.load(opts);
