@@ -11,7 +11,7 @@ var path = require('path'),
 function unlinkSocket() {
     var socket = config.get('app:luster:server:port');
 
-    if (socket) {
+    if(socket) {
         try {
             fs.unlinkSync(socket);
         } catch (e) {
@@ -40,17 +40,13 @@ if (luster.isMaster) {
         });
 }
 
-var workerPath = path.join(process.cwd(),
-    'src', 'bundles', 'desktop.bundles', 'common', 'common.node.js');
-console.log(workerPath);
-
 try {
     luster.configure({
-        app: workerPath,
+        app: require.resolve('./worker.js'),
         workers: config.get('app:luster:workers'),
         control: config.get('app:luster:control'),
         server: config.get('app:luster:server')
-    }, true);
+    }, true, __dirname);
 }catch(err) {
     console.error('Error luster initialization');
 }

@@ -14,9 +14,7 @@ modules.define('middleware', [
             return [
                 locale,
                 logger,
-                monitoring,
                 proxyExample,
-                proxySearch,
                 router,
                 pageTitle,
                 pageMeta,

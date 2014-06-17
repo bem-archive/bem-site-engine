@@ -5,9 +5,8 @@ var path = require('path'),
     vow = require('vow'),
     express = require('express');
 
-modules.define('app', ['config', 'logger', 'util', 'model', 'middleware'],
-    function(provide, config, logger, util, model, middleware) {
-
+modules.require(['config', 'logger', 'util', 'model', 'middleware'],
+    function(config, logger, util, model, middleware) {
         logger = logger(module);
 
         /**
@@ -24,62 +23,58 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware'],
             }
         }
 
-        provide({
-            run: function() {
-                return model.init().then(function() {
-                    return this.startServer();
-                }, this);
-            },
+        /**
+         * Adds middlewares for development environment
+         * @param app - {Object} express application
+         * @returns {Object} app
+         */
+        function addDevelopmentMW(app) {
+            var enbServer = require('enb/lib/server/server-middleware'),
+                rootPath = process.cwd();
 
-            startServer: function() {
-                var def = vow.defer(),
-                    app = express(),
-                    socket = config.get('app:socket'),
-                    port = config.get('app:port') || process.env.port || 8080;
+            app
+                .use(enbServer.createMiddleware({ cdir: rootPath, noLog: false }))
+                .use(express.static(rootPath))
+                .use(express.favicon(path.resolve(rootPath, 'www', 'favicon.ico')));
 
-                //add middleware for dev environment
-                util.isDev() && this.addDevelopmentMW(app);
+            return app;
+        }
 
-                app.use(express.query());
+        function startServer() {
+            var def = vow.defer(),
+                app = express(),
+                socket = config.get('app:socket'),
+                port = config.get('app:port') || process.env.port || 8080;
 
-                middleware().forEach(function(mw) {
-                    if(_.isFunction(mw)) {
-                        app.use(mw());
-                    }else if(mw.run) {
-                        app.use(mw.run());
-                    }
-                });
+            //add middleware for dev environment
+            util.isDev() && addDevelopmentMW(app);
 
-                app.listen(port || socket, function (err) {
-                    if (err) {
-                        def.reject(err);
-                        return;
-                    }
+            app.use(express.query());
 
-                    chmodSocket(socket);
+            middleware().forEach(function(mw) {
+                if(_.isFunction(mw)) {
+                    app.use(mw());
+                }else if(mw.run) {
+                    app.use(mw.run());
+                }
+            });
 
-                    logger.info('start application on %s %s', socket && 'socket' || port && 'port', socket || port);
-                    def.resolve();
-                });
+            app.listen(port || socket, function (err) {
+                if (err) {
+                    def.reject(err);
+                    return;
+                }
 
-                return def.promise();
-            },
+                chmodSocket(socket);
 
-            /**
-             * Adds middlewares for development environment
-             * @param app - {Object} express application
-             * @returns {Object} app
-             */
-            addDevelopmentMW: function(app) {
-                var enbServer = require('enb/lib/server/server-middleware'),
-                    rootPath = process.cwd();
+                logger.info('start application on %s %s', socket && 'socket' || port && 'port', socket || port);
+                def.resolve();
+            });
 
-                app
-                    .use(enbServer.createMiddleware({ cdir: rootPath, noLog: false }))
-                    .use(express.static(rootPath))
-                    .use(express.favicon(path.resolve(rootPath, 'www', 'favicon.ico')));
+            return def.promise();
+        }
 
-                return app;
-            }
-        })
+        model.init().then(function () {
+            return startServer();
+        }, this);
     });

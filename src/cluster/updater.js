@@ -1,5 +1,8 @@
 var path = require('path'),
 
+    vow = require('vow'),
+    vowFs = require('vow-fs'),
+
     cronJob = require('cron').CronJob,
 
     config = require('./config'),
@@ -66,7 +69,7 @@ var checkForUpdate = function(master) {
             if(marker.data !== content.data) {
                 marker = content;
 
-                return clearCache('cache').then(function() {
+                return clearCache(path.join(process.cwd(), 'cache')).then(function() {
                     (function(fileName) {
                         return loadFile(fileName).then(function(content) {
                             return providers.getProviderFile().save({
@@ -122,7 +125,7 @@ var clearCache = function(dir) {
             return vow.all([
                 vowFs.makeDir(path.join(dir, 'branch')),
                 vowFs.makeDir(path.join(dir, 'tag'))
-            ])
+            ]);
         });
 };
 

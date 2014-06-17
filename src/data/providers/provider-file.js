@@ -1,4 +1,5 @@
 var _ = require('lodash'),
+    vow = require('vow'),
     fs = require('vow-fs'),
     fsExtra = require('fs-extra'),
 
@@ -73,12 +74,13 @@ FileProvider.prototype.listDir = function(options) {
  * @returns {*}
  */
 FileProvider.prototype.removeDir = function(options) {
+    logger.debug('remove directory for path %s', options.path);
+
     var def = vow.defer();
     fsExtra.remove(options.path, function(err) {
         if(err) {
             def.reject(err);
         }
-
         def.resolve();
     });
 

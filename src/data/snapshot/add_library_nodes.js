@@ -226,8 +226,8 @@ module.exports = function(sitemap, routes, nodesWithLib, libraries) {
                     _node = new nodes.block.BlockNode(_route, targetNode, block);
 
                 _node.setSource({
-                    prefix: u.format('/__example/%s/%s/%s/%s',
-                        version.repo, version.ref, level.name, block.name),
+                    prefix: u.format('/__example/%s/%s',
+                        version.repo, version.ref),
                     data: block.data,
                     jsdoc: block.jsdoc
                 });
