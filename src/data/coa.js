@@ -1,6 +1,8 @@
 'use strict';
 
-var logger = require('./lib/logger')(module);
+var path = require('path'),
+    vowFs = require('vow-fs'),
+    logger = require('./lib/logger')(module);
 
 module.exports = require('coa').Cmd()
     .name(process.argv[1])
@@ -35,9 +37,20 @@ module.exports = require('coa').Cmd()
         logger.info('environment: %s', opts.environment);
         logger.info('version: %s', opts.version);
 
-        require('./index.js').run(process.cwd() + '/model', {
-            environment: opts.environment,
-            version: opts.version
-        });
+        var symlinkPath = path.join(process.cwd(), 'configs', 'current');
+
+        return vowFs.exists(symlinkPath)
+            .then(function(exists) {
+                return exists ? vowFs.remove(symlinkPath) : vow.resolve();
+            })
+            .then(function() {
+                return vowFs.symLink(path.join(process.cwd(), 'configs', opts.environment), symlinkPath, 'dir');
+            })
+            .then(function() {
+                return require('./index.js').run(process.cwd() + '/model', {
+                    environment: opts.environment,
+                    version: opts.version
+                });
+            })
     });
 

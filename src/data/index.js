@@ -32,19 +32,9 @@ module.exports = {
             provider =  isDev ?
                 providers.getProviderFile() : providers.getProviderYaDisk(),
             env = isDev ? '' : opts.environment,
-            symlinkPath = path.join(process.cwd(), 'configs', 'current');
+            promise = opts.version ? vow.resolve() : snapshot.run(modelPath);
 
-        return vowFs.exists(symlinkPath)
-            .then(function(exists) {
-                return exists ? vowFs.remove(symlinkPath) : vow.resolve();
-            })
-            .then(function() {
-                return vowFs.symLink(path.join(process.cwd(), 'configs', opts.environment), symlinkPath, 'dir');
-            })
-            .then(function() {
-                return opts.version ? vow.resolve() : snapshot.run(modelPath);
-            })
-            .then(function() {
+            return promise.then(function() {
                 return provider
                     .listDir({ path: path.join(config.get('common:model:dir')) })
                     .then(function(snapshots) {

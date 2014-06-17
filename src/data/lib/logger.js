@@ -1,5 +1,4 @@
-var intel = require('intel'),
-    config = require('./config');
+var intel = require('intel');
 
 //set logger verbosity level from configuration file
 intel.setLevel('debug');

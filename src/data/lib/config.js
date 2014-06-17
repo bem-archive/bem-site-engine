@@ -1,16 +1,7 @@
 var nconf = require('nconf'),
     path = require('path');
 
-nconf
-    .argv({
-        "v": {
-            alias: 'version',
-            describe: 'Snapshot version',
-            demand: true,
-            default: 'latest'
-        }
-    })
-    .env();
+nconf.env();
 
 [
     'current/common',
