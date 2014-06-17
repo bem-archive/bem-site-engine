@@ -36,6 +36,9 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template'],
             },
 
             run: function () {
+
+                var self = this;
+
                 /**
                  * Middleware which performs all logic operations for request
                  * fill the context and push it to templates stack
@@ -50,7 +53,7 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template'],
                         statics: config.get('app:statics:www')
                     };
 
-                    ctx = _.extend(ctx, req.__data, this.getAdvancedData(req, req.__data.node));
+                    ctx = _.extend(ctx, req.__data, self.getAdvancedData(req, req.__data.node));
 
                     return template.apply(ctx, req.lang, req.query.__mode)
                         .then(function (html) {
