@@ -1,6 +1,7 @@
 var path = require('path'),
     fs = require('fs'),
 
+    _ = require('lodash'),
     vow = require('vow'),
     express = require('express');
 
@@ -42,7 +43,11 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware'],
                 app.use(express.query());
 
                 middleware().forEach(function(mw) {
-                    app.use(mw());
+                    if(_.isFunction(mw)) {
+                        app.use(mw());
+                    }else if(mw.run) {
+                        app.use(mw.run());
+                    }
                 });
 
                 app.listen(port || socket, function (err) {
