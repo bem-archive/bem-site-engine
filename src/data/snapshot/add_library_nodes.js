@@ -153,6 +153,8 @@ module.exports = function(sitemap, routes, nodesWithLib, libraries) {
             if(!levels) return;
 
             levels.forEach(function(level) {
+                level.name = level.name.replace(/\.(sets|docs)$/, '');
+
                 var conditions = {
                     conditions: {
                         lib: version.repo,
@@ -226,8 +228,7 @@ module.exports = function(sitemap, routes, nodesWithLib, libraries) {
                     _node = new nodes.block.BlockNode(_route, targetNode, block);
 
                 _node.setSource({
-                    prefix: u.format('/__example/%s/%s',
-                        version.repo, version.ref),
+                    prefix: u.format('/__example/%s/%s', version.repo, version.ref),
                     data: block.data,
                     jsdoc: block.jsdoc
                 });
