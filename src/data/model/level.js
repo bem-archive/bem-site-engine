@@ -26,8 +26,8 @@ LevelNode.prototype = Object.create(DynamicNode.prototype);
  */
 LevelNode.prototype.setTitle = function(level) {
     this.title = {
-        en: level.name.replace(/.sets/, ''),
-        ru: level.name.replace(/.sets/, '')
+        en: level.name.replace(/\.(sets|docs)$/, ''),
+        ru: level.name.replace(/\.(sets|docs)$/, '')
     };
     return this;
 };

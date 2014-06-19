@@ -229,7 +229,7 @@ module.exports = function(sitemap, routes, nodesWithLib, libraries) {
 
                 var examplePrefix = version.enb ?
                     u.format('/__example/%s/%s', version.repo, version.ref) :
-                    u.format('/__example/%s/%s/%s/%s', version.repo, version.ref, level.name, block.name);
+                    u.format('/__example/%s/%s/%s.sets/%s', version.repo, version.ref, level.name, block.name);
 
                 _node.setSource({
                     prefix: examplePrefix,
