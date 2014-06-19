@@ -227,8 +227,12 @@ module.exports = function(sitemap, routes, nodesWithLib, libraries) {
                     },
                     _node = new nodes.block.BlockNode(_route, targetNode, block);
 
+                var examplePrefix = version.enb ?
+                    u.format('/__example/%s/%s', version.repo, version.ref) :
+                    u.format('/__example/%s/%s/%s/%s', version.repo, version.ref, level.name, block.name);
+
                 _node.setSource({
-                    prefix: u.format('/__example/%s/%s', version.repo, version.ref),
+                    prefix: examplePrefix,
                     data: block.data,
                     jsdoc: block.jsdoc
                 });
