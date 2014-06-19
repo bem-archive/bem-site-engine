@@ -45,7 +45,7 @@ modules.define('middleware__router', ['logger', 'constants', 'model', 'appError'
                 }
 
                 return self.findNode(req, url, function(result) {
-                    if(_.isFunction(self.afterFindNode) && self.afterFindNode.call(self, result, res)) {
+                    if(_.isFunction(self.afterFindNode) && self.afterFindNode.call(self, result, req, res)) {
                         return;
                     }
 
@@ -148,7 +148,7 @@ modules.define('middleware__router', ['logger', 'constants', 'model', 'appError'
          * @param res - {Object} response object
          * @returns {boolean}
          */
-        afterFindNode: function(result, res) {
+        afterFindNode: function(result, req, res) {
             if(result.lib && result.items && result.items.length) {
                 res.redirect(301, result.items[0].url);
                 return true;
