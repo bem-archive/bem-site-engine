@@ -94,6 +94,14 @@ module.exports = function(sitemap, routes, nodesWithLib, libraries) {
                     }
                 });
 
+                addPostToVersion(_node, version, {
+                    key: 'notes',
+                    title: {
+                        en: 'Release Notes',
+                        ru: 'Release Notes'
+                    }
+                });
+
                 addLevelsToVersion(_node, version);
             });
         },
