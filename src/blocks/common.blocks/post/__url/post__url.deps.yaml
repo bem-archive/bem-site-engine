@@ -1,0 +1,3 @@
+- block: icon
+  mods: { view: github }
+  required: true

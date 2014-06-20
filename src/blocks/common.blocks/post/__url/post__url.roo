@@ -1,0 +1,26 @@
+.post__url
+{
+    margin: 12px 20px 0 auto;
+
+    .icon_view_github
+    {
+        $icon-size = 24px;
+
+        width: $icon-size;
+        height: $icon-size;
+        background-size: $icon-size;
+
+    }
+
+    .icon_view_github,
+    .link
+    {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .icon_view_github
+    {
+        margin-right: 5px;
+    }
+}

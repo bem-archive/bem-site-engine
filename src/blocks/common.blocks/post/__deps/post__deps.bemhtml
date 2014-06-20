@@ -1,35 +1,32 @@
-block post, elem deps {
-
-    default, !(this.ctx && this.ctx.content): {
+block('post').elem('deps')(
+    match(function() { return !(this.ctx && this.ctx.content); }).def()(function() {
         return false;
-    }
+    }),
 
-    content: {
-
+    content()(function() {
         var self = this;
 
         return Object.keys(this.ctx.content).reduce(function(prev, item) {
                 var libName = item,
-                    libUrl = self.ctx.content[item];
+                    libUrl = self.ctx.content[item].replace('git:', '');
 
                 prev.push({
-                    tag: 'span',
-                    content: libName
+                    block: 'link',
+                    url: libUrl,
+                    attrs: { target: '_blank' },
+                    content: '&mdash; ' + libName
                 });
 
-                prev.push({
-                    tag: 'span',
-                    content: ' - '
-                });
-
-                prev.push({
-                    tag: 'span',
-                    content: libUrl
-                });
+                prev.push({ tag: 'br' });
 
                 return prev;
             },
-            [{ content: BEM.I18N('post', 'deps') }]
+            [{
+                block: 'post',
+                elem: 'title',
+                elemMods: { level: '3' },
+                content: BEM.I18N('post', 'deps')
+            }]
         );
-    }
-}
+    })
+);

@@ -1,0 +1,4 @@
+.icon_view_github
+{
+    background: url('icon_view_github.svg');
+}

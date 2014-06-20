@@ -1,12 +1,20 @@
-block post, elem url {
-
-    default, !(this.ctx && this.ctx.content && this.ctx.content.length): {
+block('post').elem('url')(
+    match(function() { return !(this.ctx && this.ctx.content && this.ctx.content.length); }).def()(function() {
         return false;
-    }
+    }),
 
-    content: {
-        block: 'link',
-        url: this.ctx.content,
-        content: BEM.I18N('post', 'url')
-    }
-}
+    content()(function() {
+        return [
+            {
+                block: 'icon',
+                mods: { view: 'github' }
+            },
+            {
+                block: 'link',
+                url: this.ctx.content,
+                attrs: { target: '_blank' },
+                content: BEM.I18N('post', 'url')
+            }
+        ]
+    })
+);

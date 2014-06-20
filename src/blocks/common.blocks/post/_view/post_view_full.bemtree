@@ -28,8 +28,7 @@ block post, mod view full {
                 lang: this.data.lang
             }),
 
-            apply('title-tags', this.ctx.content = source),
-            apply('url', this.ctx.content = source.url),
+            apply('title', this.ctx.content = source),
             apply('deps', this.ctx.content = source.deps),
             apply('contentFull', this.ctx.content = source.content),
             apply('issue', this.ctx.content = source.repo)
@@ -66,13 +65,14 @@ block post, mod view full {
         lang: this.ctx.lang
     }
 
-    //post title + tags array of post
-    title-tags: {
+    //post title + tags || link to github
+    title: {
 
         var content = this.ctx.content,
-            tags = content.tags;
+            tags = content.tags,
+            urlGithub = content.url;
 
-        if(tags) {
+        if(tags || urlGithub) {
             return {
                 elem: 'title-line',
                 content: [
@@ -81,10 +81,7 @@ block post, mod view full {
                         tag: 'h1',
                         content: content.longTitle || content.title
                     },
-                    {
-                        elem: 'tags',
-                        content: tags
-                    }
+                    apply('title-neighbors', this.ctx.content = content)
                 ]
             }
         }
@@ -94,6 +91,27 @@ block post, mod view full {
             tag: 'h1',
             content: content.longTitle || content.title
         }
+    }
+
+    title-neighbors: {
+        var content = this.ctx.content,
+            tags = content.tags,
+            urlGithub = content.url;
+
+        if(tags) {
+            return {
+                elem: 'tags',
+                content: tags
+            }
+        }
+
+        if(urlGithub) {
+            return {
+                elem: 'url',
+                content: urlGithub
+            }
+        }
+
     }
 
     //post content

@@ -1,3 +1,10 @@
-.post__deps {
+.post__deps
+{
     margin-top: 20px;
+
+    .link
+    {
+        display: inline-block;
+        margin-bottom: 5px;
+    }
 }

@@ -1,1 +1,1 @@
-- mods: { inline: 'yes', level: '1' }
+- mods: { inline: 'yes', level: ['1', '3'] }
