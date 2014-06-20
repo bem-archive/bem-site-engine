@@ -1,7 +1,7 @@
 var _ = require('lodash'),
     Susanin = require('susanin');
 
-modules.define('middleware__router', ['logger', 'constants', 'model', 'appError'], function(provide, logger, constants, model, error) {
+modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 'appError'], function(provide, config, logger, constants, model, error) {
 
     logger = logger(module);
 
@@ -121,7 +121,7 @@ modules.define('middleware__router', ['logger', 'constants', 'model', 'appError'
             if(/\/current\//.test(url)) {
                 var libUrl = url.replace(/\/current\/.*/, '');
 
-                return this.findNode(req, libUrl, function(result) {
+                this.findNode(req, libUrl, function(result) {
                     if(!result || !result.items) return;
 
                     var versions = result.items.map(function(item) {
@@ -132,7 +132,7 @@ modules.define('middleware__router', ['logger', 'constants', 'model', 'appError'
                         url = url.replace(/\/current\//, '/' + versions[0] + '/');
                     }
 
-                    return url;
+                    //return url;
                 });
             }
 
