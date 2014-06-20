@@ -42,8 +42,8 @@ modules.define('middleware__error', ['config', 'logger', 'util', 'builder'], fun
 
         return vow.all(langs.map(function(lang) {
             return vow.all([
-                vfs.read(path.join(errorBundlesPath, 'error-404', 'error-404.' + lang + '.html'), 'utf-8'),
-                vfs.read(path.join(errorBundlesPath, 'error-500', 'error-500.' + lang + '.html'), 'utf-8')
+                vowFs.read(path.join(errorBundlesPath, 'error-404', 'error-404.' + lang + '.html'), 'utf-8'),
+                vowFs.read(path.join(errorBundlesPath, 'error-500', 'error-500.' + lang + '.html'), 'utf-8')
             ]).spread(function(error404, error500) {
                 errorPages[lang] = {
                     error404: error404.replace(/\{STATICS_HOST\}/g, staticsUrl),
@@ -51,9 +51,9 @@ modules.define('middleware__error', ['config', 'logger', 'util', 'builder'], fun
                 };
             });
         }))
-            .then(function() {
-                return errorPages;
-            });
+        .then(function() {
+            return errorPages;
+        });
     }
 
     /**
@@ -80,7 +80,7 @@ modules.define('middleware__error', ['config', 'logger', 'util', 'builder'], fun
      * @returns {Function}
      */
     var prodMiddleware = function() {
-        return function(err, req, res) {
+        return function(err, req, res, next) {
             return loadErrorPages()
                 .then(function(errorPages) {
                     preparation(err, req, res);
@@ -94,7 +94,7 @@ modules.define('middleware__error', ['config', 'logger', 'util', 'builder'], fun
      * @returns {Function}
      */
     var devMiddleware = function() {
-        return function(err, req, res) {
+        return function(err, req, res, next) {
             return buildErrorPage(err.code, req.lang)
                 .then(function(errorHtml) {
                     preparation(err, req, res);
@@ -103,5 +103,5 @@ modules.define('middleware__error', ['config', 'logger', 'util', 'builder'], fun
         };
     };
 
-    util.isDev() ? provide(devMiddleware) : provide(prodMiddleware);
+    !util.isDev() ? provide(devMiddleware) : provide(prodMiddleware);
 });

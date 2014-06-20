@@ -7,8 +7,10 @@ modules.define('middleware', [
         'middleware__page-meta',
         'middleware__page-menu',
         'middleware__lang-switcher',
-        'middleware__page'],
-    function(provide, locale, logger, proxyExample, router, pageTitle, pageMeta, pageMenu, langSwitcher, page) {
+        'middleware__page',
+        'middleware__error'
+    ],
+    function(provide, locale, logger, proxyExample, router, pageTitle, pageMeta, pageMenu, langSwitcher, page, error) {
 
         return provide(function() {
             return [
@@ -20,7 +22,8 @@ modules.define('middleware', [
                 pageMeta,
                 pageMenu,
                 langSwitcher,
-                page
+                page,
+                error
             ];
         });
     }

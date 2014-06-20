@@ -45,7 +45,7 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template'],
                  * Finally returns html to response
                  * @returns {Function}
                  */
-                return function (req, res, next) {
+                return function(req, res, next) {
                     var ctx = {
                         req: req, //request object
                         bundleName: 'common',
@@ -59,7 +59,7 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template'],
                         .then(function (html) {
                             res.end(html);
                         })
-                        .fail(function (err) {
+                        .fail(function(err) {
                             next(err);
                         });
                 };
