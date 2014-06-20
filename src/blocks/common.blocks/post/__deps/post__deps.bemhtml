@@ -1,0 +1,35 @@
+block post, elem deps {
+
+    default, !(this.ctx && this.ctx.content): {
+        return false;
+    }
+
+    content: {
+
+        var self = this;
+
+        return Object.keys(this.ctx.content).reduce(function(prev, item) {
+                var libName = item,
+                    libUrl = self.ctx.content[item];
+
+                prev.push({
+                    tag: 'span',
+                    content: libName
+                });
+
+                prev.push({
+                    tag: 'span',
+                    content: ' - '
+                });
+
+                prev.push({
+                    tag: 'span',
+                    content: libUrl
+                });
+
+                return prev;
+            },
+            [{ content: BEM.I18N('post', 'deps') }]
+        );
+    }
+}

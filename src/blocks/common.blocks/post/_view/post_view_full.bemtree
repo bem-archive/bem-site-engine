@@ -9,6 +9,8 @@ block post, mod view full {
             return [];
         }
 
+        logger.debug('url %s deps %s', source.url, source.deps);
+
         return [
 
             apply('date', this.ctx = {
@@ -27,6 +29,8 @@ block post, mod view full {
             }),
 
             apply('title-tags', this.ctx.content = source),
+            apply('url', this.ctx.content = source.url),
+            apply('deps', this.ctx.content = source.deps),
             apply('contentFull', this.ctx.content = source.content),
             apply('issue', this.ctx.content = source.repo)
         ];
@@ -141,6 +145,18 @@ block post, mod view full {
             elem: 'issue',
             content: issueContent
         }
+    }
+
+    //library url on github
+    url: {
+        elem: 'url',
+        content: this.ctx.content
+    }
+
+    //library dependencies
+    deps: {
+        elem: 'deps',
+        content: this.ctx.content
     }
 
     getUrl: {

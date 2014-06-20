@@ -1,0 +1,12 @@
+block post, elem url {
+
+    default, !(this.ctx && this.ctx.content && this.ctx.content.length): {
+        return false;
+    }
+
+    content: {
+        block: 'link',
+        url: this.ctx.content,
+        content: BEM.I18N('post', 'url')
+    }
+}

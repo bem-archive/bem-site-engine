@@ -19,3 +19,5 @@
 - elem: type
 - elem: content
 - elem: title-line
+- elem: url
+- elem: deps

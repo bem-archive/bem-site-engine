@@ -39,16 +39,16 @@ VersionNode.prototype.setTitle = function(version) {
  * @returns {VersionNode}
  */
 VersionNode.prototype.setSource = function(version) {
-    var r = version['readme'];
+    var r = version['readme'],
+        s = {
+            title: version.repo,
+            deps: version.deps,
+            url: version.url
+        };
+
     this.source = {
-        en: {
-            title: version.repo,
-            content: (r && r.en) ? r.en : r
-        },
-        ru: {
-            title: version.repo,
-            content: (r && r.ru) ? r.ru : r
-        }
+        en: _.extend(s, { content: (r && r.en) ? r.en : r }),
+        ru: _.extend(s, { content: (r && r.ru) ? r.ru : r })
     };
     return this;
 };
