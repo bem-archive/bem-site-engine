@@ -73,6 +73,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
              * @returns {Object} node
              */
             var traverseTreeNodes = function(node, url) {
+                //console.log('url %s nodeUrl %s', url, node.url);
                 if(node.url === url) {
                     if(node.hidden[req.lang]) {
                         throw error.HttpError.createError(404);
@@ -82,7 +83,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                 }
 
                 //deep into node items
-                if(!result && node.items) {
+                if(!result && node.items && url.indexOf(node.url) > -1) {
                     node.items.some(function(item) {
                         return traverseTreeNodes(item, url);
                     });
@@ -111,7 +112,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
          * Callback function before find node
          * @param req - {Object} request object
          * @param url - {String} request url
-         * @returns {Stirng} processed url
+         * @returns {String} processed url
          */
         beforeFindNode: function(req, url) {
             //Remove tab parts of url before processing it
@@ -155,6 +156,11 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
             }
 
             if((result.VIEW.POSTS === result.view) && result.items && result.items.length) {
+                res.redirect(301, result.items.filter(function(item) { return !item.hidden[req.lang]; })[0].url);
+                return true;
+            }
+
+            if((result.TYPE.GROUP === result.type) && result.items && result.items.length) {
                 res.redirect(301, result.items.filter(function(item) { return !item.hidden[req.lang]; })[0].url);
                 return true;
             }
