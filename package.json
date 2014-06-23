@@ -34,7 +34,8 @@
     "inherit": "~2.1.0",
     "jshint": "~2.4.4",
     "jscs": "~1.2.4",
-    "coa": "~0.4.0"
+    "coa": "~0.4.0",
+    "connect-slashes": "*"
   },
   "devDependencies": {
       "enb": "~0.13.4",
