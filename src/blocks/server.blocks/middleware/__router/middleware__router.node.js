@@ -41,7 +41,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                 logger.debug('get node by request %s', req.path);
 
                 if(_.isFunction(self.beforeFindNode)) {
-                    url = self.beforeFindNode.call(self, req, url);
+                    url = self.beforeFindNode.call(self, req, res, url);
                 }
 
                 return self.findNode(req, url, function(result) {
@@ -114,31 +114,31 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
          * @param url - {String} request url
          * @returns {String} processed url
          */
-        beforeFindNode: function(req, url) {
+        beforeFindNode: function(req, res, url) {
             //Remove tab parts of url before processing it
             url = url.replace(/(\/docs\/)|(\/jsdoc\/)|(\/examples\/)?/gi, '');
+
+            //Remove trailing slash for url
+            url = url !== '/' ? url.replace(/(\/)+$/, '') : url;
 
             //Detect /current/ part in url and replace it by actual library version
             if(/\/current\//.test(url)) {
                 var libUrl = url.replace(/\/current\/.*/, '');
 
-                this.findNode(req, libUrl, function(result) {
-                    if(!result || !result.items) return;
+                this.findNode(req, libUrl, function (result) {
+                    if (!result || !result.items) return;
 
-                    var versions = result.items.map(function(item) {
+                    var versions = result.items.map(function (item) {
                         return _.isObject(item.title) ? item.title[config.get('app:defaultLanguage')] : item.title;
                     });
 
-                    if(versions) {
+                    if (versions) {
                         url = url.replace(/\/current\//, '/' + versions[0] + '/');
+                        res.redirect(301, url);
+                        return;
                     }
-
-                    //return url;
                 });
             }
-
-            //Remove trailing slash for url
-            url = url !== '/' ? url.replace(/(\/)+$/, '') : url;
 
             return url;
         },

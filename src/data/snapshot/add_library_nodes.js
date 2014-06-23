@@ -263,6 +263,8 @@ module.exports = function(sitemap, routes, nodesWithLib, libraries) {
 
         if(conditions && conditions.version) {
             conditions.version.push('current');
+            conditions.version.push('v2.x');
+            conditions.version.push('v3.x');
         }
         if(conditions && conditions.id) {
             conditions.id = conditions.id.concat(['docs', 'jsdoc', 'examples']);
