@@ -83,7 +83,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                 }
 
                 //deep into node items
-                if(!result && node.items && url.indexOf(node.url) > -1) {
+                if(!result && node.items) {
                     node.items.some(function(item) {
                         return traverseTreeNodes(item, url);
                     });
