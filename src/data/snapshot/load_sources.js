@@ -217,9 +217,9 @@ var loadMDFile = function(node, lang, repo, sourceRouteHash) {
                 return true;
             }
 
-            _href += '/README.md';
-            if(sourceRouteHash[_href]) {
-                _href = sourceRouteHash[_href];
+            var __href = _href + '/README.md';
+            if(sourceRouteHash[__href]) {
+                _href = sourceRouteHash[__href];
                 return true;
             }
 
