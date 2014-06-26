@@ -42,7 +42,7 @@ module.exports = function() {
     }
 
     if(err) {
-        logger.error(err);
+        logger.warn(err);
         return vow.resolve(peopleHash);
     }
 
