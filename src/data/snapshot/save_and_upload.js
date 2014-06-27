@@ -16,8 +16,14 @@ var path = require('path'),
 function getSnapshotName() {
     var date = new Date();
 
-    return util.format('snapshot_%s:%s:%s-%s:%s:%s', date.getDate(), date.getMonth() + 1,
-        date.getFullYear(), date.getHours(), date.getMinutes(), date.getSeconds());
+    return util.format('snapshot_%s:%s:%s-%s:%s:%s',
+        date.getDate(),
+        date.getMonth() + 1,
+        date.getFullYear(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds()
+    );
 }
 
 /**
