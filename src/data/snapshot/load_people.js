@@ -10,7 +10,7 @@ var u = require('util'),
  * Loads people data from github repo
  * @returns {Object} people hash
  */
-module.exports = function() {
+module.exports = function(obj) {
     logger.info('Load all people start');
 
     var err,
@@ -53,10 +53,11 @@ module.exports = function() {
                     logger.info('People successfully loaded');
 
                     result = JSON.parse((new Buffer(result.res.content, 'base64')).toString());
-                    return Object.keys(result).reduce(function(prev, key) {
+                    obj.people = Object.keys(result).reduce(function(prev, key) {
                         prev[key] = result[key];
                         return prev;
                     }, {});
+                    return obj;
                 }catch(err) {
                     logger.error('Error occur while parsing people data');
                     return {};

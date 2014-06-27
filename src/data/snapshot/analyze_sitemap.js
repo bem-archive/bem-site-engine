@@ -19,10 +19,10 @@ module.exports = function(sitemap) {
 
     try {
         def.resolve({
+            routes: routes,
             sourceNodes: sourceNodes,
             libraryNodes: libraryNodes,
             sourceRouteHash: sourceRouteHash,
-            routes: routes,
             sitemap: sitemap.map(function(item) {
                 return traverseTreeNodes(item, {
                     level: -1,

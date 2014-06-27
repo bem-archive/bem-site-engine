@@ -128,3 +128,35 @@ exports.removeCircularReferences = function(tree) {
         return traverseTreeNodes(item);
     });
 };
+
+/**
+ * Finds node by attribute and its value
+ * @param sitemap - {Object} sitemap model object
+ * @param field - {Stirng} name of attribute
+ * @param value - {String} value of attribute
+ * @returns {Object} node
+ */
+exports.findNodeByCriteria = function(sitemap, field, value) {
+
+    var result = null,
+        traverseTreeNodes = function(node) {
+            if(node[field] && node[field] === value) {
+                result = node;
+            }
+
+            if(!result && node.items) {
+                node.items.forEach(function(item) {
+                    traverseTreeNodes(item);
+                });
+            }
+        };
+
+    sitemap.forEach(function(node) {
+        if(result) {
+            return;
+        }
+        traverseTreeNodes(node);
+    });
+
+    return result;
+};

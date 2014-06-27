@@ -9,54 +9,36 @@ var p = require('path'),
     util = require('../lib/util'),
     providers = require('../providers');
 
-var MSG = {
-    WARN: {
-        META_NOT_EXIST: 'source with lang %s does not exists for node %s',
-        MD_NOT_EXIST: 'markdown with lang %s does not exists for node %s',
-        META_PARSING_ERROR: 'source for lang %s contains errors for node %s',
-        MD_PARSING_ERROR: 'markdown for lang %s contains errors for node %s',
-        DEPRECATED: 'remove deprecated field %s for source user: %s repo: %s ref: %s path: %s'
-    }
-};
-
-
 /**
  * Loads sources for nodes
- * @param nodesWithSource - {Array} sources with nodes
  * @returns {*|Q.IPromise<U>|Q.Promise<U>}
  */
-module.exports = function(nodesWithSource, sourceRouteHash) {
+module.exports = function(obj) {
     logger.info('Load sources for nodes start');
 
-    var collected = {
+    var languages = config.get('common:languages'),
+        collected = {
             authors: [],
             translators: [],
             tags: {}
         },
-        promises = nodesWithSource.map(function (node) {
-            var _promises = config.get('common:languages').map(function (lang) {
+        promises = obj.sourceNodes.map(function (node) {
+            return vow.allResolved(languages.map(function (lang) {
                 return analyzeMetaInformation(node, lang, collected)
                     .then(function (res) {
-                        return loadMDFile(res.node, lang, res.repo, sourceRouteHash);
+                        return loadMDFile(res.node, lang, res.repo, obj.sourceRouteHash);
                     })
                     .then(function (res) {
                         node.source[lang].url = node.source[lang].content;
                         node.source[lang].content = res;
                     });
-            });
-
-            return vow.allResolved(_promises);
+            }));
         });
 
-    return vow
-        .all(promises)
-        .then(function() {
-            logger.info('All loading operations for docs have been performed successfully');
-            return collected;
-        })
-        .fail(function() {
-            logger.error('Error occur while loading sources');
-        });
+    return vow.all(promises).then(function() {
+        obj.docs = collected;
+        return obj;
+    });
 };
 
 /**
@@ -72,7 +54,8 @@ var analyzeMetaInformation = function(node, lang, collected) {
     var def = vow.defer();
 
     if(!node.source[lang]) {
-        logger.warn(MSG.WARN.META_NOT_EXIST, lang, node.title && (node.title[lang] || node.title));
+        logger.warn('source with lang %s does not exists for node %s',
+            lang, node.title && (node.title[lang] || node.title));
         node.source[lang] = null;
 
         def.reject();
@@ -138,7 +121,7 @@ var analyzeMetaInformation = function(node, lang, collected) {
         def.resolve({ node: node, repo: repo });
 
     }catch(err) {
-        logger.warn(MSG.WARN.META_PARSING_ERROR, lang, node.title && (node.title[lang] || node.title));
+        logger.warn('source for lang %s contains errors for node %s', lang, node.title && (node.title[lang] || node.title));
 
         node.source[lang] = null;
         def.reject();
@@ -275,7 +258,7 @@ var loadMDFile = function(node, lang, repo, sourceRouteHash) {
             function(md) {
                 try {
                     if(!md.res) {
-                        logger.warn(MSG.WARN.MD_NOT_EXIST, lang,
+                        logger.warn('markdown with lang %s does not exists for node %s', lang,
                             (node.title && node.title[lang]) ? node.title[lang] : node.title);
                         md = null;
                     }else {
@@ -283,14 +266,14 @@ var loadMDFile = function(node, lang, repo, sourceRouteHash) {
                         md = util.mdToHtml(md, { renderer: renderer });
                     }
                 } catch(err) {
-                    logger.warn(MSG.WARN.MD_PARSING_ERROR, lang, node.title);
+                    logger.warn('markdown for lang %s contains errors for node %s', lang, node.title);
                     md = null;
                 }
 
                 return md;
             },
             function(err) {
-                logger.warn(MSG.WARN.MD_NOT_EXIST, lang,
+                logger.warn('markdown with lang %s does not exists for node %s', lang,
                     (node.title && node.title[lang]) ? node.title[lang] : node.title);
                 return null;
             }

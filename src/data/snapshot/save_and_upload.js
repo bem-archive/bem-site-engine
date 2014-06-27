@@ -1,5 +1,5 @@
 var path = require('path'),
-    util = require('util'),
+    u = require('util'),
 
     vow = require('vow'),
     _ = require('lodash'),
@@ -7,6 +7,7 @@ var path = require('path'),
 
     logger = require('../lib/logger')(module),
     config = require('../lib/config'),
+    util = require('../lib/util'),
     providers = require('../providers');
 
 /**
@@ -16,7 +17,7 @@ var path = require('path'),
 function getSnapshotName() {
     var date = new Date();
 
-    return util.format('snapshot_%s:%s:%s-%s:%s:%s',
+    return u.format('snapshot_%s:%s:%s-%s:%s:%s',
         date.getDate(),
         date.getMonth() + 1,
         date.getFullYear(),
@@ -65,7 +66,7 @@ function getConfig() {
 function getTargetData(content) {
     return {
         path: getConfig().data,
-        data: JSON.stringify(_.omit(content, 'sitemapXml', 'search'))
+        data: JSON.stringify(content)
     };
 }
 
@@ -115,24 +116,36 @@ function getTargetMarker(content, snapshot) {
     return {
         path: getConfig().marker,
         data: JSON.stringify({
-            data: sha(JSON.stringify(_.omit(content, 'sitemapXml', 'search'))),
+            data: sha(JSON.stringify(content)),
             date: snapshot
         })
     };
 }
 
-module.exports = function(content) {
+function prepareToSave(content) {
+    return {
+        sitemap: util.removeCircularReferences(content.sitemap),
+        routes: content.routes,
+        docs:   content.docs,
+        urls:   content.dynamic,
+        people: content.people
+    };
+}
 
-    var snapshot = getSnapshotName();
+module.exports = function(obj) {
+
+    var snapshot = getSnapshotName(),
+        data = prepareToSave(obj);
+
     return getProvider()
         .makeDir({ path: path.join(getConfig().dir, snapshot) })
         .then(function() {
             return vow.all([
-                getTargetData(content),
-                getTargetSitemap(content),
-                getTargetSearchLibraries(content),
-                getTargetSearchBlocks(content),
-                getTargetMarker(content, snapshot)
+                getTargetData(data),
+                getTargetSitemap(obj),
+                getTargetSearchLibraries(obj),
+                getTargetSearchBlocks(obj),
+                getTargetMarker(data, snapshot)
             ].map(function(item) {
                 return getProvider().save({
                     path: path.join(getConfig().dir, snapshot, item.path),

@@ -66,7 +66,7 @@ module.exports = function(libraryNodes) {
     }
 
     if(err) {
-        logger.error(err);
+        logger.warn(err);
         return vow.resolve(libraries);
     }
 
