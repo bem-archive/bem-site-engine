@@ -14,7 +14,6 @@ module.exports = function() {
     logger.info('Load all people start');
 
     var err,
-        peopleHash = {},
         pr = config.get('data:github:people');
 
     if(!pr) {
@@ -43,7 +42,7 @@ module.exports = function() {
 
     if(err) {
         logger.warn(err);
-        return vow.resolve(peopleHash);
+        return vow.resolve({});
     }
 
     return providers.getProviderGhApi()
@@ -51,18 +50,17 @@ module.exports = function() {
         .then(
             function(result) {
                 try {
-                    var people = JSON.parse((new Buffer(result.res.content, 'base64')).toString());
-                    peopleHash = Object.keys(people).reduce(function(prev, key) {
-                        prev[key] = people[key];
+                    logger.info('People successfully loaded');
+
+                    result = JSON.parse((new Buffer(result.res.content, 'base64')).toString());
+                    return Object.keys(result).reduce(function(prev, key) {
+                        prev[key] = result[key];
                         return prev;
                     }, {});
-
-                    logger.info('People successfully loaded');
                 }catch(err) {
                     logger.error('Error occur while parsing people data');
+                    return {};
                 }
-
-                return peopleHash;
             }
         )
         .fail(function(err) {
