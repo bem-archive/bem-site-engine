@@ -168,5 +168,5 @@ exports.findNodesByCriteria = function(sitemap, criteria, onlyFirst) {
         traverseTreeNodes(node);
     });
 
-    return result;
+    return onlyFirst ? result[0] : result;
 };

@@ -34,9 +34,11 @@ module.exports = {
             .then(require('./save_and_upload'))
             .then(function() {
                 logger.info('snapshot was created successfully');
+                return vow.resolve();
             })
             .fail(function() {
                 logger.error('Error occur while compile models and loading documentation');
+                return vow.reject();
             });
     }
 };
