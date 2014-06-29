@@ -260,10 +260,10 @@ function addLibraryNodes(routes, nodesWithLib, libraries) {
         routes[key].conditions = conditions;
     });
 
-    return vow.resolve({
+    return {
         libraries: _.values(searchLibraries),
         blocks: searchBlocks
-    });
+    };
 }
 
 module.exports = function(obj) {
@@ -277,15 +277,17 @@ module.exports = function(obj) {
     if(!nodes || !_.isArray(nodes) || !nodes.length) {
         logger.warn('nodes with lib not found');
 
-        return vow.resolve({
+        obj.search = {
             libraries: {},
             blocks: []
-        });
+        };
+
+        return vow.resolve(obj);
     }
 
     return require('./load_libraries')(nodes).then(function(libraries) {
         obj.search = addLibraryNodes(routes, nodes, libraries);
-        return obj;
+        return vow.resolve(obj);
     });
 };
 
