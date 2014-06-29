@@ -2,7 +2,8 @@ var vow = require('vow'),
     _ = require('lodash'),
 
     util = require('../lib/util'),
-    logger = require('../lib/logger')(module);
+    logger = require('../lib/logger')(module),
+    nodes = require('../model');
 
 function getSitemap(modelPath) {
     logger.info('Get sitemap start');
@@ -15,6 +16,45 @@ function getSitemap(modelPath) {
     }
 }
 
+function analyze(sitemap) {
+    logger.info('analyze sitemap start');
+
+    var def = vow.defer(),
+        routes = {},
+        traverseTreeNodes = function(node, parent) {
+            node = new nodes.base.BaseNode(node, parent);
+            node.processRoute(routes).createBreadcrumbs();
+
+            if(node.items) {
+                node.items = node.items.map(function(item) {
+                    return traverseTreeNodes(item, node);
+                });
+            }
+
+            return node;
+        };
+
+    try {
+        def.resolve({
+            routes: routes,
+            sitemap: sitemap.map(function(item) {
+                return traverseTreeNodes(item, {
+                    level: -1,
+                    route: { name: null },
+                    params: {}
+                });
+            })
+        });
+
+        logger.info('sitemap object has been analyzed successfully');
+    } catch(e) {
+        logger.error('Error occur while analyze sitemap object');
+        def.reject(e);
+    }
+
+    return def.promise();
+}
+
 module.exports = {
 
     /**
@@ -25,11 +65,12 @@ module.exports = {
         logger.info('create snapshot start');
 
         return getSitemap(modelPath)
-            .then(require('./analyze_sitemap'))
+            .then(analyze)
             .then(require('./load_sources'))
             .then(require('./load_people'))
             .then(require('./add_dynamic_nodes'))
             .then(require('./add_library_nodes'))
+            .then(require('./override_links.js'))
             .then(require('./generate_sitemap'))
             .then(require('./save_and_upload'))
             .then(function() {
