@@ -268,7 +268,9 @@ function addLibraryNodes(routes, nodesWithLib, libraries) {
 
 module.exports = function(obj) {
     var routes = obj.routes,
-        nodes = obj.libraryNodes;
+        nodes = util.findNodesByCriteria(obj.sitemap, function() {
+            return this.lib;
+        });
 
     logger.info('add library nodes start');
 

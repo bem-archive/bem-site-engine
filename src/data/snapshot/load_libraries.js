@@ -20,9 +20,12 @@ function loadLibraryVersions(repo, node, libraries) {
         .load({ repository: _.extend({ path: node.lib }, repo) })
         .then(function(result) {
             return vow.all(result.res.map(function(version) {
-                var _path = u.format('%s/%s/data.json', node.lib, version.name);
                 return providers.getProviderGhHttps()
-                    .load({ repository: _.extend({ path: _path }, repo) })
+                    .load({
+                        repository: _.extend({
+                            path: u.format('%s/%s/data.json', node.lib, version.name)
+                        }, repo)
+                    })
                     .then(function(result) {
                         libraries[node.lib][version.name] = result;
                     })

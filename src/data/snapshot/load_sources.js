@@ -23,18 +23,21 @@ module.exports = function(obj) {
             translators: [],
             tags: {}
         },
-        promises = obj.sourceNodes.map(function (node) {
-            return vow.allResolved(languages.map(function (lang) {
-                return analyzeMetaInformation(node, lang, collected)
-                    .then(function (res) {
-                        return loadMDFile(res.node, lang, res.repo, obj.sourceRouteHash);
-                    })
-                    .then(function (res) {
-                        node.source[lang].url = node.source[lang].content;
-                        node.source[lang].content = res;
-                    });
-            }));
-        });
+        promises = util.findNodesByCriteria(obj.sitemap, function() {
+                return this.source;
+            })
+            .map(function (node) {
+                return vow.allResolved(languages.map(function (lang) {
+                    return analyzeMetaInformation(node, lang, collected)
+                        .then(function(res) {
+                            return loadMDFile(res.node, lang, res.repo);
+                        })
+                        .then(function (res) {
+                            node.source[lang].url = node.source[lang].content;
+                            node.source[lang].content = res;
+                        });
+                }));
+            });
 
     return vow.all(promises).then(function() {
         obj.docs = collected;
@@ -138,14 +141,14 @@ var analyzeMetaInformation = function(node, lang, collected) {
  * @param repo - {Object} repository object
  * @returns {*|Q.IPromise<U>|Q.Promise<U>}
  */
-var loadMDFile = function(node, lang, repo, sourceRouteHash) {
+var loadMDFile = function(node, lang, repo) {
     return providers.getProviderGhApi()
         .load({ repository: repo })
         .then(
             function(md) {
                 try {
-                    md = (new Buffer(md.res.content, 'base64')).toString();
-                    md = util.mdToHtml(md, { renderer: renderer.getRenderer() });
+                    return util.mdToHtml((new Buffer(md.res.content, 'base64')).toString(),
+                        { renderer: renderer.getRenderer() });
                 }catch(err) {
                     if(!md.res) {
                         logger.warn('markdown with lang %s does not exists for node %s', lang,
@@ -153,10 +156,8 @@ var loadMDFile = function(node, lang, repo, sourceRouteHash) {
                     }else {
                         logger.warn('markdown for lang %s contains errors for node %s', lang, node.title);
                     }
-                    md = null;
+                    return null;
                 }
-
-                return md;
             }
         )
         .fail(function() {

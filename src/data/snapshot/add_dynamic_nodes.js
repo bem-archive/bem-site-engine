@@ -56,7 +56,9 @@ var addDynamicNodesFor = function(config, obj) {
         routes = obj.routes;
 
     try {
-        targetNode = util.findNodeByCriteria(obj.sitemap, 'dynamic', config.key);
+        targetNode = util.findNodesByCriteria(obj.sitemap, function() {
+            return this.dynamic === config.key;
+        }, true);
 
         if(!targetNode) {
             logger.warn('target node for %s was not found', config.key);
