@@ -132,19 +132,29 @@ exports.removeCircularReferences = function(tree) {
 /**
  * Finds node by attribute and its value
  * @param sitemap - {Object} sitemap model object
- * @param field - {Stirng} name of attribute
- * @param value - {String} value of attribute
  * @returns {Object} node
  */
-exports.findNodeByCriteria = function(sitemap, field, value) {
+exports.findNodesByCriteria = function(sitemap, criteria, onlyFirst) {
 
-    var result = null,
+    var result = [];
+
+    if(!_.isObject(sitemap)) {
+        return result;
+    }
+
+    if(!_.isFunction(criteria)) {
+        return result;
+    }
+
+    var isFound = function() {
+            return onlyFirst && result.length;
+        },
         traverseTreeNodes = function(node) {
-            if(node[field] && node[field] === value) {
-                result = node;
+            if(criteria.apply(node)) {
+                result.push(node);
             }
 
-            if(!result && node.items) {
+            if(!isFound() && node.items) {
                 node.items.forEach(function(item) {
                     traverseTreeNodes(item);
                 });
@@ -152,7 +162,7 @@ exports.findNodeByCriteria = function(sitemap, field, value) {
         };
 
     sitemap.forEach(function(node) {
-        if(result) {
+        if(isFound()) {
             return;
         }
         traverseTreeNodes(node);
