@@ -11,7 +11,7 @@ module.exports = function(obj) {
     if(hosts) {
         Object.keys(hosts).forEach(function (lang) {
             urls.forEach(function (url) {
-                if (!url.hidden[lang]) {
+                if(!url.hidden[lang]) {
                     sitemapJson.push({
                         loc: hosts[lang] + url.url,
                         changefreq: 'weekly'
