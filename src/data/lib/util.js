@@ -130,9 +130,11 @@ exports.removeCircularReferences = function(tree) {
 };
 
 /**
- * Finds node by attribute and its value
+ * Find node(s) which satisfy to criteria function
  * @param sitemap - {Object} sitemap model object
- * @returns {Object} node
+ * @param criteria - {Function} criteria function
+ * @param onlyFirst - {Boolean} flag for find only first node
+ * @returns {*}
  */
 exports.findNodesByCriteria = function(sitemap, criteria, onlyFirst) {
 
