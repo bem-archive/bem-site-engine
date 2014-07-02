@@ -7,7 +7,14 @@ var u = require('util'),
     logger = require('../lib/logger')(module),
     config = require('../lib/config');
 
-var LINK_REGEXP = /<a\s+(?:[^>]*?\s+)?href="([^"]*)"/;
+var REGEXP = {
+    LINK: /<a\s+(?:[^>]*?\s+)?href="([^"]*)"/,
+    RELATIVE: {
+        BLOCK: /^\.\.?\/([\w|-]+)\/?([\w|-]+)?\.?[html|ru\.md|en\.md]/,
+        LEVEL: /^\.\.?\/\.\.\/([\w|-]+)\.blocks\/([\w|-]+)\/?([\w|-]+)?\.?[html|ru\.md|en\.md]/
+    }
+};
+
 
 function collectUrls(sitemap) {
     var urls = {},
@@ -41,6 +48,7 @@ function collectUrls(sitemap) {
     return  urls;
 }
 
+
 /**
  * Override links for doc sources
  * @param content - {String} content doc node
@@ -49,11 +57,11 @@ function collectUrls(sitemap) {
  */
 function overrideLinks(content, node, urlHash, lang) {
     try {
-        return content.replace(LINK_REGEXP, function (str, href) {
-            //if('https://github.com/bem/bem-core/issues/540' === href) {
-            //    console.log('!');
-            //}
+        if(!_.isString(content)) {
+            return content;
+        }
 
+        return content.replace(REGEXP.LINK, function (str, href) {
             var nativeHref = href,
                 existedLinks = _.values(urlHash),
                 isMailTo = /^mailto:/.test(href), //detect mailto links
@@ -77,7 +85,7 @@ function overrideLinks(content, node, urlHash, lang) {
                 anchor = hrefArr[1];
 
             //detect if link is native site link
-            if (existedLinks.indexOf(href.replace(/\/$/, '')) > -1) {
+            if(existedLinks.indexOf(href.replace(/\/$/, '')) > -1) {
                 return  href + (anchor ? '#' + anchor : '');
             }
 
@@ -93,12 +101,23 @@ function overrideLinks(content, node, urlHash, lang) {
                     }
 
                     if (node.source.data) {
-                        console.log('!');
+                        var conditions = node.route.conditions,
+                            lib = conditions.lib,
+                            version = conditions.version,
+                            level = conditions.level;
+
+                        var match = href.match(REGEXP.RELATIVE.BLOCK);
+                        if(match) {
+                            _href = u.format('/libs/%s/%s/%s/%s', lib, version, level, match[1]);
+                        }else {
+                            match = href.match(REGEXP.RELATIVE.LEVEL);
+                            _href = u.format('/libs/%s/%s/%s/%s', lib, version, match[1], match[2]);
+                        }
                     }
                 }
 
                 //find existed resources source-link hash
-                if (urlHash[_href]) {
+                if(urlHash[_href]) {
                     _href = urlHash[_href];
                     return true;
                 }
@@ -110,16 +129,26 @@ function overrideLinks(content, node, urlHash, lang) {
                     return true;
                 }
 
+                var existed = existedLinks.filter(function(link) {
+                    return link === _href;
+                });
+
+                if(existed.length) {
+                    _href = existed[0];
+                    return true;
+                }
+
                 return false;
             });
 
             href = _href;
+            href += (anchor ? '#' + anchor : '');
 
             console.log('native: %s replaced: %s', nativeHref, href);
-            return  href + (anchor ? '#' + anchor : '');
+            return href;
         });
     }catch(err) {
-        console.error('error occur %s', node.url);
+        console.error('error occur %s', node.url, err.message);
     }
 }
 
@@ -142,12 +171,20 @@ module.exports = function(obj) {
                     node.source[lang].content = overrideLinks(s[lang].content, node, urlHash, lang);
                 }
 
-                if(s.data && s.data[lang] && s.data[lang].description) {
-                    if(_.isArray(s.data[lang].description)) {
-                        s.data[lang].description.forEach(function(item, index) {
+                if(s.data) {
+                    var description = s.data[lang] ?
+                        s.data[lang].description : s.data.description;
+
+                    if(_.isArray(description)) {
+                        description.forEach(function(item, index) {
                             var content = item.content || '';
-                            node.source.data[lang].description[index].content =
-                                overrideLinks(content, node, urlHash, lang)
+                            if(s.data[lang]) {
+                                node.source.data[lang].description[index].content =
+                                    overrideLinks(content, node, urlHash, lang)
+                            }else {
+                                node.source.data.description[index].content =
+                                    overrideLinks(content, node, urlHash, lang);
+                            }
                         })
                     }
                 }
