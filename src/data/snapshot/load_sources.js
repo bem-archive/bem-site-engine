@@ -118,6 +118,11 @@ var analyzeMetaInformation = function(node, lang, collected) {
         //set repo information for issues and prose.io links
         node.source[lang].repo = {
             type: repo.type,
+            host: repo.host,
+            user: repo.user,
+            repo: repo.repo,
+            ref:  repo.ref,
+            path: repo.path,
             issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"", repo.host, repo.user, repo.repo, meta.title),
             prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",repo.user, repo.repo, repo.ref, repo.path)
         };
