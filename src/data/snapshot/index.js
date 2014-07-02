@@ -70,7 +70,7 @@ module.exports = {
             .then(require('./load_people'))
             .then(require('./add_dynamic_nodes'))
             .then(require('./add_library_nodes'))
-            .then(require('./override_links.js'))
+            .then(require('./override_links'))
             .then(require('./generate_sitemap'))
             .then(require('./save_and_upload'))
             .then(function() {
