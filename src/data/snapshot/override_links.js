@@ -8,13 +8,12 @@ var u = require('util'),
     config = require('../lib/config');
 
 var REGEXP = {
-    LINK: /<a\s+(?:[^>]*?\s+)?href="([^"]*)"/,
+    LINK: /<a\s+(?:[^>]*?\s+)?href="([^"]*)"/g,
     RELATIVE: {
-        BLOCK: /^\.\.?\/([\w|-]+)\/?([\w|-]+)?\.?[html|ru\.md|en\.md]/,
-        LEVEL: /^\.\.?\/\.\.\/([\w|-]+)\.blocks\/([\w|-]+)\/?([\w|-]+)?\.?[html|ru\.md|en\.md]/
+        BLOCK: /^\.\.?\/([\w|-]+)\/?([\w|-]+)?\.?[html|ru\.md|en\.md]?/,
+        LEVEL: /^\.\.?\/\.\.\/([\w|-]+)\.blocks\/([\w|-]+)\/?([\w|-]+)?\.?[html|ru\.md|en\.md]?/
     }
 };
-
 
 function collectUrls(sitemap) {
     var urls = {},
@@ -65,10 +64,11 @@ function overrideLinks(content, node, urlHash, lang) {
             var nativeHref = href,
                 existedLinks = _.values(urlHash),
                 isMailTo = /^mailto:/.test(href), //detect mailto links
-                isAnchor = /^#(.+)?/.test(href); //detect simple anchors
+                isAnchor = /^#(.+)?/.test(href), //detect simple anchors
+                buildHref = function(a) { return u.format('<a href="%s"', a) };
 
             if (isMailTo || isAnchor) {
-                return href;
+                return buildHref(href);
             }
 
             //fix some broken links as single ampersand
@@ -86,10 +86,10 @@ function overrideLinks(content, node, urlHash, lang) {
 
             //detect if link is native site link
             if(existedLinks.indexOf(href.replace(/\/$/, '')) > -1) {
-                return  href + (anchor ? '#' + anchor : '');
+                return  buildHref(href + (anchor ? '#' + anchor : ''));
             }
 
-            var _href;
+            var _href, match;
             ['tree', 'blob'].some(function (item) {
                 _href = href;
 
@@ -100,19 +100,25 @@ function overrideLinks(content, node, urlHash, lang) {
                                 href.indexOf('.') == 0 ? p.dirname(repo.path) : '', href.replace(/^\//, ''));
                     }
 
+                    //try to recognize relative links in block documentation
                     if (node.source.data) {
                         var conditions = node.route.conditions,
                             lib = conditions.lib,
                             version = conditions.version,
                             level = conditions.level;
 
-                        var match = href.match(REGEXP.RELATIVE.BLOCK);
+                        //try to recognize relative block link on the same level
+                        match = href.match(REGEXP.RELATIVE.BLOCK);
                         if(match) {
                             _href = u.format('/libs/%s/%s/%s/%s', lib, version, level, match[1]);
-                        }else {
-                            match = href.match(REGEXP.RELATIVE.LEVEL);
+                        }
+
+                        //try to recognize relative block link on the different level
+                        match = href.match(REGEXP.RELATIVE.LEVEL);
+                        if(match) {
                             _href = u.format('/libs/%s/%s/%s/%s', lib, version, match[1], match[2]);
                         }
+
                     }
                 }
 
@@ -129,6 +135,7 @@ function overrideLinks(content, node, urlHash, lang) {
                     return true;
                 }
 
+                //try to found built link in array of existed links
                 var existed = existedLinks.filter(function(link) {
                     return link === _href;
                 });
@@ -144,11 +151,11 @@ function overrideLinks(content, node, urlHash, lang) {
             href = _href;
             href += (anchor ? '#' + anchor : '');
 
-            console.log('native: %s replaced: %s', nativeHref, href);
-            return href;
+            logger.verbose('native: %s replaced: %s', nativeHref, href);
+            return buildHref(href);
         });
     }catch(err) {
-        console.error('error occur %s', node.url, err.message);
+        logger.warn('overriding link %s was failed');
     }
 }
 
@@ -158,9 +165,6 @@ module.exports = function(obj) {
     var languages = config.get('common:languages'),
         sitemap = obj.sitemap,
         urlHash = collectUrls(sitemap);
-
-    //console.log('-- url links --');
-    //console.log(JSON.stringify(urlHash, null, 4));
 
     var traverseTreeNodes = function(node) {
 
@@ -198,9 +202,11 @@ module.exports = function(obj) {
         return node;
     };
 
-    sitemap.forEach(function(node) {
+    obj.sitemap.forEach(function(node) {
         traverseTreeNodes(node);
     });
+
+    logger.info('links were overrided');
 
     return obj;
 };
