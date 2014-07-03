@@ -1,5 +1,5 @@
 var path = require('path'),
-    util = require('util'),
+    u = require('util'),
 
     vow = require('vow'),
     _ = require('lodash'),
@@ -7,54 +7,150 @@ var path = require('path'),
 
     logger = require('../lib/logger')(module),
     config = require('../lib/config'),
+    util = require('../lib/util'),
     providers = require('../providers');
 
-module.exports = function(content) {
-    var date = new Date(),
-        snapshotName = util.format('snapshot_%s:%s:%s-%s:%s:%s', date.getDate(),
-                date.getMonth() + 1, date.getFullYear(), date.getHours(), date.getMinutes(), date.getSeconds()),
-        provider = 'development' === config.get('NODE_ENV') ?
-            providers.getProviderFile() : providers.getProviderYaDisk(),
+/**
+ * Returns name of snapshot as formatted current date
+ * @returns {String}
+ */
+function getSnapshotName() {
+    var date = new Date();
 
-        sitemapXml = content.sitemapXml,
-        search = content.search,
-        data = _.omit(content, 'sitemapXml', 'search');
+    return u.format('snapshot_%s:%s:%s-%s:%s:%s',
+        date.getDate(),
+        date.getMonth() + 1,
+        date.getFullYear(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds()
+    );
+}
 
-    return provider
-        .makeDir({ path: path.join(config.get('common:model:dir'), snapshotName) })
+/**
+ * Returns provider which should be used for save and upload
+ * data model. It may be file provider or Yandex Disk provider
+ * depending on settled environment
+ * @returns {*|FileProvider}
+ */
+function getProvider() {
+    return 'development' === config.get('NODE_ENV') ?
+        providers.getProviderFile() : providers.getProviderYaDisk();
+}
+
+function getConfig() {
+    var def = {
+            dir: 'backups',
+            data: 'data.json',
+            marker: 'marker.json',
+            search: {
+                libraries: 'search_libraries.json',
+                blocks: 'search_blocks.json'
+            }
+        },
+        model =  config.get('common:model') || def;
+
+    return {
+        dir: model.dir || def.dir,
+        data: model.data || def.data,
+        marker: model.marker || def.marker,
+        search: model.search || def.search
+    };
+}
+
+/**
+ * Returns target for saving main part of data model
+ * @param content
+ * @returns {{path: *, data: *}}
+ */
+function getTargetData(content) {
+    return {
+        path: getConfig().data,
+        data: JSON.stringify(content)
+    };
+}
+
+/**
+ * Returns target for saving sitemap.xml file
+ * @param content
+ * @returns {{path: *, data: *}}
+ */
+function getTargetSitemap(content) {
+    return {
+        path: 'sitemap.xml',
+        data: content.sitemapXml
+    };
+}
+
+/**
+ * Returns target for saving data for libraries search
+ * @param content
+ * @returns {{path: *, data: *}}
+ */
+function getTargetSearchLibraries(content) {
+    return {
+        path: getConfig().search.libraries,
+        data: JSON.stringify(content.search.libraries, null, 4)
+    };
+}
+
+/**
+ * Returns target for saving data for blocks search
+ * @param content
+ * @returns {{path: *, data: *}}
+ */
+function getTargetSearchBlocks(content) {
+    return {
+        path: getConfig().search.blocks,
+        data: JSON.stringify(content.search.blocks, null, 4)
+    };
+}
+
+/**
+ * Returns target for saving marker file
+ * @param content
+ * @param snapshot - {String} name of snapshot
+ * @returns {{path: *, data: *}}
+ */
+function getTargetMarker(content, snapshot) {
+    return {
+        path: getConfig().marker,
+        data: JSON.stringify({
+            data: sha(JSON.stringify(content)),
+            date: snapshot
+        })
+    };
+}
+
+function prepareToSave(content) {
+    return {
+        sitemap: util.removeCircularReferences(content.sitemap),
+        routes: content.routes,
+        docs:   content.docs,
+        urls:   content.dynamic,
+        people: content.people
+    };
+}
+
+module.exports = function(obj) {
+
+    var snapshot = getSnapshotName(),
+        data = prepareToSave(obj);
+
+    return getProvider()
+        .makeDir({ path: path.join(getConfig().dir, snapshot) })
         .then(function() {
-
-            var promises = [
-                {
-                    path: config.get('common:model:data'),
-                    data: JSON.stringify(data)
-                },
-                {
-                    path: 'sitemap.xml',
-                    data: sitemapXml
-                },
-                {
-                    path: config.get('common:model:search:libraries'),
-                    data: JSON.stringify(search.libraries, null, 4)
-                },
-                {
-                    path: config.get('common:model:search:blocks'),
-                    data: JSON.stringify(search.blocks, null, 4)
-                },
-                {
-                    path: config.get('common:model:marker'),
-                    data: JSON.stringify({
-                        data: sha(JSON.stringify(data)),
-                        date: snapshotName
-                    })
-                }
+            return vow.all([
+                getTargetData(data),
+                getTargetSitemap(obj),
+                getTargetSearchLibraries(obj),
+                getTargetSearchBlocks(obj),
+                getTargetMarker(data, snapshot)
             ].map(function(item) {
-                    return provider.save({
-                        path: path.join(config.get('common:model:dir'), snapshotName, item.path),
-                        data: item.data
-                    });
+                return getProvider().save({
+                    path: path.join(getConfig().dir, snapshot, item.path),
+                    data: item.data
                 });
-
-            return vow.all(promises);
+            }));
         });
 };

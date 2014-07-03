@@ -1,5 +1,8 @@
 var _ = require('lodash'),
-    sha = require('sha1');
+    sha = require('sha1'),
+    susanin = require('susanin'),
+
+    constants = require('../lib/constants');
 
 /**
  * Base class for nodes with common nodes methods
@@ -183,6 +186,74 @@ BaseNode.prototype = {
 
         traverse(this);
 
+    },
+
+    /**
+     * Collects routes rules for nodes
+     * @param node {Object} - single node of sitemap model
+     * @param level {Number} - menu deep level
+     */
+    processRoute: function(routes) {
+        this.params = _.extend({}, this.parent.params);
+
+        if(!this.route) {
+            this.route = {
+                name: this.parent.route.name
+            };
+            this.type = this.type || (this.url ? this.TYPE.SIMPLE : this.TYPE.GROUP);
+            return this;
+        }
+
+        //BEMINFO-195
+        if(_.isString(this.route)) {
+            this.route = {
+                conditions: {
+                    id: this.route
+                }
+            };
+        }
+
+        var r = this.route;
+
+        if(r[constants.ROUTE.NAME]) {
+            routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
+            this.url = susanin.Route(routes[r.name]).build(this.params);
+        }else {
+            r.name = this.parent.route.name;
+        }
+
+        [
+            constants.ROUTE.DEFAULTS,
+            constants.ROUTE.CONDITIONS,
+            constants.ROUTE.DATA
+        ].forEach(function(item) {
+                routes[r.name][item] = routes[r.name][item] || {};
+
+                if(r[item]) {
+                    Object.keys(r[item]).forEach(function(key) {
+                        if(item === constants.ROUTE.CONDITIONS) {
+                            routes[r.name][item][key] = routes[r.name][item][key] || [];
+                            routes[r.name][item][key] = routes[r.name][item][key].concat(r[item][key]);
+                            this.url = susanin.Route(routes[r.name]).build(_.extend(this.params, r[item]));
+                        }else {
+                            routes[r.name][item][key] = r[item][key];
+                        }
+                    }, this);
+                }
+            }, this);
+
+        /*
+         if(node.url && node.source) {
+         config.get('common:languages').forEach(function(lang) {
+         if(node.source[lang] && node.source[lang].content) {
+         sourceRouteHash[node.source[lang].content] = node.url;
+         }
+         });
+         }
+         */
+
+        this.type = this.type || this.TYPE.SIMPLE;
+        return this;
     }
 };
 

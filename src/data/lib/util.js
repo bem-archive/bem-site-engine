@@ -128,3 +128,47 @@ exports.removeCircularReferences = function(tree) {
         return traverseTreeNodes(item);
     });
 };
+
+/**
+ * Find node(s) which satisfy to criteria function
+ * @param sitemap - {Object} sitemap model object
+ * @param criteria - {Function} criteria function
+ * @param onlyFirst - {Boolean} flag for find only first node
+ * @returns {*}
+ */
+exports.findNodesByCriteria = function(sitemap, criteria, onlyFirst) {
+
+    var result = [];
+
+    if(!_.isObject(sitemap)) {
+        return result;
+    }
+
+    if(!_.isFunction(criteria)) {
+        return result;
+    }
+
+    var isFound = function() {
+            return onlyFirst && result.length;
+        },
+        traverseTreeNodes = function(node) {
+            if(criteria.apply(node)) {
+                result.push(node);
+            }
+
+            if(!isFound() && node.items) {
+                node.items.forEach(function(item) {
+                    traverseTreeNodes(item);
+                });
+            }
+        };
+
+    sitemap.forEach(function(node) {
+        if(isFound()) {
+            return;
+        }
+        traverseTreeNodes(node);
+    });
+
+    return onlyFirst ? result[0] : result;
+};

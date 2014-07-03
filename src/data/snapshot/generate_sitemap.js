@@ -3,16 +3,16 @@ var vow = require('vow'),
     config = require('../lib/config'),
     logger = require('../lib/logger')(module);
 
-module.exports = function(sitemap) {
-    var urls = getAllUrls(sitemap),
+module.exports = function(obj) {
+    var urls = getAllUrls(obj.sitemap),
         hosts = config.get('data:hosts'),
-        jsonUrls = [];
+        sitemapJson = [];
 
     if(hosts) {
         Object.keys(hosts).forEach(function (lang) {
             urls.forEach(function (url) {
-                if (!url.hidden[lang]) {
-                    jsonUrls.push({
+                if(!url.hidden[lang]) {
+                    sitemapJson.push({
                         loc: hosts[lang] + url.url,
                         changefreq: 'weekly'
                     });
@@ -21,7 +21,8 @@ module.exports = function(sitemap) {
         });
     }
 
-    return js2xml('urlset', {url: jsonUrls});
+    obj.sitemapXml = js2xml('urlset', { url: sitemapJson });
+    return obj;
 };
 
 /**

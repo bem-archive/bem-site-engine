@@ -10,11 +10,10 @@ var u = require('util'),
  * Loads people data from github repo
  * @returns {Object} people hash
  */
-module.exports = function() {
+module.exports = function(obj) {
     logger.info('Load all people start');
 
     var err,
-        peopleHash = {},
         pr = config.get('data:github:people');
 
     if(!pr) {
@@ -42,8 +41,8 @@ module.exports = function() {
     }
 
     if(err) {
-        logger.error(err);
-        return vow.resolve(peopleHash);
+        logger.warn(err);
+        return vow.resolve({});
     }
 
     return providers.getProviderGhApi()
@@ -51,18 +50,18 @@ module.exports = function() {
         .then(
             function(result) {
                 try {
-                    var people = JSON.parse((new Buffer(result.res.content, 'base64')).toString());
-                    peopleHash = Object.keys(people).reduce(function(prev, key) {
-                        prev[key] = people[key];
+                    logger.info('People successfully loaded');
+
+                    result = JSON.parse((new Buffer(result.res.content, 'base64')).toString());
+                    obj.people = Object.keys(result).reduce(function(prev, key) {
+                        prev[key] = result[key];
                         return prev;
                     }, {});
-
-                    logger.info('People successfully loaded');
+                    return obj;
                 }catch(err) {
                     logger.error('Error occur while parsing people data');
+                    return {};
                 }
-
-                return peopleHash;
             }
         )
         .fail(function(err) {

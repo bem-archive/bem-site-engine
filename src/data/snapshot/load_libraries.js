@@ -19,21 +19,20 @@ function loadLibraryVersions(repo, node, libraries) {
     return providers.getProviderGhApi()
         .load({ repository: _.extend({ path: node.lib }, repo) })
         .then(function(result) {
-            var promises = result.res.map(function(version) {
-                var _path = u.format('%s/%s/data.json', node.lib, version.name);
+            return vow.all(result.res.map(function(version) {
                 return providers.getProviderGhHttps()
-                    .load({ repository: _.extend({ path: _path }, repo) })
-                    .then(
-                    function(result) {
+                    .load({
+                        repository: _.extend({
+                            path: u.format('%s/%s/data.json', node.lib, version.name)
+                        }, repo)
+                    })
+                    .then(function(result) {
                         libraries[node.lib][version.name] = result;
-                    },
-                    function(err) {
+                    })
+                    .fail(function(err) {
                         logger.error('Error %s while loading data for library %s version %s', err, node.lib, version.name);
-                    }
-                );
-            });
-
-            return vow.all(promises);
+                    });
+            }));
         });
 }
 
@@ -70,7 +69,7 @@ module.exports = function(libraryNodes) {
     }
 
     if(err) {
-        logger.error(err);
+        logger.warn(err);
         return vow.resolve(libraries);
     }
 

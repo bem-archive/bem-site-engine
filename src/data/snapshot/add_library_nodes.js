@@ -8,25 +8,12 @@ var u = require('util'),
     constants = require('../lib/constants'),
     nodes = require('../model');
 
-module.exports = function(sitemap, routes, nodesWithLib, libraries) {
-    logger.info('add library nodes start');
 
-    var def = vow.defer(),
-        searchLibraries = {},
-        searchBlocks = [];
+function addLibraryNodes(routes, nodesWithLib, libraries) {
 
-    if(!nodesWithLib || !_.isArray(nodesWithLib) || nodesWithLib.length === 0) {
-        logger.warn('nodes with lib not found');
-
-        def.resolve({
-            libraries: searchLibraries,
-            blocks: searchBlocks
-        });
-
-        return def.promise();
-    }
-
-    var collectConditionsForBaseRoute = function(baseRoute, conditions) {
+    var searchLibraries = {},
+        searchBlocks = [],
+        collectConditionsForBaseRoute = function(baseRoute, conditions) {
             Object.keys(conditions.conditions).forEach(function(key) {
                 routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
                 routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
@@ -273,11 +260,34 @@ module.exports = function(sitemap, routes, nodesWithLib, libraries) {
         routes[key].conditions = conditions;
     });
 
-    def.resolve({
+    return {
         libraries: _.values(searchLibraries),
         blocks: searchBlocks
-    });
+    };
+}
 
-    return def.promise();
+module.exports = function(obj) {
+    var routes = obj.routes,
+        nodes = util.findNodesByCriteria(obj.sitemap, function() {
+            return this.lib;
+        });
+
+    logger.info('add library nodes start');
+
+    if(!nodes || !_.isArray(nodes) || !nodes.length) {
+        logger.warn('nodes with lib not found');
+
+        obj.search = {
+            libraries: {},
+            blocks: []
+        };
+
+        return vow.resolve(obj);
+    }
+
+    return require('./load_libraries')(nodes).then(function(libraries) {
+        obj.search = addLibraryNodes(routes, nodes, libraries);
+        return vow.resolve(obj);
+    });
 };
 

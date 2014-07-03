@@ -4,10 +4,11 @@ var _ = require('lodash'),
 
     logger = require('../lib/logger')(module),
     config = require('../lib/config'),
+    util = require('../lib/util'),
     constants = require('../lib/constants'),
     nodes = require('../model');
 
-module.exports = function(sitemap, routes, docs, people) {
+module.exports = function(obj) {
     logger.info('Add dynamic nodes to sitemap start');
 
     var urls = {
@@ -17,25 +18,47 @@ module.exports = function(sitemap, routes, docs, people) {
 
     return vow
         .all([
-            addDynamicNodesFor({ key: 'authors', data: docs.authors, urlHash: urls.people, people: people }, sitemap, routes),
-            addDynamicNodesFor({ key: 'translators', data: docs.translators, urlHash: urls.people, people: people }, sitemap, routes),
-            addDynamicNodesFor({ key: 'tags:en', data: docs.tags.en, urlHash: urls.tags }, sitemap, routes),
-            addDynamicNodesFor({ key: 'tags:ru', data: docs.tags.ru, urlHash: urls.tags }, sitemap, routes)
+            addDynamicNodesFor({
+                key: 'tags:en',
+                data: obj.docs.tags.en,
+                urlHash: urls.tags
+            }, obj),
+            addDynamicNodesFor({
+                key: 'tags:ru',
+                data: obj.docs.tags.ru,
+                urlHash: urls.tags
+            }, obj),
+            addDynamicNodesFor({
+                key: 'authors',
+                data: obj.docs.authors,
+                urlHash: urls.people,
+                people: obj.people
+            }, obj),
+            addDynamicNodesFor({
+                key: 'translators',
+                data: obj.docs.translators,
+                urlHash: urls.people,
+                people: obj.people
+            }, obj)
         ])
         .then(function() {
-            return urls;
+            obj.dynamic = urls;
+            return obj;
         });
 };
 
-var addDynamicNodesFor = function(config, sitemap, routes) {
+var addDynamicNodesFor = function(config, obj) {
     logger.debug('add dynamic nodes for %s', config.key);
 
-    var def = vow.defer(),
-        targetNode,
-        baseRoute;
+    var targetNode,
+        baseRoute,
+        def = vow.defer(),
+        routes = obj.routes;
 
     try {
-        targetNode = findNodeByCriteria(sitemap, 'dynamic', config.key);
+        targetNode = util.findNodesByCriteria(obj.sitemap, function() {
+            return this.dynamic === config.key;
+        }, true);
 
         if(!targetNode) {
             logger.warn('target node for %s was not found', config.key);
@@ -67,7 +90,9 @@ var addDynamicNodesFor = function(config, sitemap, routes) {
                     url: susanin.Route(routes[baseRoute.name]).build(conditions.conditions)
                 };
 
-            if('authors' === config.key || 'translators' === config.key) {
+            if('authors' === config.key) {
+                _node = new nodes.person.PersonNode(_route, targetNode, item, config.people);
+            }else if('translators' === config.key) {
                 _node = new nodes.person.PersonNode(_route, targetNode, item, config.people);
             }else if( config.key.indexOf('tags') > -1) {
                 _node = new nodes.tag.TagNode(_route, targetNode, item);
@@ -87,36 +112,4 @@ var addDynamicNodesFor = function(config, sitemap, routes) {
     }
 
     return def.promise();
-};
-
-/**
- * Finds node by attribute and its value
- * @param sitemap - {Object} sitemap model object
- * @param field - {Stirng} name of attribute
- * @param value - {String} value of attribute
- * @returns {Object} node
- */
-var findNodeByCriteria = function(sitemap, field, value) {
-
-    var result = null,
-        traverseTreeNodes = function(node) {
-            if(node[field] && node[field] === value) {
-                result = node;
-            }
-
-            if(!result && node.items) {
-                node.items.forEach(function(item) {
-                    traverseTreeNodes(item);
-                });
-            }
-        };
-
-    sitemap.forEach(function(node) {
-        if(result) {
-            return;
-        }
-        traverseTreeNodes(node);
-    });
-
-    return result;
 };
