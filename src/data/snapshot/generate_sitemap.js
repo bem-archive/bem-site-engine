@@ -34,7 +34,7 @@ var getAllNodesForIndexation = function(sitemap) {
 
     var traverseTreeNodes = function(node) {
 
-        if(node.url && node.hidden) {
+        if(node.hidden && _.isString(node.url) && !/^(https?:)?\/\//.test(node.url)) {
             urls.push(_.pick(node, 'url', 'hidden', 'search'));
         }
 
