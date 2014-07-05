@@ -46,8 +46,8 @@ BaseNode.prototype = {
     SITEMAP_XML: {
         FREQUENCIES: ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'],
         DEFAULT: {
-            FREQUENCY: 'weekly',
-            PRIORITY: 0.5
+            changefreq: 'weekly',
+            priority: 0.5
         }
     },
 
@@ -259,24 +259,22 @@ BaseNode.prototype = {
      * @returns {BaseNode}
      */
     setSearch: function() {
-        if(!_.isObject(this.search)) {
-            this.search = {
-                changefreq: this.SITEMAP_XML.DEFAULT.FREQUENCY,
-                priority: this.SITEMAP_XML.DEFAULT.PRIORITY
-            };
+        var def = this.SITEMAP_XML.DEFAULT;
+
+        if(!this.search) {
+            this.search = def;
             return this;
         }
 
         //validate settled changefreq property
-        if(!_.isString(this.search.changefreq)
+        if(!this.search.changefreq
             || this.SITEMAP_XML.FREQUENCIES.indexOf(this.search.changefreq) == -1) {
-            this.search.changefreq = this.SITEMAP_XML.DEFAULT.FREQUENCY
+            this.search.changefreq = def.changefreq
         }
 
         //validate settled priority property
-        if(!_.isNumber(this.search.priority)
-            || !/(0\.\d)|1/.test(this.search.priority.toString())) {
-            this.search.priority = this.SITEMAP_XML.DEFAULT.PRIORITY
+        if(!this.search.priority || this.search.priority < 0 || this.search.priority > 1) {
+            this.search.priority = def.priority
         }
 
         return this;
