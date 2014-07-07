@@ -20,7 +20,7 @@ function createRenderer() {
         options.headerPrefix = options.headerPrefix || '';
 
         return '<h' + level + ' id="' + options.headerPrefix
-            + raw.toLowerCase().replace(RegExp('[' + specials.join('\\') + ']', 'g'), '-') + '">'
+            + raw.replace(RegExp('[' + specials.join('\\') + ']', 'g'), '-') + '">'
             + text + '</h' + level + '>\n';
     };
 
