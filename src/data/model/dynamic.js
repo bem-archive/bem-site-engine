@@ -25,7 +25,8 @@ DynamicNode.prototype.init = function(parent) {
         .setView()
         .setHidden()
         .setLevel(parent)
-        .setClass();
+        .setClass()
+        .setSearch();
 
     return this;
 };

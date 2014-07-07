@@ -1,21 +1,20 @@
-var vow = require('vow'),
+var _ = require('lodash'),
+    vow = require('vow'),
     js2xml = require('js2xmlparser'),
+
     config = require('../lib/config'),
     logger = require('../lib/logger')(module);
 
 module.exports = function(obj) {
-    var urls = getAllUrls(obj.sitemap),
+    var nodes = getAllNodesForIndexation(obj.sitemap),
         hosts = config.get('data:hosts'),
         sitemapJson = [];
 
     if(hosts) {
         Object.keys(hosts).forEach(function (lang) {
-            urls.forEach(function (url) {
-                if(!url.hidden[lang]) {
-                    sitemapJson.push({
-                        loc: hosts[lang] + url.url,
-                        changefreq: 'weekly'
-                    });
+            nodes.forEach(function(node) {
+                if(!node.hidden[lang]) {
+                    sitemapJson.push(_.extend({ loc: hosts[lang] + node.url }, node.search));
                 }
             });
         });
@@ -30,16 +29,13 @@ module.exports = function(obj) {
  * @param sitemap - {Object} sitemap object
  * @returns {Array}
  */
-var getAllUrls = function(sitemap) {
+var getAllNodesForIndexation = function(sitemap) {
     var urls = [];
 
     var traverseTreeNodes = function(node) {
 
-        if(node.url && node.hidden) {
-            urls.push({
-                url: node.url,
-                hidden: node.hidden
-            });
+        if(node.hidden && _.isString(node.url) && !/^(https?:)?\/\//.test(node.url)) {
+            urls.push(_.pick(node, 'url', 'hidden', 'search'));
         }
 
         if(node.items) {

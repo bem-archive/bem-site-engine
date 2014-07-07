@@ -20,7 +20,8 @@ var BaseNode = function(node, parent) {
         .setHidden()
         .setView()
         .setLevel(parent)
-        .setClass();
+        .setClass()
+        .setSearch();
 };
 
 BaseNode.prototype = {
@@ -41,6 +42,13 @@ BaseNode.prototype = {
     },
     SIZE: {
         NORMAL: 'normal'
+    },
+    SITEMAP_XML: {
+        FREQUENCIES: ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'],
+        DEFAULT: {
+            changefreq: 'weekly',
+            priority: 0.5
+        }
     },
 
     /**
@@ -242,17 +250,33 @@ BaseNode.prototype = {
                 }
             }, this);
 
-        /*
-         if(node.url && node.source) {
-         config.get('common:languages').forEach(function(lang) {
-         if(node.source[lang] && node.source[lang].content) {
-         sourceRouteHash[node.source[lang].content] = node.url;
-         }
-         });
-         }
-         */
-
         this.type = this.type || this.TYPE.SIMPLE;
+        return this;
+    },
+
+    /**
+     * Sets params for indexation by search engines
+     * @returns {BaseNode}
+     */
+    setSearch: function() {
+        var def = this.SITEMAP_XML.DEFAULT;
+
+        if(!this.search) {
+            this.search = def;
+            return this;
+        }
+
+        //validate settled changefreq property
+        if(!this.search.changefreq
+            || this.SITEMAP_XML.FREQUENCIES.indexOf(this.search.changefreq) == -1) {
+            this.search.changefreq = def.changefreq
+        }
+
+        //validate settled priority property
+        if(!this.search.priority || this.search.priority < 0 || this.search.priority > 1) {
+            this.search.priority = def.priority
+        }
+
         return this;
     }
 };
