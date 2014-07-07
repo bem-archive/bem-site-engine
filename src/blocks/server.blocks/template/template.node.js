@@ -19,17 +19,18 @@ modules.define('template', ['config', 'logger', 'util', 'builder', 'bundles', 's
             };
 
         provide({
-            apply: function(ctx, lang, mode) {
+            apply: function(ctx, req, mode) {
                 return builder
                     .build([target])
                     .then(function() {
                         return vfs.read(path.join(process.cwd(), target)).then(function(source) {
+                            context.req = req;
                             vm.runInNewContext(source, context);
                             return context;
                         })
                     })
                     .then(function(engine) {
-                        engine.BEM.I18N.lang(lang);
+                        engine.BEM.I18N.lang(req.lang);
 
                         return engine.BEMTREE.apply(ctx)
                             .then(function(bemjson) {

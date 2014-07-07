@@ -47,7 +47,7 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template'],
                  */
                 return function(req, res, next) {
                     var ctx = {
-                        req: req, //request object
+                        req: req, //request object //TODO remove it and fix templates
                         bundleName: 'common',
                         lang: req.lang, //selected language
                         statics: config.get('app:statics:www')
@@ -55,7 +55,7 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template'],
 
                     ctx = _.extend(ctx, req.__data, self.getAdvancedData(req, req.__data.node));
 
-                    return template.apply(ctx, req.lang, req.query.__mode)
+                    return template.apply(ctx, req, req.query.__mode)
                         .then(function (html) {
                             res.end(html);
                         })
