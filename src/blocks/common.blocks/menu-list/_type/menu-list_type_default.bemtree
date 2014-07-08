@@ -3,8 +3,8 @@ block menu-list, mod type default {
     this.ctx.content, content: {
 
         return this.ctx.content.map(function(item) {
-/*            logger.verbose('menu item: title: %s url: %s type: %s active: %s size: %s',
-                        item.title, item.url, item.type, item.active, item.size);*/
+            logger.debug('menu item: title: %s url: %s type: %s active: %s size: %s',
+                        item.title, item.url, item.type, item.active, item.size);
 
             if(item.type === 'group' && item.items) {
                 return {
@@ -15,6 +15,9 @@ block menu-list, mod type default {
                             content: item.title
                         },
                         item.items.map(function(subitem) {
+                            if(subitem.type === 'select' && subitem.items) {
+                               return apply('select', this.ctx = subitem);
+                            }
                             return apply('item', this.ctx = subitem);
                         })
                     ]
@@ -22,30 +25,34 @@ block menu-list, mod type default {
             }
 
             if(item.type === 'select' && item.items) {
-                return {
-                    elem: 'group-select',
-                    elemMods: item.active ? { active: 'yes' } : undefined,
-                    content: [
-                        apply('item', this.ctx = item),
-                        {
-                            elem: 'select',
-                            content: item.items.map(function(subitem) {
-                                return {
-                                    elem: 'option',
-                                    content: subitem.title,
-                                    attrs: {
-                                        value: subitem.url,
-                                        selected: subitem.active ? 'selected' : undefined                                    }
-                                }
-                            })
-                        }
-                    ]
-                }
+                return apply('select', this.ctx = item);
             }
 
             return apply('item', this.ctx = item);
 
         });
+    }
+
+    select: {
+        return {
+            elem: 'group-select',
+            elemMods: this.ctx.active ? { active: 'yes' } : undefined,
+            content: [
+                apply('item'),
+                {
+                    elem: 'select',
+                    content: this.ctx.items.map(function(subitem) {
+                        return {
+                            elem: 'option',
+                            content: subitem.title,
+                            attrs: {
+                                value: subitem.url,
+                                selected: subitem.active ? 'selected' : undefined                                    }
+                        }
+                    })
+                }
+            ]
+        }
     }
 
     item: {
