@@ -47,6 +47,7 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template'],
                  */
                 return function(req, res, next) {
                     var ctx = {
+                        block: 'i-global',
                         req: req, //request object //TODO remove it and fix templates
                         bundleName: 'common',
                         lang: req.lang, //selected language

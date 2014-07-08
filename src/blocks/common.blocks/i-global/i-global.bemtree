@@ -1,6 +1,7 @@
-this._mode === '', !this.data {
+//this._mode === '', !this.ctx.ajax, !this.data {
+block i-global {
 
-    true: {
+default: {
         this.data = this.ctx;
         return apply(
             this._mode = '',

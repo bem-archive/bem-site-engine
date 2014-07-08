@@ -10,12 +10,16 @@ modules.define('template', ['config', 'logger', 'util', 'builder', 'bundles', 's
 
         logger = logger(module);
 
+        console.log('leStatics', new (statics.Statics)(config.get('app:statics')));
+        console.log('leBundles', new (bundles.Bundles)({ defaultLOD: 'desktop' }));
+
         var target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
             context = {
                 Vow: vow,
                 leStatics: new (statics.Statics)(config.get('app:statics')),
                 leBundles: new (bundles.Bundles)({ defaultLOD: 'desktop' }),
-                logger: logger
+                logger: logger,
+                console: console
             };
 
         provide({
