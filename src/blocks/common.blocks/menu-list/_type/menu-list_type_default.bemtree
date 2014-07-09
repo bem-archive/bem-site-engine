@@ -1,60 +1,68 @@
-block menu-list, mod type default {
+block('menu-list').mod('type', 'default')(
 
-    this.ctx.content, content: {
-
+    match(function() { return this.ctx.content; }).content()(function() {
         return this.ctx.content.map(function(item) {
-/*            logger.verbose('menu item: title: %s url: %s type: %s active: %s size: %s',
-                        item.title, item.url, item.type, item.active, item.size);*/
+            /*
+            logger.debug('menu item: title: %s url: %s type: %s active: %s size: %s',
+                        item.title, item.url, item.type, item.active, item.size);
+            */
+            return apply('item', { ctx: item });
+        });
+    }),
 
-            if(item.type === 'group' && item.items) {
+    mode('item')(
+        match(this.ctx.items)(
+            match('group' === this.ctx.type)(function(){
                 return {
                     elem: 'group',
                     content: [
                         {
                             elem: 'title',
-                            content: item.title
+                            content: this.ctx.title
                         },
-                        item.items.map(function(subitem) {
-                            return apply('item', this.ctx = subitem);
+                        this.ctx.items.map(function(subitem) {
+                            return apply('item', { ctx: subitem });
                         })
                     ]
-                }
-            }
+                };
+            }),
 
-            if(item.type === 'select' && item.items) {
+            match('select' === this.ctx.type)(function(){
                 return {
                     elem: 'group-select',
-                    elemMods: item.active ? { active: 'yes' } : undefined,
+                    elemMods: this.ctx.active ? { active: 'yes' } : undefined,
                     content: [
-                        apply('item', this.ctx = item),
+                        apply('item', { ctx: (function(c) {
+                            c._selectVal = true;
+                            return c;
+                        })(this.ctx) }),
                         {
                             elem: 'select',
-                            content: item.items.map(function(subitem) {
+                            content: this.ctx.items.map(function(subitem) {
                                 return {
                                     elem: 'option',
                                     content: subitem.title,
                                     attrs: {
                                         value: subitem.url,
                                         selected: subitem.active ? 'selected' : undefined                                    }
-                                }
+                                };
                             })
                         }
                     ]
+                };
+            })
+        ),
+
+        match(function() { return this.ctx._selectVal || !this.ctx.items; })(function(){
+            return {
+                elem: 'link',
+                url: this.ctx.url,
+                title: this.ctx.title,
+                elemMods: {
+                    active: this.ctx.active,
+                    type: this.ctx.type
                 }
-            }
-
-            return apply('item', this.ctx = item);
-
-        });
-    }
-
-    item: {
-        elem: 'link',
-        url: this.ctx.url,
-        title: this.ctx.title,
-        elemMods: {
-            active: this.ctx.active,
-            type: this.ctx.type
-        }
-    }
-}
+            };
+        })
+    )
+)
