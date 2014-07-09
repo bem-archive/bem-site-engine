@@ -3,25 +3,13 @@ block menu-list, mod type default {
     this.ctx.content, content: {
 
         return this.ctx.content.map(function(item) {
-            //logger.debug('menu item: title: %s url: %s type: %s active: %s size: %s',
-            //            item.title, item.url, item.type, item.active, item.size);
+            /*
+            logger.debug('menu item: title: %s url: %s type: %s active: %s size: %s',
+                        item.title, item.url, item.type, item.active, item.size);
+            */
 
             if(item.type === 'group' && item.items) {
-                return {
-                    elem: 'group',
-                    content: [
-                        {
-                            elem: 'title',
-                            content: item.title
-                        },
-                        item.items.map(function(subitem) {
-                            if(subitem.type === 'select' && subitem.items) {
-                               return apply('select', this.ctx = subitem);
-                            }
-                            return apply('item', this.ctx = subitem);
-                        })
-                    ]
-                }
+                return apply('group', this.ctx = item);
             }
 
             if(item.type === 'select' && item.items) {
@@ -29,8 +17,25 @@ block menu-list, mod type default {
             }
 
             return apply('item', this.ctx = item);
-
         });
+    }
+
+    group: {
+        return {
+            elem: 'group',
+            content: [
+                {
+                    elem: 'title',
+                    content: this.ctx.title
+                },
+                this.ctx.items.map(function(subitem) {
+                    if(subitem.type === 'select' && subitem.items) {
+                       return apply('select', this.ctx = subitem);
+                    }
+                    return apply('item', this.ctx = subitem);
+                })
+            ]
+        };
     }
 
     select: {
@@ -48,11 +53,11 @@ block menu-list, mod type default {
                             attrs: {
                                 value: subitem.url,
                                 selected: subitem.active ? 'selected' : undefined                                    }
-                        }
+                        };
                     })
                 }
             ]
-        }
+        };
     }
 
     item: {
