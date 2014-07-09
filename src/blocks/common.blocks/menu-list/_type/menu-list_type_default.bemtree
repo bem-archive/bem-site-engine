@@ -1,7 +1,6 @@
-block menu-list, mod type default {
+block('menu-list').mod('type', 'default')(
 
-    this.ctx.content, content: {
-
+    match(function() { return this.ctx.content }).content()(function() {
         return this.ctx.content.map(function(item) {
             /*
             logger.debug('menu item: title: %s url: %s type: %s active: %s size: %s',
@@ -9,18 +8,18 @@ block menu-list, mod type default {
             */
 
             if(item.type === 'group' && item.items) {
-                return apply('group', this.ctx = item);
+                return apply('group', { ctx: item });
             }
 
             if(item.type === 'select' && item.items) {
-                return apply('select', this.ctx = item);
+                return apply('select', { ctx: item });
             }
 
-            return apply('item', this.ctx = item);
+            return apply('item', { ctx: item });
         });
-    }
+    }),
 
-    group: {
+    mode('group')(function(){
         return {
             elem: 'group',
             content: [
@@ -30,15 +29,15 @@ block menu-list, mod type default {
                 },
                 this.ctx.items.map(function(subitem) {
                     if(subitem.type === 'select' && subitem.items) {
-                       return apply('select', this.ctx = subitem);
+                       return apply('select', { ctx: subitem });
                     }
-                    return apply('item', this.ctx = subitem);
+                    return apply('item', { ctx: subitem });
                 })
             ]
         };
-    }
+    }),
 
-    select: {
+    mode('select')(function(){
         return {
             elem: 'group-select',
             elemMods: this.ctx.active ? { active: 'yes' } : undefined,
@@ -58,15 +57,17 @@ block menu-list, mod type default {
                 }
             ]
         };
-    }
+    }),
 
-    item: {
-        elem: 'link',
-        url: this.ctx.url,
-        title: this.ctx.title,
-        elemMods: {
-            active: this.ctx.active,
-            type: this.ctx.type
-        }
-    }
-}
+    mode('item')(function(){
+        return {
+            elem: 'link',
+            url: this.ctx.url,
+            title: this.ctx.title,
+            elemMods: {
+                active: this.ctx.active,
+                type: this.ctx.type
+            }
+        };
+    })
+)
