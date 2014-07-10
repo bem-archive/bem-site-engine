@@ -5,11 +5,11 @@ block post, mod view full {
             node = this.data.node;
 
         if(!source) {
-            logger.error('source not found for node %s and locale %s', this.data.node.id, this.data.req.lang);
+            console.error('source not found for node %s and locale %s', this.data.node.id, this.data.req.lang);
             return [];
         }
 
-        logger.debug('url %s deps %s', source.url, source.deps);
+        console.log('url %s deps %s', source.url, source.deps);
 
         return [
 

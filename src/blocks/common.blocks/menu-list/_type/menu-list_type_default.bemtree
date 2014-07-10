@@ -3,7 +3,7 @@ block('menu-list').mod('type', 'default')(
     match(function() { return this.ctx.content; }).content()(function() {
         return this.ctx.content.map(function(item) {
             /*
-            logger.debug('menu item: title: %s url: %s type: %s active: %s size: %s',
+            console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
                         item.title, item.url, item.type, item.active, item.size);
             */
             return apply('item', { ctx: item });

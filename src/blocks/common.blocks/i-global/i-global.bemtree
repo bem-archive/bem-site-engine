@@ -1,4 +1,3 @@
-//this._mode === '', !this.ctx.ajax, !this.data {
 block i-global {
 
 default: {

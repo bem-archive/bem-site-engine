@@ -5,17 +5,14 @@ var path = require('path'),
     vfs = require('vow-fs'),
     stringify = require('json-stringify-safe');
 
-modules.define('template', ['config', 'logger', 'util', 'builder', 'bundles', 'statics'],
-    function(provide, config, logger, util, builder, bundles, statics) {
-
-        logger = logger(module);
+modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
+    function(provide, config, util, builder, bundles, statics) {
 
         var target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
             context = {
                 Vow: vow,
                 leStatics: new (statics.Statics)(config.get('app:statics')),
                 leBundles: new (bundles.Bundles)({ defaultLOD: 'desktop' }),
-                logger: logger,
                 console: console
             };
 
