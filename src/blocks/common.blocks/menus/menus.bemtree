@@ -1,4 +1,4 @@
-block menu, this.data.menu, default: {
+block menus, this.data.menu, default: {
 
     return applyCtx([
         this.data.menu.map(function(column, index) {
