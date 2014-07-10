@@ -1,0 +1,22 @@
+block('menu-list').mod('type', 'header')(
+    match(function() { return this.ctx.content; }).content()(function() {
+        var menu = this.ctx.content;
+
+        return menu.map(function(menuItem) {
+            return {
+                block: 'link',
+                url: menuItem.url,
+                mix: [{
+                    block: 'menu-list',
+                    elem: 'link',
+                    elemMods: {
+                        active: menuItem.active,
+                        type: menuItem.type,
+                        size: menuItem.size
+                    }
+                }],
+                content: menuItem.title
+            };
+        });
+    })
+);
