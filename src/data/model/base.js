@@ -183,7 +183,7 @@ BaseNode.prototype = {
                 if (node.url) {
                     self.breadcrumbs.unshift({
                         title: node.title,
-                        url: node !== self ? node.url : null
+                        url: node.url
                     });
                 }
 

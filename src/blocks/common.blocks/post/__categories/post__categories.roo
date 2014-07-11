@@ -1,0 +1,5 @@
+.post__categories
+{
+    padding-top: 10px;
+    opacity: .7;
+}
