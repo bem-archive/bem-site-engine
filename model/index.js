@@ -18,8 +18,8 @@ var getMain = function() {
             ru: {
                 title: 'Bem-site-engine',
                 createDate: '12-07-2014',
-                authors: [],
-                tags: [],
+                authors: ['kuznetsov-andrey'],
+                tags: ['readme'],
                 content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/README.md'
             }
         }
@@ -41,8 +41,8 @@ var getDocs = function() {
                     ru: {
                         title: 'Создание модели',
                         createDate: '12-07-2014',
-                        authors: [],
-                        tags: [],
+                        authors: ['kuznetsov-andrey'],
+                        tags: ['documentation', 'model'],
                         content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/model.ru.md'
                     }
                 }
@@ -54,8 +54,8 @@ var getDocs = function() {
                     ru: {
                         title: 'Руководство по конфигурированию приложения',
                         createDate: '12-07-2014',
-                        authors: [],
-                        tags: [],
+                        authors: ['kuznetsov-andrey'],
+                        tags: ['documentation', 'config'],
                         content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/config.ru.md'
                     }
                 }
@@ -67,8 +67,8 @@ var getDocs = function() {
                     ru: {
                         title: 'Описание middleware модулей',
                         createDate: '12-07-2014',
-                        authors: [],
-                        tags: [],
+                        authors: ['kuznetsov-andrey'],
+                        tags: ['documentation', 'middleware'],
                         content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/middleware.ru.md'
                     }
                 }
@@ -80,8 +80,8 @@ var getDocs = function() {
                     ru: {
                         title: 'Процесс сборки данных',
                         createDate: '12-07-2014',
-                        authors: [],
-                        tags: [],
+                        authors: ['kuznetsov-andrey'],
+                        tags: ['documentation', 'data-compile'],
                         content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/data_compiling.ru.md'
                     }
                 }

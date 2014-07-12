@@ -14,10 +14,10 @@
             },
             "people": {
                 "type": "public",
-                "user": "",
-                "repo": "",
-                "ref": "",
-                "path": ""
+                "user": "bem",
+                "repo": "bem-site-engine",
+                "ref": "BEMINFO-379",
+                "path": "docs/people/people.json"
             }
         }
     }

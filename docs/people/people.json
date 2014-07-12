@@ -1,0 +1,24 @@
+{
+    "kuznetsov-andrey": {
+        "en": {
+            "firstName": "Kuznetsov",
+            "lastName": "Andrey",
+            "avatar": "https://raw.github.com/bem/bem-site-engine/BEMINFO-379/docs/people/avatars/andrey.kuznetsov.png",
+            "github": "tormozz48",
+            "email": [],
+            "twitter": "kuznetsov48",
+            "skype": "boomer4848",
+            "info": "Frontend developer at Yandex"
+        },
+        "ru": {
+            "firstName": "Кузнецов",
+            "lastName": "Андрей",
+            "avatar": "https://raw.github.com/bem/bem-site-engine/BEMINFO-379/docs/people/avatars/andrey.kuznetsov.png",
+            "github": "tormozz48",
+            "email": [],
+            "twitter": "kuznetsov48",
+            "skype": "boomer4848",
+            "info": "Разработчик интерфейсов в Яндексе"
+        }
+    }
+}
