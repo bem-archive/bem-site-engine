@@ -1,10 +1,10 @@
 {
   "name": "bem-info",
-  "description": "Front-end for bem.info",
-  "version": "3.0.0-alpha5",
+  "description": "BEM CMS based on Express framework",
+  "version": "3.3.14",
   "repository": {
     "type": "git",
-    "url": "git://github.yandex-team.ru/lego/bem-info.git"
+    "url": "git://github.com/bem/bem-site-engine.git"
   },
   "engines": {
     "node": ">=0.8"
@@ -55,9 +55,7 @@
       "jscs": "~1.4.5"
   },
   "scripts": {
-    "start": "node bin/app.js",
-    "build": "make build",
-    "static": "make static",
+    "start": "node bin/app_dev.js",
     "test": "make lint"
   },
   "author": "lego-team@yandex-team.ru",

@@ -10,9 +10,5 @@
     "node_modules",
     "configs/current",
     ".enb/tmp"
-  ],
-  "resolutions": {
-    "bem-core": "v2",
-    "bem-components": "845ba685b647030289442d243ca52997e2617a9f"
-  }
+  ]
 }
