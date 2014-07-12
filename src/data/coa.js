@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path'),
+    vow = require('vow'),
     vowFs = require('vow-fs'),
     logger = require('./lib/logger')(module);
 
