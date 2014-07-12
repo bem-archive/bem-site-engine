@@ -2,7 +2,8 @@ module.exports = {
     get: function() {
         return [
             getMain(),
-            getDocs()
+            getDocs(),
+            getAuthors()
         ]
     }
 };
@@ -85,6 +86,29 @@ var getDocs = function() {
                         content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/data_compiling.ru.md'
                     }
                 }
+            }
+        ]
+    };
+};
+
+var getAuthors = function() {
+    return {
+        title: {
+            en: "Authors",
+            ru: "Авторы"
+        },
+        route:{
+            name: "authors",
+            pattern: "/authors(/<id>)(/)"
+        },
+        view: "authors",
+        items: [
+            {
+                title: {
+                    en: "Authors",
+                    ru: "Авторы"
+                },
+                dynamic: "authors"
             }
         ]
     };
