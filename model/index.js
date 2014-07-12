@@ -3,7 +3,8 @@ module.exports = {
         return [
             getMain(),
             getDocs(),
-            getAuthors()
+            getAuthors(),
+            getTags()
         ]
     }
 };
@@ -109,6 +110,28 @@ var getAuthors = function() {
                     ru: "Авторы"
                 },
                 dynamic: "authors"
+            }
+        ]
+    };
+};
+
+var getTags = function() {
+    return {
+        title: {
+            en: "Tags",
+            ru: "Теги"
+        },
+        route:{
+            name: "tags",
+            pattern: "/tags(/<id>)(/)"
+        },
+        view: "tags",
+        source: "https://github.com/bem/bem-method/tree/bem-info-data/pages/dummy",
+        items: [
+            {
+                title: "Теги",
+                hidden: ['en'],
+                dynamic: "tags:ru"
             }
         ]
     };
