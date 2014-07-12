@@ -34,8 +34,8 @@ $ npm start
 
 Ответственные за разработку:
 
-[Андрей Кузнецов](https://github.com/tormozz48)
-[Николай Ильченко](https://github.com/tavriaforever)
-[Владимир Гриненко](https://github.com/tadatuta)
-[Андрей Абрамов](https://github.com/andrewblond)
-[Дмитрий Белицкий](https://github.com/dab)
+* [Андрей Кузнецов](https://github.com/tormozz48)
+* [Николай Ильченко](https://github.com/tavriaforever)
+* [Владимир Гриненко](https://github.com/tadatuta)
+* [Андрей Абрамов](https://github.com/andrewblond)
+* [Дмитрий Белицкий](https://github.com/dab)
