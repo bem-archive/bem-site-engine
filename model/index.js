@@ -30,8 +30,8 @@ var getDocs = function() {
     return {
         title: 'Документация',
         route: {
-            name: 'docs',
-            pattern: '/docs(/<id>)'
+            name: 'documentation',
+            pattern: '/documentation(/<id>)(/)'
         },
         items: [
             {
