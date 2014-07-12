@@ -1,44 +1,91 @@
 module.exports = {
     get: function() {
         return [
-            getMain()
+            getMain(),
+            getDocs()
         ]
     }
 };
 
 var getMain = function() {
     return {
-        title: {
-            en: "Hello Bem-Engine",
-            ru: "Привет Bem-Engine"
-        },
+        title: 'Привет Bem-Engine',
         route: {
-            name: "index",
-            pattern: "/"
+            name: 'index',
+            pattern: '/'
         },
         source: {
-            en: {
-                title: "Hello Bem-Engine",
-                createDate: "28-02-2014",
-                editDate: "",
-                summary: "",
-                thumbnail: "",
-                authors: [],
-                tags: [],
-                translators: [],
-                content: "https://github.yandex-team.ru/bem/bem-engine/tree/dev/README.md"
-            },
             ru: {
-                title: "Привет Bem-Engine",
-                createDate: "28-02-2014",
-                editDate: "",
-                summary: "",
-                thumbnail: "",
+                title: 'Bem-site-engine',
+                createDate: '12-07-2014',
                 authors: [],
                 tags: [],
-                translators: [],
-                content: "https://github.yandex-team.ru/bem/bem-engine/tree/dev/README.md"
+                content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/README.md'
             }
         }
+    };
+};
+
+var getDocs = function() {
+    return {
+        title: 'Документация',
+        route: {
+            name: 'docs',
+            pattern: '/docs'
+        },
+        items: [
+            {
+                title: 'Создание модели',
+                route: 'model',
+                source: {
+                    ru: {
+                        title: 'Создание модели',
+                        createDate: '12-07-2014',
+                        authors: [],
+                        tags: [],
+                        content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/model.ru.md'
+                    }
+                }
+            },
+            {
+                title: 'Конфигурация',
+                route: 'config',
+                source: {
+                    ru: {
+                        title: 'Конфигурация',
+                        createDate: '12-07-2014',
+                        authors: [],
+                        tags: [],
+                        content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/config.ru.md'
+                    }
+                }
+            },
+            {
+                title: 'Описание middleware модулей',
+                route: 'middleware',
+                source: {
+                    ru: {
+                        title: 'Описание middleware модулей',
+                        createDate: '12-07-2014',
+                        authors: [],
+                        tags: [],
+                        content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/middleware.ru.md'
+                    }
+                }
+            },
+            {
+                title: 'Процесс сборки данных',
+                route: 'compile',
+                source: {
+                    ru: {
+                        title: 'Процесс сборки данных',
+                        createDate: '12-07-2014',
+                        authors: [],
+                        tags: [],
+                        content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/data_compiling.ru.md'
+                    }
+                }
+            }
+        ]
     };
 };
