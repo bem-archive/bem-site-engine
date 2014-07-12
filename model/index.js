@@ -52,7 +52,7 @@ var getDocs = function() {
                 route: 'config',
                 source: {
                     ru: {
-                        title: 'Конфигурация',
+                        title: 'Руководство по конфигурированию приложения',
                         createDate: '12-07-2014',
                         authors: [],
                         tags: [],
