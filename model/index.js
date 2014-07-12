@@ -22,7 +22,7 @@ var getMain = function() {
                 createDate: '12-07-2014',
                 authors: ['kuznetsov-andrey'],
                 tags: ['readme'],
-                content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/README.md'
+                content: 'https://github.com/bem/bem-site-engine/blob/dev/README.md'
             }
         }
     };
@@ -45,7 +45,7 @@ var getDocs = function() {
                         createDate: '12-07-2014',
                         authors: ['kuznetsov-andrey'],
                         tags: ['documentation', 'model'],
-                        content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/model.ru.md'
+                        content: 'https://github.com/bem/bem-site-engine/blob/dev/docs/model.ru.md'
                     }
                 }
             },
@@ -58,7 +58,7 @@ var getDocs = function() {
                         createDate: '12-07-2014',
                         authors: ['kuznetsov-andrey'],
                         tags: ['documentation', 'config'],
-                        content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/config.ru.md'
+                        content: 'https://github.com/bem/bem-site-engine/blob/dev/docs/config.ru.md'
                     }
                 }
             },
@@ -71,7 +71,7 @@ var getDocs = function() {
                         createDate: '12-07-2014',
                         authors: ['kuznetsov-andrey'],
                         tags: ['documentation', 'middleware'],
-                        content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/middleware.ru.md'
+                        content: 'https://github.com/bem/bem-site-engine/blob/dev/docs/middleware.ru.md'
                     }
                 }
             },
@@ -84,7 +84,7 @@ var getDocs = function() {
                         createDate: '12-07-2014',
                         authors: ['kuznetsov-andrey'],
                         tags: ['documentation', 'data-compile'],
-                        content: 'https://github.com/bem/bem-site-engine/blob/BEMINFO-379/docs/data_compiling.ru.md'
+                        content: 'https://github.com/bem/bem-site-engine/blob/dev/docs/data_compiling.ru.md'
                     }
                 }
             }

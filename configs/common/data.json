@@ -16,7 +16,7 @@
                 "type": "public",
                 "user": "bem",
                 "repo": "bem-site-engine",
-                "ref": "BEMINFO-379",
+                "ref": "dev",
                 "path": "docs/people/people.json"
             }
         }
