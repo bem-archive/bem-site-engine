@@ -1,6 +1,6 @@
 {
     "app": {
-        "defaultLanguage": "en",
+        "defaultLanguage": "ru",
         "title": {
             "en": "Your application title",
             "ru": "Название приложения"

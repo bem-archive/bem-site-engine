@@ -42,7 +42,7 @@ module.exports = function(obj) {
 
     if(err) {
         logger.warn(err);
-        return vow.resolve({});
+        return vow.resolve(obj);
     }
 
     return providers.getProviderGhApi()
