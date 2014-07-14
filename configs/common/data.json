@@ -8,17 +8,11 @@
             "public": {
                 "host": "api.github.com",
                 "auth": {
-                    "type": "",
+                    "type": "oauth",
                     "token": ""
                 }
             },
-            "people": {
-                "type": "public",
-                "user": "bem",
-                "repo": "bem-site-engine",
-                "ref": "dev",
-                "path": "docs/people/people.json"
-            }
+            "people": "https://github.com/bem/bem-site-engine/blob/dev/docs/people/people.json"
         }
     }
 }

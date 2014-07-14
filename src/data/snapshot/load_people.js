@@ -17,27 +17,25 @@ module.exports = function(obj) {
         pr = config.get('data:github:people');
 
     if(!pr) {
-        err = 'People repository was not set in configuration'
+        err = 'Path to people data file has not been set in application configuration'
     }
 
-    if(!pr.type || !_.isString(pr.type) || !pr.type.length) {
-        err = 'Type of people repository was not set in configuration';
-    }
+    if(!err) {
+        pr = pr.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
 
-    if(!pr.user || !_.isString(pr.user) || !pr.user.length) {
-        err = 'User field of people repository was not set in configuration';
-    }
+        if (!pr) {
+            err = 'Path to repository has invalid format';
+        }else {
+            pr = {
+                host: pr[1],
+                user: pr[2],
+                repo: pr[3],
+                ref:  pr[5],
+                path: pr[6]
+            };
 
-    if(!pr.repo || !_.isString(pr.repo) || !pr.repo.length) {
-        err = 'Name of people repository was not set in configuration';
-    }
-
-    if(!pr.ref  || !_.isString(pr.ref)  || !pr.ref.length) {
-        err = 'Reference of people repository was not set in configuration';
-    }
-
-    if(!pr.path || !_.isString(pr.path) || !pr.path.length) {
-        err = 'Path to data file in people repository was not set in configuration';
+            pr.type = pr.host.indexOf('github.com') > -1 ? 'public' : 'private'
+        }
     }
 
     if(err) {
