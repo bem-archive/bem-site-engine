@@ -23,18 +23,19 @@ module.exports = function(obj) {
             translators: [],
             tags: {}
         },
-        promises = util.findNodesByCriteria(obj.sitemap, function() {
-                return this.source;
-            })
+        promises = util
+            .findNodesByCriteria(obj.sitemap, function() { return this.source; }, false)
             .map(function (node) {
-                return vow.allResolved(languages.map(function (lang) {
+                return vow.all(languages.map(function (lang) {
                     return analyzeMetaInformation(node, lang, collected)
                         .then(function(res) {
                             return loadMDFile(res.node, lang, res.repo);
                         })
-                        .then(function (res) {
-                            node.source[lang].url = node.source[lang].content;
-                            node.source[lang].content = res;
+                        .then(function(res) {
+                            if(res) {
+                                node.source[lang].url = node.source[lang].content;
+                                node.source[lang].content = res;
+                            }
                         });
                 }));
             });
@@ -55,19 +56,28 @@ module.exports = function(obj) {
  */
 var analyzeMetaInformation = function(node, lang, collected) {
 
-    var def = vow.defer();
-
     if(!node.source[lang]) {
-        logger.warn('source with lang %s does not exists for node %s',
-            lang, node.title && (node.title[lang] || node.title));
+        logger.warn('source with lang %s does not exists for node with url %s', lang, node.url);
         node.source[lang] = null;
-
-        def.reject();
-        return def.promise();
+        return vow.resolve({ node: node, repo: null });
     }
 
     try {
-        var meta = node.source[lang];
+        var meta = node.source[lang],
+            content = meta.content,
+            repo = (function(_source) {
+                var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/,
+                    parsedSource = _source.match(re);
+                return {
+                    host: parsedSource[1],
+                    user: parsedSource[2],
+                    repo: parsedSource[3],
+                    ref:  parsedSource[5],
+                    path: parsedSource[6]
+                };
+            })(content);
+
+        repo.type = repo.host.indexOf('github.com') > -1 ? 'public' : 'private';
 
         //parse date from dd-mm-yyyy format into milliseconds
         if(meta.createDate) {
@@ -99,22 +109,6 @@ var analyzeMetaInformation = function(node, lang, collected) {
             collected.tags[lang] = _.union(collected.tags[lang], meta.tags);
         }
 
-        var content = meta.content;
-
-        var repo = (function(_source) {
-            var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/,
-                parsedSource = _source.match(re);
-            return {
-                host: parsedSource[1],
-                user: parsedSource[2],
-                repo: parsedSource[3],
-                ref:  parsedSource[5],
-                path: parsedSource[6]
-            };
-        })(content);
-
-        repo.type = repo.host === 'github.yandex-team.ru' ? 'private' : 'public';
-
         //set repo information for issues and prose.io links
         node.source[lang].repo = {
             type: repo.type,
@@ -127,16 +121,12 @@ var analyzeMetaInformation = function(node, lang, collected) {
             prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",repo.user, repo.repo, repo.ref, repo.path)
         };
 
-        def.resolve({ node: node, repo: repo });
-
+        return vow.resolve({ node: node, repo: repo });
     }catch(err) {
         logger.warn('source for lang %s contains errors for node %s', lang, node.title && (node.title[lang] || node.title));
-
         node.source[lang] = null;
-        def.reject();
+        return vow.reject();
     }
-
-    return def.promise();
 };
 
 /**
@@ -147,6 +137,12 @@ var analyzeMetaInformation = function(node, lang, collected) {
  * @returns {*|Q.IPromise<U>|Q.Promise<U>}
  */
 var loadMDFile = function(node, lang, repo) {
+    var title = (node.title && node.title[lang]) ? node.title[lang] : node.title;
+
+    if(!repo) {
+        return vow.resolve(null);
+    }
+
     return providers.getProviderGhApi()
         .load({ repository: repo })
         .then(
@@ -155,19 +151,17 @@ var loadMDFile = function(node, lang, repo) {
                     return util.mdToHtml((new Buffer(md.res.content, 'base64')).toString(),
                         { renderer: renderer.getRenderer() });
                 }catch(err) {
-                    if(!md.res) {
-                        logger.warn('markdown with lang %s does not exists for node %s', lang,
-                            (node.title && node.title[lang]) ? node.title[lang] : node.title);
-                    }else {
-                        logger.warn('markdown for lang %s contains errors for node %s', lang, node.title);
-                    }
-                    return null;
+                    var errorMsg = !md.res ?
+                            u.format('markdown with lang %s does not exists for node %s', lang, title) :
+                            u.format('markdown for lang %s contains errors for node %s', lang, title);
+                    logger.error(errorMsg);
+                    return vow.reject(errorMsg);
                 }
             }
         )
         .fail(function() {
-            logger.warn('markdown with lang %s does not exists for node %s', lang,
-                (node.title && node.title[lang]) ? node.title[lang] : node.title);
-            return null;
+            var errorMsg = u.format('markdown with lang %s does not exists for node %s', lang, title);
+            logger.error(errorMsg);
+            return vow.reject(errorMsg);
         });
 };

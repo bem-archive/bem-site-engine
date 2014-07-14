@@ -13,7 +13,7 @@ var MSG = {
         START: '-- data compiler module start --',
         END: '-- data compiler successfully finished --'
     },
-    ERROR: 'Error'
+    ERROR: 'data compiler failed'
 };
 
 module.exports = {
@@ -57,7 +57,7 @@ module.exports = {
                 logger.info(''.toUpperCase.apply(MSG.INFO.END))
             })
             .fail(function(err) {
-                logger.error(''.toUpperCase.apply(MSG.ERROR), err)
+                logger.error(''.toUpperCase.apply(MSG.ERROR))
             });
     }
 };
