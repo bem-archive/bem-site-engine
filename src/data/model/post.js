@@ -1,5 +1,6 @@
 var u = require('util'),
     _ = require('lodash'),
+    config = require('../lib/config'),
     DynamicNode = require('./dynamic').DynamicNode;
 
 /**
@@ -9,48 +10,48 @@ var u = require('util'),
  * @param config - {Object} advanced configuration object
  * @constructor
  */
-var PostNode = function(node, parent, version, config) {
-    Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
-
-    this
+var PostNode = function(parent, routes, version, doc, id) {
+    this.setTitle(doc)
+        .setSource(doc)
+        .processRoute(routes, parent, {
+            conditions: {
+                lib: version.repo,
+                version: version.ref,
+                id: id
+            }
+        })
         .init(parent)
-        .setTitle(version, config)
-        .setSource(version, config);
-
-    this.createBreadcrumbs();
+        .createBreadcrumbs();
 };
 
 PostNode.prototype = Object.create(DynamicNode.prototype);
 
 /**
  * Sets title for node
- * @param version - {Object} library version
  * @param config - {Object} advanced configuration object
  * @returns {PostNode}
  */
-PostNode.prototype.setTitle = function(version, config) {
+PostNode.prototype.setTitle = function(config) {
     this.title = config.title;
     return this;
 };
 
 /**
  * Sets source for node
- * @param version - {Object} library version
- * @param config - {Object} advanced configuration object
+ * @param doc - {Object} advanced configuration object
  * @returns {PostNode}
  */
-PostNode.prototype.setSource = function(version, config) {
-    var p = version[config.key];
-    this.source = {
-        en: {
-            title: config.title.en,
-            content: (p && p.en) ? p.en : p
-        },
-        ru: {
-            title: config.title.ru,
-            content: (p && p.ru) ? p.ru : p
-        }
-    };
+PostNode.prototype.setSource = function(doc) {
+    var languages = config.get('common:languages') || ['en'];
+
+    this.source = languages.reduce(function(prev, lang) {
+        prev[lang] = {
+            title: doc.title[lang],
+            content: doc.content[lang]
+        };
+        return prev
+    }, {});
+
     return this;
 };
 

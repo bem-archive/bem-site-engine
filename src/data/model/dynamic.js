@@ -1,5 +1,6 @@
 var u = require('util'),
     _ = require('lodash'),
+    susanin = require('susanin'),
     BaseNode = require('./base').BaseNode;
 
 /**
@@ -18,15 +19,15 @@ DynamicNode.prototype = Object.create(BaseNode.prototype);
  */
 DynamicNode.prototype.init = function(parent) {
 
-    this.generateUniqueId()
-        .setParent(parent)
-        .setType()
+    this.setType()
         .setSize()
         .setView()
         .setHidden()
         .setLevel(parent)
         .setClass()
-        .setSearch();
+        .setSearch()
+        .generateUniqueId()
+        .setParent(parent);
 
     return this;
 };
@@ -73,6 +74,22 @@ DynamicNode.prototype.setHidden = function() {
  */
 DynamicNode.prototype.setClass = function() {
     this.class = 'dynamic';
+    return this;
+};
+
+DynamicNode.prototype.processRoute = function(routes, parent, conditions) {
+    var baseRoute = parent.getBaseRoute();
+    routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+
+    Object.keys(conditions.conditions).forEach(function(key) {
+        routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
+        routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
+        routes[baseRoute.name].conditions[key] = _.uniq(routes[baseRoute.name].conditions[key]);
+    });
+
+    this.route = _.extend({}, { name: baseRoute.name }, conditions);
+    this.url = susanin.Route(routes[baseRoute.name]).build(conditions.conditions);
+
     return this;
 };
 
