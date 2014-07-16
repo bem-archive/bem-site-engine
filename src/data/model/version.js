@@ -97,41 +97,41 @@ VersionNode.prototype.addItems = function(routes, version, searchLibraries, sear
 
     var docs = version.docs || {
         changelog: {
-            title: {
-                en: 'Changelog',
-                ru: 'История изменений'
-            },
+            title: { en: 'Changelog', ru: 'История изменений'},
             content: version.changelog
         },
         migration: {
-            title: {
-                en: 'Migration',
-                ru: 'Миграция'
-            },
+            title: { en: 'Migration', ru: 'Миграция' },
             content: version.migration
         },
         notes: {
-            title: {
-                en: 'Release Notes',
-                ru: 'Замечания к релизу'
-            },
+            title: { en: 'Release Notes', ru: 'Замечания к релизу' },
             content: version.notes
         }
     };
 
-    Object.keys(docs).forEach(function(item) {
-        logger.verbose('add post %s to version %s of library %s', item, version.ref, version.repo);
+    Object.keys(docs)
+        .filter(function(item) {
+            return 'readme' !== item;
+        })
+        .forEach(function(item) {
+            logger.verbose('add post %s to version %s of library %s', item, version.ref, version.repo);
 
-        //verify existed docs
-        if(!docs[item] || !docs[item].content) {
-            return;
-        }
+            //verify existed docs
+            if(!docs[item] || !docs[item].content) {
+                return;
+            }
+            this.items.push(new nodes.post.PostNode(this, routes, version, docs[item], item));
+        }, this);
 
-        this.items.push(new nodes.post.PostNode(this, routes, version, docs[item], item));
-    }, this);
+    if(version.custom) {
+        version.custom.forEach(function(item) {
+
+        }, this);
+    }
 
     var levels = version.levels;
-    if(!levels) return;
+    if(!levels) return this;
 
     levels.forEach(function(level) {
         level.name = level.name.replace(/\.(sets|docs)$/, '');

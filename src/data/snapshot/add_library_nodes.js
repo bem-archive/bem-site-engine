@@ -6,7 +6,13 @@ var u = require('util'),
     util  = require('../lib/util'),
     nodes = require('../model');
 
-
+/**
+ * Dynamically build tree of child nodes for each library
+ * @param routes - {Object} application routes hash
+ * @param nodesWithLib - {Array} array of target library nodes
+ * @param libraries - {Object} loaded libs data
+ * @returns {{libraries: *, blocks: Array}}
+ */
 function addLibraryNodes(routes, nodesWithLib, libraries) {
 
     var searchLibraries = {},
@@ -27,7 +33,20 @@ function addLibraryNodes(routes, nodesWithLib, libraries) {
             });
     });
 
-    //add version aliases
+    addVersionAliases(routes);
+
+    return {
+        libraries: _.values(searchLibraries),
+        blocks: searchBlocks
+    };
+}
+
+/**
+ * Add allowed aliases for library versions
+ * such as current or v{n}.x
+ * @param routes - {Object} application routes hash
+ */
+function addVersionAliases(routes) {
     Object.keys(routes).forEach(function(key) {
         var conditions = routes[key].conditions;
 
@@ -45,11 +64,6 @@ function addLibraryNodes(routes, nodesWithLib, libraries) {
 
         routes[key].conditions = conditions;
     });
-
-    return {
-        libraries: _.values(searchLibraries),
-        blocks: searchBlocks
-    };
 }
 
 module.exports = function(obj) {
