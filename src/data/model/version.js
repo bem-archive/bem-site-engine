@@ -110,6 +110,7 @@ VersionNode.prototype.addItems = function(routes, version, searchLibraries, sear
         }
     };
 
+    //add doc nodes to library version
     Object.keys(docs)
         .filter(function(item) {
             return 'readme' !== item;
@@ -124,15 +125,18 @@ VersionNode.prototype.addItems = function(routes, version, searchLibraries, sear
             this.items.push(new nodes.post.PostNode(this, routes, version, docs[item], item));
         }, this);
 
+    //add custom nodes to library version
     if(version.custom) {
         version.custom.forEach(function(item) {
-
+            item.url += '#';
+            this.items.push(new nodes.base.BaseNode(item, this));
         }, this);
     }
 
     var levels = version.levels;
     if(!levels) return this;
 
+    //add level nodes to library version
     levels.forEach(function(level) {
         level.name = level.name.replace(/\.(sets|docs)$/, '');
 

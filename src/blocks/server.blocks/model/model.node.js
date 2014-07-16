@@ -236,7 +236,7 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
 
             var result = {},
                 traverseTreeNodes = function(node) {
-                    if(node.route.pattern) {
+                    if(node.route && node.route.pattern) {
                         result[node.route.name] = {
                             title: node.title[lang]
                         };
