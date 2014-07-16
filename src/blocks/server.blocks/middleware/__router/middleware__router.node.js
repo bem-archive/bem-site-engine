@@ -31,11 +31,11 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                 var route = router.findFirst(url);
 
                 if(!route) {
-                    return next(new error.HttpError(error.HttpError.CODES.NOT_FOUND));
+                    //return next(new error.HttpError(error.HttpError.CODES.NOT_FOUND));
+                }else {
+                    req.route = route[0].getName();
+                    req.params = route[1];
                 }
-
-                req.route = route[0].getName();
-                req.params = route[1];
                 req.__data = req.__data || {};
 
                 logger.debug('get node by request %s', req.path);
@@ -122,14 +122,15 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
             url = url !== '/' ? url.replace(/(\/)+$/, '') : url;
 
             //Detect /current/ part in url and replace it by actual library version
-            if(/\/current\//.test(url)) {
-                var libUrl = url.replace(/\/current\/.*/, '');
+            if(/\/current\/?/.test(url)) {
+                var libUrl = url.replace(/\/current\/?.*/, '');
 
                 this.findNode(req, libUrl, function (result) {
                     if (!result || !result.items) return;
 
                     var versions = result.items.map(function (item) {
-                        return _.isObject(item.title) ? item.title[config.get('app:defaultLanguage')] : item.title;
+                        //return _.isObject(item.title) ? item.title[config.get('app:defaultLanguage')] : item.title;
+                        return item.url.substr(item.url.lastIndexOf("/"));
                     });
 
                     if (versions) {
