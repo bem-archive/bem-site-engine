@@ -1,11 +1,9 @@
 var u = require('util'),
     _ = require('lodash'),
-    susanin = require('susanin'),
     vow = require('vow'),
 
     logger = require('../lib/logger')(module),
     util  = require('../lib/util'),
-    constants = require('../lib/constants'),
     nodes = require('../model');
 
 
@@ -20,18 +18,20 @@ function addLibraryNodes(routes, nodesWithLib, libraries) {
         var versions = libraries[node.lib];
         if(!versions) return;
 
-        Object.keys(versions).sort(util.sortLibraryVerions).forEach(function(key, index) {
-            node.items.push(
-                new nodes.version.VersionNode(node, versions[key], searchLibraries, searchBlocks, index));
-        });
+        Object.keys(versions)
+            .sort(util.sortLibraryVerions)
+            .forEach(function(key, index) {
+                node.items = node.items || [];
+                node.items.push(
+                    new nodes.version.VersionNode(node, routes, versions[key], searchLibraries, searchBlocks, index));
+            });
     });
 
-    //add current version value for route version conditions
+    //add version aliases
     Object.keys(routes).forEach(function(key) {
         var conditions = routes[key].conditions;
 
         if(conditions) {
-            //add version aliases
             if(conditions.version) {
                 conditions.version.push('current');
                 for(var i = 1; i < 100; i++) {
@@ -54,9 +54,7 @@ function addLibraryNodes(routes, nodesWithLib, libraries) {
 
 module.exports = function(obj) {
     var routes = obj.routes,
-        nodes = util.findNodesByCriteria(obj.sitemap, function() {
-            return this.lib;
-        }, false);
+        nodes = util.findNodesByCriteria(obj.sitemap, function() { return this.lib; }, false);
 
     logger.info('add library nodes start');
 
@@ -71,9 +69,10 @@ module.exports = function(obj) {
         return vow.resolve(obj);
     }
 
-    return require('./load_libraries')(nodes).then(function(libraries) {
-        obj.search = addLibraryNodes(routes, nodes, libraries);
-        return vow.resolve(obj);
-    });
+    return require('./load_libraries')(nodes)
+        .then(function(libraries) {
+            obj.search = addLibraryNodes(routes, nodes, libraries);
+            return vow.resolve(obj);
+        });
 };
 

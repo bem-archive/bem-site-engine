@@ -1,16 +1,21 @@
-var u = require('util'),
-    _ = require('lodash'),
+var _ = require('lodash'),
     config = require('../lib/config'),
-    DynamicNode = require('./dynamic').DynamicNode;
+    logger = require('../lib/logger')(module),
+    nodes = require('./index');
 
 /**
  * Subclass of dynamic nodes which describe post of library
- * @param node - {Object} base node configuration
- * @param parent - {VersionNode} parent node
- * @param config - {Object} advanced configuration object
+ * @param parent - {VersionNode} parent node object
+ * @param routes - {Object} application routes hash
+ * @param version - {Object} library version object
+ * @param doc - {Object} doc object
+ * @param id - {String} key of doc
  * @constructor
  */
 var PostNode = function(parent, routes, version, doc, id) {
+
+    logger.verbose('post constructor %s %s %s', version.repo, version.ref, id);
+
     this.setTitle(doc)
         .setSource(doc)
         .processRoute(routes, parent, {
@@ -24,21 +29,21 @@ var PostNode = function(parent, routes, version, doc, id) {
         .createBreadcrumbs();
 };
 
-PostNode.prototype = Object.create(DynamicNode.prototype);
+PostNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
 
 /**
  * Sets title for node
- * @param config - {Object} advanced configuration object
+ * @param doc - {Object} doc object
  * @returns {PostNode}
  */
-PostNode.prototype.setTitle = function(config) {
-    this.title = config.title;
+PostNode.prototype.setTitle = function(doc) {
+    this.title = doc.title;
     return this;
 };
 
 /**
  * Sets source for node
- * @param doc - {Object} advanced configuration object
+ * @param doc - {Object} doc object
  * @returns {PostNode}
  */
 PostNode.prototype.setSource = function(doc) {

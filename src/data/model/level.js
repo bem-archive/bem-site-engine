@@ -1,17 +1,21 @@
-var u = require('util'),
-    _ = require('lodash'),
+var _ = require('lodash'),
     config = require('../lib/config'),
-    DynamicNode = require('./dynamic').DynamicNode,
+    logger = require('../lib/logger')(module),
     nodes = require('./index');
 
 /**
  * Subclass of dynamic nodes which describe library block levels
- * @param node - {Object} base node configuration
  * @param parent - {VersionNode} parent node
- * @param level - {Object} block level data
+ * @param routes - {Object} application routes hash
+ * @param version - {Object} version object
+ * @param level - {Object} level object
+ * @param searchLibraries - {Object} search libraries model
+ * @param searchBlocks - {Object} search blocks model
  * @constructor
  */
 var LevelNode = function(parent, routes, version, level, searchLibraries, searchBlocks) {
+    logger.verbose('level constructor %s %s %s', version.repo, version.ref, level.name);
+
     //add library block level to library search item
     _.find(searchLibraries, function(item) { return version.repo === item.name; })
         .getVersion(version.ref).addLevel(new nodes.search.Level(level.name));
@@ -28,11 +32,11 @@ var LevelNode = function(parent, routes, version, level, searchLibraries, search
         .addItems(routes, version, level, searchLibraries, searchBlocks);
 };
 
-LevelNode.prototype = Object.create(DynamicNode.prototype);
+LevelNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
 
 /**
  * Sets title for node
- * @param levle - {Object} level
+ * @param level - {Object} level
  * @returns {LevelNode}
  */
 LevelNode.prototype.setTitle = function(level) {
@@ -63,8 +67,16 @@ LevelNode.prototype.setClass = function() {
     return this;
 };
 
+/**
+ * Add block nodes as items to level
+ * @param routes - {Object} application routes hash
+ * @param version - {Object} version object
+ * @param level - {Object} level object
+ * @param searchLibraries - {Object} search libraries model
+ * @param searchBlocks - {Object} search blocks model
+ */
 LevelNode.prototype.addItems = function(routes, version, level, searchLibraries, searchBlocks) {
-    logger.verbose('add blocks to level %s of version %s', level.name, version.ref);
+    logger.verbose('add blocks to level %s of version %s start', level.name, version.ref);
 
     this.items = this.items || [];
 
@@ -86,6 +98,8 @@ LevelNode.prototype.addItems = function(routes, version, level, searchLibraries,
 
         this.items.push(node);
     }, this);
+
+    return this;
 };
 
 exports.LevelNode = LevelNode;

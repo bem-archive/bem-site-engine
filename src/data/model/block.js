@@ -1,7 +1,8 @@
 var u = require('util'),
     _ = require('lodash'),
     config = require('../lib/config'),
-    DynamicNode = require('./dynamic').DynamicNode;
+    logger = require('../lib/logger')(module),
+    nodes = require('./index');
 
 /**
  * Subclass of dynamic nodes which describe library blocks
@@ -11,6 +12,8 @@ var u = require('util'),
  * @constructor
  */
 var BlockNode = function(parent, routes, version, level, block) {
+    logger.verbose('block constructor %s %s %s start', version.repo, version.ref, block.name);
+
     this.setTitle(block)
         .setSource(version, level, block)
         .processRoute(routes, parent, {
@@ -24,7 +27,7 @@ var BlockNode = function(parent, routes, version, level, block) {
         .init(parent);
 };
 
-BlockNode.prototype = Object.create(DynamicNode.prototype);
+BlockNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
 
 /**
  * Sets title for node

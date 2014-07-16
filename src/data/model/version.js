@@ -1,17 +1,22 @@
 var u = require('util'),
     _ = require('lodash'),
     config = require('../lib/config'),
-    DynamicNode = require('./dynamic').DynamicNode,
+    logger = require('../lib/logger')(module),
     nodes = require('./index');
 
 /**
  * Subclass of dynamic nodes which describe single version of library
- * @param node - {Object} base node configuration
  * @param parent - {BaseNode} parent node
+ * @param routes - {Object} application routes hash
  * @param version - {Object} version of library
+ * @param searchLibraries - {Object} search libraries model
+ * @param searchBlocks - {Object} search blocks model
+ * @param index - {Number}
  * @constructor
  */
 var VersionNode = function(parent, routes, version, searchLibraries, searchBlocks, index) {
+
+    logger.verbose('version constructor %s %s', version.repo, version.ref);
 
     this.setTitle(version)
         .setSource(version)
@@ -22,17 +27,10 @@ var VersionNode = function(parent, routes, version, searchLibraries, searchBlock
             }
         })
         .init(parent)
-        .addItems(routes, version, searchLibraries, searchBlocks);
-
-    searchLibraries[version.repo] =
-        searchLibraries[version.repo] || new nodes.search.Library(version.repo);
-
-    //TODO fix this.source.ru.content !
-    searchLibraries[version.repo].addVersion(
-        new nodes.search.Version(version.ref, this.url, this.source.ru.content, !index));
+        .addItems(routes, version, searchLibraries, searchBlocks, index);
 };
 
-VersionNode.prototype = Object.create(DynamicNode.prototype);
+VersionNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
 
 /**
  * Sets title for node
@@ -80,11 +78,21 @@ VersionNode.prototype.setClass = function() {
 };
 
 /**
- *
- * @param targetNode
- * @param version
+ * Adds items for node
+ * @param routes - {Object} application routes hash
+ * @param version - {Object} version of library
+ * @param searchLibraries - {Object} search libraries model
+ * @param searchBlocks - {Object} search blocks model
+ * @returns {VersionNode}
  */
-VersionNode.prototype.addItems = function(routes, version, searchLibraries, searchBlocks) {
+VersionNode.prototype.addItems = function(routes, version, searchLibraries, searchBlocks, index) {
+    searchLibraries[version.repo] =
+        searchLibraries[version.repo] || new nodes.search.Library(version.repo);
+
+    //TODO fix this.source.ru.content !
+    searchLibraries[version.repo].addVersion(
+        new nodes.search.Version(version.ref, this.url, this.source.ru.content, !index));
+
     this.items = this.items || [];
 
     var docs = version.docs || {
@@ -133,6 +141,8 @@ VersionNode.prototype.addItems = function(routes, version, searchLibraries, sear
             this.items.push(new nodes.level.LevelNode(this, routes, version, level, searchLibraries, searchBlocks));
         }
     }, this);
+
+    return this;
 };
 
 exports.VersionNode = VersionNode;
