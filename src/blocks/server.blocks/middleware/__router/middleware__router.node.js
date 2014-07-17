@@ -129,8 +129,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                     if (!result || !result.items) return;
 
                     var versions = result.items.map(function (item) {
-                        //return _.isObject(item.title) ? item.title[config.get('app:defaultLanguage')] : item.title;
-                        return item.url.substr(item.url.lastIndexOf("/"));
+                        return item.url.substr(item.url.lastIndexOf('/'));
                     });
 
                     if (versions) {
