@@ -30,9 +30,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
 
                 var route = router.findFirst(url);
 
-                if(!route) {
-                    //return next(new error.HttpError(error.HttpError.CODES.NOT_FOUND));
-                }else {
+                if(route) {
                     req.route = route[0].getName();
                     req.params = route[1];
                 }

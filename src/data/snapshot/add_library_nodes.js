@@ -33,40 +33,10 @@ function addLibraryNodes(routes, nodesWithLib, libraries) {
             });
     });
 
-    addVersionAliases(routes);
-
     return {
         libraries: _.values(searchLibraries),
         blocks: searchBlocks
     };
-}
-
-/**
- * Add allowed aliases for library versions
- * such as current or v{n}.x
- * @param routes - {Object} application routes hash
- */
-function addVersionAliases(routes) {
-    Object.keys(routes).forEach(function(key) {
-        var conditions = routes[key].conditions;
-
-        if(!conditions) {
-            return ;
-        }
-
-        if(conditions.version) {
-            conditions.version.push('current');
-            for(var i = 1; i < 100; i++) {
-                conditions.version.push(u.format('v%s.x', i));
-            }
-        }
-
-        if(conditions.id) {
-            conditions.id = conditions.id.concat(['docs', 'jsdoc', 'examples']);
-        }
-
-        routes[key].conditions = conditions;
-    });
 }
 
 module.exports = function(obj) {

@@ -86,12 +86,12 @@ VersionNode.prototype.setClass = function() {
  * @returns {VersionNode}
  */
 VersionNode.prototype.addItems = function(routes, version, searchLibraries, searchBlocks, index) {
-    searchLibraries[version.repo] =
-        searchLibraries[version.repo] || new nodes.search.Library(version.repo);
+    var sl = searchLibraries[version.repo];
 
     //TODO fix this.source.ru.content !
-    searchLibraries[version.repo].addVersion(
-        new nodes.search.Version(version.ref, this.url, this.source.ru.content, !index));
+    sl = sl || new nodes.search.Library(version.repo);
+    sl.addVersion(new nodes.search.Version(version.ref, this.url, this.source.ru.content, !index));
+    searchLibraries[version.repo] = sl;
 
     this.items = this.items || [];
 
