@@ -35,7 +35,8 @@
     "jshint": "~2.4.4",
     "jscs": "~1.2.4",
     "coa": "~0.4.0",
-    "connect-slashes": "*"
+    "connect-slashes": "*",
+    "deep-extend": "~0.2.10"
   },
   "devDependencies": {
       "enb": "~0.13.4",

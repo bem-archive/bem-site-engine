@@ -1,6 +1,8 @@
 var u = require('util'),
     _ = require('lodash'),
-    DynamicNode = require('./dynamic').DynamicNode;
+    config = require('../lib/config'),
+    logger = require('../lib/logger')(module),
+    nodes = require('./index');
 
 /**
  * Subclass of dynamic nodes which describe library blocks
@@ -9,16 +11,23 @@ var u = require('util'),
  * @param block - {Object} block data
  * @constructor
  */
-var BlockNode = function(node, parent, block) {
-    Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
+var BlockNode = function(parent, routes, version, level, block) {
+    logger.verbose('block constructor %s %s %s start', version.repo, version.ref, block.name);
 
-    this
-        .init(parent)
-        .setTitle(block)
-        .setSource(block);
+    this.setTitle(block)
+        .setSource(version, level, block)
+        .processRoute(routes, parent, {
+            conditions: {
+                lib: version.repo,
+                version: version.ref,
+                level: level.name,
+                block: block.name
+            }
+        })
+        .init(parent);
 };
 
-BlockNode.prototype = Object.create(DynamicNode.prototype);
+BlockNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
 
 /**
  * Sets title for node
@@ -26,10 +35,11 @@ BlockNode.prototype = Object.create(DynamicNode.prototype);
  * @returns {BlockNode}
  */
 BlockNode.prototype.setTitle = function(block) {
-    this.title = {
-        en: block.name,
-        ru: block.name
-    };
+    var languages = config.get('common:languages') || ['en'];
+    this.title = languages.reduce(function(prev, lang) {
+        prev[lang] = block.name;
+        return prev;
+    }, {});
     return this;
 };
 
@@ -38,8 +48,16 @@ BlockNode.prototype.setTitle = function(block) {
  * @param source - {Object} source
  * @returns {BlockNode}
  */
-BlockNode.prototype.setSource = function(source) {
-    this.source = source;
+BlockNode.prototype.setSource = function(version, level, block) {
+    var examplePrefix = version.enb ?
+        u.format('/__example/%s/%s', version.repo, version.ref) :
+        u.format('/__example/%s/%s/%s.sets/%s', version.repo, version.ref, level.name, block.name);
+
+    this.source = {
+        prefix: examplePrefix,
+        data: block.data,
+        jsdoc: block.jsdoc
+    };
     return this;
 };
 
