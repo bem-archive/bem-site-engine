@@ -13,7 +13,7 @@ var MSG = {
         START: '-- data compiler module start --',
         END: '-- data compiler successfully finished --'
     },
-    ERROR: 'Error'
+    ERROR: 'data compiler failed'
 };
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
      * @param modelPath - {String} relative path to model index file
      */
     run: function(modelPath, opts) {
-        logger.info(''.toUpperCase.apply(MSG.INFO.START));
+        logger.info(MSG.INFO.START.toUpperCase());
 
         logger.debug('Version %s of data will be settled', opts.version);
         logger.debug('Start compile data for %s environment', opts.environment);
@@ -54,10 +54,10 @@ module.exports = {
                     });
             })
             .then(function() {
-                logger.info(''.toUpperCase.apply(MSG.INFO.END))
+                logger.info(MSG.INFO.END.toUpperCase());
             })
-            .fail(function(err) {
-                logger.error(''.toUpperCase.apply(MSG.ERROR), err)
+            .fail(function() {
+                logger.error(MSG.ERROR.toUpperCase());
             });
     }
 };
