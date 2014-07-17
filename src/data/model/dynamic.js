@@ -77,18 +77,25 @@ DynamicNode.prototype.setClass = function() {
     return this;
 };
 
-DynamicNode.prototype.processRoute = function(routes, parent, conditions) {
-    var baseRoute = parent.getBaseRoute();
-    routes[baseRoute.name].conditions = routes[baseRoute.name].conditions || {};
+/**
+ * Create route and url fields for dynamic nodes
+ * @param routes - {Object} application routes hash
+ * @param parent - {BaseNode} parent node
+ * @param params - {Object} route params of node
+ * @returns {DynamicNode}
+ */
+DynamicNode.prototype.processRoute = function(routes, parent, params) {
+    var baseRoute = parent.getBaseRoute(),
+        conditions = routes[baseRoute.name].conditions;
 
-    Object.keys(conditions.conditions).forEach(function(key) {
-        routes[baseRoute.name].conditions[key] = routes[baseRoute.name].conditions[key] || [];
-        routes[baseRoute.name].conditions[key].push(conditions.conditions[key]);
-        routes[baseRoute.name].conditions[key] = _.uniq(routes[baseRoute.name].conditions[key]);
-    });
+    routes[baseRoute.name].conditions = Object.keys(params.conditions).reduce(function(prev, key) {
+        prev[key] = prev[key] || [];
+        prev[key].concat(params.conditions[key]);
+        return prev;
+    }, conditions || {});
 
-    this.route = _.extend({}, { name: baseRoute.name }, conditions);
-    this.url = susanin.Route(routes[baseRoute.name]).build(conditions.conditions);
+    this.route = _.extend({}, { name: baseRoute.name }, params);
+    this.url = susanin.Route(routes[baseRoute.name]).build(params.conditions);
 
     return this;
 };
