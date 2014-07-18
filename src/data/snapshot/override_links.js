@@ -61,6 +61,12 @@ function overrideLinks(content, node, urlHash, lang) {
         }
 
         return content.replace(REGEXP.LINK, function (str, href) {
+
+            //decode html entities
+            href = href.replace(/&#(x?)([0-9a-fA-F]+);?/g, function(str, bs, match) {
+                return String.fromCharCode(parseInt(match, bs === 'x' ? 16 : 10));
+            });
+
             var nativeHref = href,
                 existedLinks = _.values(urlHash),
                 isMailTo = /^mailto:/.test(href), //detect mailto links
