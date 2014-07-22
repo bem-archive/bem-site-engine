@@ -1,35 +1,41 @@
 var u = require('util'),
-    _ = require('lodash')
+    _ = require('lodash'),
+    config = require('../lib/config'),
     DynamicNode = require('./dynamic').DynamicNode;
 
 /**
  * Subclass of dynamic nodes which describe person
- * @param node - {Object} base node configuration
  * @param parent - {BaseNode} parent node
- * @param personKey - {String} person key
+ * @param routes - {Object} application routes hash
+ * @param key - {String} person data
+ * @param people - {Object} people data
  * @constructor
  */
-var PersonNode = function(node, parent, personKey, people) {
-    Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
-
+var PersonNode = function(parent, routes, key, people) {
     this
-        .init(parent)
-        .setTitle(personKey, people);
+        .setTitle(people[key])
+        .processRoute(routes, parent, {
+            conditions: {
+                id: key
+            }
+        })
+        .init(parent);
+
 };
 
 PersonNode.prototype = Object.create(DynamicNode.prototype);
 
 /**
  * Sets title for node
- * @param personKey - {String} key for person
+ * @param person - {Object} object data for person
  * @returns {PersonNode}
  */
-PersonNode.prototype.setTitle = function(personKey, people) {
-    var person = people[personKey];
-    this.title = {
-        en: u.format('%s %s', person.en['firstName'], person.en['lastName']),
-        ru: u.format('%s %s', person.ru['firstName'], person.ru['lastName'])
-    };
+PersonNode.prototype.setTitle = function(person) {
+    var languages = config.get('common:languages') || ['en'];
+    this.title = languages.reduce(function(prev, lang) {
+        prev[lang] = u.format('%s %s', person[lang]['firstName'], person[lang]['lastName']);
+        return prev;
+    }, {});
     return this;
 };
 

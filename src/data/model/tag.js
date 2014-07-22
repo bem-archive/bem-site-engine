@@ -1,20 +1,24 @@
 var u = require('util'),
     _ = require('lodash'),
+    config = require('../lib/config'),
     DynamicNode = require('./dynamic').DynamicNode;
 
 /**
  * Subclass of dynamic nodes which describe tag of post
- * @param node - {Object} base node configuration
  * @param parent - {BaseNode} parent node
+ * @param routes - {Object} application routes hash
  * @param tagKey - {String} tag
  * @constructor
  */
-var TagNode = function(node, parent, tagKey) {
-    Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
-
+var TagNode = function(parent, routes, tagKey) {
     this
-        .init(parent)
-        .setTitle(tagKey);
+        .setTitle(tagKey)
+        .processRoute(routes, parent, {
+            conditions: {
+                id: tagKey
+            }
+        })
+        .init(parent);
 };
 
 TagNode.prototype = Object.create(DynamicNode.prototype);
@@ -25,10 +29,11 @@ TagNode.prototype = Object.create(DynamicNode.prototype);
  * @returns {TagNode}
  */
 TagNode.prototype.setTitle = function(tagKey) {
-    this.title = {
-        en: tagKey,
-        ru: tagKey
-    };
+    var languages = config.get('common:languages') || ['en'];
+    this.title = languages.reduce(function(prev, lang) {
+        prev[lang] = tagKey;
+        return prev;
+    }, {});
     return this;
 };
 

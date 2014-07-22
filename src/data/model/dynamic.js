@@ -90,7 +90,7 @@ DynamicNode.prototype.processRoute = function(routes, parent, params) {
 
     routes[baseRoute.name].conditions = Object.keys(params.conditions).reduce(function(prev, key) {
         prev[key] = prev[key] || [];
-        prev[key].concat(params.conditions[key]);
+        prev[key] = prev[key].concat(params.conditions[key]);
         return prev;
     }, conditions || {});
 
