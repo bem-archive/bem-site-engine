@@ -65,19 +65,7 @@ var analyzeMetaInformation = function(node, lang, collected) {
     try {
         var meta = node.source[lang],
             content = meta.content,
-            repo = (function(_source) {
-                var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/,
-                    parsedSource = _source.match(re);
-                return {
-                    host: parsedSource[1],
-                    user: parsedSource[2],
-                    repo: parsedSource[3],
-                    ref:  parsedSource[5],
-                    path: parsedSource[6]
-                };
-            })(content);
-
-        repo.type = repo.host.indexOf('github.com') > -1 ? 'public' : 'private';
+            repo;
 
         //parse date from dd-mm-yyyy format into milliseconds
         if(meta.createDate) {
@@ -109,21 +97,45 @@ var analyzeMetaInformation = function(node, lang, collected) {
             collected.tags[lang] = _.union(collected.tags[lang], meta.tags);
         }
 
+        //check for existing content
+        if(!content) {
+            var isContentExistsForAnyOtherLang = Object.keys(node.source).some(function(_lang) {
+                return _lang !== lang && node.source[_lang] && node.source[_lang].content;
+            });
+
+            if(isContentExistsForAnyOtherLang) {
+                return vow.resolve({ node: node, repo: null });
+            }else{
+                logger.error('Content were not set for any lang for node %s', node.url);
+                node.source[lang] = null;
+                return vow.reject();
+            }
+        }
+
+        repo = (function(_source) {
+            var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/,
+                parsedSource = _source.match(re);
+            return {
+                host: parsedSource[1],
+                user: parsedSource[2],
+                repo: parsedSource[3],
+                ref:  parsedSource[5],
+                path: parsedSource[6]
+            };
+        })(content);
+
+        repo.type = repo.host.indexOf('github.com') > -1 ? 'public' : 'private';
+        repo.issue = u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
+            repo.host, repo.user, repo.repo, meta.title);
+        repo.prose = u.format("http://prose.io/#%s/%s/edit/%s/%s",
+            repo.user, repo.repo, repo.ref, repo.path);
+
         //set repo information for issues and prose.io links
-        node.source[lang].repo = {
-            type: repo.type,
-            host: repo.host,
-            user: repo.user,
-            repo: repo.repo,
-            ref:  repo.ref,
-            path: repo.path,
-            issue: u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"", repo.host, repo.user, repo.repo, meta.title),
-            prose: u.format("http://prose.io/#%s/%s/edit/%s/%s",repo.user, repo.repo, repo.ref, repo.path)
-        };
+        node.source[lang].repo = repo;
 
         return vow.resolve({ node: node, repo: repo });
     }catch(err) {
-        logger.warn('source for lang %s contains errors for node %s', lang, node.title && (node.title[lang] || node.title));
+        logger.error('source for lang %s contains errors for node %s', lang, node.url);
         node.source[lang] = null;
         return vow.reject();
     }
