@@ -1,27 +1,31 @@
 .post__tags
 {
-	font-size: 12px;
+    font-size: 12px;
 
-	.link
-	{
-		margin-left: 2px;
-		padding: 4px 10px;
+    .link
+    {
+        display: inline-block;
 
-		opacity: .5;
-		color: #000;
-		border-radius: 2px;
-		background-color: #eee;
+        margin: 0 2px 4px 0;
+        padding: 4px 10px;
 
-		&:hover
-		{
-			opacity: 1;
-		}
-	}
+        opacity: .5;
+        color: #000;
+        border-radius: 2px;
+        background-color: #eee;
 
-	.post_view_full &
-	{
-	    line-height: 20px;
+        white-space: nowrap;
 
-	    margin-left: 20px;
-	}
+        &:hover
+        {
+            opacity: 1;
+        }
+    }
+
+    .post_view_full &
+    {
+        line-height: 20px;
+
+        margin-left: 20px;
+    }
 }
