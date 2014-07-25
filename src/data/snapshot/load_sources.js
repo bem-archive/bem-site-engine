@@ -4,176 +4,220 @@ var p = require('path'),
     vow = require('vow'),
     md = require('marked'),
 
-    logger = require('../lib/logger')(module),
-    config = require('../lib/config'),
     util = require('../lib/util'),
+    config = require('../lib/config'),
     renderer = require('../lib/renderer'),
-    providers = require('../providers');
+    providers = require('../providers'),
+    logger = require('../lib/logger')(module);
 
-/**
- * Loads sources for nodes
- * @returns {*|Q.IPromise<U>|Q.Promise<U>}
- */
+var Meta = function(meta, lang, collected) {
+    Object.keys(meta).forEach(function(key) { this[key] = meta[key]; }, this);
+
+    this
+        .convertDate('createDate')
+        .convertDate('editDate')
+        .collectPeople('authors', collected)
+        .collectPeople('translators', collected)
+        .collectTags(lang, collected)
+        .setRepo();
+};
+
+Meta.prototype = {
+
+    /**
+     * Converts date fields of post meta information to milliseconds
+     * @param field - {String} name of field
+     * @returns {Meta}
+     */
+    convertDate: function(field) {
+        this[field] && (this[field] = util.dateToMilliseconds(this[field]));
+        return this;
+    },
+
+    /**
+     * Collects people data of post
+     * @param field - {String} name of field
+     * @param collected - {Object} hash of collected data
+     * @returns {Meta}
+     */
+    collectPeople: function(field, collected) {
+        this[field] && (collected[field] = collected[field].concat(this[field]));
+        return this;
+    },
+
+    /**
+     * Collects tags data for post
+     * @param lang - {String} language
+     * @param collected - {Object} hash of collected data
+     * @returns {Meta}
+     */
+    collectTags: function(lang, collected) {
+        if(this.tags) {
+            collected.tags[lang] = collected.tags[lang] || [];
+            collected.tags[lang] = collected.tags[lang].concat(this.tags);
+        }
+        return this;
+    },
+
+    /**
+     * Sets repository information and urls
+     * for issues and prose.io edit
+     * @returns {Meta}
+     */
+    setRepo: function() {
+        if(!this.content) {
+            this.repo = null;
+            return this;
+        }
+
+        var regExp = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/,
+            parsedRepo = this.content.match(regExp);
+
+        if(!parsedRepo) {
+            this.repo = null;
+            return this;
+        }
+
+        this.repo = {
+            host: parsedRepo[1],
+            user: parsedRepo[2],
+            repo: parsedRepo[3],
+            ref:  parsedRepo[5],
+            path: parsedRepo[6]
+        };
+
+        this.repo.type = this.repo.host.indexOf('github.com') > -1 ? 'public' : 'private';
+        this.repo.issue = this.generateIssueUrl(this.title);
+        this.repo.prose = this.generateProseUrl();
+        return this;
+    },
+
+    /**
+     * Returns generated url for issues of repo which post belongs to
+     * @param title - {String} title of post
+     * @returns {String}
+     */
+    generateIssueUrl: function(title) {
+        var r = this.repo;
+        return u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"", r.host, r.user, r.repo, title);
+    },
+
+    /**
+     * Returns generated url for editing post by prose.io service
+     * @returns {String}
+     */
+    generateProseUrl: function() {
+        var r = this.repo;
+        return u.format("http://prose.io/#%s/%s/edit/%s/%s", r.user, r.repo, r.ref, r.path);
+    }
+};
+
 module.exports = function(obj) {
     logger.info('Load sources for nodes start');
 
-    var languages = config.get('common:languages'),
-        collected = {
+    var nodes = util.findNodesByCriteria(obj.sitemap, function() { return this.source; }, false),
+        collected = nodes.reduce(function(prev, item) {
+            return analyzeMeta(prev, item);
+        }, {
             authors: [],
             translators: [],
             tags: {}
-        },
-        promises = util
-            .findNodesByCriteria(obj.sitemap, function() { return this.source; }, false)
-            .map(function (node) {
-                return vow.all(languages.map(function (lang) {
-                    return analyzeMetaInformation(node, lang, collected)
-                        .then(function(res) {
-                            return loadMDFile(res.node, lang, res.repo);
-                        })
-                        .then(function(res) {
-                            if(res) {
-                                node.source[lang].url = node.source[lang].content;
-                                node.source[lang].content = res;
-                            }
-                        });
-                }));
-            });
+        });
 
-    return vow.all(promises).then(function() {
-        obj.docs = collected;
+    return vow.all(nodes.map(function(node) {
+        if(!_.isObject(node.source)) {
+            return vow.resolve();
+        }
+
+        return vow.all(Object.keys(node.source).map(function(lang) {
+            return loadMDFile(node, lang);
+        }));
+    })).then(function() {
+        obj.docs = compactCollected.apply(collected);
         return obj;
     });
 };
 
 /**
- * Analizes source for node, transform values and create repo links
- * @param node - {Object} node
- * @param lang - {String} language of source
- * @param collected - {Object} result target object
- * urls of nodes as values
- * @returns {*}
+ * Analyze meta information for node
+ * @param collected - {Object} hash of collected data
+ * @param node - {BaseNode} node
+ * @returns {Object} collected
  */
-var analyzeMetaInformation = function(node, lang, collected) {
-
-    if(!node.source[lang]) {
-        logger.warn('source with lang %s does not exists for node with url %s', lang, node.url);
-        node.source[lang] = null;
-        return vow.resolve({ node: node, repo: null });
+function analyzeMeta(collected, node) {
+    if(!_.isObject(node.source)) {
+        return collected;
     }
 
-    try {
-        var meta = node.source[lang],
-            content = meta.content,
-            repo;
+    var source = node.source,
+        languages = config.get('common:languages') || ['en'],
+        hasContent = Object.keys(source).some(function (lang) {
+            return source[lang] && source[lang].content;
+        });
 
-        //parse date from dd-mm-yyyy format into milliseconds
-        if(meta.createDate) {
-            meta.createDate = util.dateToMilliseconds(meta.createDate);
+    !hasContent && (node.hidden = true);
+
+    languages.forEach(function (lang) {
+        if (!source[lang]) {
+            logger.warn('source with lang %s does not exists for node with url %s', lang, node.url);
+            source[lang] = null;
+            return;
         }
 
-        //parse date from dd-mm-yyyy format into milliseconds
-        if(meta.editDate) {
-            node.source[lang].editDate = util.dateToMilliseconds(meta.editDate);
-        }
-
-        //compact and collect authors
-        if(meta.authors && _.isArray(meta.authors)) {
-            meta.authors = _.compact(meta.authors);
-            node.source[lang].authors = meta.authors;
-            collected.authors = _.union(collected.authors, meta.authors);
-        }
-
-        //compact and collect translators
-        if(meta.translators && _.isArray(meta.translators)) {
-            meta.translators = _.compact(meta.translators);
-            node.source[lang].translators = meta.translators;
-            collected.translators = _.union(collected.translators, meta.translators);
-        }
-
-        //collect tags
-        if(meta.tags) {
-            collected.tags[lang] = collected.tags[lang] || [];
-            collected.tags[lang] = _.union(collected.tags[lang], meta.tags);
-        }
-
-        //check for existing content
-        if(!content) {
-            var isContentExistsForAnyOtherLang = Object.keys(node.source).some(function(_lang) {
-                return _lang !== lang && node.source[_lang] && node.source[_lang].content;
-            });
-
-            if(isContentExistsForAnyOtherLang) {
-                return vow.resolve({ node: node, repo: null });
-            }else{
-                logger.error('Content were not set for any lang for node %s', node.url);
-                node.source[lang] = null;
-                return vow.reject();
-            }
-        }
-
-        repo = (function(_source) {
-            var re = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/,
-                parsedSource = _source.match(re);
-            return {
-                host: parsedSource[1],
-                user: parsedSource[2],
-                repo: parsedSource[3],
-                ref:  parsedSource[5],
-                path: parsedSource[6]
-            };
-        })(content);
-
-        repo.type = repo.host.indexOf('github.com') > -1 ? 'public' : 'private';
-        repo.issue = u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"",
-            repo.host, repo.user, repo.repo, meta.title);
-        repo.prose = u.format("http://prose.io/#%s/%s/edit/%s/%s",
-            repo.user, repo.repo, repo.ref, repo.path);
-
-        //set repo information for issues and prose.io links
-        node.source[lang].repo = repo;
-
-        return vow.resolve({ node: node, repo: repo });
-    }catch(err) {
-        logger.error('source for lang %s contains errors for node %s', lang, node.url);
-        node.source[lang] = null;
-        return vow.reject();
-    }
-};
+        source[lang] = new Meta(source[lang], lang, collected);
+    });
+    node.source = source;
+    return collected;
+}
 
 /**
  * Loads *.md file for source of node
  * @param node - {Object} node of sitemap model
  * @param lang - {String} language key
- * @param repo - {Object} repository object
- * @returns {*|Q.IPromise<U>|Q.Promise<U>}
+ * @returns {Vow.promise}
  */
-var loadMDFile = function(node, lang, repo) {
-    var title = (node.title && node.title[lang]) ? node.title[lang] : node.title;
 
-    if(!repo) {
+function loadMDFile(node, lang) {
+    var s = node.source[lang],
+        onError = function(md) {
+            var errorMsg = (!md || !md.res) ?
+                'markdown with lang %s does not exists for node %s' :
+                'markdown for lang %s contains errors for node %s';
+            errorMsg = u.format(errorMsg, lang, node.url);
+            logger.error(errorMsg);
+            return vow.reject(errorMsg);
+        };
+
+    if(!s || !s.repo) {
         return vow.resolve(null);
     }
 
-    return providers.getProviderGhApi()
-        .load({ repository: repo })
-        .then(
-            function(md) {
-                try {
-                    return util.mdToHtml((new Buffer(md.res.content, 'base64')).toString(),
-                        { renderer: renderer.getRenderer() });
-                }catch(err) {
-                    var errorMsg = !md.res ?
-                            u.format('markdown with lang %s does not exists for node %s', lang, title) :
-                            u.format('markdown for lang %s contains errors for node %s', lang, title);
-                    logger.error(errorMsg);
-                    return vow.reject(errorMsg);
-                }
+    return providers.getProviderGhApi().load({ repository: s.repo })
+        .then(function(md) {
+            try {
+                node.source[lang].url = s.content;
+                node.source[lang].content = util.mdToHtml(
+                    (new Buffer(md.res.content, 'base64')).toString(), { renderer: renderer.getRenderer() });
+            }catch(err) {
+                return onError(md);
             }
-        )
+        })
         .fail(function() {
-            var errorMsg = u.format('markdown with lang %s does not exists for node %s', lang, title);
-            logger.error(errorMsg);
-            return vow.reject(errorMsg);
+            return onError();
         });
-};
+}
+
+/**
+ * Remove undefined, null or empty string values from authors, translators and tags collections
+ * Remove repeated values
+ */
+function compactCollected() {
+    this.authors = _.uniq(_.compact(this.authors));
+    this.translators = _.uniq(_.compact(this.translators));
+
+    Object.keys(this.tags).forEach(function(lang) {
+        this.tags[lang] = _.uniq(_.compact(this.tags[lang]));
+    }, this);
+    return this;
+}
+
