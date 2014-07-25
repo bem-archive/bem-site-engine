@@ -66,7 +66,7 @@ module.exports = {
 
         return getSitemap(modelPath)
             .then(analyze)
-            .then(require('./load_sources'))
+            .then(require('./load-sources'))
             .then(require('./load_people'))
             .then(require('./add_dynamic_nodes'))
             .then(require('./add_library_nodes'))

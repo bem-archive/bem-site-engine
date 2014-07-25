@@ -86,10 +86,21 @@ Meta.prototype = {
             path: parsedRepo[6]
         };
 
-        this.repo.type = this.repo.host.indexOf('github.com') > -1 ? 'public' : 'private';
-        this.repo.issue = this.generateIssueUrl(this.title);
-        this.repo.prose = this.generateProseUrl();
+        //generate advanced params for repository
+        this.repo = _.extend(this.repo, {
+            type: this.getTypeOfRepository(),
+            issue: this.generateIssueUrl(this.title),
+            prose: this.generateProseUrl()
+        });
+
         return this;
+    },
+
+    /**
+     * Returns type of repository
+     */
+    getTypeOfRepository: function() {
+        return this.repo.host.indexOf('github.com') > -1 ? 'public' : 'private';
     },
 
     /**
@@ -99,7 +110,7 @@ Meta.prototype = {
      */
     generateIssueUrl: function(title) {
         var r = this.repo;
-        return u.format("https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"", r.host, r.user, r.repo, title);
+        return u.format('https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"', r.host, r.user, r.repo, title);
     },
 
     /**
@@ -108,7 +119,7 @@ Meta.prototype = {
      */
     generateProseUrl: function() {
         var r = this.repo;
-        return u.format("http://prose.io/#%s/%s/edit/%s/%s", r.user, r.repo, r.ref, r.path);
+        return u.format('http://prose.io/#%s/%s/edit/%s/%s', r.user, r.repo, r.ref, r.path);
     }
 };
 
@@ -212,11 +223,11 @@ function loadMDFile(node, lang) {
  * Remove repeated values
  */
 function compactCollected() {
-    this.authors = _.uniq(_.compact(this.authors));
-    this.translators = _.uniq(_.compact(this.translators));
+    this.authors = util.uniqCompact(this.authors);
+    this.translators = util.uniqCompact(this.translators);
 
     Object.keys(this.tags).forEach(function(lang) {
-        this.tags[lang] = _.uniq(_.compact(this.tags[lang]));
+        this.tags[lang] = util.uniqCompact(this.tags[lang]);
     }, this);
     return this;
 }
