@@ -172,3 +172,13 @@ exports.findNodesByCriteria = function(sitemap, criteria, onlyFirst) {
 
     return onlyFirst ? result[0] : result;
 };
+
+/**
+ * Remove undefined, null or empty string values from collection
+ * Remove repeated values
+ * @param collection - {Array}
+ * @returns {Array}
+ */
+exports.uniqCompact = function(collection) {
+    return _.uniq(_.compact(collection));
+};
