@@ -32,13 +32,6 @@ block menu-list, mod type main {
             block: 'menu-list',
             elem: 'delimeter'
         });
-        _content.push({
-            block: 'link',
-            mods: { award: true },
-            url: 'http://bit.ly/voteforb',
-            content: 'Vote for BEM'
-        });
-        _content.push({ block: 'search' });
 
         return _content;
     }

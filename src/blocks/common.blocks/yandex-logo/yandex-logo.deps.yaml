@@ -1,5 +1,0 @@
-- block: i-bem
-  required: true
-  elem: [html, i18n]
-
-- mods: { lang: [en, ru] }

@@ -1,9 +1,0 @@
-block('search-action').elem('icon')(
-    def()(
-        applyCtx({
-            block: 'icon',
-            mods: { action: 'search' },
-            mix: { block: this.block, elem: this.elem }
-        })
-    )
-)
