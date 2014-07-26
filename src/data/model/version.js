@@ -53,9 +53,9 @@ VersionNode.prototype.setTitle = function(version) {
  */
 VersionNode.prototype.setSource = function(version) {
     var languages = config.get('common:languages') || ['en'],
-        readme = version.docs ? version.docs['readme'] : {
+        readme = version.docs ? version.docs.readme : {
             title: { en: 'Readme', ru: 'Readme'},
-            content: version['readme']
+            content: version.readme
         };
 
     this.source = languages.reduce(function(prev, lang) {
