@@ -1,3 +1,0 @@
-block content, mod view index {
-    content: 'You can implement your own custom content here'
-}
