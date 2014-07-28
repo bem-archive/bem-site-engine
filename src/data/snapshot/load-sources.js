@@ -141,7 +141,11 @@ module.exports = function(obj) {
         }
 
         return vow.all(Object.keys(node.source).map(function(lang) {
-            return loadMDFile(node, lang);
+            return vow.all[
+                loadMDFile(node, lang),
+                setUpdateDate(node, lang),
+                checkForBranch(node, lang)
+            ];
         }));
     })).then(function() {
         obj.docs = compactCollected.apply(collected);
@@ -187,7 +191,6 @@ function analyzeMeta(collected, node) {
  * @param lang - {String} language key
  * @returns {Vow.promise}
  */
-
 function loadMDFile(node, lang) {
     var s = node.source[lang],
         onError = function(md) {
@@ -215,6 +218,46 @@ function loadMDFile(node, lang) {
         })
         .fail(function() {
             return onError();
+        });
+}
+
+/**
+ * Sets update date by date of latest commit
+ * @param node - {Object} node of sitemap model
+ * @param lang - {String} language key
+ * @returns {Vow.promise}
+ */
+function setUpdateDate(node, lang) {
+    var s = node.source[lang];
+
+    if(!s || !s.repo) {
+        return vow.resolve(null);
+    }
+
+    return providers.getProviderGhApi().getCommits({ repository: s.repo })
+        .then(function(res) {
+
+        });
+}
+
+/**
+ * Checks branch is branch and not tag
+ * in opposite case the prose io link will be dropped
+ * @param node - {Object} node of sitemap model
+ * @param lang - {String} language key
+ * @returns {Vow.promise}
+ */
+function checkForBranch(node, lang) {
+    var s = node.source[lang];
+    if(!s || !s.repo) {
+        return vow.resolve(null);
+    }
+
+    return providers.getProviderGhApi().isBranchExists({
+            repository: _.extend(s.repo, { branch: s.repo.ref })
+        })
+        .then(function(exists) {
+            exists || (node.source[lang].repo.prose = null);
         });
 }
 

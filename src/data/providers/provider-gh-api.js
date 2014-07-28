@@ -42,7 +42,7 @@ GhApiProvider.prototype = {
 
     /**
      * Returns content of repository directory or file loaded by github api
-     * @param repository - {Object} with fields:
+     * @param options - {Object} with fields:
      * - type {String} type of repository privacy ('public' or 'private')
      * - user {String} name of user or organization which this repository is belong to
      * - repo {String} name of repository
@@ -63,6 +63,42 @@ GhApiProvider.prototype = {
             }
         });
         return def.promise();
+    },
+
+    /**
+     * Returns info for given branch
+     * @param options - {Object} with fields:
+     * - type {String} type of repository privacy ('public' or 'private')
+     * - user {String} name of user or organization which this repository is belong to
+     * - repo {String} name of repository
+     * - branch {String} name of branch
+     * @returns {*}
+     */
+    isBranchExists: function(options) {
+        var repository = options.repository,
+            git = repository.type === 'private' ? this.gitPrivate : this.gitPublic;
+
+        return git.repos.getBranch(repository, function(err, res) {
+            return vow.resolve((err || !res) ? false : true);
+        });
+    },
+
+    /**
+     * Returns list of commits of given file path
+     * @param options - {Object} with fields:
+     * - type {String} type of repository privacy ('public' or 'private')
+     * - user {String} name of user or organization which this repository is belong to
+     * - repo {String} name of repository
+     * - path {String} relative path from the root of repository
+     * @returns {*}
+     */
+    getCommits: function(options) {
+        var repository = options.repository,
+            git = repository.type === 'private' ? this.gitPrivate : this.gitPublic;
+
+        return git.repos.getCommits(repository, function(err, res) {
+            return vow.resolve((err || !res) ? null : res);
+        });
     }
 };
 
