@@ -230,7 +230,7 @@ function loadMDFile(node, lang) {
 function setUpdateDate(node, lang) {
     var s = node.source[lang],
         repository;
-    if(!s || !s.repo) {
+    if(!s || !s.repo || s.editDate) {
         return vow.resolve(null);
     }
 
