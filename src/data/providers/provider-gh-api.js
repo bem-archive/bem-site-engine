@@ -27,15 +27,20 @@ GhApiProvider.prototype = {
     init: function() {
         logger.info('Init Github API provider');
 
-        if(config.get('data:github:public'))
-            this.gitPublic  = new api(_.extend(config.get('data:github:public'), this.common));
+        var ghConfig = config.get('data:github'),
+            ghPublic = ghConfig.public,
+            ghPrivate = ghConfig.private;
 
-        if(config.get('data:github:private'))
-            this.gitPrivate = new api(_.extend(config.get('data:github:private'), this.common));
+        if(ghPublic)
+            this.gitPublic  = new api(_.extend(ghPublic, this.common));
 
-        var auth = config.get('data:github:public:auth');
-        if(auth && _.isString(auth.type) && _.isString(auth.token) && auth.type.length && auth.token.length)
-            this.gitPublic.authenticate(config.get('data:github:public:auth'));
+        if(ghPrivate)
+            this.gitPrivate = new api(_.extend(ghPrivate, this.common));
+
+        var auth = ghPublic.auth;
+        if(auth) {
+            this.gitPublic.authenticate(auth);
+        }
 
         return this;
     },
@@ -107,7 +112,7 @@ GhApiProvider.prototype = {
             repository = options.repository;
 
         this.getGit(repository).repos.getCommits(repository, function(err, res) {
-            def.resolve((err || !res) ? null : res);
+            def.resolve(res);
         });
 
         return def.promise();

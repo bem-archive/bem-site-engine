@@ -143,7 +143,7 @@ module.exports = function(obj) {
         return vow.all(Object.keys(node.source).map(function(lang) {
             return vow.all[
                 loadMDFile(node, lang),
-                //setUpdateDate(node, lang),
+                setUpdateDate(node, lang),
                 checkForBranch(node, lang)
             ];
         }));
@@ -228,14 +228,23 @@ function loadMDFile(node, lang) {
  * @returns {Vow.promise}
  */
 function setUpdateDate(node, lang) {
-    var s = node.source[lang];
+    var s = node.source[lang],
+        repository;
     if(!s || !s.repo) {
         return vow.resolve(null);
     }
 
-    return providers.getProviderGhApi().getCommits({ repository: s.repo })
+    repository = s.repo;
+
+    return providers.getProviderGhApi().getCommits({ repository: repository })
         .then(function(res) {
-            console.log('!');
+            if(!res || !res[0]) {
+                logger.warn('can not get commits for %s %s %s %s',
+                    repository.user, repository.repo, repository.ref, repository.path);
+                return;
+            }
+
+            s.editDate = (new Date(res[0].commit.committer.date)).getTime();
         });
 }
 
