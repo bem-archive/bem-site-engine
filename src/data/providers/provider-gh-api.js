@@ -41,6 +41,15 @@ GhApiProvider.prototype = {
     },
 
     /**
+     * Returns gh module configured for public or private github depending on repository type
+     * @param r - {Object} repository type
+     * @returns {Object}
+     */
+    getGit: function(r) {
+        return r.type === 'private' ? this.gitPrivate : this.gitPublic;
+    },
+
+    /**
      * Returns content of repository directory or file loaded by github api
      * @param options - {Object} with fields:
      * - type {String} type of repository privacy ('public' or 'private')
@@ -52,10 +61,9 @@ GhApiProvider.prototype = {
      */
     load: function(options) {
         var def = vow.defer(),
-            repository = options.repository,
-            git = repository.type === 'private' ? this.gitPrivate : this.gitPublic;
+            repository = options.repository;
 
-        git.repos.getContent(repository, function(err, res) {
+        this.getGit(repository).repos.getContent(repository, function(err, res) {
             if (err || !res) {
                 def.reject({res: null, repo: repository});
             }else {
@@ -75,12 +83,14 @@ GhApiProvider.prototype = {
      * @returns {*}
      */
     isBranchExists: function(options) {
-        var repository = options.repository,
-            git = repository.type === 'private' ? this.gitPrivate : this.gitPublic;
+        var def = vow.defer(),
+            repository = options.repository;
 
-        return git.repos.getBranch(repository, function(err, res) {
-            return vow.resolve((err || !res) ? false : true);
+        this.getGit(repository).repos.getBranch(repository, function(err, res) {
+            def.resolve((err || !res) ? false : true);
         });
+
+        return def.promise();
     },
 
     /**
@@ -93,12 +103,33 @@ GhApiProvider.prototype = {
      * @returns {*}
      */
     getCommits: function(options) {
-        var repository = options.repository,
-            git = repository.type === 'private' ? this.gitPrivate : this.gitPublic;
+        var def = vow.defer(),
+            repository = options.repository;
 
-        return git.repos.getCommits(repository, function(err, res) {
-            return vow.resolve((err || !res) ? null : res);
+        this.getGit(repository).repos.getCommits(repository, function(err, res) {
+            def.resolve((err || !res) ? null : res);
         });
+
+        return def.promise();
+    },
+
+    /**
+     * Returns name of default branch for current repository
+     * @param options - {Object} with fields:
+     * - type {String} type of repository privacy ('public' or 'private')
+     * - user {String} name of user or organization which this repository is belong to
+     * - repo {String} name of repository
+     * @returns {*}
+     */
+    getDefaultBranch: function(options) {
+        var def = vow.defer(),
+            repository = options.repository;
+
+        this.getGit(repository).repos.get(repository, function(err, res) {
+            def.resolve((err || !res) ? null : res.default_branch);
+        });
+
+        return def.promise();
     }
 };
 

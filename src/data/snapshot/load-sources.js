@@ -143,7 +143,7 @@ module.exports = function(obj) {
         return vow.all(Object.keys(node.source).map(function(lang) {
             return vow.all[
                 loadMDFile(node, lang),
-                setUpdateDate(node, lang),
+                //setUpdateDate(node, lang),
                 checkForBranch(node, lang)
             ];
         }));
@@ -229,14 +229,13 @@ function loadMDFile(node, lang) {
  */
 function setUpdateDate(node, lang) {
     var s = node.source[lang];
-
     if(!s || !s.repo) {
         return vow.resolve(null);
     }
 
     return providers.getProviderGhApi().getCommits({ repository: s.repo })
         .then(function(res) {
-
+            console.log('!');
         });
 }
 
@@ -248,16 +247,26 @@ function setUpdateDate(node, lang) {
  * @returns {Vow.promise}
  */
 function checkForBranch(node, lang) {
-    var s = node.source[lang];
+    var s = node.source[lang],
+        repository;
+
     if(!s || !s.repo) {
         return vow.resolve(null);
     }
 
+    repository = s.repo;
+
     return providers.getProviderGhApi().isBranchExists({
-            repository: _.extend(s.repo, { branch: s.repo.ref })
+            repository: _.extend(repository, { branch: repository.ref })
         })
         .then(function(exists) {
-            exists || (node.source[lang].repo.prose = null);
+            if(exists) return;
+
+            return providers.getProviderGhApi().getDefaultBranch({ repository: repository })
+                .then(function(branch) {
+                    repository.ref = branch;
+                    repository.prose = s.generateProseUrl();
+                })
         });
 }
 
