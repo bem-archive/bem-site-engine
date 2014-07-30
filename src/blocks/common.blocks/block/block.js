@@ -96,7 +96,9 @@ BEMDOM.decl('block', {
 
     _loadExamples: function() {
         this.findBlocksInside('block-example').forEach(function(example) {
-            example.loadIframe('live');
+            example
+                .setMod('js', 'inited')
+                .loadIframe('live');
         });
     }
 
