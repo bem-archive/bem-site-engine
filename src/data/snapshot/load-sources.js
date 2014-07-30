@@ -141,7 +141,11 @@ module.exports = function(obj) {
         }
 
         return vow.all(Object.keys(node.source).map(function(lang) {
-            return loadMDFile(node, lang);
+            return vow.all[
+                loadMDFile(node, lang),
+                setUpdateDate(node, lang),
+                checkForBranch(node, lang)
+            ];
         }));
     })).then(function() {
         obj.docs = compactCollected.apply(collected);
@@ -187,7 +191,6 @@ function analyzeMeta(collected, node) {
  * @param lang - {String} language key
  * @returns {Vow.promise}
  */
-
 function loadMDFile(node, lang) {
     var s = node.source[lang],
         onError = function(md) {
@@ -215,6 +218,66 @@ function loadMDFile(node, lang) {
         })
         .fail(function() {
             return onError();
+        });
+}
+
+/**
+ * Sets update date by date of latest commit
+ * @param node - {Object} node of sitemap model
+ * @param lang - {String} language key
+ * @returns {Vow.promise}
+ */
+function setUpdateDate(node, lang) {
+    var s = node.source[lang],
+        repository;
+    if(!s || !s.repo || s.editDate) {
+        return vow.resolve(null);
+    }
+
+    repository = s.repo;
+
+    return providers.getProviderGhApi().getCommits({
+            repository: _.extend(repository, { sha: repository.ref })
+        })
+        .then(function(res) {
+            if(!res || !res[0]) {
+                logger.warn('can not get commits for %s %s %s %s',
+                    repository.user, repository.repo, repository.ref, repository.path);
+                return;
+            }
+
+            s.editDate = (new Date(res[0].commit.committer.date)).getTime();
+        });
+}
+
+/**
+ * Checks branch is branch and not tag
+ * in opposite case the prose io link will be dropped
+ * @param node - {Object} node of sitemap model
+ * @param lang - {String} language key
+ * @returns {Vow.promise}
+ */
+function checkForBranch(node, lang) {
+    var s = node.source[lang],
+        repository;
+
+    if(!s || !s.repo) {
+        return vow.resolve(null);
+    }
+
+    repository = s.repo;
+
+    return providers.getProviderGhApi().isBranchExists({
+            repository: _.extend(repository, { branch: repository.ref })
+        })
+        .then(function(exists) {
+            if(exists) return;
+
+            return providers.getProviderGhApi().getDefaultBranch({ repository: repository })
+                .then(function(branch) {
+                    repository.ref = branch;
+                    repository.prose = s.generateProseUrl();
+                })
         });
 }
 
