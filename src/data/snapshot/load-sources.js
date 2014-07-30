@@ -236,7 +236,9 @@ function setUpdateDate(node, lang) {
 
     repository = s.repo;
 
-    return providers.getProviderGhApi().getCommits({ repository: repository })
+    return providers.getProviderGhApi().getCommits({
+            repository: _.extend(repository, { sha: repository.ref })
+        })
         .then(function(res) {
             if(!res || !res[0]) {
                 logger.warn('can not get commits for %s %s %s %s',

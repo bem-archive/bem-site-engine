@@ -31,15 +31,17 @@ GhApiProvider.prototype = {
             ghPublic = ghConfig.public,
             ghPrivate = ghConfig.private;
 
-        if(ghPublic)
-            this.gitPublic  = new api(_.extend(ghPublic, this.common));
+        if(ghPublic) {
+            this.gitPublic = new api(_.extend(ghPublic, this.common));
 
-        if(ghPrivate)
+            var auth = ghPublic.auth;
+            if(auth) {
+                this.gitPublic.authenticate(auth);
+            }
+        }
+
+        if(ghPrivate) {
             this.gitPrivate = new api(_.extend(ghPrivate, this.common));
-
-        var auth = ghPublic.auth;
-        if(auth) {
-            this.gitPublic.authenticate(auth);
         }
 
         return this;
