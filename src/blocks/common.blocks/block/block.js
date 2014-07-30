@@ -11,7 +11,6 @@ BEMDOM.decl('block', {
                 _this.wrapTables();
 
                 if(tabs) {
-
                     _this._openTabFromUrl(tabs);
 
                     // support back/next button in browser (html5 history api)
@@ -51,6 +50,7 @@ BEMDOM.decl('block', {
             this._openTabByDataName(tabs, this._getTabName());
         } else {
             tabs.setActiveTab(0);
+            this._isExamples(tabs);
         }
     },
 
@@ -66,10 +66,14 @@ BEMDOM.decl('block', {
                 tabs.setActiveTab($(tab));
             }
 
-            if(tabs.hasMod(tabs.getCurrentTab(), 'examples', 'yes')) {
-                _this._loadExamples();
-            }
+            _this._isExamples(tabs);
         });
+    },
+
+    _isExamples: function(tabs) {
+        if(tabs.hasMod(tabs.getCurrentTab(), 'examples', 'yes')) {
+            this._loadExamples();
+        }
     },
 
     _getTabName: function() {
