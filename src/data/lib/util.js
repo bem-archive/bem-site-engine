@@ -193,13 +193,5 @@ exports.getLanguages = function() {
     var languages = config.get('common:languages'),
         defaultLanguage = config.get('app:defaultLanguage');
 
-    if(languages) {
-        return languages;
-    }
-
-    if(defaultLanguage) {
-        return [defaultLanguage];
-    }
-
-    return ['en'];
+    return languages || [defaultLanguage || 'en'];
 };
