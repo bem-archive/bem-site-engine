@@ -65,7 +65,7 @@ Meta.prototype = {
      * @returns {Meta}
      */
     setRepo: function() {
-        if(!this.content) {
+        if(!this.content && this.stub) {
             this.repo = null;
             return this;
         }
