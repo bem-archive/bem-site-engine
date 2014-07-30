@@ -29,6 +29,10 @@ block post, mod view full {
             }),
 
             apply('title', this.ctx.content = source),
+            apply('github', this.ctx = {
+                content: source,
+                node: node
+            }),
             apply('deps', this.ctx.content = source.deps),
             apply('contentFull', this.ctx.content = source.content),
             apply('issue', this.ctx.content = source.repo)
@@ -67,12 +71,10 @@ block post, mod view full {
 
     //post title + tags || link to github
     title: {
-
         var content = this.ctx.content,
-            tags = content.tags,
-            urlGithub = content.url;
+            tags = content.tags;
 
-        if(tags || urlGithub) {
+        if(tags) {
             return {
                 elem: 'title-line',
                 content: [
@@ -81,7 +83,10 @@ block post, mod view full {
                         tag: 'h1',
                         content: content.longTitle || content.title
                     },
-                    apply('title-neighbors', this.ctx.content = content)
+                    {
+                        elem: 'tags',
+                        content: tags
+                    }
                 ]
             }
         }
@@ -93,25 +98,21 @@ block post, mod view full {
         }
     }
 
-    title-neighbors: {
-        var content = this.ctx.content,
+    github: {
+        var ctx = this.ctx,
+            content = ctx.content,
+            url = content.url,
             tags = content.tags,
-            urlGithub = content.url;
+            routeName = ctx.node.route.name;
 
-        if(tags) {
-            return {
-                elem: 'tags',
-                content: tags
-            }
+        if(routeName === 'index' || tags) {
+            return false;
         }
 
-        if(urlGithub) {
-            return {
-                elem: 'url',
-                content: urlGithub
-            }
+        return {
+            elem: 'url',
+            content: url
         }
-
     }
 
     //post content

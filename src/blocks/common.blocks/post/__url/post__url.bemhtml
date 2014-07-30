@@ -4,17 +4,17 @@ block('post').elem('url')(
     }),
 
     content()(function() {
-        return [
-            {
-                block: 'icon',
-                mods: { view: 'github' }
-            },
-            {
-                block: 'link',
-                url: this.ctx.content,
-                attrs: { target: '_blank' },
-                content: BEM.I18N('post', 'url')
-            }
-        ]
+        return {
+            block: 'link',
+            url: this.ctx.content,
+            attrs: { target: '_blank' },
+            content: [
+                {
+                    block: 'icon',
+                    mods: { view: 'github' }
+                },
+                BEM.I18N('post', 'url')
+            ]
+         }
     })
 );

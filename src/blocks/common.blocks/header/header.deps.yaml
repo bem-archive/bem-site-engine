@@ -1,9 +1,6 @@
 - block: menu-list
   mods: { type: 'header' }
 
-- block: search-action
-  elems: [text, icon]
-
 - block: form
   mods: { visible: 'hidden' }
 

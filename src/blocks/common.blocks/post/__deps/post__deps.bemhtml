@@ -7,17 +7,19 @@ block('post').elem('deps')(
         var self = this;
 
         return Object.keys(this.ctx.content).reduce(function(prev, item) {
-                var libName = item,
-                    libUrl = self.ctx.content[item].replace('git:', '');
+                var libUrl = self.ctx.content[item].replace('git:', '');
 
                 prev.push({
-                    block: 'link',
-                    url: libUrl,
-                    attrs: { target: '_blank' },
-                    content: '&mdash; ' + libName
+                    content: [
+                        '&mdash; ',
+                        {
+                            block: 'link',
+                            url: libUrl,
+                            attrs: { target: '_blank' },
+                            content: item
+                        }
+                    ]
                 });
-
-                prev.push({ tag: 'br' });
 
                 return prev;
             },

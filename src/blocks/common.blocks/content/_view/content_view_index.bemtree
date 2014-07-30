@@ -1,6 +1,0 @@
-block content, mod view index {
-    content: {
-        block: 'quick-start-billboard',
-        url: '/articles/start-with-project-stub'
-    }
-}
