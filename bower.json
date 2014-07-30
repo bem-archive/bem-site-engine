@@ -3,8 +3,8 @@
   "version": "3.0.0",
   "private": true,
   "dependencies": {
-    "bem-core": "git://github.com/bem/bem-core.git#v2.2.1",
-    "bem-components": "git://github.com/bem/bem-components.git#845ba685b647030289442d243ca52997e2617a9f"
+      "bem-core": "git://github.com/bem/bem-core.git#v2.3.0",
+      "bem-components": "git://github.com/bem/bem-components.git#74195dc46a12b375393c9ca1d5484d161a83c047"
   },
   "ignore": [
     "node_modules",
