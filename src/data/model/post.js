@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    config = require('../lib/config'),
+    util = require('../lib/util'),
     logger = require('../lib/logger')(module),
     nodes = require('./index');
 
@@ -47,9 +47,7 @@ PostNode.prototype.setTitle = function(doc) {
  * @returns {PostNode}
  */
 PostNode.prototype.setSource = function(doc) {
-    var languages = config.get('common:languages') || ['en'];
-
-    this.source = languages.reduce(function(prev, lang) {
+    this.source = util.getLanguages().reduce(function(prev, lang) {
         prev[lang] = {
             title: doc.title[lang],
             content: doc.content[lang]

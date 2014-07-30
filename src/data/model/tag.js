@@ -1,6 +1,6 @@
 var u = require('util'),
     _ = require('lodash'),
-    config = require('../lib/config'),
+    util = require('../lib/util'),
     DynamicNode = require('./dynamic').DynamicNode;
 
 /**
@@ -29,8 +29,7 @@ TagNode.prototype = Object.create(DynamicNode.prototype);
  * @returns {TagNode}
  */
 TagNode.prototype.setTitle = function(tagKey) {
-    var languages = config.get('common:languages') || ['en'];
-    this.title = languages.reduce(function(prev, lang) {
+    this.title = util.getLanguages().reduce(function(prev, lang) {
         prev[lang] = tagKey;
         return prev;
     }, {});

@@ -1,6 +1,6 @@
 var u = require('util'),
     _ = require('lodash'),
-    config = require('../lib/config'),
+    util = require('../lib/util'),
     logger = require('../lib/logger')(module),
     nodes = require('./index');
 
@@ -35,8 +35,7 @@ BlockNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @returns {BlockNode}
  */
 BlockNode.prototype.setTitle = function(block) {
-    var languages = config.get('common:languages') || ['en'];
-    this.title = languages.reduce(function(prev, lang) {
+    this.title = util.getLanguages().reduce(function(prev, lang) {
         prev[lang] = block.name;
         return prev;
     }, {});

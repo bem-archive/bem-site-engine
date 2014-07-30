@@ -16,13 +16,12 @@ var REGEXP = {
 };
 
 function collectUrls(sitemap) {
-    var urls = {},
-        languages = config.get('common:languages');
+    var urls = {};
 
     var traverseTreeNodes = function(node) {
 
         if(node.url && node.source && node.hidden) {
-            languages.forEach(function(lang) {
+            util.getLanguages().forEach(function(lang) {
                 if(!node.hidden[lang]) {
                     if(node.source && node.source[lang] && node.source[lang].url) {
                         urls[node.source[lang].url] = node.url;
