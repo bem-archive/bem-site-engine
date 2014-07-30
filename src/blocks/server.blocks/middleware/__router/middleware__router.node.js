@@ -33,12 +33,12 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
 
                 route = router.findFirst(url);
 
-                if(route) {
-                    req.route = route[0].getName();
-                    req.params = route[1];
-                }else {
+                if(!route) {
                     throw error.HttpError.createError(404);
                 }
+
+                req.route = route[0].getName();
+                req.params = route[1];
 
                 return self.findNode(req, url, function(result) {
                     return self.afterFindNode(result, req, res, next);
