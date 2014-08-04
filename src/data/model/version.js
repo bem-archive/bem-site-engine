@@ -1,6 +1,6 @@
 var u = require('util'),
     _ = require('lodash'),
-    config = require('../lib/config'),
+    util = require('../lib/util'),
     logger = require('../lib/logger')(module),
     nodes = require('./index');
 
@@ -38,8 +38,7 @@ VersionNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @returns {VersionNode}
  */
 VersionNode.prototype.setTitle = function(version) {
-    var languages = config.get('common:languages') || ['en'];
-    this.title = languages.reduce(function(prev, lang) {
+    this.title = util.getLanguages().reduce(function(prev, lang) {
         prev[lang] = version.ref;
         return prev;
     }, {});
@@ -52,13 +51,12 @@ VersionNode.prototype.setTitle = function(version) {
  * @returns {VersionNode}
  */
 VersionNode.prototype.setSource = function(version) {
-    var languages = config.get('common:languages') || ['en'],
         readme = version.docs ? version.docs.readme : {
             title: { en: 'Readme', ru: 'Readme'},
             content: version.readme
         };
 
-    this.source = languages.reduce(function(prev, lang) {
+    this.source = util.getLanguages().reduce(function(prev, lang) {
         prev[lang] = {
             title: version.repo,
             deps: version.deps,

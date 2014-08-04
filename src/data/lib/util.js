@@ -2,7 +2,9 @@ var u = require('util'),
 
     _ = require('lodash'),
     md = require('marked'),
-    semver = require('semver');
+    semver = require('semver'),
+
+    config = require('./config');
 
 /**
  * Compile *.md files to html with marked module
@@ -181,4 +183,15 @@ exports.findNodesByCriteria = function(sitemap, criteria, onlyFirst) {
  */
 exports.uniqCompact = function(collection) {
     return _.uniq(_.compact(collection));
+};
+
+/**
+ * Returns array of available languages
+ * @returns {Array}
+ */
+exports.getLanguages = function() {
+    var languages = config.get('common:languages'),
+        defaultLanguage = config.get('app:defaultLanguage');
+
+    return languages || [defaultLanguage || 'en'];
 };

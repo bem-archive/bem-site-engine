@@ -65,7 +65,7 @@ Meta.prototype = {
      * @returns {Meta}
      */
     setRepo: function() {
-        if(!this.content) {
+        if(!this.content && this.stub) {
             this.repo = null;
             return this;
         }
@@ -165,14 +165,13 @@ function analyzeMeta(collected, node) {
     }
 
     var source = node.source,
-        languages = config.get('common:languages') || ['en'],
         hasContent = Object.keys(source).some(function (lang) {
             return source[lang] && source[lang].content;
         });
 
     !hasContent && (node.hidden = true);
 
-    languages.forEach(function (lang) {
+    util.getLanguages().forEach(function (lang) {
         if (!source[lang]) {
             logger.warn('source with lang %s does not exists for node with url %s', lang, node.url);
             source[lang] = null;

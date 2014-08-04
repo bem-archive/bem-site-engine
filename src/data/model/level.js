@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    config = require('../lib/config'),
+    util = require('../lib/util'),
     logger = require('../lib/logger')(module),
     nodes = require('./index');
 
@@ -40,8 +40,7 @@ LevelNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @returns {LevelNode}
  */
 LevelNode.prototype.setTitle = function(level) {
-    var languages = config.get('common:languages') || ['en'];
-    this.title = languages.reduce(function(prev, lang) {
+    this.title = util.getLanguages().reduce(function(prev, lang) {
         prev[lang] = level.name.replace(/\.(sets|docs)$/, '');
         return prev;
     }, {});
