@@ -1,29 +1,52 @@
-block block-jsdoc {
+block('block-jsdoc')(
+    content()(
+        (function() {
+            var jsdoc = this.data.node.source.jsdoc;
 
-    content: {
+            return [
+                apply('description', { ctx: { description: jsdoc.description }}),
+                apply('methods', { ctx: { methods: jsdoc.methods }}),
+                apply('events', { ctx: { events: jsdoc.events }})
+            ];
+        }),
 
-        var _jsdoc = this.data.node.source.jsdoc;
+        match(function() {
+            return 'string' === typeof this.data.node.source.jsdoc;
+        })(function() {
+            return this.data.node.source.jsdoc;
+        })
+    ),
 
-        return [
-            apply('description', this.ctx.description = _jsdoc.description),
-            apply('methods', this.ctx.methods = _jsdoc.methods),
-            apply('events', this.ctx.events = _jsdoc.events)
-        ]
-    }
+    mode('description')(function() {
+        return {
+            elem: 'description',
+            content: this.ctx.description
+        };
+    }),
 
-    description: {
-        elem: 'description',
-        content: this.ctx.description
-    }
+    mode('methods-title')(function() {
+        return {
+            elem: 'title',
+            tag: 'h2',
+            mix: [{ block: 'post', elem: 'title' }],
+            content: BEM.I18N('block-jsdoc', 'methods-title')
+        };
+    }),
 
-    methods: {
+    mode('events-title')(function() {
+        return {
+            elem: 'title',
+            tag: 'h2',
+            mix: [{ block: 'post', elem: 'title' }],
+            content: BEM.I18N('block-jsdoc', 'events-title')
+        };
+    }),
 
-        if(this.ctx.methods && this.ctx.methods.length > 0) {
-
+    mode('methods')(
+        (function() {
             return [
                 apply('methods-title'),
                 this.ctx.methods.map(function(method) {
-
                     return {
                         elem: 'item',
                         content: [
@@ -45,28 +68,24 @@ block block-jsdoc {
                                 elem: 'description',
                                 content: method.description
                             },
-                            apply('method-params', this.ctx.method = method),
-                            apply('method-returns', this.ctx.method = method)
+                            apply('method-params', { ctx: { method: method }}),
+                            apply('method-returns', { ctx: { method: method }})
                         ]
-                    }
-
+                    };
                 })
-            ]
-        }
+            ];
+        }),
 
-    }
+        match(function() {
+            var methods = this.ctx.methods;
+            return !methods || !methods.length;
+        })(function() {
+            return false;
+        })
+    ),
 
-    methods-title: {
-        elem: 'title',
-        tag: 'h2',
-        mix: [{ block: 'post', elem: 'title' }],
-        content: BEM.I18N('block-jsdoc', 'methods-title')
-    }
-
-    method-params: {
-
-        if(this.ctx.method.params && this.ctx.method.params.length > 0) {
-
+    mode('method-params')(
+        (function() {
             return [
                 {
                     elem: 'title',
@@ -74,50 +93,51 @@ block block-jsdoc {
                     tag: 'h6',
                     content: BEM.I18N('block-jsdoc', 'params') + ':'
                 },
-
                 this.ctx.method.params.map(function(param) {
-
                     return [
                         {
                             elem: 'value',
                             mix: [{ elem: 'selection', elemMods: { color: 'grey' } }],
                             content: param.name
                         },
-                        apply('method-params-type', this.ctx.param = param),
+                        apply('method-params-type', { ctx: { param: param }}),
                         {
                             elem: 'js-description',
                             content: param.description
                         }
-                    ]
-
+                    ];
                 })
-            ]
+            ];
+        }),
 
-        }
+        match(function() {
+            var params = this.ctx.method.params;
+            return !params || !params.length;
+        })(function() {
+            return false;
+        })
+    ),
 
-    }
-
-    method-params-type: {
-
-        if(this.ctx.param.types && this.ctx.param.types.length > 0) {
-
+    mode('method-params-type')(
+        (function() {
             return this.ctx.param.types.map(function(type){
-
                 return {
                     elem: 'type',
                     content: '<code>' + type + '</code>'
-                }
+                };
+            });
+        }),
 
-            })
+        match(function() {
+            var types = this.ctx.param.types;
+            return !types || !types.length;
+        })(function() {
+            return false;
+        })
+    ),
 
-        }
-
-    }
-
-    method-returns: {
-
-        if(this.ctx.method.returns && this.ctx.method.returns.length > 0) {
-
+    mode('method-returns')(
+        (function() {
             return [
                 {
                     elem: 'title',
@@ -125,42 +145,39 @@ block block-jsdoc {
                     tag: 'h6',
                     content: BEM.I18N('block-jsdoc', 'returns') + ':'
                 },
-
                 this.ctx.method.returns.map(function(returns) {
-
                     return [
                         {
                             elem: 'types',
                             content: returns.types.map(function(type) {
-
                                 return {
                                     elem: 'type',
                                     content: '<code>' + type + '</code>'
-                                }
-
+                                };
                             })
                         },
                         {
                             elem: 'description',
                             content: returns.description
                         }
-                    ]
-
+                    ];
                 })
-            ]
+            ];
+        }),
 
-        }
+        match(function() {
+            var returns = this.ctx.method.returns;
+            return !returns || !returns.length;
+        })(function() {
+            return false;
+        })
+    ),
 
-    }
-
-    events: {
-
-        if (this.ctx.events && this.ctx.events.length > 0) {
-
+    mode('events')(
+        (function() {
             return [
                 apply('events-title'),
                 this.ctx.events.map(function(event) {
-
                     return {
                         elem: 'item',
                         content: [
@@ -178,29 +195,23 @@ block block-jsdoc {
                                 elem: 'description',
                                 content: event.description
                             },
-                            apply('event-params', this.ctx.event = event)
+                            apply('event-params', { ctx: { event: event }})
                         ]
-                    }
-
-
+                    };
                 })
-            ]
+            ];
+        }),
 
-        }
+        match(function() {
+            var events = this.ctx.events;
+            return !events || !events.length;
+        })(function() {
+            return false;
+        })
+    ),
 
-    }
-
-    events-title: {
-        elem: 'title',
-        tag: 'h2',
-        mix: [{ block: 'post', elem: 'title' }],
-        content: BEM.I18N('block-jsdoc', 'events-title')
-    }
-
-    event-params: {
-
-        if(this.ctx.event.params && this.ctx.event.params.length > 0) {
-
+    mode('event-params')(
+        (function() {
             return [
                 {
                     elem: 'title',
@@ -209,7 +220,6 @@ block block-jsdoc {
                     content: BEM.I18N('block-jsdoc', 'params') + ':'
                 },
                 this.ctx.event.params.map(function(param) {
-
                     return [
                         {
                             elem: 'value',
@@ -220,19 +230,20 @@ block block-jsdoc {
                             return {
                                 elem: 'type',
                                 content: '<code>' + type + '</code>'
-                            }
+                            };
                         }),
                         {
                             elem: 'js-description',
                             content: param.description
                         }
-                    ]
-
+                    ];
                 })
             ]
+        }),
 
-        }
-
-    }
-
-}
+        match(function() {
+            var params = this.ctx.event.params;
+            return !params || !params.length;
+        })(function() { return false; })
+    )
+)
