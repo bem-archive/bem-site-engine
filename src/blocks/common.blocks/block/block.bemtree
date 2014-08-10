@@ -1,77 +1,31 @@
-block block {
-
-    content: {
-
+block('block')(
+    content()(function() {
         var node = this.data.node,
             lang = this.data.lang,
             _source = node.source;
 
-        return [
-            apply('contents', this.ctx = {
-                source: _source,
-                node: node,
-                lang: lang
-            })
-        ];
-    }
+        return [ apply('contents', { ctx: { source: _source, node: node, lang: lang }}) ];
+    }),
 
-    contents: {
-
-        var tabsHeader = [],
+    mode('contents')(function() {
+        var _source = this.ctx.source,
+            _data = _source.data,
+            tabsHeader = [],
             tabsContent = [];
 
-        if(this.ctx.source.data) {
-            tabsHeader.push({
-                elem: 'tab',
-                attrs: { 'data-tab': 'docs' },
-                mods: { 'side': 'left' },
-                content: BEM.I18N('block', 'docs')
-            });
-
-            tabsContent.push({
-                elem: 'pane',
-                content: [
-                    {
-                        block: this.block,
-                        elem: 'title',
-                        content: BEM.I18N('block', 'static-title') + ' ' + this.ctx.node.title[this.ctx.lang]
-                    },
-                    {
-                        block: 'block-docs',
-                        mix: { block: 'post', elem: 'content' }
-                    }
-                ]
-            });
+        if(_data){
+            tabsHeader.push(apply('docs-header'));
+            tabsContent.push(apply('docs-content'));
         }
 
-        if(this.ctx.source.jsdoc) {
-            tabsHeader.push({
-                elem: 'tab',
-                attrs: { 'data-tab': 'jsdoc' },
-                content: BEM.I18N('block', 'jsdoc')
-            });
-
-            tabsContent.push({
-                elem: 'pane',
-                content: {
-                    block: 'block-jsdoc',
-                    mix: { block: 'post', elem: 'content' }
-                }
-            });
+        if(_source.jsdoc) {
+            tabsHeader.push(apply('jsdoc-header'));
+            tabsContent.push(apply('jsdoc-content'));
         }
 
-        if(this.ctx.source.data && this.ctx.source.data.examples && this.ctx.source.data.examples[0].content.length > 0) {
-            tabsHeader.push({
-                elem: 'tab',
-                attrs: { 'data-tab': 'examples' },
-                mods: { 'side': 'right', 'examples': 'yes' },
-                content: BEM.I18N('block', 'examples')
-            });
-
-            tabsContent.push({
-                elem: 'pane',
-                content: apply('examples-items')
-            });
+        if(_data && _data.examples && _data.examples[0].content.length) {
+            tabsHeader.push(apply('examples-header'));
+            tabsContent.push(apply('esamples-content'));
         }
 
         return {
@@ -87,14 +41,74 @@ block block {
                     content: tabsContent
                 }
             ]
-        }
-    }
+        };
+    }),
 
-    examples-items: {
+    mode('docs-header')(function() {
+        return {
+            elem: 'tab',
+            attrs: { 'data-tab': 'docs' },
+            mods: { 'side': 'left' },
+            content: BEM.I18N('block', 'docs')
+        };
+    }),
 
-        if(this.ctx.source.data.examples && this.ctx.source.data.examples.length > 0) {
+    mode('docs-content')(function() {
+        return {
+            elem: 'pane',
+            content: [
+                {
+                    block: this.block,
+                    elem: 'title',
+                    content: BEM.I18N('block', 'static-title') + ' ' + this.ctx.node.title[this.ctx.lang]
+                },
+                {
+                    block: 'block-docs',
+                    mix: { block: 'post', elem: 'content' }
+                }
+            ]
+        };
+    }),
 
+    mode('jsdoc-header')(function() {
+        return {
+            elem: 'tab',
+            attrs: { 'data-tab': 'jsdoc' },
+            content: BEM.I18N('block', 'jsdoc')
+        };
+    }),
+
+    mode('jsdoc-content')(function() {
+        return {
+            elem: 'pane',
+            content: {
+                block: 'block-jsdoc',
+                mix: { block: 'post', elem: 'content' }
+            }
+        };
+    }),
+
+    mode('examples-header')(function() {
+        return {
+            elem: 'tab',
+            attrs: { 'data-tab': 'examples' },
+            mods: { 'side': 'right', 'examples': 'yes' },
+            content: BEM.I18N('block', 'examples')
+        };
+    }),
+
+    mode('examples-content')(function() {
+        return {
+            elem: 'pane',
+            content: apply('examples-items')
+        };
+    }),
+
+    mode('examples-items')(
+        (function() {
             var prefix = this.ctx.source.prefix;
+
+            console.log('Examples items');
 
             return this.ctx.source.data.examples[0].content.map(function(example) {
                 var exampleUrl = prefix + '/' + example.url + '.ru.html',
@@ -109,51 +123,73 @@ block block {
                             copyHoverClass: 'source-copy-hover'
                         },
                         content: [
-                            {
-                                elem: 'header',
-                                content: [
-                                    {
-                                        block: 'link',
-                                        url: exampleUrl,
-                                        attrs: { target: '_blank' },
-                                        mix: [{ block: 'block-example', elem: 'link', elemMods: { icon: 'blank' } }],
-                                        content: example.title + ' (' + exampleName + ')'
-                                    },
-                                    {
-                                        block: 'link',
-                                        url: '#',
-                                        mix: [
-                                            { block: 'block-example', elem: 'link', elemMods: { icon: 'source' } },
-                                            { block: 'block-example', elem: 'source-link' }
-                                        ],
-                                        content: 'BEMJSON'
-                                    }
-                                ]
-                            },
-                            {
-                                elem: 'source',
-                                content: [
-                                    {
-                                        elem: 'source-code',
-                                        attrs: { 'data-url': bemjson }
-                                    },
-                                    {
-                                        block: 'link',
-                                        mods: { type: 'block' },
-                                        mix: [{ block: 'block-example', elem: 'source-copy' }],
-                                        content: BEM.I18N('block-example', 'copy')
-                                    }
-                                ]
-                            },
-                            {
-                                elem: 'live',
-                                attrs: { 'data-url': exampleUrl }
-                            }
+                            apply('example-header', { ctx: {
+                                exampleName: exampleName,
+                                exampleUrl: exampleUrl,
+                                title: example.title
+                            }}),
+                            apply('example-source', { ctx: { bemjson: bemjson }}),
+                            apply('example-live', { ctx: { url: exampleUrl }})
                         ]
                     }
-                ]
-            })
-        }
-    }
+                ];
+            });
+        }),
 
-}
+        match(function() {
+            var examples = this.ctx.source.data.examples;
+            return !examples || !examples.length;
+        })(function() {
+            return false;
+        })
+    ),
+
+    mode('example-header')(function() {
+        return {
+            elem: 'header',
+            content: [
+                {
+                    block: 'link',
+                    url: this.ctx.exampleUrl,
+                    attrs: { target: '_blank' },
+                    mix: [{ block: 'block-example', elem: 'link', elemMods: { icon: 'blank' } }],
+                    content: this.ctx.title + ' (' + this.ctx.exampleName + ')'
+                },
+                {
+                    block: 'link',
+                    url: '#',
+                    mix: [
+                        { block: 'block-example', elem: 'link', elemMods: { icon: 'source' } },
+                        { block: 'block-example', elem: 'source-link' }
+                    ],
+                    content: 'BEMJSON'
+                }
+            ]
+        };
+    }),
+
+    mode('example-source')(function() {
+        return {
+            elem: 'source',
+            content: [
+                {
+                    elem: 'source-code',
+                    attrs: { 'data-url': this.ctx.bemjson }
+                },
+                {
+                    block: 'link',
+                    mods: { type: 'block' },
+                    mix: [{ block: 'block-example', elem: 'source-copy' }],
+                    content: BEM.I18N('block-example', 'copy')
+                }
+            ]
+        };
+    }),
+
+    mode('example-live')(function() {
+        return {
+            elem: 'live',
+            attrs: { 'data-url': this.ctx.url }
+        };
+    })
+)
