@@ -50,7 +50,17 @@ module.exports = {
 var checkForUpdate = function(master) {
     console.info('Check for update for master process start');
 
-    return loadFile(config.get('common:model:marker'))
+    var yaDiskDirectory = config.get('common:model:dir'),
+        dataFileName = config.get('common:model:data'),
+        env = config.get('NODE_ENV'),
+        dataSourcePath = path.join(yaDiskDirectory, env, dataFileName),
+        dataTargetPath = path.join(process.cwd(),'backups', dataFileName),
+        sitemapSourcePath = path.join(yaDiskDirectory, env, 'sitemap.xml'),
+        sitemapTargetPath = path.join(process.cwd(), 'sitemap.xml');
+
+    return providers.getProviderYaDisk().load({
+            path: path.join(yaDiskDirectory, env, config.get('common:model:marker'))
+        })
         .then(function (content) {
             return JSON.parse(content);
         })
@@ -73,24 +83,12 @@ var checkForUpdate = function(master) {
                     .then(function() {
                         return vow.all([
                             providers.getProviderYaDisk().downloadFile({
-                                source: path.join(
-                                    config.get('common:model:dir'),
-                                    config.get('NODE_ENV'),
-                                    config.get('common:model:dir')
-                                ),
-                                target: path.join(
-                                    process.cwd(),
-                                    'backups',
-                                    config.get('common:model:dir')
-                                )
+                                source: dataSourcePath,
+                                target: dataTargetPath
                             }),
                             providers.getProviderYaDisk().downloadFile({
-                                source: path.join(
-                                    config.get('common:model:dir'),
-                                    config.get('NODE_ENV'),
-                                    'sitemap.xml'
-                                ),
-                                target: path.join(process.cwd(), 'sitemap.xml')
+                                source: sitemapSourcePath,
+                                target: sitemapTargetPath
                             })
                         ]);
                     })
@@ -103,30 +101,6 @@ var checkForUpdate = function(master) {
             console.error('Error occur while loading and parsing marker file');
         });
 };
-
-/**
- * Check if current environment is development
- * @returns {boolean}
- */
-var isDev = function() {
-    return 'development' === config.get('NODE_ENV');
-};
-
-/**
- * Loads file from local filesystem or Yandex Disk
- * depending on application environment
- * @param fileName - {String} name of file
- * @returns {*}
- */
-//var downloadFile = function(fileName) {
-//    var provider =
-//        opts = { path: path.join(config.get('common:model:dir'),
-//            isDev() ? '' : config.get('NODE_ENV'), fileName) };
-//
-//    return ({
-//
-//    });
-//};
 
 /**
  * Clear and create empty cache folders
