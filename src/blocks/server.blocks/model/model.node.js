@@ -222,6 +222,10 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
             return model.urls ? model.urls.people : [];
         },
 
+        getBlocks: function() {
+            return model.blocks;
+        },
+
         /**
          * Returns array of pseudo-nodes with title attribute
          * and pseudo-node items with id and url attributes which
