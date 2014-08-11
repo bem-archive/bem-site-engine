@@ -71,7 +71,7 @@ module.exports = {
             .then(require('./add_dynamic_nodes'))
             .then(require('./add_library_nodes'))
             .then(require('./override-links'))
-            .then(require('./generate_sitemap'))
+            .then(require('./sitemapXML'))
             .then(require('./save'))
             .then(function() {
                 logger.info('snapshot was created successfully');

@@ -69,19 +69,34 @@ var checkForUpdate = function(master) {
             if(marker.data !== content.data) {
                 marker = content;
 
-                return clearCache(path.join(process.cwd(), 'cache')).then(function() {
-                    (function(fileName) {
-                        return loadFile(fileName).then(function(content) {
-                            return providers.getProviderFile().save({
-                                data: content,
-                                path: path.join(process.cwd(), fileName)
-                            });
-                        });
-                    })('sitemap.xml');
-
-                    console.info('restart application by data changing event');
-                    master.softRestart();
-                });
+                return clearCache(path.join(process.cwd(), 'cache'))
+                    .then(function() {
+                        return vow.all([
+                            providers.getProviderYaDisk().downloadFile({
+                                source: path.join(
+                                    config.get('common:model:dir'),
+                                    config.get('NODE_ENV'),
+                                    config.get('common:model:dir')
+                                ),
+                                target: path.join(
+                                    process.cwd(),
+                                    'backups',
+                                    config.get('common:model:dir')
+                                )
+                            }),
+                            providers.getProviderYaDisk().downloadFile({
+                                source: path.join(
+                                    config.get('common:model:dir'),
+                                    config.get('NODE_ENV'),
+                                    'sitemap.xml'
+                                ),
+                                target: path.join(process.cwd(), 'sitemap.xml')
+                            })
+                        ]);
+                    })
+                    .then(function() {
+                        return master.softRestart();
+                    });
             }
         })
         .fail(function() {
@@ -103,15 +118,15 @@ var isDev = function() {
  * @param fileName - {String} name of file
  * @returns {*}
  */
-var loadFile = function(fileName) {
-    var provider = isDev() ?
-            providers.getProviderFile() :
-            providers.getProviderYaDisk(),
-        opts = { path: path.join(config.get('common:model:dir'),
-            isDev() ? '' : config.get('NODE_ENV'), fileName) };
-
-    return provider.load(opts);
-};
+//var downloadFile = function(fileName) {
+//    var provider =
+//        opts = { path: path.join(config.get('common:model:dir'),
+//            isDev() ? '' : config.get('NODE_ENV'), fileName) };
+//
+//    return ({
+//
+//    });
+//};
 
 /**
  * Clear and create empty cache folders
