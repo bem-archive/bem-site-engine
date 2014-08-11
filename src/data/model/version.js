@@ -9,12 +9,12 @@ var u = require('util'),
  * @param parent - {BaseNode} parent node
  * @param routes - {Object} application routes hash
  * @param version - {Object} version of library
- * @param searchLibraries - {Object} search libraries model
- * @param searchBlocks - {Object} search blocks model
+ * @param search - {Object} search model
+ * @param blocksHash - {Object} blocks data hash
  * @param index - {Number}
  * @constructor
  */
-var VersionNode = function(parent, routes, version, searchLibraries, searchBlocks, index) {
+var VersionNode = function(parent, routes, version, search, blocksHash, index) {
 
     logger.verbose('version constructor %s %s', version.repo, version.ref);
 
@@ -27,7 +27,7 @@ var VersionNode = function(parent, routes, version, searchLibraries, searchBlock
             }
         })
         .init(parent)
-        .addItems(routes, version, searchLibraries, searchBlocks, index);
+        .addItems(routes, version, search, blocksHash, index);
 };
 
 VersionNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
@@ -51,10 +51,10 @@ VersionNode.prototype.setTitle = function(version) {
  * @returns {VersionNode}
  */
 VersionNode.prototype.setSource = function(version) {
-        readme = version.docs ? version.docs.readme : {
-            title: { en: 'Readme', ru: 'Readme'},
-            content: version.readme
-        };
+    var readme = version.docs ? version.docs.readme : {
+        title: { en: 'Readme', ru: 'Readme'},
+        content: version.readme
+    };
 
     this.source = util.getLanguages().reduce(function(prev, lang) {
         prev[lang] = {
@@ -82,17 +82,17 @@ VersionNode.prototype.setClass = function() {
  * Adds items for node
  * @param routes - {Object} application routes hash
  * @param version - {Object} version of library
- * @param searchLibraries - {Object} search libraries model
- * @param searchBlocks - {Object} search blocks model
+ * @param search - {Object} search model
+ * @param blocksHash - {Object} blocks data hash
  * @returns {VersionNode}
  */
-VersionNode.prototype.addItems = function(routes, version, searchLibraries, searchBlocks, index) {
-    var sl = searchLibraries[version.repo];
+VersionNode.prototype.addItems = function(routes, version, search, blocksHash, index) {
+    var sl = search.libraries[version.repo];
 
     //TODO fix this.source.ru.content !
     sl = sl || new nodes.search.Library(version.repo);
     sl.addVersion(new nodes.search.Version(version.ref, this.url, this.source.ru.content, !index));
-    searchLibraries[version.repo] = sl;
+    search.libraries[version.repo] = sl;
 
     this.items = this.items || [];
 
@@ -143,7 +143,7 @@ VersionNode.prototype.addItems = function(routes, version, searchLibraries, sear
 
         //verify existed blocks for level
         if(level.blocks) {
-            this.items.push(new nodes.level.LevelNode(this, routes, version, level, searchLibraries, searchBlocks));
+            this.items.push(new nodes.level.LevelNode(this, routes, version, level, search, blocksHash));
         }
     }, this);
 

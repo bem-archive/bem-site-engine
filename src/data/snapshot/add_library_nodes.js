@@ -9,16 +9,19 @@ var u = require('util'),
 /**
  * Dynamically build tree of child nodes for each library
  * @param routes - {Object} application routes hash
- * @param nodesWithLib - {Array} array of target library nodes
+ * @param nodesWithLibs - {Array} array of target library nodes
  * @param libraries - {Object} loaded libs data
- * @returns {{libraries: *, blocks: Array}}
+ * @returns {{search: *, blocksHash: *}}
  */
-function addLibraryNodes(routes, nodesWithLib, libraries) {
+function addLibraryNodes(routes, nodesWithLibs, libraries) {
 
-    var searchLibraries = {},
-        searchBlocks = [];
+    var search = {
+            libraries: {},
+            blocks: []
+        },
+        blocksHash = {};
 
-    nodesWithLib.forEach(function(node) {
+    nodesWithLibs.forEach(function(node) {
         logger.debug('add versions to library %s %s', node.lib, node.url);
 
         var versions = libraries[node.lib];
@@ -29,14 +32,12 @@ function addLibraryNodes(routes, nodesWithLib, libraries) {
             .forEach(function(key, index) {
                 node.items = node.items || [];
                 node.items.push(
-                    new nodes.version.VersionNode(node, routes, versions[key], searchLibraries, searchBlocks, index));
+                    new nodes.version.VersionNode(node, routes, versions[key], search, blocksHash, index));
             });
     });
 
-    return {
-        libraries: _.values(searchLibraries),
-        blocks: searchBlocks
-    };
+    search.libraries = _.values(search.libraries);
+    return { search: search, blocksHash: blocksHash };
 }
 
 module.exports = function(obj) {
@@ -58,7 +59,9 @@ module.exports = function(obj) {
 
     return require('./load_libraries')(nodes)
         .then(function(libraries) {
-            obj.search = addLibraryNodes(routes, nodes, libraries);
+            var result = addLibraryNodes(routes, nodes, libraries);
+            obj.search = result.search;
+            obj.blocksHash = result.blocksHash;
             return vow.resolve(obj);
         });
 };

@@ -42,6 +42,7 @@ function getConfig() {
     var def = {
             dir: 'backups',
             data: 'data.json',
+            blocks: 'blocks.json',
             marker: 'marker.json',
             search: {
                 libraries: 'search_libraries.json',
@@ -128,7 +129,8 @@ function prepareToSave(content) {
         routes: content.routes,
         docs:   content.docs,
         urls:   content.dynamic,
-        people: content.people
+        people: content.people,
+        blocks: content.blocksHash
     };
 }
 
