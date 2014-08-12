@@ -1,5 +1,7 @@
 block('block')(
     content()(function() {
+        console.log('BLOCK');
+
         var node = this.data.node,
             lang = this.data.lang,
             _source = node.source;
@@ -25,7 +27,7 @@ block('block')(
 
         if(_data && _data.examples && _data.examples[0].content.length) {
             tabsHeader.push(apply('examples-header'));
-            tabsContent.push(apply('esamples-content'));
+            tabsContent.push(apply('examples-content'));
         }
 
         return {
