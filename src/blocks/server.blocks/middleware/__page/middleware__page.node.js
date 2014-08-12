@@ -17,19 +17,29 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template'],
                     peopleUrls: model.getPeopleUrls()
                 };
 
-                if(node.view === node.VIEW.AUTHOR) {
+                if(node.VIEW.AUTHOR === node.view) {
                     return _.extend(result, {
                         posts: model.getNodesBySourceCriteria(req.lang, ['authors', 'translators'], req.params.id) });
                 }
 
-                if(node.view === node.VIEW.TAGS) {
+                if(node.VIEW.TAGS === node.view) {
                     return _.extend(result, {
                         posts: model.getNodesBySourceCriteria(req.lang, ['tags'], req.params.id) });
                 }
 
-                if(node.view === node.VIEW.AUTHORS) {
+                if(node.VIEW.AUTHORS === node.view) {
                     return _.extend(result, {
                         authors: model.getAuthors() });
+                }
+
+                if(node.VIEW.BLOCK === node.view) {
+                    var s = node.source,
+                        d = model.getBlocks()[s.key];
+
+                    s.data = d.data;
+                    s.jsdoc = d.jsdoc;
+
+                    return {};
                 }
 
                 return result;

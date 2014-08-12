@@ -1,21 +1,26 @@
 var u = require('util'),
     _ = require('lodash'),
+    sha = require('sha1'),
+
     util = require('../lib/util'),
     logger = require('../lib/logger')(module),
     nodes = require('./index');
 
 /**
  * Subclass of dynamic nodes which describe library blocks
- * @param node - {Object} base node configuration
  * @param parent - {LevelNode} parent node
+ * @param routes - {Object} application routes hash
+ * @param version - {Object} version of library
+ * @param level - {Object} version of library
  * @param block - {Object} block data
+ * @param blocksHash - {Object} blocks data hash
  * @constructor
  */
-var BlockNode = function(parent, routes, version, level, block) {
+var BlockNode = function(parent, routes, version, level, block, blocksHash) {
     logger.verbose('block constructor %s %s %s start', version.repo, version.ref, block.name);
 
     this.setTitle(block)
-        .setSource(version, level, block)
+        .setSource(version, level, block, blocksHash)
         .processRoute(routes, parent, {
             conditions: {
                 lib: version.repo,
@@ -47,16 +52,22 @@ BlockNode.prototype.setTitle = function(block) {
  * @param source - {Object} source
  * @returns {BlockNode}
  */
-BlockNode.prototype.setSource = function(version, level, block) {
-    var examplePrefix = version.enb ?
-        u.format('/__example/%s/%s', version.repo, version.ref) :
-        u.format('/__example/%s/%s/%s.sets/%s', version.repo, version.ref, level.name, block.name);
+BlockNode.prototype.setSource = function(version, level, block, blocksHash) {
+    var source = {
+            data: block.data,
+            jsdoc: block.jsdoc
+        },
+        shaKey = sha(JSON.stringify(source));
+
+    blocksHash[shaKey] = source;
 
     this.source = {
-        prefix: examplePrefix,
-        data: block.data,
-        jsdoc: block.jsdoc
+        key: shaKey,
+        prefix: version.enb ?
+            u.format('/__example/%s/%s', version.repo, version.ref) :
+            u.format('/__example/%s/%s/%s.sets/%s', version.repo, version.ref, level.name, block.name)
     };
+
     return this;
 };
 

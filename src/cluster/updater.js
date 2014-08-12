@@ -50,7 +50,17 @@ module.exports = {
 var checkForUpdate = function(master) {
     console.info('Check for update for master process start');
 
-    return loadFile(config.get('common:model:marker'))
+    var yaDiskDirectory = config.get('common:model:dir'),
+        dataFileName = config.get('common:model:data'),
+        env = config.get('NODE_ENV'),
+        dataSourcePath = path.join(yaDiskDirectory, env, dataFileName),
+        dataTargetPath = path.join(process.cwd(),'backups', dataFileName),
+        sitemapSourcePath = path.join(yaDiskDirectory, env, 'sitemap.xml'),
+        sitemapTargetPath = path.join(process.cwd(), 'sitemap.xml');
+
+    return providers.getProviderYaDisk().load({
+            path: path.join(yaDiskDirectory, env, config.get('common:model:marker'))
+        })
         .then(function (content) {
             return JSON.parse(content);
         })
@@ -69,48 +79,27 @@ var checkForUpdate = function(master) {
             if(marker.data !== content.data) {
                 marker = content;
 
-                return clearCache(path.join(process.cwd(), 'cache')).then(function() {
-                    (function(fileName) {
-                        return loadFile(fileName).then(function(content) {
-                            return providers.getProviderFile().save({
-                                data: content,
-                                path: path.join(process.cwd(), fileName)
-                            });
-                        });
-                    })('sitemap.xml');
-
-                    console.info('restart application by data changing event');
-                    master.softRestart();
-                });
+                return clearCache(path.join(process.cwd(), 'cache'))
+                    .then(function() {
+                        return vow.all([
+                            providers.getProviderYaDisk().downloadFile({
+                                source: dataSourcePath,
+                                target: dataTargetPath
+                            }),
+                            providers.getProviderYaDisk().downloadFile({
+                                source: sitemapSourcePath,
+                                target: sitemapTargetPath
+                            })
+                        ]);
+                    })
+                    .then(function() {
+                        return master.softRestart();
+                    });
             }
         })
         .fail(function() {
             console.error('Error occur while loading and parsing marker file');
         });
-};
-
-/**
- * Check if current environment is development
- * @returns {boolean}
- */
-var isDev = function() {
-    return 'development' === config.get('NODE_ENV');
-};
-
-/**
- * Loads file from local filesystem or Yandex Disk
- * depending on application environment
- * @param fileName - {String} name of file
- * @returns {*}
- */
-var loadFile = function(fileName) {
-    var provider = isDev() ?
-            providers.getProviderFile() :
-            providers.getProviderYaDisk(),
-        opts = { path: path.join(config.get('common:model:dir'),
-            isDev() ? '' : config.get('NODE_ENV'), fileName) };
-
-    return provider.load(opts);
 };
 
 /**

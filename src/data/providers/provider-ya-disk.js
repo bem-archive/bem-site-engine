@@ -40,6 +40,16 @@ YaDiskProvider.prototype = {
         return def.promise();
     },
 
+    downloadFile: function(options) {
+        logger.debug('download file %s from yandex disk to %s', options.source, options.target);
+
+        var def = vow.defer();
+        this.disk.downloadFile(options.source, options.target, function(err) {
+            err ? def.reject(err) : def.resolve();
+        });
+        return def.promise();
+    },
+
     /**
      * Creates remote file on yandex disk
      * @param options {Object} object with fields:

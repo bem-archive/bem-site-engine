@@ -131,15 +131,9 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
          * @returns {*}
          */
         init: function() {
-
-            providerDisk.init();
-
-            var provider = util.isDev() ? providerFile : providerDisk,
-                opts = { path: path.join(config.get('common:model:dir'),
-                    util.isDev() ? '' : config.get('NODE_ENV'), config.get('common:model:data'))
-                };
-
-            return provider.load(opts)
+            return providerFile.load({
+                    path: path.join(process.cwd(), 'backups', config.get('common:model:data'))
+                })
                 .then(function(content) {
                     try {
                         return JSON.parse(content);
@@ -220,6 +214,10 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
          */
         getPeopleUrls: function() {
             return model.urls ? model.urls.people : [];
+        },
+
+        getBlocks: function() {
+            return model.blocks;
         },
 
         /**

@@ -9,15 +9,15 @@ var _ = require('lodash'),
  * @param routes - {Object} application routes hash
  * @param version - {Object} version object
  * @param level - {Object} level object
- * @param searchLibraries - {Object} search libraries model
- * @param searchBlocks - {Object} search blocks model
+ * @param search - {Object} search model
+ * @param blocksHash - {Object} blocks data hash
  * @constructor
  */
-var LevelNode = function(parent, routes, version, level, searchLibraries, searchBlocks) {
+var LevelNode = function(parent, routes, version, level, search, blocksHash) {
     logger.verbose('level constructor %s %s %s', version.repo, version.ref, level.name);
 
     //add library block level to library search item
-    _.find(searchLibraries, function(item) { return version.repo === item.name; })
+    _.find(search.libraries, function(item) { return version.repo === item.name; })
         .getVersion(version.ref).addLevel(new nodes.search.Level(level.name));
 
     this.setTitle(level)
@@ -29,7 +29,7 @@ var LevelNode = function(parent, routes, version, level, searchLibraries, search
             }
         })
         .init(parent)
-        .addItems(routes, version, level, searchLibraries, searchBlocks);
+        .addItems(routes, version, level, search, blocksHash);
 };
 
 LevelNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
@@ -71,10 +71,10 @@ LevelNode.prototype.setClass = function() {
  * @param routes - {Object} application routes hash
  * @param version - {Object} version object
  * @param level - {Object} level object
- * @param searchLibraries - {Object} search libraries model
- * @param searchBlocks - {Object} search blocks model
+ * @param search - {Object} search model
+ * @param blocksHash - {Object} blocks data hash
  */
-LevelNode.prototype.addItems = function(routes, version, level, searchLibraries, searchBlocks) {
+LevelNode.prototype.addItems = function(routes, version, level, search, blocksHash) {
     logger.verbose('add blocks to level %s of version %s start', level.name, version.ref);
 
     this.items = this.items || [];
@@ -85,13 +85,13 @@ LevelNode.prototype.addItems = function(routes, version, level, searchLibraries,
     blocks.forEach(function(block) {
 
         //add library block to library search item
-        _.find(searchLibraries, function(item) { return version.repo === item.name; })
+        _.find(search.libraries, function(item) { return version.repo === item.name; })
             .getVersion(version.ref).getLevel(level.name).addBlock(block.name);
 
         //create node
-        var node = new nodes.block.BlockNode(this, routes, version, level, block);
+        var node = new nodes.block.BlockNode(this, routes, version, level, block, blocksHash);
 
-        searchBlocks.push(
+        search.blocks.push(
             new nodes.search.Block(block.name, node.url, version.repo,
                 version.ref, level.name, block.data, block.jsdoc));
 

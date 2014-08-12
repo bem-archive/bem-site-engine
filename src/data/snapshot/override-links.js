@@ -98,7 +98,7 @@ function overrideLinks(content, node, urlHash, lang) {
             ['tree', 'blob'].some(function (item) {
                 _href = href;
 
-                if (!/^(https?:)?\/\//.test(href)) {
+                if(!/^(https?:)?\/\//.test(href)) {
                     if (node.source[lang] && node.source[lang].repo) {
                         var repo = node.source[lang].repo;
                         _href = 'https://' + p.join(repo.host, repo.user, repo.repo, item, repo.ref,
@@ -106,7 +106,7 @@ function overrideLinks(content, node, urlHash, lang) {
                     }
 
                     //try to recognize relative links in block documentation
-                    if (node.source.data) {
+                    if(node.source.key) {
                         var conditions = node.route.conditions,
                             lib = conditions.lib,
                             version = conditions.version,
@@ -123,7 +123,6 @@ function overrideLinks(content, node, urlHash, lang) {
                         if(match) {
                             _href = u.format('/libs/%s/%s/%s/%s', lib, version, match[1], match[2]);
                         }
-
                     }
                 }
 
@@ -169,40 +168,55 @@ module.exports = function(obj) {
 
     var languages = config.get('common:languages'),
         sitemap = obj.sitemap,
+        blocksHash = obj.blocksHash,
         urlHash = collectUrls(sitemap);
 
     var traverseTreeNodes = function(node) {
+        var s = node.source;
 
-        if(node.source) {
-            var s = node.source;
-            languages.forEach(function(lang) {
+        if(s) {
+            languages.forEach(function (lang) {
                 if(s[lang] && s[lang].content) {
                     node.source[lang].content = overrideLinks(s[lang].content, node, urlHash, lang);
                 }
 
-                if(s.data) {
-                    var description = s.data[lang] ?
-                        s.data[lang].description : s.data.description;
+                //override blocks links
+                if(s.key) {
+                    //console.log('s key %s', s.key);
 
-                    if(_.isArray(description)) {
-                        description.forEach(function(item, index) {
-                            var content = item.content || '';
-                            if(s.data[lang]) {
-                                node.source.data[lang].description[index].content =
-                                    overrideLinks(content, node, urlHash, lang)
-                            }else {
-                                node.source.data.description[index].content =
-                                    overrideLinks(content, node, urlHash, lang);
+                    try {
+                        var blockHashItem = blocksHash[s.key];
+
+                        if(blockHashItem) {
+                            var blockData = blockHashItem.data;
+
+                            if(blockData) {
+                                var description = blockData[lang] ? blockData[lang].description : blockData.description;
+                                if(_.isArray(description)) {
+                                    description.forEach(function (item, index) {
+                                        var content = item.content || '';
+                                        if(blockData[lang]) {
+                                            obj.blocksHash[s.key].data[lang].description[index].content =
+                                                overrideLinks(content, node, urlHash, lang)
+                                        } else {
+                                            obj.blocksHash[s.key].data.description[index].content =
+                                                overrideLinks(content, node, urlHash, lang);
+                                        }
+                                    });
+                                }
                             }
-                        })
+                        }
+                    }catch(err) {
+                        console.log(err.message);
                     }
                 }
             });
         }
 
-        node.items && node.items.forEach(function(item) {
+        node.items && node.items.forEach(function (item) {
             traverseTreeNodes(item);
         });
+
 
         return node;
     };

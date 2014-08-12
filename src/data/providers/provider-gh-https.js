@@ -31,7 +31,7 @@ exports.GhHttpsProvider = function() {
                 'private': this.GITHUB_PATTERN.PRIVATE
             }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
 
-        logger.debug('load data by https from: %s', url);
+        logger.debug('load data by https for: %s', repository.path);
 
         https.get(url, function (res) {
             var data = '';
@@ -45,7 +45,7 @@ exports.GhHttpsProvider = function() {
                 try {
                     res = JSON.parse(data);
                     def.resolve(res);
-                    logger.debug('load data successfully finished from url %s', url);
+                    logger.debug('load data successfully finished for %s', repository.path);
                 } catch (err) {
                     def.reject(err.message);
                     logger.error('parsing error %s from url %s', err.message, url);
