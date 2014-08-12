@@ -20,7 +20,7 @@ function unlinkSocket() {
     }
 }
 
-if (luster.isMaster) {
+if(luster.isMaster) {
     console.info('luster: master process start');
 
     unlinkSocket();
