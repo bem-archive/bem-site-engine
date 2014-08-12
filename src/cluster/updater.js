@@ -1,10 +1,9 @@
 var path = require('path'),
 
     vow = require('vow'),
-    vowFs = require('vow-fs'),
-
     cronJob = require('cron').CronJob,
 
+    util = require('./util'),
     config = require('./config'),
     providers = require('../data/providers');
 
@@ -24,7 +23,7 @@ module.exports = {
         job = new cronJob({
             cronTime: config.get('app:update:cron'),
             onTick: function() { checkForUpdate(master) },
-            start: false
+            start: true
         });
 
         return this;
@@ -41,53 +40,6 @@ module.exports = {
 };
 
 /**
- * Clear and create empty cache folders
- * @param dir - {String} name of cache folder
- * @returns {*}
- */
-var clearCache = function(dir) {
-    console.info('clear cache start');
-    return providers.getProviderFile()
-        .removeDir({ path: dir })
-        .then(function() {
-            return vow.all([
-                vowFs.makeDir(path.join(dir, 'branch')),
-                vowFs.makeDir(path.join(dir, 'tag'))
-            ]);
-        });
-};
-
-/**
- * Remove files from local filesystem
- * @param dtp - {String} path to data file on local filesystem
- * @param stp - {String} path to sitemap.xml file on local filesystem
- * @returns {*}
- */
-var removeFiles = function(dtp, stp) {
-    console.info('remove files start');
-    return vow.all([
-        providers.getProviderFile().remove({ path: dtp }),
-        providers.getProviderFile().remove({ path: stp })
-    ]);
-};
-
-/**
- * Downloads files from Yandex Disk to local filesystem
- * @param dsp - {String} path to data file on Yandex Disk
- * @param dtp - {String} path to data file on local filesystem
- * @param ssp - {String} path to sitemap.xml file on Yandex Disk
- * @param stp - {String} path to sitemap.xml file on local filesystem
- * @returns {*}
- */
-var downloadFiles = function(dsp, dtp, ssp, stp) {
-    console.info('download files start');
-    return vow.all([
-        providers.getProviderYaDisk().downloadFile({ source: dsp, target: dtp }),
-        providers.getProviderYaDisk().downloadFile({ source: ssp, target: stp })
-    ]);
-};
-
-/**
  * Loads marker file from local filesystem or Yandex Disk depending on enviroment
  * Compare sha sums of data object with sums of previous check
  * If these sums are different then restart all cluster workers
@@ -97,16 +49,12 @@ var downloadFiles = function(dsp, dtp, ssp, stp) {
 var checkForUpdate = function(master) {
     console.info('Check for update for master process start');
 
-    var yaDiskDirectory = config.get('common:model:dir'),
-        dataFileName = config.get('common:model:data'),
-        env = config.get('NODE_ENV'),
-        dataSourcePath = path.join(yaDiskDirectory, env, dataFileName),
-        dataTargetPath = path.join(process.cwd(),'backups', dataFileName),
-        sitemapSourcePath = path.join(yaDiskDirectory, env, 'sitemap.xml'),
-        sitemapTargetPath = path.join(process.cwd(), 'sitemap.xml');
-
     return providers.getProviderYaDisk().load({
-            path: path.join(yaDiskDirectory, env, config.get('common:model:marker'))
+            path: path.join(
+                config.get('common:model:dir'),
+                config.get('NODE_ENV'),
+                config.get('common:model:marker')
+            )
         })
         .then(function (content) {
             return JSON.parse(content);
@@ -116,34 +64,25 @@ var checkForUpdate = function(master) {
                 return;
             }
 
-            //marker is not exist for first check operation
-            if(!marker) {
-                marker = content;
-                return;
-            }
-
-            //compare sha sums for data objects
-            if(marker.data === content.data) {
-                return;
+            if(marker) {
+                //compare sha sums for data objects
+                if(marker.data === content.data) {
+                    return;
+                }
             }
 
             marker = content;
 
-            return clearCache(path.join(process.cwd(), 'cache'))
+            return util.clearCache()
+                .then(util.removeFiles)
+                .then(util.downloadFiles)
                 .then(function() {
-                    return removeFiles(dataTargetPath, sitemapTargetPath);
-                })
-                .then(function() {
-                    return downloadFiles(dataSourcePath, dataTargetPath, sitemapSourcePath, sitemapTargetPath);
-                })
-                .then(function() {
-                    console.info('restart workers ...');
+                    console.log('restart all workers');
                     return master.softRestart();
                 });
-
         })
         .fail(function() {
-            console.error('Error occur while loading and parsing marker file');
+            console.error('Error!');
         });
 };
 

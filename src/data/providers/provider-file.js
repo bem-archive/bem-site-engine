@@ -14,7 +14,7 @@ exports.FileProvider = function() {
      * @returns {vow promise object}
      */
     this.load = function(options) {
-        logger.debug('load data from file file %s', options.path);
+        logger.debug('load data from file %s', options.path);
         return vowFs.read(options.path, 'utf-8');
     };
 
@@ -26,7 +26,7 @@ exports.FileProvider = function() {
      * @returns {vow promise object}
      */
     this.save = function(options) {
-        logger.debug('save data to file file %s', options.path ? options.path : 'unknown file');
+        logger.debug('save data to file %s', options.path ? options.path : 'unknown file');
         return vowFs.write(options.path, options.data, 'utf8');
     };
 
@@ -90,4 +90,8 @@ exports.FileProvider = function() {
         logger.debug('remove file for path %s', options.path);
         return vowFs.remove(options.path);
     };
+
+    this.exists = function(options) {
+        return vowFs.exists(options.path);
+    }
 };

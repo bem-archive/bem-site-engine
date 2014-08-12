@@ -1,12 +1,12 @@
 var path = require('path'),
     fs = require('fs'),
 
-    vow = require('vow'),
-    vowFs = require('vow-fs'),
     luster = require('luster'),
 
+    util = require('./util'),
+    config = require('./config'),
     updater = require('./updater'),
-    config = require('./config');
+    providers = require('../data/providers');
 
 function unlinkSocket() {
     var socket = config.get('app:luster:server:port');
@@ -20,35 +20,19 @@ function unlinkSocket() {
     }
 }
 
-if(luster.isMaster) {
-    console.info('luster: master process start');
-
-    unlinkSocket();
-
-    vow
-        .all([
-            vowFs.makeDir(path.join('cache', 'branch')),
-            vowFs.makeDir(path.join('cache', 'tag'))
-        ])
-        .then(function() {
-            if(config.get('app:update:enable')) {
-                updater.init(luster).start(luster);
-            }
-        })
-        .fail(function() {
-            console.error('Can not create cache folder and it subfolders');
-        });
-}
-
-try {
+module.exports = function() {
     luster.configure({
         app: require.resolve('./worker.js'),
         workers: config.get('app:luster:workers'),
         control: config.get('app:luster:control'),
         server: config.get('app:luster:server')
-    }, true, __dirname);
-}catch(err) {
-    console.error('Error luster initialization');
-}
+    }, true, __dirname).run();
 
-module.exports = luster;
+    if(luster.isMaster) {
+        console.info('luster: master process start');
+
+        unlinkSocket();
+        updater.init(luster);
+        config.get('app:update:enable') && updater.start();
+    }
+};
