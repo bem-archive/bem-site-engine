@@ -41,6 +41,53 @@ module.exports = {
 };
 
 /**
+ * Clear and create empty cache folders
+ * @param dir - {String} name of cache folder
+ * @returns {*}
+ */
+var clearCache = function(dir) {
+    console.info('clear cache start');
+    return providers.getProviderFile()
+        .removeDir({ path: dir })
+        .then(function() {
+            return vow.all([
+                vowFs.makeDir(path.join(dir, 'branch')),
+                vowFs.makeDir(path.join(dir, 'tag'))
+            ]);
+        });
+};
+
+/**
+ * Remove files from local filesystem
+ * @param dtp - {String} path to data file on local filesystem
+ * @param stp - {String} path to sitemap.xml file on local filesystem
+ * @returns {*}
+ */
+var removeFiles = function(dtp, stp) {
+    console.info('remove files start');
+    return vow.all([
+        providers.getProviderFile().remove({ path: dtp }),
+        providers.getProviderFile().remove({ path: stp })
+    ]);
+};
+
+/**
+ * Downloads files from Yandex Disk to local filesystem
+ * @param dsp - {String} path to data file on Yandex Disk
+ * @param dtp - {String} path to data file on local filesystem
+ * @param ssp - {String} path to sitemap.xml file on Yandex Disk
+ * @param stp - {String} path to sitemap.xml file on local filesystem
+ * @returns {*}
+ */
+var downloadFiles = function(dsp, dtp, ssp, stp) {
+    console.info('download files start');
+    return vow.all([
+        providers.getProviderYaDisk().downloadFile({ source: dsp, target: dtp }),
+        providers.getProviderYaDisk().downloadFile({ source: ssp, target: stp })
+    ]);
+};
+
+/**
  * Loads marker file from local filesystem or Yandex Disk depending on enviroment
  * Compare sha sums of data object with sums of previous check
  * If these sums are different then restart all cluster workers
@@ -76,45 +123,27 @@ var checkForUpdate = function(master) {
             }
 
             //compare sha sums for data objects
-            if(marker.data !== content.data) {
-                marker = content;
-
-                return clearCache(path.join(process.cwd(), 'cache'))
-                    .then(function() {
-                        return vow.all([
-                            providers.getProviderYaDisk().downloadFile({
-                                source: dataSourcePath,
-                                target: dataTargetPath
-                            }),
-                            providers.getProviderYaDisk().downloadFile({
-                                source: sitemapSourcePath,
-                                target: sitemapTargetPath
-                            })
-                        ]);
-                    })
-                    .then(function() {
-                        return master.softRestart();
-                    });
+            if(marker.data === content.data) {
+                return;
             }
+
+            marker = content;
+
+            return clearCache(path.join(process.cwd(), 'cache'))
+                .then(function() {
+                    return removeFiles(dataTargetPath, sitemapTargetPath);
+                })
+                .then(function() {
+                    return downloadFiles(dataSourcePath, dataTargetPath, sitemapSourcePath, sitemapTargetPath);
+                })
+                .then(function() {
+                    console.info('restart workers ...');
+                    return master.softRestart();
+                });
+
         })
         .fail(function() {
             console.error('Error occur while loading and parsing marker file');
-        });
-};
-
-/**
- * Clear and create empty cache folders
- * @param dir - {String} name of cache folder
- * @returns {*}
- */
-var clearCache = function(dir) {
-    return providers.getProviderFile()
-        .removeDir({ path: dir })
-        .then(function() {
-            return vow.all([
-                vowFs.makeDir(path.join(dir, 'branch')),
-                vowFs.makeDir(path.join(dir, 'tag'))
-            ]);
         });
 };
 

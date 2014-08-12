@@ -79,4 +79,15 @@ exports.FileProvider = function() {
         });
         return def.promise();
     };
+
+    /**
+     * Removes file
+     * @param options - {Object} with fields:
+     * - path {String} path to target file
+     * @returns {*}
+     */
+    this.remove = function(options) {
+        logger.debug('remove file for path %s', options.path);
+        return vowFs.remove(options.path);
+    };
 };
