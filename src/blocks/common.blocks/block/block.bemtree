@@ -1,7 +1,5 @@
 block('block')(
     content()(function() {
-        console.log('BLOCK');
-
         var node = this.data.node,
             lang = this.data.lang,
             _source = node.source;
@@ -25,9 +23,28 @@ block('block')(
             tabsContent.push(apply('jsdoc-content'));
         }
 
-        if(_data && _data.examples && _data.examples[0].content.length) {
+        if(_data && _data.examples) {
             tabsHeader.push(apply('examples-header'));
             tabsContent.push(apply('examples-content'));
+        }
+
+        if(!tabsHeader.length) {
+            return {
+                elem: 'message',
+                content: [
+                    {
+                        block: 'post',
+                        elem: 'title',
+                        elemMods: { level: '1' },
+                        content: BEM.I18N('block', 'warning-title')
+                    },
+                    {
+                        block: 'post',
+                        elem: 'content',
+                        content: BEM.I18N('block', 'warning-text')
+                    }
+                ]
+            };
         }
 
         return {
@@ -90,52 +107,14 @@ block('block')(
         };
     }),
 
-    mode('examples-header')(function() {
-        return {
-            elem: 'tab',
-            attrs: { 'data-tab': 'examples' },
-            mods: { 'side': 'right', 'examples': 'yes' },
-            content: BEM.I18N('block', 'examples')
-        };
-    }),
-
-    mode('examples-content')(function() {
-        return {
-            elem: 'pane',
-            content: apply('examples-items')
-        };
-    }),
-
-    mode('examples-items')(
+    mode('examples-header')(
         (function() {
-            var prefix = this.ctx.source.prefix;
-
-            console.log('Examples items');
-
-            return this.ctx.source.data.examples[0].content.map(function(example) {
-                var exampleUrl = prefix + '/' + example.url + '.ru.html',
-                    bemjson = prefix + '/' + example.url + '.bemjson.js',
-                    exampleName = example.url.replace(/.+\//, '');
-
-                return [
-                    {
-                        block: 'block-example',
-                        js: {
-                            bemjsonUrl: bemjson,
-                            copyHoverClass: 'source-copy-hover'
-                        },
-                        content: [
-                            apply('example-header', { ctx: {
-                                exampleName: exampleName,
-                                exampleUrl: exampleUrl,
-                                title: example.title
-                            }}),
-                            apply('example-source', { ctx: { bemjson: bemjson }}),
-                            apply('example-live', { ctx: { url: exampleUrl }})
-                        ]
-                    }
-                ];
-            });
+            return {
+                elem: 'tab',
+                attrs: { 'data-tab': 'examples' },
+                mods: { 'side': 'right', 'examples': 'yes' },
+                content: BEM.I18N('block', 'examples')
+            };
         }),
 
         match(function() {
@@ -146,52 +125,51 @@ block('block')(
         })
     ),
 
-    mode('example-header')(function() {
-        return {
-            elem: 'header',
-            content: [
-                {
-                    block: 'link',
-                    url: this.ctx.exampleUrl,
-                    attrs: { target: '_blank' },
-                    mix: [{ block: 'block-example', elem: 'link', elemMods: { icon: 'blank' } }],
-                    content: this.ctx.title + ' (' + this.ctx.exampleName + ')'
-                },
-                {
-                    block: 'link',
-                    url: '#',
-                    mix: [
-                        { block: 'block-example', elem: 'link', elemMods: { icon: 'source' } },
-                        { block: 'block-example', elem: 'source-link' }
-                    ],
-                    content: 'BEMJSON'
-                }
-            ]
-        };
-    }),
+    mode('examples-content')(
+        (function() {
+            return {
+                elem: 'pane',
+                content: apply('examples-items')
+            };
+        }),
 
-    mode('example-source')(function() {
-        return {
-            elem: 'source',
-            content: [
-                {
-                    elem: 'source-code',
-                    attrs: { 'data-url': this.ctx.bemjson }
-                },
-                {
-                    block: 'link',
-                    mods: { type: 'block' },
-                    mix: [{ block: 'block-example', elem: 'source-copy' }],
-                    content: BEM.I18N('block-example', 'copy')
-                }
-            ]
-        };
-    }),
+        match(function() {
+            var examples = this.ctx.source.data.examples;
+            return !examples || !examples.length;
+        })(function() {
+            return false;
+        })
+    ),
 
-    mode('example-live')(function() {
-        return {
-            elem: 'live',
-            attrs: { 'data-url': this.ctx.url }
-        };
-    })
+    mode('examples-items')(
+        (function() {
+            var s = this.ctx.source;
+            return this.ctx.examples.map(function(example) {
+                return [
+                    {
+                        block: 'block-example',
+                        enb: s.enb,
+                        prefix: s.prefix,
+                        example: example
+                    }
+                ];
+            });
+        }),
+
+        match(function() {
+            var examples = this.ctx.source.data.examples;
+            return !this.ctx.examples && examples[0].content && examples[0].content.length;
+        })(function() {
+            this.ctx = this.extend(this.ctx, { examples: this.ctx.source.data.examples[0].content })
+            return applyNext();
+        }),
+
+        match(function() {
+            var examples = this.ctx.source.data.examples;
+            return !this.ctx.examples && examples.length && !examples[0].content;
+        })(function() {
+            this.ctx = this.extend(this.ctx, { examples: this.ctx.source.data.examples })
+            return applyNext();
+        })
+    )
 )
