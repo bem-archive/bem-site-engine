@@ -39,7 +39,7 @@ block('block-docs')(
 
             description = buf;
             */
-            
+
             return {
                 elem: 'description',
                 content: description

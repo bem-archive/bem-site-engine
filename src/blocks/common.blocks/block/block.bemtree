@@ -162,24 +162,27 @@ block('block')(
         }),
 
         match(function() {
-            var examples = this.ctx.source.data.examples;
-            return !this.ctx.examples && examples[0].content && examples[0].content.length;
+            return !this.ctx.examples;
         })(function() {
-            this.ctx = this.extend(this.ctx, { examples: this.ctx.source.data.examples[0].content })
-            return applyNext();
-        }),
+            var data = this.ctx.source.data,
+                examples;
 
-        match(function() {
-            var data = this.ctx.source.data;
             data = data[this.ctx.lang] || data;
+            examples = data.examples;
 
-            var examples = data.examples;
-            return !this.ctx.examples && examples.length && !examples[0].content;
-        })(function() {
-            var data = this.ctx.source.data;
-            data = data[this.ctx.lang] || data;
-            this.ctx = this.extend(this.ctx, { examples: data.examples })
-            return applyNext();
+            if(!examples.length) {
+                return false;
+            }
+
+            if(!examples[0].content) {
+                this.ctx = this.extend(this.ctx, { examples: examples });
+                return applyNext();
+            }else if(examples[0].content.length){
+                this.ctx = this.extend(this.ctx, { examples: examples[0].content });
+                return applyNext();
+            }else {
+                return false;
+            }
         })
     )
 )
