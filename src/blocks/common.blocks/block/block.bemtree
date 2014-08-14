@@ -10,6 +10,7 @@ block('block')(
     mode('contents')(function() {
         var _source = this.ctx.source,
             _data = _source.data,
+            _lang = this.ctx.lang,
             tabsHeader = [],
             tabsContent = [];
 
@@ -23,7 +24,7 @@ block('block')(
             tabsContent.push(apply('jsdoc-content'));
         }
 
-        if(_data && _data.examples) {
+        if(_data && (_data[_lang].examples || _data.examples)) {
             tabsHeader.push(apply('examples-header'));
             tabsContent.push(apply('examples-content'));
         }
@@ -118,7 +119,9 @@ block('block')(
         }),
 
         match(function() {
-            var examples = this.ctx.source.data.examples;
+            var data = this.ctx.source.data;
+            data = data[this.ctx.lang] || data;
+            var examples = data.examples;
             return !examples || !examples.length;
         })(function() {
             return false;
@@ -134,7 +137,9 @@ block('block')(
         }),
 
         match(function() {
-            var examples = this.ctx.source.data.examples;
+            var data = this.ctx.source.data;
+            data = data[this.ctx.lang] || data;
+            var examples = data.examples;
             return !examples || !examples.length;
         })(function() {
             return false;
@@ -165,10 +170,15 @@ block('block')(
         }),
 
         match(function() {
-            var examples = this.ctx.source.data.examples;
+            var data = this.ctx.source.data;
+            data = data[this.ctx.lang] || data;
+
+            var examples = data.examples;
             return !this.ctx.examples && examples.length && !examples[0].content;
         })(function() {
-            this.ctx = this.extend(this.ctx, { examples: this.ctx.source.data.examples })
+            var data = this.ctx.source.data;
+            data = data[this.ctx.lang] || data;
+            this.ctx = this.extend(this.ctx, { examples: data.examples })
             return applyNext();
         })
     )

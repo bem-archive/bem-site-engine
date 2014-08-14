@@ -19,8 +19,15 @@ block('block-docs')(
                 inlineExamples = [],
                 description = this.ctx.description;
 
+            //parse inline examples
+            /*
             description = description.replace(/<!--\sbem-example:\s(\S+)\s-->/g, function(str, p1) {
-                inlineExamples.push(apply('examples', {ctx: {examples: [{ url: p1 }] }} ));
+                inlineExamples.push(apply('examples', {
+                    ctx: {
+                        examples: [{ url: p1 }],
+                        source: this.data.node.source
+                    }
+                } ));
                 return sign;
             });
 
@@ -29,8 +36,10 @@ block('block-docs')(
                 buf.push(inlineExamples[index]);
             });
 
-            description = buf;
 
+            description = buf;
+            */
+            
             return {
                 elem: 'description',
                 content: description
@@ -234,6 +243,28 @@ block('block-docs')(
 
         match(function() {
             return !this.ctx.values || !this.ctx.values.length;
+        })(function() {
+            return false;
+        })
+    ),
+
+    mode('examples')(
+        (function() {
+            var s = this.ctx.source;
+            return this.ctx.examples.map(function(example) {
+                return [
+                    {
+                        block: 'block-example',
+                        enb: s.enb,
+                        prefix: s.prefix,
+                        example: example
+                    }
+                ];
+            });
+        }),
+
+        match(function() {
+            return !this.ctx.examples || !this.ctx.examples.length;
         })(function() {
             return false;
         })
