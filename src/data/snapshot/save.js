@@ -155,42 +155,4 @@ module.exports = function(obj) {
                 });
             }));
         });
-
-//    return getProvider()
-//        .makeDir({ path: path.join(getConfig().dir, snapshot) })
-//        .then(function() {
-//            var item = getTargetData(data);
-//            return getProvider().save({
-//                path: path.join(getConfig().dir, snapshot, item.path),
-//                data: item.data
-//            });
-//        })
-//        .then(function() {
-//            var item = getTargetSitemap(obj);
-//            return getProvider().save({
-//                path: path.join(getConfig().dir, snapshot, item.path),
-//                data: item.data
-//            });
-//        })
-//        .then(function() {
-//            var item = getTargetSearchLibraries(obj);
-//            return getProvider().save({
-//                path: path.join(getConfig().dir, snapshot, item.path),
-//                data: item.data
-//            });
-//        })
-//        .then(function() {
-//            var item = getTargetSearchBlocks(obj);
-//            return getProvider().save({
-//                path: path.join(getConfig().dir, snapshot, item.path),
-//                data: item.data
-//            });
-//        })
-//        .then(function() {
-//            var item = getTargetMarker(data, snapshot);
-//            return getProvider().save({
-//                path: path.join(getConfig().dir, snapshot, item.path),
-//                data: item.data
-//            });
-//        });
 };
