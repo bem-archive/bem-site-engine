@@ -24,6 +24,7 @@ block('block-example')(
                 bemjson = prefix + '/' + path + '/_' + name + '.bemjson.js';
             }
         }else {
+            title = example.title;
             url = prefix + '/' + example.url + '.ru.html';
             bemjson = prefix + '/' + example.url + '.bemjson.js';
             name = example.url.replace(/.+\//, '');
@@ -48,7 +49,7 @@ block('block-example')(
            apply('example-header', { ctx: {
                name: this.ctx.exampleName,
                url: this.ctx.exampleUrl,
-               title: this.ctx.example.title,
+               title: this.ctx.title,
                bemjson: this.ctx.bemjson
            }}),
            apply('example-source', { ctx: { bemjson: this.ctx.bemjson }}),
