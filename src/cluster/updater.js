@@ -61,25 +61,27 @@ var checkForUpdate = function(master) {
         })
         .then(function(content) {
             if(!content) {
-                console.log('Content is not defined. Return');
                 return;
             }
 
-            if(marker && marker.data === content.data) {
-                console.log('Data has not been changed. Return');
+            //marker is not exist for first check operation
+            if(!marker) {
+                marker = content;
                 return;
             }
 
-            console.log('Data has been changed. Prepare to restart ....');
-            marker = content;
-
-            return util.clearCache()
-                .then(util.removeFiles)
-                .then(util.downloadFiles)
-                .then(function() {
-                    console.log('Restart all workers');
-                    return master.softRestart();
-                });
+            //compare sha sums for data objects
+            if(marker.data !== content.data) {
+                marker = content;
+                
+                return util.clearCache()
+                    .then(util.removeFiles)
+                    .then(util.downloadFiles)
+                    .then(function() {
+                        console.log('Restart all workers');
+                        return master.softRestart();
+                    });
+            }
         })
         .fail(function() {
             console.error('Error!');
