@@ -1,0 +1,3 @@
+block('block-docs').elem('title').elemMod('h', '6')(
+    tag()('h6')
+)

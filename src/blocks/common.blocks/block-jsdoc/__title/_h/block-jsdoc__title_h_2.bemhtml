@@ -1,0 +1,3 @@
+block('block-jsdoc').elem('title').elemMod('h', '2')(
+    tag()('h2')
+)

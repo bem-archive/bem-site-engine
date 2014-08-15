@@ -1,0 +1,4 @@
+.block__message
+{
+    padding: 0 30px;
+}

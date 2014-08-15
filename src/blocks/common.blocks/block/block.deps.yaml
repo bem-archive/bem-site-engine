@@ -1,6 +1,7 @@
 - elems:
     - header
     - title
+    - message
 
 - block: i-bem
   required: true

@@ -63,6 +63,7 @@ BlockNode.prototype.setSource = function(version, level, block, blocksHash) {
 
     this.source = {
         key: shaKey,
+        enb: version.enb,
         prefix: version.enb ?
             u.format('/__example/%s/%s', version.repo, version.ref) :
             u.format('/__example/%s/%s/%s.sets/%s', version.repo, version.ref, level.name, block.name)

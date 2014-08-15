@@ -1,77 +1,52 @@
-block block {
-
-    content: {
-
+block('block')(
+    content()(function() {
         var node = this.data.node,
             lang = this.data.lang,
             _source = node.source;
 
-        return [
-            apply('contents', this.ctx = {
-                source: _source,
-                node: node,
-                lang: lang
-            })
-        ];
-    }
+        return [ apply('contents', { ctx: { source: _source, node: node, lang: lang }}) ];
+    }),
 
-    contents: {
-
-        var tabsHeader = [],
+    mode('contents')(function() {
+        var _source = this.ctx.source,
+            _data = _source.data,
+            _lang = this.ctx.lang,
+            _examples = apply('examples'),
+            tabsHeader = [],
             tabsContent = [];
 
-        if(this.ctx.source.data) {
-            tabsHeader.push({
-                elem: 'tab',
-                attrs: { 'data-tab': 'docs' },
-                mods: { 'side': 'left' },
-                content: BEM.I18N('block', 'docs')
-            });
+        if(_data){
+            tabsHeader.push(apply('docs-header'));
+            tabsContent.push(apply('docs-content'));
+        }
 
-            tabsContent.push({
-                elem: 'pane',
+        if(_source.jsdoc) {
+            tabsHeader.push(apply('jsdoc-header'));
+            tabsContent.push(apply('jsdoc-content'));
+        }
+
+        if(_examples) {
+            tabsHeader.push(_examples.header);
+            tabsContent.push(_examples.content);
+        }
+
+        if(!tabsHeader.length) {
+            return {
+                elem: 'message',
                 content: [
                     {
-                        block: this.block,
+                        block: 'post',
                         elem: 'title',
-                        content: BEM.I18N('block', 'static-title') + ' ' + this.ctx.node.title[this.ctx.lang]
+                        elemMods: { level: '1' },
+                        content: BEM.I18N('block', 'warning-title')
                     },
                     {
-                        block: 'block-docs',
-                        mix: { block: 'post', elem: 'content' }
+                        block: 'post',
+                        elem: 'content',
+                        content: BEM.I18N('block', 'warning-text')
                     }
                 ]
-            });
-        }
-
-        if(this.ctx.source.jsdoc) {
-            tabsHeader.push({
-                elem: 'tab',
-                attrs: { 'data-tab': 'jsdoc' },
-                content: BEM.I18N('block', 'jsdoc')
-            });
-
-            tabsContent.push({
-                elem: 'pane',
-                content: {
-                    block: 'block-jsdoc',
-                    mix: { block: 'post', elem: 'content' }
-                }
-            });
-        }
-
-        if(this.ctx.source.data && this.ctx.source.data.examples && this.ctx.source.data.examples[0].content.length > 0) {
-            tabsHeader.push({
-                elem: 'tab',
-                attrs: { 'data-tab': 'examples' },
-                mods: { 'side': 'right', 'examples': 'yes' },
-                content: BEM.I18N('block', 'examples')
-            });
-
-            tabsContent.push({
-                elem: 'pane',
-                content: apply('examples-items')
-            });
+            };
         }
 
         return {
@@ -87,73 +62,116 @@ block block {
                     content: tabsContent
                 }
             ]
-        }
-    }
+        };
+    }),
 
-    examples-items: {
+    mode('docs-header')(function() {
+        return {
+            elem: 'tab',
+            attrs: { 'data-tab': 'docs' },
+            mods: { 'side': 'left' },
+            content: BEM.I18N('block', 'docs')
+        };
+    }),
 
-        if(this.ctx.source.data.examples && this.ctx.source.data.examples.length > 0) {
+    mode('docs-content')(function() {
+        return {
+            elem: 'pane',
+            content: [
+                {
+                    block: this.block,
+                    elem: 'title',
+                    content: BEM.I18N('block', 'static-title') + ' ' + this.ctx.node.title[this.ctx.lang]
+                },
+                {
+                    block: 'block-docs',
+                    mix: { block: 'post', elem: 'content' }
+                }
+            ]
+        };
+    }),
 
-            var prefix = this.ctx.source.prefix;
+    mode('jsdoc-header')(function() {
+        return {
+            elem: 'tab',
+            attrs: { 'data-tab': 'jsdoc' },
+            content: BEM.I18N('block', 'jsdoc')
+        };
+    }),
 
-            return this.ctx.source.data.examples[0].content.map(function(example) {
-                var exampleUrl = prefix + '/' + example.url + '.ru.html',
-                    bemjson = prefix + '/' + example.url + '.bemjson.js',
-                    exampleName = example.url.replace(/.+\//, '');
+    mode('jsdoc-content')(function() {
+        return {
+            elem: 'pane',
+            content: {
+                block: 'block-jsdoc',
+                mix: { block: 'post', elem: 'content' }
+            }
+        };
+    }),
 
-                return [
-                    {
-                        block: 'block-example',
-                        js: {
-                            bemjsonUrl: bemjson,
-                            copyHoverClass: 'source-copy-hover'
-                        },
-                        content: [
-                            {
-                                elem: 'header',
-                                content: [
-                                    {
-                                        block: 'link',
-                                        url: exampleUrl,
-                                        attrs: { target: '_blank' },
-                                        mix: [{ block: 'block-example', elem: 'link', elemMods: { icon: 'blank' } }],
-                                        content: example.title + ' (' + exampleName + ')'
-                                    },
-                                    {
-                                        block: 'link',
-                                        url: '#',
-                                        mix: [
-                                            { block: 'block-example', elem: 'link', elemMods: { icon: 'source' } },
-                                            { block: 'block-example', elem: 'source-link' }
-                                        ],
-                                        content: 'BEMJSON'
-                                    }
-                                ]
-                            },
-                            {
-                                elem: 'source',
-                                content: [
-                                    {
-                                        elem: 'source-code',
-                                        attrs: { 'data-url': bemjson }
-                                    },
-                                    {
-                                        block: 'link',
-                                        mods: { type: 'block' },
-                                        mix: [{ block: 'block-example', elem: 'source-copy' }],
-                                        content: BEM.I18N('block-example', 'copy')
-                                    }
-                                ]
-                            },
-                            {
-                                elem: 'live',
-                                attrs: { 'data-url': exampleUrl }
-                            }
-                        ]
-                    }
-                ]
-            })
-        }
-    }
+    mode('examples')(
+        (function(){
+            return {
+                header: apply('examples-header'),
+                content: apply('examples-content')
+            };
+        }),
 
-}
+        match(function() {
+            return !this.ctx.examples;
+        })(function() {
+            var data = this.ctx.source.data,
+                examples,
+                length;
+
+            if(!data) {
+                return false;
+            }
+
+            data = data[this.ctx.lang] || data;
+            examples = data.examples;
+
+            if(!examples || !examples.length) {
+                return false;
+            }
+
+            length = examples.length;
+
+            if(!examples[length - 1].content) {
+                this.ctx = this.extend(this.ctx, { examples: examples });
+                return applyNext();
+            }else if(examples[length - 1].content.length){
+                this.ctx = this.extend(this.ctx, { examples: examples[length - 1].content });
+                return applyNext();
+            }else {
+                return false;
+            }
+        })
+    ),
+
+    mode('examples-header')(function() {
+        return {
+            elem: 'tab',
+            attrs: { 'data-tab': 'examples' },
+            mods: { 'side': 'right', 'examples': 'yes' },
+            content: BEM.I18N('block', 'examples')
+        };
+    }),
+
+    mode('examples-content')(function() {
+        var s = this.ctx.source;
+        return {
+            elem: 'pane',
+            content: this.ctx.examples.map(function(example) {
+                 return [
+                     {
+                         block: 'block-example',
+                         enb: s.enb,
+                         prefix: s.prefix,
+                         example: example
+                     }
+                 ];
+             })
+        };
+    })
+)
