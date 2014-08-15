@@ -2,8 +2,7 @@ var _ = require('lodash'),
     vow = require('vow'),
     api = require('github'),
 
-    config = require('../lib/config'),
-    logger = require('../lib/logger')(module);
+    config = require('../lib/config');
 
 var GhApiProvider = function() {
     this.init();
@@ -25,8 +24,6 @@ GhApiProvider.prototype = {
      * with configured credentials
      */
     init: function() {
-        logger.info('Init Github API provider');
-
         var ghConfig = config.get('data:github'),
             ghPublic = ghConfig.public,
             ghPrivate = ghConfig.private;

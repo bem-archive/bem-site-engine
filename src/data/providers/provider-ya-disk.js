@@ -3,7 +3,6 @@ var _ = require('lodash'),
     yandex_disk = require('yandex-disk'),
     vow = require('vow'),
 
-    logger = require('../lib/logger')(module),
     config = require('../lib/config');
 
 var YaDiskProvider = function() {
@@ -31,8 +30,6 @@ YaDiskProvider.prototype = {
      * @returns {*}
      */
     load: function(options) {
-        logger.debug('read file %s from yandex disk', options.path);
-
         var def = vow.defer();
         this.disk.readFile(options.path, 'utf8', function (err, content) {
             (err || !content) ? def.reject(err) : def.resolve(content);
@@ -41,8 +38,6 @@ YaDiskProvider.prototype = {
     },
 
     downloadFile: function(options) {
-        logger.debug('download file %s from yandex disk to %s', options.source, options.target);
-
         var def = vow.defer();
         this.disk.downloadFile(options.source, options.target, function(err) {
             err ? def.reject(err) : def.resolve();
@@ -58,8 +53,6 @@ YaDiskProvider.prototype = {
      * @returns {*}
      */
     save: function(options) {
-        logger.debug('write file %s to yandex disk', options.path);
-
         var self = this,
             def = vow.defer();
 
@@ -83,8 +76,6 @@ YaDiskProvider.prototype = {
      * @returns {*}
      */
     copy: function(options) {
-        logger.debug('copy %s to %s on yandex disk', options.source, options.target);
-
         var def = vow.defer();
         this.disk.copy(options.source, options.target, function(err) {
             err ? def.reject(err) : def.resolve();
@@ -99,8 +90,6 @@ YaDiskProvider.prototype = {
      * @returns {*}
      */
     makeDir: function(options) {
-        logger.debug('make directory %s on yandex disk', options.path);
-
         var def = vow.defer();
         this.disk.mkdir(options.path, function(err) {
             err ? def.reject(err) : def.resolve();
@@ -115,8 +104,6 @@ YaDiskProvider.prototype = {
      * @returns {*}
      */
     listDir: function(options) {
-        logger.debug('read directory %s on yandex disk', options.path);
-
         var def = vow.defer();
         this.disk.readdir(options.path, function(err, result) {
             (err || !result) ? def.reject(err) : def.resolve(result);

@@ -2,9 +2,7 @@ var https = require('https'),
     util = require('util'),
 
     vow = require('vow'),
-    _ = require('lodash'),
-
-    logger = require('../lib/logger')(module);
+    _ = require('lodash');
 
 exports.GhHttpsProvider = function() {
 
@@ -31,8 +29,6 @@ exports.GhHttpsProvider = function() {
                 'private': this.GITHUB_PATTERN.PRIVATE
             }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
 
-        logger.debug('load data by https for: %s', repository.path);
-
         https.get(url, function (res) {
             var data = '';
 
@@ -45,15 +41,12 @@ exports.GhHttpsProvider = function() {
                 try {
                     res = JSON.parse(data);
                     def.resolve(res);
-                    logger.debug('load data successfully finished for %s', repository.path);
                 } catch (err) {
                     def.reject(err.message);
-                    logger.error('parsing error %s from url %s', err.message, url);
                 }
 
             });
         }).on('error', function (e) {
-            logger.error('load data failed with error %s from url %s', e.message, url);
             def.reject(e);
         });
 

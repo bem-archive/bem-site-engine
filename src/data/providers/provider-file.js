@@ -1,9 +1,7 @@
 var _ = require('lodash'),
     vow = require('vow'),
     vowFs = require('vow-fs'),
-    fsExtra = require('fs-extra'),
-
-    logger = require('../lib/logger')(module);
+    fsExtra = require('fs-extra');
 
 exports.FileProvider = function() {
 
@@ -14,7 +12,6 @@ exports.FileProvider = function() {
      * @returns {vow promise object}
      */
     this.load = function(options) {
-        logger.debug('load data from file %s', options.path);
         return vowFs.read(options.path, 'utf-8');
     };
 
@@ -26,7 +23,6 @@ exports.FileProvider = function() {
      * @returns {vow promise object}
      */
     this.save = function(options) {
-        logger.debug('save data to file %s', options.path ? options.path : 'unknown file');
         return vowFs.write(options.path, options.data, 'utf8');
     };
 
@@ -38,7 +34,6 @@ exports.FileProvider = function() {
      * @returns {*}
      */
     this.copy = function(options) {
-        logger.debug('copy file %s to %s', options.source, options.target);
         return vowFs.copy(options.source, options.target);
     };
 
@@ -49,7 +44,6 @@ exports.FileProvider = function() {
      * @returns {*}
      */
     this.makeDir = function(options) {
-        logger.debug('create directory %s', options.path);
         return vowFs.makeDir(options.path);
     };
 
@@ -60,7 +54,6 @@ exports.FileProvider = function() {
      * @returns {*}
      */
     this.listDir = function(options) {
-        logger.debug('list of directories for path %s', options.path);
         return vowFs.listDir(options.path);
     };
 
@@ -71,8 +64,6 @@ exports.FileProvider = function() {
      * @returns {*}
      */
     this.removeDir = function(options) {
-        logger.debug('remove directory for path %s', options.path);
-
         var def = vow.defer();
         fsExtra.remove(options.path, function (err) {
             err ? def.reject(err) : def.resolve();
@@ -87,7 +78,6 @@ exports.FileProvider = function() {
      * @returns {*}
      */
     this.remove = function(options) {
-        logger.debug('remove file for path %s', options.path);
         return vowFs.remove(options.path);
     };
 
