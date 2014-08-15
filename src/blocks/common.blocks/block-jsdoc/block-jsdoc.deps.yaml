@@ -1,4 +1,4 @@
-- elems: [item, selection, value, title, access, types, type]
+- elems: [item, selection, value, title, access, types, type, title]
 
 - block: i-bem
   required: true

@@ -1,9 +1,10 @@
 block('block-docs')(
     content()(function() {
-        var _data = this.data.node.source.data,
-            lang = this.data.lang;
+        var data = this.data;
+            _data = data.node.source.data,
+            _lang = data.lang;
 
-        _data = _data[lang] ? _data[lang] : _data;
+        _data = _data[_lang] ? _data[_lang] : _data;
         return [
             applyNext(),
             apply('description', { ctx: { description: _data.description }}),
@@ -32,8 +33,7 @@ block('block-docs')(
             });
 
             description.split(sign).forEach(function(item, index) {
-                buf.push(item);
-                buf.push(inlineExamples[index]);
+                buf.push(item, inlineExamples[index]);
             });
 
 
@@ -57,7 +57,7 @@ block('block-docs')(
         match(function() {
             return !this.ctx.description;
         })(function() {
-            return false;
+            return null;
         })
     ),
 
@@ -71,8 +71,7 @@ block('block-docs')(
                         content: [
                             {
                                 elem: 'title',
-                                mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
-                                tag: 'h6',
+                                elemMods: { mix: 'post-title-inline', h: '6' },
                                 content: {
                                     elem: 'selection',
                                     elemMods: { color: 'gold' },
@@ -94,15 +93,14 @@ block('block-docs')(
         match(function() {
             return !this.ctx.mods || !this.ctx.mods.length;
         })(function() {
-            return  false;
+            return null;
         })
     ),
 
     mode('mods-title')(function() {
         return {
             elem: 'title',
-            tag: 'h4',
-            mix: [{ block: 'post', elem: 'title' }],
+            elemMods: { mix: 'post-title', h: '4' },
             content: BEM.I18N('block-docs', 'mods')
         };
     }),
@@ -132,7 +130,7 @@ block('block-docs')(
         match(function() {
             return !this.ctx.values || !this.ctx.values.length;
         })(function() {
-            return false;
+            return null;
         })
     ),
 
@@ -146,8 +144,7 @@ block('block-docs')(
                         content: [
                             {
                                 elem: 'title',
-                                mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
-                                tag: 'h6',
+                                elemMods: { mix: 'post-title-inline', h: '6' },
                                 content: {
                                     elem: 'selection',
                                     elemMods: { color: 'gold' },
@@ -169,15 +166,14 @@ block('block-docs')(
         match(function() {
             return !this.ctx.elems || !this.ctx.elems.length;
         })(function() {
-            return false;
+            return null;
         })
     ),
 
     mode('elems-title')(function() {
         return {
             elem: 'title',
-            tag: 'h4',
-            mix: [{ block: 'post', elem: 'title' }],
+            elemMods: { mix: 'post-title', h: '4' },
             content: BEM.I18N('block-docs', 'elems')
         };
     }),
@@ -192,8 +188,7 @@ block('block-docs')(
                         content: [
                             {
                                 elem: 'title',
-                                mix: [{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }],
-                                tag: 'h6',
+                                elemMods: { mix: 'post-title-inline', h: '6' },
                                 content: {
                                     elem: 'selection',
                                     elemMods: { color: 'gold' },
@@ -215,7 +210,7 @@ block('block-docs')(
         match(function() {
             return !this.ctx.eMods || !this.ctx.eMods.length;
         })(function() {
-            return false;
+            return null;
         })
     ),
 
@@ -244,7 +239,7 @@ block('block-docs')(
         match(function() {
             return !this.ctx.values || !this.ctx.values.length;
         })(function() {
-            return false;
+            return null;
         })
     ),
 
@@ -266,7 +261,7 @@ block('block-docs')(
         match(function() {
             return !this.ctx.examples || !this.ctx.examples.length;
         })(function() {
-            return false;
+            return null;
         })
     )
 )
