@@ -121,7 +121,8 @@ block('block')(
             return !this.ctx.examples;
         })(function() {
             var data = this.ctx.source.data,
-                examples;
+                examples,
+                length;
 
             if(!data) {
                 return false;
@@ -134,11 +135,13 @@ block('block')(
                 return false;
             }
 
-            if(!examples[0].content) {
+            length = examples.length;
+
+            if(!examples[length - 1].content) {
                 this.ctx = this.extend(this.ctx, { examples: examples });
                 return applyNext();
-            }else if(examples[0].content.length){
-                this.ctx = this.extend(this.ctx, { examples: examples[0].content });
+            }else if(examples[length - 1].content.length){
+                this.ctx = this.extend(this.ctx, { examples: examples[length - 1].content });
                 return applyNext();
             }else {
                 return false;

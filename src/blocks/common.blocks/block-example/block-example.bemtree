@@ -89,7 +89,7 @@ block('block-example')(
         match(function() {
             return !this.ctx.bemjson;
         })(function() {
-            return false;
+            return null;
         })
     ),
 
@@ -115,7 +115,7 @@ block('block-example')(
         match(function() {
             return !this.ctx.bemjson;
         })(function() {
-            return false;
+            return null;
         })
     ),
 
