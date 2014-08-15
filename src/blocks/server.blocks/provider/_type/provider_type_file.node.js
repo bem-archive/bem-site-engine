@@ -50,7 +50,7 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
         },
 
         exists: function(options) {
-            return vowFs.exists(options.path);
+            return fs.exists(options.path);
         }
     });
 });
