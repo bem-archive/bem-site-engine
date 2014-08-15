@@ -47,6 +47,10 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
             });
 
             return def.promise();
+        },
+
+        exists: function(options) {
+            return vowFs.exists(options.path);
         }
     });
 });

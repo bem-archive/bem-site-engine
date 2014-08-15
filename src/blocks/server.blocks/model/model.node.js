@@ -131,25 +131,36 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
          * @returns {*}
          */
         init: function() {
-            return providerFile.load({
+            return providerFile.exists({
+                path: path.join(process.cwd(), 'backups', config.get('common:model:data'))
+            }).then(function(isExists) {
+                var promise = isExists ? providerFile.load({
                     path: path.join(process.cwd(), 'backups', config.get('common:model:data'))
-                })
-                .then(function(content) {
-                    try {
-                        return JSON.parse(content);
-                    }catch(err) {
-                        logger.error('Error occur while parsing data object');
-                    }
-                })
-                .then(function(content) {
-                    try {
-                        model = content;
-                        model.sitemap = addCircularReferences(model.sitemap);
-                        model.routes = _.values(model.routes);
-                    }catch(err) {
-                        logger.error('Error occur while filling model');
-                    }
+                }) : providerDisk.load({
+                    path: path.join(
+                        config.get('common:model:dir'),
+                        config.get('NODE_ENV'),
+                        config.get('common:model:data'))
                 });
+
+                return promise
+                    .then(function(content) {
+                        try {
+                            return JSON.parse(content);
+                        }catch(err) {
+                            logger.error('Error occur while parsing data object');
+                        }
+                    })
+                    .then(function(content) {
+                        try {
+                            model = content;
+                            model.sitemap = addCircularReferences(model.sitemap);
+                            model.routes = _.values(model.routes);
+                        }catch(err) {
+                            logger.error('Error occur while filling model');
+                        }
+                    });
+            });
         },
 
         /**
