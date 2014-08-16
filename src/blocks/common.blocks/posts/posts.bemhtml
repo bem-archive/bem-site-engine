@@ -1,14 +1,19 @@
-block posts {
+block('posts')(
 
-    default, (this.ctx.content && this.ctx.content.length == 0): {
+    def().match(function() {
+        var c = this.ctx.content;
+        return !c || !c.length;
+    })(function() {
         return false;
-    }
+    }),
 
-    this.ctx.title, content: [
-        {
-            elem: 'title',
-            content: this.ctx.title
-        },
-        applyNext()
-    ]
-}
+    content().match(this.ctx.title)(function(){
+        return [
+            {
+                elem: 'title',
+                content: this.ctx.title
+            },
+            applyNext()
+        ];
+    })
+);

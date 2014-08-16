@@ -1,15 +1,18 @@
-block posts {
+block('posts')(
 
-    content: {
-        var node = this.ctx.node;
+    content()(
+        (function() {
+            return {
+                elem: 'list',
+                content: this.ctx.node
+            };
+        }),
 
-        if(!node.items) {
+        match(function() {
+            var node = this.ctx.node;
+            return !node.items || !node.items.length;
+        })(function() {
             return [];
-        }
-
-        return {
-            elem: 'list',
-            content: node.items
-        };
-    }
-}
+        })
+    )
+)
