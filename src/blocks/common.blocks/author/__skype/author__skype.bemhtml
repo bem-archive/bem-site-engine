@@ -1,19 +1,21 @@
-block author, elem skype {
+block('author').elem('skype')(
 
-    default, !(this.ctx && this.ctx.content): {
+    def().match(!this.ctx.content)(function() {
         return false;
-    }
+    }),
 
-    content: [
-        {
-            block: 'author',
-            elem: 'label',
-            content: ''
-        },
-        {
-            block: 'author',
-            elem: 'value',
-            content: this.ctx.content
-        }
-    ]
-}
+    content()(function() {
+        return [
+            {
+                block: 'author',
+                elem: 'label',
+                content: ''
+            },
+            {
+                block: 'author',
+                elem: 'value',
+                content: this.ctx.content
+            }
+        ];
+    })
+);

@@ -1,8 +1,7 @@
-block author, content: {
-
-    var author = this.data.people[this.ctx.id][this.data.lang] || this.ctx.id;
-
-    return this._.extend(author, {
-        url: this.data.peopleUrls[this.ctx.id]
-    });
-}
+block('author')(
+    content()(function() {
+        var id = this.ctx.id,
+            author = this.data.people[id][this.data.lang] || id;
+        return this.extend(author, { url: this.data.peopleUrls[id] });
+    })
+);

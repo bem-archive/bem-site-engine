@@ -1,16 +1,20 @@
-block author, mod view simple {
+block('author').mod('view', 'simple')(
 
-    tag: 'a'
+    tag()('a'),
 
-    mix: { block: 'link' }
+    mix()({ block: 'link' }),
 
-    attrs: { href : this.ctx.content.url }
+    attrs()({ href : this.ctx.content.url }),
 
-    content: {
-        block: 'author',
-        elem: 'name',
-        content: this.ctx.content
-    }
+    content()(function() {
+        return {
+            block: 'author',
+            elem: 'name',
+            content: this.ctx.content
+        };
+    }),
 
-    this._.isSimple(this.ctx.content), content: this.ctx.content
-}
+    match(this.isSimple(this.ctx.content)).content()(function(){
+        return this.ctx.content;
+    })
+);

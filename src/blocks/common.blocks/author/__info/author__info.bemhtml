@@ -1,6 +1,5 @@
-block author, elem info {
-
-    default, !(this.ctx && this.ctx.content): {
+block('author').elem('info')(
+    match(!this.ctx.content).def()(function() {
         return false;
-    }
-}
+    })
+);

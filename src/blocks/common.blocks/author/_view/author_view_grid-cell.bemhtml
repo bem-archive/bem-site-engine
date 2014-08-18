@@ -1,20 +1,22 @@
-block author, mod view grid-cell {
+block('author').mod('view', 'grid-cell')(
 
-    tag: 'a',
+    tag()('a'),
 
-    attrs: { href: this.ctx.content.url }
+    attrs()({ href: this.ctx.content.url }),
 
-    content: [
-        {
-            block: 'author',
-            elem: 'avatar',
-            elemMods: this.ctx.content.avatar ? { size: 'medium' } : { size: 'medium', 'no-image': 'yes' },
-            content: this.ctx.content
-        },
-        {
-            block: 'author',
-            elem: 'name',
-            content: this.ctx.content
-        }
-    ]
-}
+    content()(function() {
+        return [
+            {
+                block: 'author',
+                elem: 'avatar',
+                elemMods: this.ctx.content.avatar ? { size: 'medium' } : { size: 'medium', 'no-image': 'yes' },
+                content: this.ctx.content
+            },
+            {
+                block: 'author',
+                elem: 'name',
+                content: this.ctx.content
+            }
+        ];
+    })
+);

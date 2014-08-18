@@ -1,21 +1,25 @@
-block author, elem e-mail {
+block('author').elem('e-mail')(
 
-    default, !(this.ctx && this.ctx.content && this._.isArray(this.ctx.content) && this.ctx.content.length > 0): {
+    def().match(function() {
+        var c = this.ctx.content;
+        return !c || !c.length
+    })(function() {
         return false;
-    }
+    }),
 
-    content: [
-        {
-            block: 'author',
-            elem: 'label',
-            content: ''
-        },
-        apply('contentTransformation')
-    ]
+    content()(function() {
+        return [
+            {
+                block: 'author',
+                elem: 'label',
+                content: ''
+            },
+            apply('transformation')
+        ];
+    }),
 
-    contentTransformation: {
-
-        return this.ctx.content.map(function(item, index){
+    mode('transformation')(function() {
+        return this.ctx.content.map(function(item){
             return {
                 block: 'author',
                 elem: 'value',
@@ -28,5 +32,5 @@ block author, elem e-mail {
                 ]
             };
         });
-    }
-}
+    })
+);

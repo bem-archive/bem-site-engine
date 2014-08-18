@@ -1,31 +1,32 @@
-block author, elem github {
+block('author').elem('github')(
 
-    default, !(this.ctx && this.ctx.content): {
-        return false;
-    }
+    def().match(!this.ctx.content)(function() { return false; }),
 
-    content: [
-        {
-            block: 'author',
-            elem: 'label',
-            content: ''
-        },
-        {
-            block: 'author',
-            elem: 'value',
-            content: [
-                {
-                    block: 'link',
-                    url: apply('url'),
-                    content: this.ctx.content
-                }
-            ]
-        }
-    ]
+    content()(function() {
+        return [
+            {
+                block: 'author',
+                elem: 'label',
+                content: ''
+            },
+            {
+                block: 'author',
+                elem: 'value',
+                content: [
+                    {
+                        block: 'link',
+                        url: apply('url'),
+                        content: this.ctx.content
+                    }
+                ]
+            }
+        ];
+    }),
 
-    url: {
-        var GITHUB_URL = 'https://github.com/';
-        return this.ctx.content.indexOf(GITHUB_URL) > -1 ?
-            this.ctx.content : GITHUB_URL + this.ctx.content;
-    }
-}
+    mode('url')(function() {
+        var GITHUB_URL = 'https://github.com/',
+            content = this.ctx.content;
+
+        return content.indexOf(GITHUB_URL) > -1 ? content : (GITHUB_URL + content);
+    })
+);
