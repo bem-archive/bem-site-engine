@@ -1,12 +1,11 @@
-block menu-list, mod type main {
-
-    this.ctx.content, content: {
+block('menu-list').mod('type', 'main')(
+    match(this.ctx.content).content()(function() {
         var _content = this.ctx.content.map(function(item, index) {
             //console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
             //                        item.title, item.url, item.type, item.active, item.size);
 
             if(index === 0) {
-                return apply('logo', this.ctx = item);
+                return apply('logo', { ctx: item });
             }
 
             if(item.type === 'group' && item.items) {
@@ -18,13 +17,13 @@ block menu-list, mod type main {
                             content: item.title
                         },
                         item.items.map(function(subitem) {
-                            return apply('item', this.ctx = subitem);
+                            return apply('item', { ctx: subitem });
                         })
                     ]
                 }
             }
 
-            return apply('item', this.ctx = item);
+            return apply('item', { ctx: item });
 
         });
         _content.push({ block: 'lang-switch', url: this.data.langSwitch });
@@ -34,23 +33,23 @@ block menu-list, mod type main {
         });
 
         return _content;
-    }
+    }),
 
-    logo: {
-        block: 'logo',
-        mods: { type: 'bem' },
-        url: this.ctx.url
-    }
+    mode('logo')(function() {
+        return {
+            block: 'logo',
+            mods: { type: 'bem' },
+            url: this.ctx.url
+        };
+    }),
 
-    item: {
-        elem: 'link',
-        title: this.ctx.title,
-        url: this.ctx.url,
-        elemMods: {
-            main: true,
-            active: this.ctx.active,
-            type: this.ctx.type,
-            size: this.ctx.size
-        }
-    }
-}
+    mode('item')(function() {
+        c = this.ctx;
+        return {
+            elem: 'link',
+            title: c.title,
+            url: c.url,
+            elemMods: { main: true, active: c.active, type: c.type, size: c.size }
+        };
+    })
+);
