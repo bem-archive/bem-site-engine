@@ -131,6 +131,8 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
          * @returns {*}
          */
         init: function() {
+            providerDisk.init();
+
             return providerFile.exists({
                 path: path.join(process.cwd(), 'backups', config.get('common:model:data'))
             }).then(function(isExists) {
