@@ -1,11 +1,6 @@
-block logo {
-
-    this.ctx.url {
-
-        tag: 'a'
-
-        attrs: {
-            href: this.ctx.url
-        }
-    }
-}
+block('logo')(
+    match(this.ctx.url)(
+        tag()('a'),
+        attrs()({ href: this.ctx.url })
+    )
+);
