@@ -24,7 +24,7 @@ var BlockNode = function(parent, routes, version, level, block, blocksHash) {
         .processRoute(routes, parent, {
             conditions: {
                 lib: version.repo,
-                version: version.ref,
+                version: version.ref.replace(/\//g, '-'),
                 level: level.name,
                 block: block.name
             }

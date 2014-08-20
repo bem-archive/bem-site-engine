@@ -23,7 +23,7 @@ var VersionNode = function(parent, routes, version, search, blocksHash, index) {
         .processRoute(routes, parent, {
             conditions: {
                 lib: version.repo,
-                version: version.ref
+                version: version.ref.replace(/\//g, '-')
             }
         })
         .init(parent)
@@ -39,7 +39,7 @@ VersionNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  */
 VersionNode.prototype.setTitle = function(version) {
     this.title = util.getLanguages().reduce(function(prev, lang) {
-        prev[lang] = version.ref;
+        prev[lang] = version.ref.replace(/\//g, '-');
         return prev;
     }, {});
     return this;

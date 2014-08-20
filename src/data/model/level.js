@@ -24,7 +24,7 @@ var LevelNode = function(parent, routes, version, level, search, blocksHash) {
         .processRoute(routes, parent, {
             conditions: {
                 lib: version.repo,
-                version: version.ref,
+                version: version.ref.replace(/\//g, '-'),
                 level: level.name
             }
         })
