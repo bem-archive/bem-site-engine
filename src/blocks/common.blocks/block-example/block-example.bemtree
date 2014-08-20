@@ -9,7 +9,7 @@ block('block-example')(
             url;
 
         if(this.ctx.enb) {
-            var path = example.url.replace(/\.(ru|en)/, ''),
+            var path = (example.url || example.path).replace(/\.(ru|en)/, ''),
                 parts = path.split('/');
 
             title = '';
