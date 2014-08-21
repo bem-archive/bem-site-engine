@@ -6,8 +6,7 @@ block('author').elem('github')(
         return [
             {
                 block: 'author',
-                elem: 'label',
-                content: ''
+                elem: 'label'
             },
             {
                 block: 'author',

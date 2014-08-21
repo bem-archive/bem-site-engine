@@ -9,7 +9,7 @@ block('author').mod('view', 'grid-cell')(
             {
                 block: 'author',
                 elem: 'avatar',
-                elemMods: this.ctx.content.avatar ? { size: 'medium' } : { size: 'medium', 'no-image': 'yes' },
+                elemMods: { size: 'medium', 'no-image': this.ctx.content.avatar && 'yes' },
                 content: this.ctx.content
             },
             {

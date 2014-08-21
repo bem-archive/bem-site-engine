@@ -8,8 +8,7 @@ block('author').elem('twitter')(
         return [
             {
                 block: 'author',
-                elem: 'label',
-                content: ''
+                elem: 'label'
             },
             {
                 block: 'author',
