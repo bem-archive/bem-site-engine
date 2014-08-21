@@ -1,74 +1,92 @@
-block author, mod view full {
+block('author').mod('view', 'full')(
 
-    mix: { block: 'island' }
+    mix()({ block: 'island' }),
 
-    content: [
-        {
-            elem: 'avatar-wrapper',
-            content: [
-                apply('avatar')
-            ]
-        },
-        {
-            elem: 'data-wrapper',
-            content: [
-                apply('name'),
-                {
-                    block: 'contact-info',
-                    content: [
-                        apply('e-mail'),
-                        apply('github'),
-                        apply('twitter'),
-                        apply('skype')
-                    ]
-                },
-                apply('info')
-            ]
-        }
-    ]
+    content()(function() {
+        return [
+            {
+                elem: 'avatar-wrapper',
+                content: [
+                    apply('avatar')
+                ]
+            },
+            {
+                elem: 'data-wrapper',
+                content: [
+                    apply('name'),
+                    {
+                        block: 'contact-info',
+                        content: [
+                            apply('e-mail'),
+                            apply('github'),
+                            apply('twitter'),
+                            apply('skype')
+                        ]
+                    },
+                    apply('info')
+                ]
+            }
+        ];
+    }),
 
-    avatar: {
-        block: 'author',
-        elem: 'avatar',
-        elemMods: this.ctx.content.avatar ? { size: 'medium' } : { size: 'medium', 'no-image': 'yes' },
-        content: this.ctx.content
-    }
+    mode('avatar')(function() {
+        return {
+            block: 'author',
+            elem: 'avatar',
+            elemMods: { size: 'medium', 'no-image': this.ctx.content.avatar && 'yes' },
+            content: this.ctx.content
+        };
+    }),
 
-    name: {
-        block: 'author',
-        elem: 'name',
-        content: this.ctx.content
-    }
+    mode('name')(function() {
+        return {
+            block: 'author',
+            elem: 'name',
+            content: this.ctx.content
+        };
+    }),
 
-    e-mail: {
-        block: 'author',
-        elem: 'e-mail',
-        content: this.ctx.content.email
-    }
+    mode('e-mail')(function() {
+        return {
+            block: 'author',
+            elem: 'e-mail',
+            content: this.ctx.content.email
+        };
+    }),
 
-    github: {
-        block: 'author',
-        elem: 'github',
-        content: this.ctx.content.github
-    }
+    mode('github')(function() {
+        return {
+            block: 'author',
+            elem: 'github',
+            content: this.ctx.content.github
+        };
+    }),
 
-    twitter: {
-        block: 'author',
-        elem: 'twitter',
-        content: this.ctx.content.twitter
-    }
+    mode('twitter')(function() {
+        return {
+            block: 'author',
+            elem: 'twitter',
+            content: this.ctx.content.twitter
+        };
+    }),
 
-    skype: {
-        block: 'author',
-        elem: 'skype',
-        content: this.ctx.content.skype
-    }
+    mode('skype')(function() {
+        return {
+            block: 'author',
+            elem: 'skype',
+            content: this.ctx.content.skype
+        };
+    }),
 
-    info: {
-        block: 'author',
-        elem: 'info',
-        content: this.ctx.content.info
-    }
+    mode('info')(function() {
+        return {
+            block: 'author',
+            elem: 'info',
+            content: this.ctx.content.info
+        };
+    }),
 
-    this._.isSimple(this.ctx.content), content: this.ctx.content
-}
+    match(this.isSimple(this.ctx.content)).content()(function() {
+        return this.ctx.content;
+    })
+)

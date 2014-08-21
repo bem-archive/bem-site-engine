@@ -1,23 +1,23 @@
-block author, elem name {
+block('author').elem('name')(
 
-    default, !(this.ctx && this.ctx.content): {
+    def().match(!this.ctx.content)(function() {
         return false;
-    }
+    }),
 
-    tag: 'span'
+    tag()('span'),
 
-    content {
+    content()(
 
-        this.ctx.content.lastName: {
+        match(this.ctx.content.lastName)(function() {
             return this.ctx.content.lastName
-        }
+        }),
 
-        (this.ctx.content.firstName && this.ctx.content.lastName): {
-            return [
-                this.ctx.content.firstName,
-                ' ',
-                this.ctx.content.lastName
-            ]
-        }
-    }
-}
+        match(function() {
+            var c = this.ctx.content;
+            return c.firstName && c.lastName;
+        })(function() {
+            var c = this.ctx.content;
+            return [c.firstName, ' ', c.lastName];
+        })
+    )
+);

@@ -1,25 +1,26 @@
-block author, elem twitter {
+block('author').elem('twitter')(
 
-    default, !(this.ctx && this.ctx.content): {
+    def().match(!this.ctx.content)(function() {
         return false;
-    }
+    }),
 
-    content: [
-        {
-            block: 'author',
-            elem: 'label',
-            content: ''
-        },
-        {
-            block: 'author',
-            elem: 'value',
-            content: [
-                {
-                    block: 'link',
-                    url: 'https://twitter.com/' + this.ctx.content,
-                    content: '@' + this.ctx.content
-                }
-            ]
-        }
-    ]
-}
+    content()(function() {
+        return [
+            {
+                block: 'author',
+                elem: 'label'
+            },
+            {
+                block: 'author',
+                elem: 'value',
+                content: [
+                    {
+                        block: 'link',
+                        url: 'https://twitter.com/' + this.ctx.content,
+                        content: '@' + this.ctx.content
+                    }
+                ]
+            }
+        ];
+    })
+);
