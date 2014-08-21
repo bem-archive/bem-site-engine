@@ -3,6 +3,7 @@ module.exports = {
         return [
             getMain(),
             getDocs(),
+            getLibraries(),
             getAuthors(),
             getTags()
         ]
@@ -92,6 +93,25 @@ var getDocs = function() {
     };
 };
 
+var getLibraries = function() {
+    return {
+        title: 'Библиотеки',
+        route: {
+            name: 'libs',
+            pattern: '/libs(/<lib>)(/<version>)(/<level>)(/<block>)(/<id>)(/docs|jsdoc|examples)(/)'
+        },
+        source: {
+            ru: {
+                title: 'Библиотеки  ',
+                content: 'https://github.com/bem/bem-site-engine/blob/dev/README.md'
+            }
+        },
+        items: [
+            getLib('bem-components')
+        ]
+    };
+};
+
 var getAuthors = function() {
     return {
         title: {
@@ -134,5 +154,18 @@ var getTags = function() {
                 dynamic: "tags:ru"
             }
         ]
+    };
+};
+
+var getLib = function(lib) {
+    return {
+        title: lib,
+        route: {
+            conditions: {
+                lib: lib
+            }
+        },
+        type: 'select',
+        lib: lib
     };
 };
