@@ -1,5 +1,3 @@
 block('menu-list').mod('type', 'level').mix()(function() {
-    return [{
-        mods: { type: 'default' }
-    }];
+    return { mods: { type: 'default' }};
 });
