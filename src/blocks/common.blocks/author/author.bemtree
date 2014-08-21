@@ -1,7 +1,8 @@
 block('author')(
     content()(function() {
-        var id = this.ctx.id,
-            author = this.data.people[id][this.data.lang] || id;
-        return this.extend(author, { url: this.data.peopleUrls[id] });
+        var data = this.data,
+            id = this.ctx.id,
+            author = data.people[id][data.lang] || id;
+        return this.extend(author, { url: data.peopleUrls[id] });
     })
 );
