@@ -102,7 +102,7 @@ var getLibraries = function() {
         },
         source: {
             ru: {
-                title: 'Библиотеки  ',
+                title: 'Библиотеки',
                 content: 'https://github.com/bem/bem-site-engine/blob/dev/README.md'
             }
         },
