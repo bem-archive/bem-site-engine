@@ -17,8 +17,8 @@
         "github": {
             "libraries": {
                 "type": "public",
-                "user": "",
-                "repo": "",
+                "user": "bem",
+                "repo": "bem-info-libs",
                 "ref": "master",
                 "pattern": "https://raw.githubusercontent.com/%s/%s/%s%s"
             }
