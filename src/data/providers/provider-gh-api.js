@@ -34,7 +34,7 @@ GhApiProvider.prototype = {
             var auth = ghPublic.auth;
             if(auth) {
                 this.gitPublic.authenticate({
-                    type: 'auth',
+                    type: 'oauth',
                     token: auth
                 });
             }
