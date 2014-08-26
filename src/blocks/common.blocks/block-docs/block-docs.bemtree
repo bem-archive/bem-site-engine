@@ -50,7 +50,11 @@ block('block-docs')(
             var d = this.ctx.description;
             return this.isArray(d) && d.length;
         })(function() {
-            this.ctx = this.extend(this.ctx, { description: this.ctx.description[0].content })
+            var md = this.ctx.description.filter(function(item) {
+                return !item.tech || (item.tech && 'desc.md' === item.tech)
+            })[0];
+
+            this.ctx = this.extend(this.ctx, { description: md ? md.content : '' })
             return applyNext();
         }),
 
