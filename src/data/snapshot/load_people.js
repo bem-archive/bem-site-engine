@@ -14,7 +14,7 @@ module.exports = function(obj) {
     logger.info('Load all people start');
 
     var err,
-        pr = config.get('data:github:people');
+        pr = config.get('github:people');
 
     if(!pr) {
         err = 'Path to people data file has not been set in application configuration'

@@ -18,8 +18,8 @@ YaDiskProvider.prototype = {
      */
     init: function() {
         this.disk = new yandex_disk.YandexDisk(
-            config.get('common:yandexApi:login'),
-            config.get('common:yandexApi:password')
+            config.get('yandexApi:login'),
+            config.get('yandexApi:password')
         );
     },
 

@@ -43,8 +43,8 @@ modules.require(['config', 'logger', 'util', 'model', 'middleware', 'updater'],
         function startServer() {
             var def = vow.defer(),
                 app = express(),
-                socket = config.get('app:socket'),
-                port = config.get('app:port') || process.env.port || 8080;
+                socket = config.get('socket'),
+                port = config.get('port') || process.env.port || 8080;
 
             //add middleware for dev environment
             util.isDev() && addDevelopmentMW(app);
@@ -79,7 +79,7 @@ modules.require(['config', 'logger', 'util', 'model', 'middleware', 'updater'],
                 return startServer();
             }, this)
             .then(function() {
-                if(config.get('app:update:enable')) {
+                if(config.get('update:enable')) {
                     updater.init();
                     updater.start();
                 }

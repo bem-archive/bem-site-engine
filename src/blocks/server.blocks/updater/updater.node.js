@@ -40,7 +40,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
     function reloadSitemapXML() {
         var XML = 'sitemap.xml',
             XMLSourcePath =
-                path.join(config.get('common:model:dir'), util.isDev() ? '' : config.get('NODE_ENV'), XML),
+                path.join(config.get('model:dir'), util.isDev() ? '' : config.get('NODE_ENV'), XML),
             XMLTargetPath = path.join(process.cwd(), XML);
 
         return providerFile.exists({ path: XMLTargetPath }).then(function(exists) {
@@ -73,9 +73,9 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
 
         return provider.load({
                 path: path.join(
-                    config.get('common:model:dir'),
+                    config.get('model:dir'),
                     util.isDev() ? '' : config.get('NODE_ENV'),
-                    config.get('common:model:marker')
+                    'marker.json'
                 )
             })
             .then(function (content) {
@@ -109,7 +109,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
         init: function() {
             provider.init();
             job = new cronJob({
-                cronTime: config.get('app:update:cron'),
+                cronTime: config.get('update:cron'),
                 onTick: function() { checkForUpdate() },
                 start: false
             });

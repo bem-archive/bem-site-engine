@@ -1,14 +1,16 @@
 {
-    "app": {
-        "port": 3015,
-        "logger": {
-            "level": "debug",
-            "stdout": "logs/output.log",
-            "stderr": "logs/errors.log"
-        },
-        "statics": {
-            "www": "/www",
-            "pathname": "/src"
-        }
+    "NODE_ENV": "development",
+    "port": 3015,
+    "logger": {
+        "level": "debug",
+        "stdout": "logs/output.log",
+        "stderr": "logs/errors.log"
+    },
+    "statics": {
+        "www": "/www",
+        "pathname": "/src"
+    },
+    "model": {
+        "dir": "backups"
     }
 }

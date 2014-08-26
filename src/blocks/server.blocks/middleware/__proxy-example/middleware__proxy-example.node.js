@@ -12,7 +12,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
 
         logger = logger(module);
 
-        var libRepo = config.get('common:github:libraries');
+        var libRepo = config.get('github:libraries');
 
         /**
          * Loads sources for url and sent them to response

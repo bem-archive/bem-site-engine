@@ -166,7 +166,7 @@ function overrideLinks(content, node, urlHash, lang) {
 module.exports = function(obj) {
     logger.info('Start overriding links');
 
-    var languages = config.get('common:languages'),
+    var languages = config.get('languages'),
         sitemap = obj.sitemap,
         blocksHash = obj.blocksHash,
         urlHash = collectUrls(sitemap);

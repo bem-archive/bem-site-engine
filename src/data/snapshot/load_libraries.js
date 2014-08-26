@@ -42,7 +42,7 @@ module.exports = function(libraryNodes) {
 
     var err,
         libraries = {},
-        lr = config.get('common:github:libraries');
+        lr = config.get('github:libraries');
 
     if(!lr) {
         err = 'Libraries repository was not set in configuration'

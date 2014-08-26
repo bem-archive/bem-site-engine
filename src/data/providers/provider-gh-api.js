@@ -24,7 +24,7 @@ GhApiProvider.prototype = {
      * with configured credentials
      */
     init: function() {
-        var ghConfig = config.get('data:github'),
+        var ghConfig = config.get('github'),
             ghPublic = ghConfig.public,
             ghPrivate = ghConfig.private;
 
@@ -33,7 +33,10 @@ GhApiProvider.prototype = {
 
             var auth = ghPublic.auth;
             if(auth) {
-                this.gitPublic.authenticate(auth);
+                this.gitPublic.authenticate({
+                    type: 'auth',
+                    token: auth
+                });
             }
         }
 

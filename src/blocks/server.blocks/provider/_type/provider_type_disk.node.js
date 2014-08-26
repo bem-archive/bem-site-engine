@@ -13,8 +13,8 @@ modules.define('providerDisk', ['logger', 'config'], function(provide, logger, c
     provide({
         init: function() {
             disk = new YandexDisk.YandexDisk(
-                config.get('common:yandexApi:login'),
-                config.get('common:yandexApi:password')
+                config.get('yandexApi:login'),
+                config.get('yandexApi:password')
             );
         },
 

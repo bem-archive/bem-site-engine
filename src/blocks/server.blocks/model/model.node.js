@@ -128,10 +128,7 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
 
     function load() {
         return provider.load({
-            path: path.join(
-                config.get('common:model:dir'),
-                util.isDev() ? '' : config.get('NODE_ENV'),
-                config.get('common:model:data'))
+            path: path.join(config.get('model:dir'), util.isDev() ? '' : config.get('NODE_ENV'), 'data.json')
         })
         .then(function(content) {
             try {

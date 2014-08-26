@@ -36,7 +36,7 @@ module.exports = {
 
             return promise.then(function() {
                 return provider
-                    .listDir({ path: path.join(config.get('common:model:dir')) })
+                    .listDir({ path: path.join(config.get('model:dir')) })
                     .then(function(snapshots) {
                         if('latest' === opts.version)
                             opts.version = 0;
@@ -113,22 +113,24 @@ var getTargetShaphot = function(snapshots, version) {
  */
 var replaceFiles = function(provider, environment, targetSnapshot) {
     var targetFiles = [
-        config.get('common:model:data'),
-        config.get('common:model:marker'),
-        config.get('common:model:search:libraries'),
-        config.get('common:model:search:blocks'),
+        'data.json',
+        'marker.json',
+        'search_libraries.json',
+        'search_blocks.json',
         'sitemap.xml'
     ];
 
     return vow
         .all(targetFiles.map(function(item) {
             return  provider.copy({
-                source: path.join(config.get('common:model:dir'), targetSnapshot, item),
-                target: path.join(config.get('common:model:dir'), environment, item)
+                source: path.join(config.get('model:dir'), targetSnapshot, item),
+                target: path.join(config.get('model:dir'), environment, item)
             });
         }))
-        .then(
-            function() {logger.info('Data files have been successfully replaced')},
-            function() {logger.error('Error occur while data files replacement')}
-        );
+        .then(function() {
+            logger.info('Data files have been successfully replaced');
+        })
+        .fail(function() {
+            logger.error('Error occur while data files replacement');
+        });
 };

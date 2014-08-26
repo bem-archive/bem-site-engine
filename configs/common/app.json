@@ -1,22 +1,46 @@
 {
-    "app": {
-        "defaultLanguage": "ru",
-        "title": {
-            "en": "Your application title",
-            "ru": "Название приложения"
+    "languages": ["en", "ru"],
+    "defaultLanguage": "ru",
+    "title": {
+        "en": "Your application title",
+        "ru": "Название приложения"
+    },
+    "update": {
+        "enable": true,
+        "cron": "0 */1 * * * *"
+    },
+    "logger": {
+        "level": "debug",
+        "stdout": "/logs/stdout.log",
+        "stderr": "/logs/stderr.log"
+    },
+    "statics": {
+        "www": "",
+        "pathname": "/m"
+    },
+    "yandexApi": {
+        "login": "",
+        "password": ""
+    },
+    "model": {
+        "dir": "bem-site-engine"
+    },
+    "github": {
+        "libraries": {
+            "type": "public",
+            "user": "bem",
+            "repo": "bem-info-libs",
+            "ref": "master",
+            "pattern": "https://raw.githubusercontent.com/%s/%s/%s%s"
         },
-        "update": {
-            "enable": true,
-            "cron": "0 */1 * * * *"
+        "public": {
+            "host": "api.github.com",
+            "auth": ""
         },
-        "logger": {
-            "level": "debug",
-            "stdout": "/logs/stdout.log",
-            "stderr": "/logs/stderr.log"
-        },
-        "statics": {
-            "www": "",
-            "pathname": "/m"
-        }
+        "people": "https://github.com/bem/bem-site-engine/blob/dev/docs/people/people.json"
+    },
+    "hosts": {
+        "en": "",
+        "ru": ""
     }
 }
