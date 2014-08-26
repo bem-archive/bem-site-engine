@@ -14,7 +14,6 @@
     "connect-slashes": "~1.2.0",
     "terror": "0.3.4",
     "json-stringify-safe": "5.0.0",
-    "luster": "0.2.0",
     "cron": "1.0.1",
     "request": "2.33.0",
     "mime": "1.2.11",
@@ -31,11 +30,7 @@
     "js2xmlparser": "*",
     "github": "*",
     "yandex-disk": "0.0.6",
-    "inherit": "~2.1.0",
-    "jshint": "~2.4.4",
-    "jscs": "~1.2.4",
     "coa": "~0.4.0",
-    "connect-slashes": "*",
     "deep-extend": "~0.2.10"
   },
   "devDependencies": {
@@ -49,7 +44,7 @@
       "borschik": "~1.0.5",
       "enb-borschik": "~1.0.4",
       "roole": "*",
-      "bower": "~1.3.5",
+      "bower": "~1.3.9",
       "bower-npm-install": "~0.5.8",
       "inherit": "~2.2.2",
       "jshint": "~2.5.1",

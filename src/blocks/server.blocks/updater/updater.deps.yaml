@@ -4,4 +4,3 @@
 - block: model
 - block: util
 - block: middleware
-- block: updater

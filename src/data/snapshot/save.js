@@ -39,23 +39,17 @@ function getProvider() {
 }
 
 function getConfig() {
-    var def = {
-            dir: 'backups',
-            data: 'data.json',
-            blocks: 'blocks.json',
-            marker: 'marker.json',
-            search: {
-                libraries: 'search_libraries.json',
-                blocks: 'search_blocks.json'
-            }
-        },
-        model =  config.get('common:model') || def;
+    var model =  config.get('model') || { dir: 'backups' };
 
     return {
-        dir: model.dir || def.dir,
-        data: model.data || def.data,
-        marker: model.marker || def.marker,
-        search: model.search || def.search
+        dir: model.dir || 'backups',
+        data: 'data.json',
+        blocks: 'blocks.json',
+        marker: 'marker.json',
+        search: {
+            libraries: 'search_libraries.json',
+            blocks: 'search_blocks.json'
+        }
     };
 }
 

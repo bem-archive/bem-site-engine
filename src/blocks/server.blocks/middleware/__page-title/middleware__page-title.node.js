@@ -27,7 +27,7 @@ modules.define('middleware__page-title', ['config', 'logger'], function(provide,
 
             traverseTreeNodes(node);
 
-            titles.push(config.get('app:title')[req.lang]);
+            titles.push(config.get('title')[req.lang]);
 
             req.__data.title = titles.join(' / ');
             return next();

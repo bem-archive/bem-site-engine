@@ -5,8 +5,8 @@ modules.define('middleware__locale', ['config'], function(provide, config) {
      * @returns {Function}
      */
     provide(function() {
-        var languages = config.get('common:languages'),
-            defaultLanguage = config.get('app:defaultLanguage');
+        var languages = config.get('languages'),
+            defaultLanguage = config.get('defaultLanguage');
 
         return function(req, res, next) {
             var host = req.headers.host,

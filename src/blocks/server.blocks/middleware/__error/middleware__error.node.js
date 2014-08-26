@@ -9,14 +9,14 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function(provi
 
     logger = logger(module);
 
-    var staticsUrl = url.format(config.get('app:statics'));
+    var staticsUrl = url.format(config.get('statics'));
 
     /**
      * Loads compiled error pages for testing and production environments
      * @returns {*}
      */
     function loadErrorPages() {
-        var langs = config.get('common:languages'),
+        var langs = config.get('languages'),
             errorBundlesPath = path.join(process.cwd(), 'src', 'bundles', 'errors.bundles'),
             errorPages = {};
 

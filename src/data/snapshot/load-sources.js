@@ -5,7 +5,6 @@ var p = require('path'),
     md = require('marked'),
 
     util = require('../lib/util'),
-    config = require('../lib/config'),
     renderer = require('../lib/renderer'),
     providers = require('../providers'),
     logger = require('../lib/logger')(module);

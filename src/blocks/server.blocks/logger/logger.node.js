@@ -3,7 +3,7 @@ var intel = require('intel');
 modules.define('logger', ['config'], function(provide, config) {
 
     //set logger verbosity level from configuration file
-    intel.setLevel(config.get('app:logger:level'));
+    intel.setLevel(config.get('logger:level'));
 
     //add console logger handler
     intel.addHandler(
@@ -19,7 +19,7 @@ modules.define('logger', ['config'], function(provide, config) {
     //add file logger handler
     intel.addHandler(
         new intel.handlers.File({
-            file: config.get('app:logger:stdout'),
+            file: config.get('logger:stdout'),
             level: intel.INFO,
             formatter: new intel.Formatter({
                 format: '[%(date)s] %(levelname)s %(name)s: %(message)s',

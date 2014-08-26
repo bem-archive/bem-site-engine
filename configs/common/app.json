@@ -1,35 +1,46 @@
 {
-    "app": {
-        "defaultLanguage": "ru",
-        "title": {
-            "en": "Your application title",
-            "ru": "Название приложения"
+    "languages": ["en", "ru"],
+    "defaultLanguage": "ru",
+    "title": {
+        "en": "Your application title",
+        "ru": "Название приложения"
+    },
+    "update": {
+        "enable": true,
+        "cron": "0 */1 * * * *"
+    },
+    "logger": {
+        "level": "debug",
+        "stdout": "/logs/stdout.log",
+        "stderr": "/logs/stderr.log"
+    },
+    "statics": {
+        "www": "",
+        "pathname": "/m"
+    },
+    "yandexApi": {
+        "login": "",
+        "password": ""
+    },
+    "model": {
+        "dir": "bem-site-engine"
+    },
+    "github": {
+        "libraries": {
+            "type": "public",
+            "user": "bem",
+            "repo": "bem-info-libs",
+            "ref": "master",
+            "pattern": "https://raw.githubusercontent.com/%s/%s/%s%s"
         },
-        "luster": {
-            "workers": 4,
-            "control": {
-                "forkTimeout": 1000,
-                "stopTimeout": 1000,
-                "exitThreshold": 3000,
-                "allowedSequentialDeaths": 3
-            },
-            "server": {
-                "port": "socket or port name",
-                "groups": 1
-            }
+        "public": {
+            "host": "api.github.com",
+            "auth": ""
         },
-        "update": {
-            "enable": true,
-            "cron": "0 */1 * * * *"
-        },
-        "logger": {
-            "level": "debug",
-            "stdout": "/logs/stdout.log",
-            "stderr": "/logs/stderr.log"
-        },
-        "statics": {
-            "www": "",
-            "pathname": "/m"
-        }
+        "people": "https://github.com/bem/bem-site-engine/blob/dev/docs/people/people.json"
+    },
+    "hosts": {
+        "en": "",
+        "ru": ""
     }
 }

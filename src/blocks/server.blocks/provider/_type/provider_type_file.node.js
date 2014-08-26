@@ -7,6 +7,11 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
     logger = logger(module);
 
     provide({
+
+        init: function() {
+            //stub method
+        },
+
         /**
          * Returns loaded and parsed content of json file
          * @param options - {Object} with fields
@@ -31,12 +36,25 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
         },
 
         /**
+         * Makes directory for given options
+         * @param options - {Object} with fields:
+         * - path {String} path to target file
+         * @returns {*}
+         */
+        makeDir: function(options) {
+            logger.debug('make directory %s', options.path);
+            return fs.makeDir(options.path);
+        },
+
+        /**
          * Removes directory with all files and subdirectories
          * @param options - {Object} with fields:
          * - path {String} path to target file
          * @returns {*}
          */
         removeDir: function(options) {
+            logger.debug('remove directory %s', options.path);
+
             var def = vow.defer();
             fsExtra.remove(options.path, function(err) {
                 if(err) {
@@ -47,6 +65,17 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
             });
 
             return def.promise();
+        },
+
+        /**
+         * Removes file with given options
+         * @param options - {Object} with fields:
+         * - path {String} path to target file
+         * @returns {*}
+         */
+        remove: function(options) {
+            logger.debug('remove file %s', options.path);
+            return fs.remove(options.path);
         },
 
         exists: function(options) {

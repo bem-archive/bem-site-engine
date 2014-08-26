@@ -7,7 +7,7 @@ var _ = require('lodash'),
 
 module.exports = function(obj) {
     var nodes = getAllNodesForIndexation(obj.sitemap),
-        hosts = config.get('data:hosts'),
+        hosts = config.get('hosts'),
         sitemapJson = [];
 
     if(hosts) {

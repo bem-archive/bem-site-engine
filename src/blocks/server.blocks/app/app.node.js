@@ -5,8 +5,8 @@ var path = require('path'),
     vow = require('vow'),
     express = require('express');
 
-modules.require(['config', 'logger', 'util', 'model', 'middleware'],
-    function(config, logger, util, model, middleware) {
+modules.require(['config', 'logger', 'util', 'model', 'middleware', 'updater'],
+    function(config, logger, util, model, middleware, updater) {
         logger = logger(module);
 
         /**
@@ -43,8 +43,8 @@ modules.require(['config', 'logger', 'util', 'model', 'middleware'],
         function startServer() {
             var def = vow.defer(),
                 app = express(),
-                socket = config.get('app:socket'),
-                port = config.get('app:port') || process.env.port || 8080;
+                socket = config.get('socket'),
+                port = config.get('port') || process.env.port || 8080;
 
             //add middleware for dev environment
             util.isDev() && addDevelopmentMW(app);
@@ -74,7 +74,14 @@ modules.require(['config', 'logger', 'util', 'model', 'middleware'],
             return def.promise();
         }
 
-        model.init().then(function () {
-            return startServer();
-        }, this);
+        model.init()
+            .then(function () {
+                return startServer();
+            }, this)
+            .then(function() {
+                if(config.get('update:enable')) {
+                    updater.init();
+                    updater.start();
+                }
+            });
     });

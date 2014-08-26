@@ -9,15 +9,15 @@ var u = require('util'),
 /**
  * Compile *.md files to html with marked module
  * @param content - {String} content of *.md file
- * @param config - {Object} configuration object
+ * @param conf - {Object} configuration object
  * @returns {String} html string
  */
-exports.mdToHtml = function(content, config) {
+exports.mdToHtml = function(content, conf) {
     return md(content, _.extend({
         gfm: true,
         pedantic: false,
         sanitize: false
-    }, config));
+    }, conf));
 };
 
 /**
@@ -190,8 +190,5 @@ exports.uniqCompact = function(collection) {
  * @returns {Array}
  */
 exports.getLanguages = function() {
-    var languages = config.get('common:languages'),
-        defaultLanguage = config.get('app:defaultLanguage');
-
-    return languages || [defaultLanguage || 'en'];
+    return config.get('languages') || [config.get('defaultLanguage') || 'en'];
 };
