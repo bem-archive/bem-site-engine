@@ -5,8 +5,8 @@ var path = require('path'),
     vow = require('vow'),
     express = require('express');
 
-modules.require(['config', 'logger', 'util', 'model', 'middleware'],
-    function(config, logger, util, model, middleware) {
+modules.require(['config', 'logger', 'util', 'model', 'middleware', 'updater'],
+    function(config, logger, util, model, middleware, updater) {
         logger = logger(module);
 
         /**
@@ -74,7 +74,14 @@ modules.require(['config', 'logger', 'util', 'model', 'middleware'],
             return def.promise();
         }
 
-        model.init().then(function () {
-            return startServer();
-        }, this);
+        model.init()
+            .then(function () {
+                return startServer();
+            }, this)
+            .then(function() {
+                if(config.get('app:update:enable')) {
+                    updater.init();
+                    updater.start();
+                }
+            });
     });

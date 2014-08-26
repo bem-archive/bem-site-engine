@@ -5,19 +5,6 @@
             "en": "Your application title",
             "ru": "Название приложения"
         },
-        "luster": {
-            "workers": 4,
-            "control": {
-                "forkTimeout": 1000,
-                "stopTimeout": 1000,
-                "exitThreshold": 3000,
-                "allowedSequentialDeaths": 3
-            },
-            "server": {
-                "port": "socket or port name",
-                "groups": 1
-            }
-        },
         "update": {
             "enable": true,
             "cron": "0 */1 * * * *"

@@ -38,6 +38,21 @@ modules.define('providerDisk', ['logger', 'config'], function(provide, logger, c
             });
 
             return def.promise();
+        },
+
+        /**
+         * Downloads file from yandex disk to local filesystem
+         * @param options - {Object} with fields
+         * - source {String} source path on Yandex Disk
+         * - target {String} target path on local filesystem
+         * @returns {*}
+         */
+        downloadFile: function(options) {
+            var def = vow.defer();
+            disk.downloadFile(options.source, options.target, function(err) {
+                err ? def.reject(err) : def.resolve();
+            });
+            return def.promise();
         }
     })
 });
