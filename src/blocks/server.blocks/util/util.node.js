@@ -1,8 +1,11 @@
 var path = require('path'),
+    fs = require('fs'),
 
     vow = require('vow');
 
-modules.define('util', ['constants', 'config'], function(provide, constants, config) {
+modules.define('util', ['logger', 'constants', 'config'], function(provide, logger, constants, config) {
+
+    logger = logger(module);
 
     provide({
 
@@ -12,6 +15,32 @@ modules.define('util', ['constants', 'config'], function(provide, constants, con
          */
         isDev: function() {
             return 'development' === config.get('NODE_ENV');
+        },
+
+        /**
+         * Set correct rights for socket file
+         * @param socket - {String} path to socket file
+         */
+        chmodSocket: function(socket) {
+            if(socket) {
+                try {
+                    fs.chmod(socket, '0777');
+                }catch(e) {
+                    logger.error('Can\'t chmod 0777 to socket');
+                }
+            }
+        },
+
+        /**
+         * Unlink socket
+         * @param socket - {String} path to socket file
+         */
+        unlinkSocket: function(socket) {
+            try {
+                fs.unlinkSync(socket);
+            }catch(e) {
+                logger.warn('Can\'t unlink socket %s', socket);
+            }
         }
     });
 });

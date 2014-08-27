@@ -10,20 +10,6 @@ modules.require(['config', 'logger', 'util', 'model', 'middleware', 'updater'],
         logger = logger(module);
 
         /**
-         * Set correct rights for socket file
-         * @param socket - {String} name of socket
-         */
-        function chmodSocket(socket) {
-            if(socket) {
-                try {
-                    fs.chmod(socket, '0777');
-                }catch(e) {
-                    logger.error('Can\'t chmod 0777 to socket');
-                }
-            }
-        }
-
-        /**
          * Adds middlewares for development environment
          * @param app - {Object} express application
          * @returns {Object} app
@@ -58,22 +44,15 @@ modules.require(['config', 'logger', 'util', 'model', 'middleware', 'updater'],
                 }
             });
 
-            if(_.isString(port)) {
-                try {
-                    fs.unlinkSync(port);
-                }catch(e) {
-                    logger.warn('Can\'t unlink socket %s', port);
-                }
-            }
+            _.isString(port) && util.unlinkSocket(port);
 
             app.listen(port, function (err) {
-                if (err) {
+                if(err) {
                     def.reject(err);
                     return;
                 }
 
-                chmodSocket(port);
-
+                _.isString(port) && util.chmodSocket(port);
                 logger.info('start application on port or socket %s', port);
                 def.resolve();
             });
