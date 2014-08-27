@@ -41,6 +41,22 @@ modules.define('util', ['logger', 'constants', 'config'], function(provide, logg
             }catch(e) {
                 logger.warn('Can\'t unlink socket %s', socket);
             }
+        },
+
+        /**
+         * Returns array of configured app languages
+         * @returns {*|string[]}
+         */
+        getLanguages: function() {
+            return config.get('languages') || ['en'];
+        },
+
+        /**
+         * Returns default application language
+         * @returns {*|string}
+         */
+        getDefaultLanguage: function() {
+            return config.get('defaultLanguage') || 'en';
         }
     });
 });

@@ -1,18 +1,20 @@
-modules.define('middleware__locale', ['config'], function(provide, config) {
+modules.define('middleware__locale', ['logger', 'util'], function(provide, logger, util) {
+
+    logger = logger(module);
 
     /**
      * Middleware for lang detection by subdomain
      * @returns {Function}
      */
     provide(function() {
-        var languages = config.get('languages'),
-            defaultLanguage = config.get('defaultLanguage');
+        var languages = util.getLanguages(),
+            defaultLanguage = util.getDefaultLanguage();
 
         return function(req, res, next) {
-            var host = req.headers.host,
-                lang = host ? host.split('.')[0] : defaultLanguage;
+            //TODO Here you can implement your own lang detection mechanism
 
-            req.lang = languages.indexOf(lang) > -1 ? lang : defaultLanguage;
+            req.lang = defaultLanguage;
+            logger.debug('request locale was set to %s', req.lang);
             return next();
         };
     });

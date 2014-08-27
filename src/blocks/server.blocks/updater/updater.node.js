@@ -69,7 +69,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
     }
 
     function checkForUpdate() {
-        logger.info('Check for update for master process start');
+        logger.info('Check for update for start');
 
         return provider.load({
                 path: path.join(

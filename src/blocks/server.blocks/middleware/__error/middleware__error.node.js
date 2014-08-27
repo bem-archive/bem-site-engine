@@ -5,7 +5,7 @@ var path = require('path'),
     vowFs = require('vow-fs'),
     terror = require('terror');
 
-modules.define('middleware__error', ['config', 'logger', 'util'], function(provide, config, logger) {
+modules.define('middleware__error', ['config', 'logger', 'util'], function(provide, config, logger, util) {
 
     logger = logger(module);
 
@@ -16,7 +16,7 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function(provi
      * @returns {*}
      */
     function loadErrorPages() {
-        var langs = config.get('languages'),
+        var langs = util.getLanguages(),
             errorBundlesPath = path.join(process.cwd(), 'src', 'bundles', 'errors.bundles'),
             errorPages = {};
 
