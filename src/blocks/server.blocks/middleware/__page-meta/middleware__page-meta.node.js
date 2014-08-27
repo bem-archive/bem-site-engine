@@ -6,49 +6,32 @@ modules.define('middleware__page-meta', ['logger'], function(provide, logger) {
         /**
          * Retrieves meta-information for request by request
          * @param req - {Object} http request object
-         *
-         * Sets meta object with fields
+         * Sets meta object with fields:
          * description - {String} meta-description attribute
          * ogDescription - {String} og:description attribute
          * keywords - {String} keywords for source
          * ogKeywords - {String} keywords for source, og:keywords attribute
-         * image - {String}
-         * ogType - {String}
+         * ogType - {String} type of source
          * ogUrl - {String} url of source
          */
         return function(req, res, next) {
+            logger.debug('get meta by request %s', req.url);
+
             var node = req.__data.node,
-                source,
-                meta = {};
-
-            if(!node.source) {
-                meta.description = node.title[req.lang];
-                meta.ogUrl = req.url;
-
-                req.__data.meta = meta;
-                return next();
-            }
-
-            source = node.source[req.lang];
+                source = node.source && node.source[req.lang],
+                meta = {
+                    description: node.title ? node.title[req.lang] : '',
+                    ogUrl: req.url
+                };
 
             if(source) {
-                meta.description = meta.ogDescription = source.summary;
+                meta.description = meta.ogDescription = source.title;
                 meta.keywords = meta.ogKeywords = source.tags ? source.tags.join(', ') : '';
-
-                if(source.ogImage && source.ogImage.length > 0) {
-                    meta.image = source.ogImage;
-                }else if(source.thumbnail && source.thumbnail.length > 0) {
-                    meta.image = source.thumbnail;
-                }
-
                 meta.ogType = 'article';
-                meta.ogUrl = req.url;
-
-                req.__data.meta = meta;
-                return next();
             }
 
-            next();
+            req.__data.meta = meta;
+            return next();
         };
     });
 });

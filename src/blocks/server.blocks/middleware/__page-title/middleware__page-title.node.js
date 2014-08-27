@@ -7,6 +7,10 @@ modules.define('middleware__page-title', ['config', 'logger'], function(provide,
             logger.debug('get title by request %s', req.url);
 
             var node = req.__data.node,
+                traverseTreeNodes = function(node) {
+                    node.url && node.title && titles.push(node.title[req.lang]);
+                    node.parent && traverseTreeNodes(node.parent);
+                },
                 titles = [];
 
             if(req.url === '/') {
@@ -14,19 +18,9 @@ modules.define('middleware__page-title', ['config', 'logger'], function(provide,
                 return next();
             }
 
-            var traverseTreeNodes = function(node) {
-
-                if(node.url && node.title) {
-                    titles.push(node.title[req.lang]);
-                }
-
-                if(node.parent) {
-                    traverseTreeNodes(node.parent);
-                }
-            };
-
             traverseTreeNodes(node);
 
+            //add common suffix from application configuration
             titles.push(config.get('title')[req.lang]);
 
             req.__data.title = titles.join(' / ');
