@@ -12,19 +12,19 @@
     },
     "logger": {
         "level": "debug",
-        "stdout": "/logs/stdout.log",
-        "stderr": "/logs/stderr.log"
+        "stdout": "logs/output.log",
+        "stderr": "logs/errors.log"
     },
     "statics": {
-        "www": "",
-        "pathname": "/m"
+        "www": "/www",
+        "pathname": "/src"
     },
     "yandexApi": {
         "login": "",
         "password": ""
     },
     "model": {
-        "dir": "bem-site-engine"
+        "dir": "backups"
     },
     "github": {
         "libraries": {

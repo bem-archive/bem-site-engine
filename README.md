@@ -9,20 +9,24 @@ bem-site-engine
 
 ### Установка, сборка и запуск
 
+Клонируем проект:
 ```
-$ git clone git://github.com/bem/bem-site-engine.git
-$ cd bem-engine
-$ make
-$ node bin/data.js
-$ npm start
+$ git clone git://github.com/bem/bem-site-engine.git && cd bem-site-engine
 ```
 
-Чтобы заработали поддомены необходимо добавить в `/etc/hosts` записи:
-
+Устанавливаем зависимости:
 ```
-127.0.0.1    localhost
-127.0.0.1    ru.localhost
-127.0.0.1    en.localhost
+npm run deps
+```
+
+Собираем данные:
+```
+node bin/data.js
+```
+
+Запускаем сервер:
+```
+npm start
 ```
 
 ### Документация
