@@ -43,7 +43,6 @@ modules.require(['config', 'logger', 'util', 'model', 'middleware', 'updater'],
         function startServer() {
             var def = vow.defer(),
                 app = express(),
-                socket = config.get('socket'),
                 port = config.get('port') || process.env.port || 8080;
 
             //add middleware for dev environment
@@ -59,15 +58,23 @@ modules.require(['config', 'logger', 'util', 'model', 'middleware', 'updater'],
                 }
             });
 
-            app.listen(port || socket, function (err) {
+            if(_.isString(port)) {
+                try {
+                    fs.unlinkSync(port);
+                }catch(e) {
+                    logger.warn('Can\'t unlink socket %s', port);
+                }
+            }
+
+            app.listen(port, function (err) {
                 if (err) {
                     def.reject(err);
                     return;
                 }
 
-                chmodSocket(socket);
+                chmodSocket(port);
 
-                logger.info('start application on %s %s', socket && 'socket' || port && 'port', socket || port);
+                logger.info('start application on port or socket %s', port);
                 def.resolve();
             });
 

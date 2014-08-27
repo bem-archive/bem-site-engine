@@ -1,6 +1,7 @@
 {
     "languages": ["en", "ru"],
     "defaultLanguage": "ru",
+    "port": 8080,
     "title": {
         "en": "Your application title",
         "ru": "Название приложения"

@@ -51,7 +51,7 @@
       "jscs": "~1.4.5"
   },
   "scripts": {
-    "start": "node bin/app_dev.js",
+    "start": "node bin/app.js",
     "test": "make lint"
   },
   "author": "lego-team@yandex-team.ru",
