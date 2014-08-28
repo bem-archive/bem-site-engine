@@ -5,69 +5,73 @@ var path = require('path'),
     vow = require('vow'),
     express = require('express');
 
-modules.require(['config', 'logger', 'util', 'model', 'middleware', 'updater'],
-    function(config, logger, util, model, middleware, updater) {
+modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updater'],
+    function(provide, config, logger, util, model, middleware, updater) {
         logger = logger(module);
 
-        /**
-         * Adds middlewares for development environment
-         * @param app - {Object} express application
-         * @returns {Object} app
-         */
-        function addDevelopmentMW(app) {
-            var enbServer = require('enb/lib/server/server-middleware'),
-                rootPath = process.cwd();
+        provide({
+            /**
+             * Adds middlewares for development environment
+             * @param app - {Object} express application
+             * @returns {Object} app
+             */
+            addDevelopmentMW: function(app) {
+                var enbServer = require('enb/lib/server/server-middleware'),
+                    rootPath = process.cwd();
 
-            app
-                .use(enbServer.createMiddleware({ cdir: rootPath, noLog: false }))
-                .use(express.static(rootPath))
-                .use(express.favicon(path.resolve(rootPath, 'www', 'favicon.ico')));
+                app
+                    .use(enbServer.createMiddleware({ cdir: rootPath, noLog: false }))
+                    .use(express.static(rootPath))
+                    .use(express.favicon(path.resolve(rootPath, 'www', 'favicon.ico')));
 
-            return app;
-        }
+                return app;
+            },
 
-        function startServer() {
-            var def = vow.defer(),
-                app = express(),
-                port = config.get('port') || process.env.port || 8080;
+            startServer: function() {
+                var def = vow.defer(),
+                    app = express(),
+                    port = config.get('port') || process.env.port || 8080;
 
-            //add middleware for dev environment
-            util.isDev() && addDevelopmentMW(app);
+                //add middleware for dev environment
+                util.isDev() && this.addDevelopmentMW(app);
 
-            app.use(express.query());
+                app.use(express.query());
 
-            middleware().forEach(function(mw) {
-                if(_.isFunction(mw)) {
-                    app.use(mw());
-                }else if(mw.run) {
-                    app.use(mw.run());
-                }
-            });
+                middleware().forEach(function(mw) {
+                    if(_.isFunction(mw)) {
+                        app.use(mw());
+                    }else if(mw.run) {
+                        app.use(mw.run());
+                    }
+                });
 
-            _.isString(port) && util.unlinkSocket(port);
+                _.isString(port) && util.unlinkSocket(port);
 
-            app.listen(port, function (err) {
-                if(err) {
-                    def.reject(err);
-                    return;
-                }
+                app.listen(port, function (err) {
+                    if(err) {
+                        def.reject(err);
+                        return;
+                    }
 
-                _.isString(port) && util.chmodSocket(port);
-                logger.info('start application on port or socket %s', port);
-                def.resolve();
-            });
+                    _.isString(port) && util.chmodSocket(port);
+                    logger.info('start application on port or socket %s', port);
+                    def.resolve();
+                });
 
-            return def.promise();
-        }
+                return def.promise();
+            },
 
-        model.init()
-            .then(function () {
-                return startServer();
-            }, this)
-            .then(function() {
-                if(config.get('update:enable')) {
-                    updater.init();
-                    updater.start();
-                }
-            });
-    });
+            init: function() {
+                model.init()
+                    .then(function () {
+                        return this.startServer();
+                    }, this)
+                    .then(function() {
+                        if(config.get('update:enable')) {
+                            updater.init();
+                            updater.start();
+                        }
+                    });
+            }
+        });
+});
