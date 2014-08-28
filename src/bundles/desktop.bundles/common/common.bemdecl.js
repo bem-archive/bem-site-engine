@@ -3,5 +3,5 @@ exports.blocks = [
     { "name": "i-global" },
     { "name": "page" },
 
-    { "name": "app"}
+    { "name": "index"}
 ];
