@@ -11,7 +11,7 @@ modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
         var target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
             context = {
                 Vow: vow,
-                leStatics: new (statics.Statics)(config.get('statics')),
+                leStatics: new (statics.Statics)('/'),
                 leBundles: new (bundles.Bundles)({ defaultLOD: 'desktop' }),
                 console: console
             };
