@@ -2,6 +2,7 @@
     "languages": ["en", "ru"],
     "defaultLanguage": "ru",
     "port": 8080,
+    "statics": "",
     "title": {
         "en": "Your application title",
         "ru": "Название приложения"
@@ -14,10 +15,6 @@
         "level": "debug",
         "stdout": "logs/output.log",
         "stderr": "logs/errors.log"
-    },
-    "statics": {
-        "www": "/www",
-        "pathname": "/src"
     },
     "yandexApi": {
         "login": "",
@@ -41,7 +38,7 @@
         "people": "https://github.com/bem/bem-site-engine/blob/dev/docs/people/people.json"
     },
     "hosts": {
-        "en": "",
-        "ru": ""
+        "en": "http://you-site-host-en",
+        "ru": "http://you-site-host-ru"
     }
 }

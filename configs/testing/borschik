@@ -1,11 +1,9 @@
 {
     "paths" : {
-        "./": "/m/",
-        "freeze/": "/m/_/",
-        "libs/romochka/freeze/": "//yandex.st/lego/_/"
+        "./": "/www/",
+        "src/www/freeze/": "/www/freeze/"
     },
     "freeze_paths" : {
-        "./": "freeze/",
-        "libs/romochka": "freeze/"
+        "./**": "src/www/freeze/"
     }
 }

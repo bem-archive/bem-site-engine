@@ -52,7 +52,7 @@
   },
   "scripts": {
     "start": "node bin/app.js",
-    "deps": "npm install && node postinstall.js",
+    "make": "npm install && node postinstall.js && node bin/data.js && npm start",
     "clean": "rm -rf node_modules && rm -rf libs && rm -rf cache && rm -rf backups && rm -rf logs",
     "clean_logs": "rm -rf logs",
     "clean_cache": "rm -rf cache",

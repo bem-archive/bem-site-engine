@@ -12,6 +12,7 @@ npm-debug.log
 logs
 libs
 backups
+cache
 
 .enb/tmp
 src/bundles/*.bundles/*/*.*

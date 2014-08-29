@@ -6,6 +6,11 @@ var path = require('path'),
     vow = require('vow'),
     vowFs = require('vow-fs');
 
+function getEnvironment() {
+    //TODO implement your own environment detection
+    return 'development'
+}
+
 function runCommand(cmd, opts, name) {
     var baseOpts = {
         encoding: 'utf8',
@@ -57,7 +62,7 @@ function checkOrCreateDir(dir) {
         .fail(createDir);
 }
 
-console.info('--- application install ---');;
+console.info('--- application install ---');
 return vow.all([
         checkOrCreateDir('logs'),
         checkOrCreateDir('backups'),
@@ -86,7 +91,7 @@ return vow.all([
         return runCommand('bower-npm-install --non-interactive', {}, 'bower-npm-install');
     })
     .then(function() {
-        return runCommand('enb make --no-cache', {}, 'enb make');
+        return runCommand(util.format('YENV=%s enb make --no-cache', getEnvironment()), {}, 'enb make');
     })
     .then(function() {
         return console.info('--- application installed successfully ---');

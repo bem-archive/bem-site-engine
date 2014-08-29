@@ -17,12 +17,13 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
              */
             addDevelopmentMW: function(app) {
                 var enbServer = require('enb/lib/server/server-middleware'),
-                    rootPath = process.cwd();
+                    rootPath = process.cwd(),
+                    staticsDir = path.join(rootPath, 'src');
 
                 app
                     .use(enbServer.createMiddleware({ cdir: rootPath, noLog: false }))
-                    .use(express.static(rootPath))
-                    .use(express.favicon(path.resolve(rootPath, 'www', 'favicon.ico')));
+                    .use(express.static(staticsDir))
+                    .use(express.favicon(path.resolve(staticsDir, 'www/favicon.ico')));
 
                 return app;
             },

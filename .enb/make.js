@@ -69,12 +69,19 @@ module.exports = function(config) {
     // копируем файлы, добавляя префикс `_`
     config.mode('development', function() {
         config.nodes('src/bundles/*.bundles/*', function(nodeConfig) {
+//            nodeConfig.addTechs([
+//                use('copy', { sourceTarget: '?.css', destTarget: '?.min.css' }),
+//                use('copy', { sourceTarget: '?.ie.css', destTarget: '?.min.ie.css' }),
+//                use('borschik', { sourceTarget: '?.js', destTarget: '?.borschik.js', minify: false, freeze: true }),
+//                use('copy', { sourceTarget: '?.borschik.js', destTarget: '?.min.js' }),
+//                use('copy', { sourceTarget: '?.template.i18n.js', destTarget: '?.min.template.i18n.js' })
+//            ]);
             nodeConfig.addTechs([
-                use('copy', { sourceTarget: '?.css', destTarget: '?.min.css' }),
-                use('copy', { sourceTarget: '?.ie.css', destTarget: '?.min.ie.css' }),
-                use('borschik', { sourceTarget: '?.js', destTarget: '?.borschik.js', minify: false, freeze: true }),
-                use('copy', { sourceTarget: '?.borschik.js', destTarget: '?.min.js' }),
-                use('copy', { sourceTarget: '?.template.i18n.js', destTarget: '?.min.template.i18n.js' })
+                use('borschik', { sourceTarget: '?.css', destTarget: '?.min.css', minify: false, freeze: true }),
+                use('borschik', { sourceTarget: '?.ie.css', destTarget: '?.min.ie.css', minify: false, freeze: true }),
+                use('borschik', { sourceTarget: '?.js', destTarget: '?.min.js', minify: false, freeze: true }),
+                use('borschik', { sourceTarget: '?.template.i18n.js', destTarget: '?.min.template.i18n.js',
+                    minify: false, freeze: false })
             ]);
         });
     });
