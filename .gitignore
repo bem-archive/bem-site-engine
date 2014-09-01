@@ -18,6 +18,7 @@ cache
 src/bundles/*.bundles/*/*.*
 !src/bundles/desktop.bundles/*/*.bemdecl.js
 !src/bundles/errors.bundles/*/*.bemjson.js
+src/www/freeze
 
 *.deb
 *.build
