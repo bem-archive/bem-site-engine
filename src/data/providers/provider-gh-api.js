@@ -32,7 +32,7 @@ GhApiProvider.prototype = {
             this.gitPublic = new api(_.extend(ghPublic, this.common));
 
             var auth = ghPublic.auth;
-            if(auth) {
+            if(auth && auth.length) {
                 this.gitPublic.authenticate({
                     type: 'oauth',
                     token: auth
