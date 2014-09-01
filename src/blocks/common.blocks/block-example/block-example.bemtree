@@ -1,128 +1,100 @@
 block('block-example')(
 
     def()(function() {
-        var prefix = this.ctx.prefix,
+        var enb = this.ctx.builder && this.ctx.builder.enb,
+            prefix = this.ctx.prefix,
             example = this.ctx.example,
             bemjson,
             title,
             name,
             url;
 
-        if(this.ctx.enb) {
+        if(enb) {
             var path = (example.url || example.path).replace(/\.(ru|en)/, ''),
-                parts = path.split('/');
+                parts = path.split('/'),
+                data = this.data,
+                lang = data.lang,
+                examplesData = data.node.source.data[lang].examples;
 
-            title = '';
+            // get name of example
             name = parts[parts.length - 1];
 
+            // check what data structure
             if(parts[parts.length - 1] === parts[parts.length - 2]) {
                 // old structure enb-bem-docs
                 url = prefix + '/' + path + '.html';
-            }else {
+            } else {
                 // new structure enb-bem-docs
                 url = prefix + '/' + path + '/' + name + '.html';
                 bemjson = prefix + '/' + path + '/_' + name + '.bemjson.js';
+
+                // get source bemjson if it inline example
+                examplesData.forEach(function(example){
+                    if(example.source && example.name === name) {
+                        bemjson = example.source;
+                    }
+                });
             }
-        }else {
+        } else {
             title = example.title;
             url = prefix + '/' + example.url + '.ru.html';
             bemjson = prefix + '/' + example.url + '.bemjson.js';
             name = example.url.replace(/.+\//, '');
         }
 
-        this.ctx = this.extend(this.ctx, {
-            js: {
-               bemjsonUrl: bemjson,
-               copyHoverClass: 'source-copy-hover'
-            },
-            exampleName: name,
-            exampleUrl: url,
-            title: title,
-            bemjson: bemjson
+        return applyNext({
+            _title: title,
+            _name: name,
+            _url: url,
+            _bemjson: bemjson
         });
-
-        return applyNext();
     }),
 
     content()(function() {
+        var title = this._title,
+            name = this._name,
+            url = this._url;
+
         return [
-           apply('example-header', { ctx: {
-               name: this.ctx.exampleName,
-               url: this.ctx.exampleUrl,
-               title: this.ctx.title,
-               bemjson: this.ctx.bemjson
-           }}),
-           apply('example-source', { ctx: { bemjson: this.ctx.bemjson }}),
-           apply('example-live', { ctx: { url: this.ctx.exampleUrl }})
-       ];
-    }),
-
-    mode('example-header')(function() {
-        return {
-            elem: 'header',
-            content: [
-                {
-                    block: 'link',
-                    url: this.ctx.url,
-                    attrs: { target: '_blank' },
-                    mix: [{ block: 'block-example', elem: 'link', elemMods: { icon: 'blank' } }],
-                    content: this.ctx.title + ' (' + this.ctx.name + ')'
-                },
-                apply('example-header-source', { ctx: { bemjson: this.ctx.bemjson }})
-            ]
-        };
-    }),
-
-    mode('example-header-source')(
-        (function() {
-            return {
-                block: 'link',
-                url: '#',
-                mix: [
-                    { block: 'block-example', elem: 'link', elemMods: { icon: 'source' } },
-                    { block: 'block-example', elem: 'source-link' }
-                ],
-                content: 'BEMJSON'
-            };
-        }),
-
-        match(function() {
-            return !this.ctx.bemjson;
-        })(function() {
-            return null;
-        })
-    ),
-
-    mode('example-source')(
-        (function() {
-            return {
-                elem: 'source',
+            {
+                elem: 'header',
                 content: [
                     {
-                        elem: 'source-code',
-                        attrs: { 'data-url': this.ctx.bemjson }
+                        elem: 'blank',
+                        url: url,
+                        content: (title && name) ? title + ' (' + name + ')' : ''
                     },
                     {
-                        block: 'link',
-                        mods: { type: 'block' },
-                        mix: [{ block: 'block-example', elem: 'source-copy' }],
-                        content: BEM.I18N('block-example', 'copy')
+                        elem: 'source-switcher'
                     }
                 ]
-            };
-        }),
+            },
+            { elem: 'source' },
+            {
+                elem: 'live-wrap',
+                content: [
+                    {
+                        elem: 'live-spin'
+                    },
+                    {
+                        elem: 'live',
+                        url: url
+                    }
+                ]
+            }
+        ];
+    }),
 
-        match(function() {
-            return !this.ctx.bemjson;
-        })(function() {
-            return null;
-        })
-    ),
-
-    mode('example-live')(function() {
-        return {
-            elem: 'live',
-            attrs: { 'data-url': this.ctx.url }
-        };
-    })
-)
+    match(function() { return !this._bemjson; })(
+        elem('source-switcher')(
+            def()(function() {
+                return false;
+            })
+        ),
+        elem('source')(
+            def()(function() {
+                return false;
+            })
+        )
+    )
+);

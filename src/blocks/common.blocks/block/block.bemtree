@@ -138,9 +138,19 @@ block('block')(
             length = examples.length;
 
             if(!examples[length - 1].content) {
-                this.ctx = this.extend(this.ctx, { examples: examples });
+                // new structure
+
+                // filter not inline examples
+                var defaultExamples = examples.filter(function(example) {
+                    return !example.source;
+                });
+
+                if(!defaultExamples.length) return false;
+
+                this.ctx = this.extend(this.ctx, { examples: defaultExamples });
                 return applyNext();
             }else if(examples[length - 1].content.length){
+                // old structure
                 this.ctx = this.extend(this.ctx, { examples: examples[length - 1].content });
                 return applyNext();
             }else {
@@ -159,19 +169,20 @@ block('block')(
     }),
 
     mode('examples-content')(function() {
-        var s = this.ctx.source;
+        var source = this.ctx.source;
         return {
             elem: 'pane',
             content: this.ctx.examples.map(function(example) {
-                 return [
-                     {
-                         block: 'block-example',
-                         enb: s.enb,
-                         prefix: s.prefix,
-                         example: example
-                     }
-                 ];
-             })
+                return [
+                    {
+                        block: 'block-example',
+                        mods: { view: 'default' },
+                        builder: { enb: source.enb },
+                        prefix: source.prefix,
+                        example: example
+                    }
+                ];
+            })
         };
     })
-)
+);

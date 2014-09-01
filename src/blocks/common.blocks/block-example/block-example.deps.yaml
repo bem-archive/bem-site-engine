@@ -2,6 +2,16 @@
   required: true
   elem: i18n
 
-- block: link
+- elems:
+  - blank
+  - header
+  - link
+  - live
+  - live-spin
+  - live-wrap
+  - source
+  - source-code
+  - source-copy
+  - source-switcher
 
-- elems: [header, link, live, source, source-code, source-link, source-copy]
+- mods: { view: [inline, default] }

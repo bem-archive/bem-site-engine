@@ -12,11 +12,17 @@ BEMDOM.decl('block-example', {
 
     changeHeight: function(el) {
         var iframe = this.elem(el),
-            doc = iframe[0].contentDocument || iframe[0].contentWindow && iframe[0].contentWindow.document;
+            doc = iframe[0].contentDocument || iframe[0].contentWindow && iframe[0].contentWindow.document,
+            height;
 
         if (!doc) return;
 
-        var height = $(doc).height();
+        height = doc.documentElement.scrollHeight || doc.body.scrollHeight;
+
+        if(el === 'source-code') {
+            // fix visible scroll
+            height += 5;
+        }
 
         if (this._actualHeight !== height) {
             iframe.attr('height', height);
@@ -35,21 +41,30 @@ BEMDOM.decl('block-example', {
 
         var _this = this,
             iframe = _this.elem(el),
-            url = iframe.data('url');
+            url = iframe.data('url'),
+            isLive = (el === 'live');
+
+        isLive && this._toggleSpin();
 
         iframe.attr('src', url);
 
         iframe.load(function() {
+            isLive && _this._toggleSpin();
+
             _this.changeHeight(el);
 
             _this.loadComplete[el] = true;
         });
+    },
+
+    _toggleSpin: function() {
+        this.findBlockInside('live-spin', 'spin').toggleMod('progress', true, '');
     }
 
 }, {
     live: function() {
 
-        this.liveBindTo('source-link', 'pointerclick', function(e) {
+        this.liveBindTo('source-switcher', 'pointerclick', function(e) {
             e.preventDefault();
 
             this.toggleSource();

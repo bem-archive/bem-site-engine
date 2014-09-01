@@ -4,9 +4,11 @@ block('author').elem('avatar')(
         return c && c.avatar;
     })(
         tag()('img'),
-        attrs()({
-            src : this.ctx.content.avatar,
-            alt : this.ctx.content.slug
+        attrs()(function() {
+            return {
+                src : this.ctx.content.avatar,
+                alt : this.ctx.content.slug
+            };
         })
     )
 );

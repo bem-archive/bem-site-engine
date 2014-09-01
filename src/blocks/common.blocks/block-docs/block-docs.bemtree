@@ -1,10 +1,11 @@
 block('block-docs')(
     content()(function() {
-        var data = this.data;
+        var data = this.data,
             _data = data.node.source.data,
             _lang = data.lang;
 
         _data = _data[_lang] ? _data[_lang] : _data;
+
         return [
             applyNext(),
             apply('description', { ctx: { description: _data.description }}),
@@ -18,27 +19,28 @@ block('block-docs')(
             var buf = [],
                 sign = '<!--bem-example-->',
                 inlineExamples = [],
-                description = this.ctx.description;
+                description = this.ctx.description,
+                source = this.data.node.source;
 
-            //parse inline examples
-            /*
-            description = description.replace(/<!--\sbem-example:\s(\S+)\s-->/g, function(str, p1) {
-                inlineExamples.push(apply('examples', {
-                    ctx: {
-                        examples: [{ url: p1 }],
-                        source: this.data.node.source
-                    }
-                } ));
-                return sign;
-            });
+            if(source.enb) {
+                // parse inline examples
+                description = description.replace(/<!--\sbem-example:\s(\S+)\s-->/g, function(str, url) {
+                    inlineExamples.push(apply('examples', {
+                        ctx: {
+                            examples: [{ url: url }],
+                            source: source
+                        }
+                    } ));
 
-            description.split(sign).forEach(function(item, index) {
-                buf.push(item, inlineExamples[index]);
-            });
+                    return sign;
+                });
 
+                description.split(sign).forEach(function(item, index) {
+                    buf.push(item, inlineExamples[index]);
+                });
 
-            description = buf;
-            */
+                description = buf;
+            }
 
             return {
                 elem: 'description',
@@ -50,16 +52,45 @@ block('block-docs')(
             var d = this.ctx.description;
             return this.isArray(d) && d.length;
         })(function() {
-            var md = this.ctx.description.filter(function(item) {
-                return !item.tech || (item.tech && 'desc.md' === item.tech)
-            })[0];
+            var desc = this.ctx.description;
 
-            this.ctx = this.extend(this.ctx, { description: md ? md.content : '' })
+            // support old structure bem-sets, when first item of desc array was a bemjson
+            // islands-page < 2.2.0, 2.1.0 & others old versions.
+            if(!(desc[0].content && desc[0].content !== null && typeof desc[0].content === 'object')) {
+                var md = desc.filter(function(item) {
+                    return !item.tech || (item.tech && 'desc.md' === item.tech)
+                })[0];
+
+                this.ctx = this.extend(this.ctx, { description: md ? md.content : '' });
+            }
+
             return applyNext();
         }),
 
         match(function() {
             return !this.ctx.description;
+        })(function() {
+            return null;
+        })
+    ),
+
+    mode('examples')(
+        (function() {
+            var source = this.ctx.source;
+
+            return this.ctx.examples.map(function(example) {
+                return {
+                    block: 'block-example',
+                    mods: { view: 'inline' },
+                    builder: { enb: source.enb },
+                    prefix: source.prefix,
+                    example: example
+                };
+            });
+        }),
+
+        match(function() {
+            return !this.ctx.examples || !this.ctx.examples.length;
         })(function() {
             return null;
         })
@@ -245,27 +276,5 @@ block('block-docs')(
         })(function() {
             return null;
         })
-    ),
-
-    mode('examples')(
-        (function() {
-            var s = this.ctx.source;
-            return this.ctx.examples.map(function(example) {
-                return [
-                    {
-                        block: 'block-example',
-                        enb: s.enb,
-                        prefix: s.prefix,
-                        example: example
-                    }
-                ];
-            });
-        }),
-
-        match(function() {
-            return !this.ctx.examples || !this.ctx.examples.length;
-        })(function() {
-            return null;
-        })
     )
-)
+);

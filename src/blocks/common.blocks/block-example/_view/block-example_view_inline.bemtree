@@ -1,0 +1,17 @@
+block('block-example').mod('view', 'inline')(
+    elem('source')(
+        content()(function() {
+            return [
+                {
+                    elem: 'source-code',
+                    elemMods: { type: 'text' },
+                    content: this._bemjson
+                },
+                {
+                    elem: 'source-copy',
+                    js: { inlineBemjson: this._bemjson }
+                }
+            ];
+        })
+    )
+);

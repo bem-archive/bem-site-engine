@@ -1,7 +1,0 @@
-block block-example, elem source-code {
-    tag: 'iframe'
-
-    mix: ({
-        block: 'code'
-    })
-}

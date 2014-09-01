@@ -1,1 +1,6 @@
-block block-example, elem live, tag: 'iframe'
+block('block-example').elem('live')(
+    tag()('iframe'),
+    attrs()(function() {
+        return { 'data-url': this.ctx.url, height: 50 };
+    })
+);

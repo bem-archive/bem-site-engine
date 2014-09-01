@@ -50,8 +50,9 @@ BEMDOM.decl('block', {
             this._openTabByDataName(tabs, this._getTabName());
         } else {
             tabs.setActiveTab(0);
-            this._isExamples(tabs);
         }
+
+        this._loadExamples();
     },
 
     _isTabNameInPath: function() {
@@ -59,21 +60,11 @@ BEMDOM.decl('block', {
     },
 
     _openTabByDataName: function(tabs, tabName) {
-        var _this = this;
-
         tabs.elem('tab').each(function(idx, tab) {
             if($(tab).data('tab') === tabName) {
                 tabs.setActiveTab($(tab));
             }
-
-            _this._isExamples(tabs);
         });
-    },
-
-    _isExamples: function(tabs) {
-        if(tabs.hasMod(tabs.getCurrentTab(), 'examples', 'yes')) {
-            this._loadExamples();
-        }
     },
 
     _getTabName: function() {
@@ -99,7 +90,14 @@ BEMDOM.decl('block', {
     },
 
     _loadExamples: function() {
+        var self = this;
+
         this.findBlocksInside('block-example').forEach(function(example) {
+            // lazy loading for default examples in tab 'examples'
+            if(example.hasMod('view', 'default') && self._getTabName() !== 'examples') {
+                return false;
+            }
+
             example
                 .setMod('js', 'inited')
                 .loadIframe('live');
