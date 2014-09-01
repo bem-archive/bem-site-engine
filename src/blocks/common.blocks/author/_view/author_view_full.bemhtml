@@ -33,7 +33,7 @@ block('author').mod('view', 'full')(
         return {
             block: 'author',
             elem: 'avatar',
-            elemMods: { size: 'medium', 'no-image': this.ctx.content.avatar && 'yes' },
+            elemMods: { size: 'medium', 'no-image': !this.ctx.content.avatar && 'yes' },
             content: this.ctx.content
         };
     }),
