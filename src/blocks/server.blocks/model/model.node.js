@@ -185,6 +185,8 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
 
         getBlocks: function() { return model.blocks; },
 
+        getRedirects: function() { return model.redirects || []; },
+
         /**
          * Returns array of pseudo-nodes with title attribute
          * and pseudo-node items with id and url attributes which

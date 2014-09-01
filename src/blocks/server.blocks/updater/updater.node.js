@@ -3,8 +3,8 @@ var path = require('path'),
     vow = require('vow'),
     cronJob = require('cron').CronJob;
 
-modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__router', 'providerFile', 'providerDisk'],
-    function(provide, logger, config, util, model, router, providerFile, providerDisk) {
+modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__router', 'middleware__redirect', 'providerFile', 'providerDisk'],
+    function(provide, logger, config, util, model, router, redirect, providerFile, providerDisk) {
 
     logger = logger(module);
 
@@ -62,6 +62,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
 
         model.reload().then(function() {
             router.init();
+            redirect.init();
         });
 
         reloadCache();
