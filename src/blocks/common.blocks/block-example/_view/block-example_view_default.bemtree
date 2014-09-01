@@ -1,0 +1,17 @@
+block('block-example').mod('view', 'default')(
+    elem('source')(
+        content()(function() {
+            return [
+                {
+                    elem: 'source-code',
+                    elemMods: { type: 'iframe' },
+                    attrs: { 'data-url': this._bemjson }
+                },
+                {
+                    elem: 'source-copy',
+                    js: { urlBemjson: this._bemjson }
+                }
+            ];
+        })
+    )
+);

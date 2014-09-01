@@ -42,18 +42,23 @@ BEMDOM.decl('block-example', {
     },
 
     getData: function(client) {
-        var _this = this;
+        var elemParams = this.elemParams('source-copy'),
+            inlineBemjson = elemParams.inlineBemjson;
 
-        $.ajax({
-            url: _this.params.bemjsonUrl,
-            success: function(content) {
-                client.setText(content);
-            },
-            async: false
-        });
+        if(inlineBemjson) {
+            client.setText(inlineBemjson);
+        } else {
+            $.ajax({
+                url: elemParams.urlBemjson,
+                success: function(content) {
+                    client.setText(content);
+                },
+                async: false
+            });
+        }
     }
 
-}, {});
+});
 
 provide(BEMDOM);
 

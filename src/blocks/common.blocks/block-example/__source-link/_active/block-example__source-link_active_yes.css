@@ -1,9 +1,0 @@
-.block-example__source-link_active_yes
-{
-    color: #000;
-}
-
-.block-example__source-link_active_yes:after
-{
-    opacity: 1;
-}

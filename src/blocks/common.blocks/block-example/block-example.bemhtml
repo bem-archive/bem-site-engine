@@ -1,1 +1,5 @@
-block block-example, js: true
+block('block-example')(
+    js()({
+        copyHoverClass: 'source-copy-hover'
+    })
+);

@@ -4,7 +4,9 @@ block('author').mod('view', 'simple')(
 
     mix()({ block: 'link' }),
 
-    attrs()({ href : this.ctx.content.url }),
+    attrs()(function() {
+        return { href : this.ctx.content.url };
+    }),
 
     content()(function() {
         return {

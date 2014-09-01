@@ -1,0 +1,14 @@
+block('block-example').elem('source-copy')(
+    def()(function() {
+        return applyCtx({
+            block: 'link',
+            mods: { pseudo: true },
+            attrs: { title: BEM.I18N('block-example', 'copy') },
+            mix: {
+                block: this.block,
+                elem: this.elem,
+                js: this.ctx.js
+            }
+        });
+    })
+);
