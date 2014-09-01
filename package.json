@@ -54,10 +54,10 @@
     "start": "node bin/app.js",
     "make": "npm install && node postinstall.js && node bin/data.js && npm start",
     "clean": "enb make clean && rm -rf node_modules && rm -rf libs && rm -rf cache && rm -rf backups && rm -rf logs",
-    "clean_logs": "rm -rf logs",
-    "clean_cache": "rm -rf cache",
-    "clean_data": "rm -rf backups",
-    "test": "node_modules/.bin/jshint && node_modules/.bin/jscs"
+    "clean_logs": "rm -rf logs/*",
+    "clean_cache": "rm -rf cache/*",
+    "clean_data": "rm -rf backups/*",
+    "test": "node_modules/.bin/jshint . && node_modules/.bin/jscs ."
   },
   "author": "lego-team@yandex-team.ru",
   "readmeFilename": "README.md",
