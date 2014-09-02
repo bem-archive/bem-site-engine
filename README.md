@@ -14,20 +14,28 @@ bem-site-engine
 $ git clone git://github.com/bem/bem-site-engine.git && cd bem-site-engine
 ```
 
-Устанавливаем зависимости:
+##### Установка, сборка данных и запуск приложения одной командой
+
 ```
-npm run deps
+npm run make
 ```
 
-Собираем данные:
-```
-node bin/data.js
-```
+##### Команды
 
-Запускаем сервер:
-```
-npm start
-```
+* Установка зависимостей: `npm install && node postinstall.js`
+* Запуск сервера: `npm start`
+* Удаление логов: `npm run clean_logs`
+* Удаление кеша примеров блоков: `npm run clean_cache`
+* Удаление всех собранных данных: `npm run clean_data` 
+* Запуск тестов jshint и jscs: `npm run test`
+
+Сборка данных:
+
+* development: `node bin/data.js`
+* testing: `node bin/data.js -env testing`
+* production: `node bin/data.js -env production -v latest`
+
+Более подробно о командах сборки данных можно прочитать в [Соответствующем руководстве](./docs/data_compiling.ru.md)
 
 ### Документация
 
