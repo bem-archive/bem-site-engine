@@ -2,6 +2,7 @@ module.exports = {
     get: function() {
         return [
             getMain(),
+            //getCustom(),
             getDocs(),
             getLibraries(),
             getAuthors(),
@@ -24,6 +25,24 @@ var getMain = function() {
                 authors: ['kuznetsov-andrey'],
                 tags: ['readme'],
                 content: 'https://github.com/bem/bem-site-engine/blob/dev/README.md'
+            }
+        }
+    };
+};
+
+var getCustom = function() {
+    return {
+        title: '',
+        route: {
+            name: '',
+            pattern: '/'
+        },
+        source: {
+            ru: {
+                title: '',
+                authors: ['kuznetsov-andrey'],
+                tags: [''],
+                content: ''
             }
         }
     };
