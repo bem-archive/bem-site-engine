@@ -21,8 +21,8 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                     staticsDir = path.join(rootPath, 'src');
 
                 app
-                    .use(enbServer.createMiddleware({ cdir: rootPath, noLog: false }))
-                    .use(express.static(staticsDir))
+                    .use(enbServer.createMiddleware())
+                    .use(express.static(rootPath))
                     .use(express.favicon(path.resolve(staticsDir, 'www/favicon.ico')));
 
                 return app;
