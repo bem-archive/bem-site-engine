@@ -1,2 +1,2 @@
 - block: code
-- mods: { type: [text, iframe] }
+- mods: { view: [text, iframe] }

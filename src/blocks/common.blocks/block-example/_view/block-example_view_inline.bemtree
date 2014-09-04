@@ -1,15 +1,44 @@
 block('block-example').mod('view', 'inline')(
+    elem('header')(
+        content()(function() {
+            return [
+                applyNext(),
+                {
+                    elem: 'source-switcher',
+                    elemMods: { type: 'html' },
+                    js: { urlBemhtml: this._urlBemhtml },
+                    content: 'html'
+                }
+            ]
+        })
+    ),
+
     elem('source')(
         content()(function() {
             return [
                 {
-                    elem: 'source-code',
-                    elemMods: { type: 'text' },
-                    content: this._bemjson
+                    elem: 'source-item',
+                    elemMods: { type: 'bemjson' },
+                    content: [
+                        {
+                            elem: 'source-code',
+                            elemMods: { view: 'text' },
+                            content: this._bemjson
+                        },
+                        {
+                            elem: 'source-copy',
+                            js: { inlineBemjson: this._bemjson }
+                        }
+                    ]
                 },
                 {
-                    elem: 'source-copy',
-                    js: { inlineBemjson: this._bemjson }
+                    elem: 'source-item',
+                    elemMods: { type: 'html' },
+                    content: {
+                        elem: 'source-code',
+                        elemMods: { view: 'text', type: 'html' },
+                        content: ' '
+                    }
                 }
             ];
         })

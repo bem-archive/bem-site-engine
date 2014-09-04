@@ -188,6 +188,49 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
         getRedirects: function() { return model.redirects || []; },
 
         /**
+         * Find node(s) which satisfy to criteria function
+         * @param condition - {Function} criteria function
+         * @param onlyFirst - {Boolean} flag for find only first node
+         * @returns {*}
+         */
+        getNodesByCriteria: function(condition, onlyFirst) {
+
+            var result = [];
+
+            if(!_.isObject(this.getSitemap())) {
+                return result;
+            }
+
+            if(!_.isFunction(criteria)) {
+                return result;
+            }
+
+            var isFound = function() {
+                    return onlyFirst && result.length;
+                },
+                traverseTreeNodes = function(node) {
+                    if(condition.apply(node)) {
+                        result.push(node);
+                    }
+
+                    if(!isFound() && node.items) {
+                        node.items.forEach(function(item) {
+                            traverseTreeNodes(item);
+                        });
+                    }
+                };
+
+            this.getSitemap().forEach(function(node) {
+                if(isFound()) {
+                    return;
+                }
+                traverseTreeNodes(node);
+            });
+
+            return onlyFirst ? result[0] : result;
+        },
+
+        /**
          * Returns array of pseudo-nodes with title attribute
          * and pseudo-node items with id and url attributes which
          * is necessary to build posts block

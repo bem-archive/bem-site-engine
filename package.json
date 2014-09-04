@@ -31,7 +31,8 @@
     "github": "*",
     "yandex-disk": "0.0.6",
     "coa": "~0.4.0",
-    "deep-extend": "~0.2.10"
+    "deep-extend": "~0.2.10",
+    "html": "0.0.7"
   },
   "devDependencies": {
       "enb": "~0.13.4",

@@ -1,18 +1,67 @@
 var u = require('util'),
     fs = require('fs'),
+    vm = require('vm'),
     path = require('path'),
 
     vowFs = require('vow-fs'),
     request = require('request'),
     sha = require('sha1'),
+    html = require('html'),
     mime = require('mime');
 
-modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'providerFile'],
-    function(provide, config, constants, logger, util, providerFile) {
+modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'providerFile', 'model'],
+    function(provide, config, constants, logger, util, providerFile, model) {
 
         logger = logger(module);
 
         var libRepo = config.get('github:libraries');
+
+        var loadHtmlCodeOfBlock = function(req, url, template) {
+            var urlRegExp = /^\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\.bemhtml\.js$/,
+                match = url.match(urlRegExp),
+                node;
+
+            if(!match) {
+                return null;
+            }
+
+            node = model.getNodesByCriteria(function() {
+                var r = this.route;
+                return 'block' === this.class && r && r.conditions &&
+                    match[1] === r.conditions.lib &&
+                    match[2] === r.conditions.version &&
+                    match[3].replace(/\.examples$/, '') === r.conditions.level &&
+                    match[4] === r.conditions.block;
+            }, true);
+
+            if(!node) {
+                return null;
+            }
+
+            var blockData = model.getBlocks()[node.source.key],
+                example,
+                htmlStr;
+
+            if(!blockData) {
+                return null;
+            }
+
+            example = blockData.data[req.lang].examples.filter(function(item) {
+                return item.name && match[5] === item.name;
+            })[0];
+
+            if(!example) {
+                return null;
+            }
+
+            var bemhtml = {},
+                bemjson = vm.runInNewContext('(' + example.source + ')', {});
+
+            vm.runInNewContext(template, bemhtml);
+            htmlStr = bemhtml.BEMHTML.apply(bemjson);
+
+            return html.prettyPrint(htmlStr);
+        };
 
         /**
          * Loads sources for url and sent them to response
@@ -21,7 +70,9 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
          * @param res - {Object} response
          * @returns {*}
          */
-        var proxyTextFiles = function(url, ref, res) {
+        var proxyTextFiles = function(url, ref, req, res) {
+
+            var originUrl = url;
 
             //set the content-types by mime type
             res.type(mime.lookup(url));
@@ -33,6 +84,10 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                 sendRequest = function() {
                     request(url, function (error, response, body) {
                         if (!error && response.statusCode === 200) {
+                            if(/\.bemhtml\.js$/.test(url)) {
+                                body = loadHtmlCodeOfBlock(req, originUrl, body);
+                            }
+
                             providerFile.save({
                                 path: path.resolve(constants.DIRS.CACHE, ref, sha(url)),
                                 data: body
@@ -84,7 +139,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
 
                 if(url.indexOf(PATTERN.EXAMPLE) > -1) {
                     return proxyTextFiles(url.replace(PATTERN.EXAMPLE, ''),
-                        VERSION_REGEXP.test(url) ? constants.DIRS.TAG : constants.DIRS.BRANCH, res);
+                        VERSION_REGEXP.test(url) ? constants.DIRS.TAG : constants.DIRS.BRANCH, req, res);
                 }
 
                 if(url.indexOf(PATTERN.FREEZE) > -1) {

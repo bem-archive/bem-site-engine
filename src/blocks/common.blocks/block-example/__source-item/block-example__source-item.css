@@ -1,0 +1,10 @@
+.block-example__source-item
+{
+    display: none;
+}
+
+.block-example__source-item_visible
+{
+    display: block;
+    margin-bottom: 20px;
+}

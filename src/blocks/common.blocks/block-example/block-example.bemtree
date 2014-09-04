@@ -7,7 +7,8 @@ block('block-example')(
             bemjson,
             title,
             name,
-            url;
+            url,
+            urlBemhtml;
 
         if(enb) {
             var path = (example.url || example.path).replace(/\.(ru|en)/, ''),
@@ -32,6 +33,7 @@ block('block-example')(
                 examplesData.forEach(function(example){
                     if(example.source && example.name === name) {
                         bemjson = example.source;
+                        urlBemhtml = prefix + '/' + path + '/' + name + '.bemhtml.js';
                     }
                 });
             }
@@ -46,7 +48,8 @@ block('block-example')(
             _title: title,
             _name: name,
             _url: url,
-            _bemjson: bemjson
+            _bemjson: bemjson,
+            _urlBemhtml: urlBemhtml
         });
     }),
 
@@ -65,7 +68,9 @@ block('block-example')(
                         content: (title && name) ? title + ' (' + name + ')' : ''
                     },
                     {
-                        elem: 'source-switcher'
+                        elem: 'source-switcher',
+                        elemMods: { type: 'bemjson' },
+                        content: 'bemjson'
                     }
                 ]
             },

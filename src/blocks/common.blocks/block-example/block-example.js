@@ -5,6 +5,33 @@ BEMDOM.decl('block-example', {
     onSetMod: {
         'js' : {
             'inited': function() {
+                var self = this;
+
+                this.bindTo('source-switcher', 'pointerclick', function(e) {
+                    e.preventDefault();
+
+                    var target = $(e.target),
+                        typeSource = this.getMod(target, 'type');
+
+                    if(self._typeSource && self._typeSource !== typeSource) {
+                        self
+                            .delMod(self.elem('source-switcher'), 'active')
+                            .delMod(self.elem('source-item'), 'visible');
+                    }
+
+                    self._typeSource = typeSource;
+
+                    self.toggleSource(typeSource);
+
+                    if(typeSource === 'html') {
+                        self._getHtml(self.elemParams(target).urlBemhtml);
+                    }
+
+                    if(typeSource === 'bemjson') {
+                        self.loadIframe('source-code');
+                    }
+                });
+
                 this.loadComplete = {};
             }
         }
@@ -30,10 +57,19 @@ BEMDOM.decl('block-example', {
         }
     },
 
-    toggleSource: function() {
+    toggleSource: function(type) {
         this
-            .toggleMod(this.elem('source-link'), 'active', 'yes', '')
-            .toggleMod(this.elem('source'), 'visible', 'yes', '');
+            .toggleMod(this.elem('source-switcher', 'type', type), 'active', 'yes', '')
+            .toggleMod(this.elem('source-item', 'type', type), 'visible', true, '');
+    },
+
+    _getHtml: function(url) {
+        $.ajax({ url: url, dataType: 'text', context: this })
+            .done(function(html) {
+                html += ' ';
+                this.elem('source-code', 'type', 'html').text(html);
+            })
+            .fail(function(error) { console.log('error', error); });
     },
 
     loadIframe: function(el) {
@@ -61,19 +97,6 @@ BEMDOM.decl('block-example', {
         this.findBlockInside('live-spin', 'spin').toggleMod('progress', true, '');
     }
 
-}, {
-    live: function() {
-
-        this.liveBindTo('source-switcher', 'pointerclick', function(e) {
-            e.preventDefault();
-
-            this.toggleSource();
-
-            this.loadIframe('source-code');
-        });
-
-        return false;
-    }
 });
 
 provide(BEMDOM);

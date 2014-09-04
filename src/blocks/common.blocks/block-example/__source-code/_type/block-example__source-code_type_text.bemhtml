@@ -1,3 +1,0 @@
-block('block-example').elem('source-code').elemMod('type', 'text')(
-    tag()('code')
-);
