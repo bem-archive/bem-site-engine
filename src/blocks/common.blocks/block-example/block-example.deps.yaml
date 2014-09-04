@@ -12,6 +12,7 @@
   - source
   - source-code
   - source-copy
+  - source-item
   - source-switcher
 
 - mods: { view: [inline, default] }
