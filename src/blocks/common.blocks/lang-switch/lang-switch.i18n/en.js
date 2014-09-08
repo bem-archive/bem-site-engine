@@ -1,5 +1,5 @@
 module.exports = {
     "lang-switch": {
-        "name": "In Russian"
+        "name": "По-русски"
     }
 };
