@@ -61,7 +61,7 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template'],
                         req: req, //request object //TODO remove it and fix templates
                         bundleName: 'common',
                         lang: req.lang, //selected language
-                        statics: '/www'
+                        statics: ''
                     };
 
                     ctx = _.extend(ctx, req.__data, self.getAdvancedData(req, req.__data.node));
