@@ -6,7 +6,7 @@ var u = require('util'),
     vowFs = require('vow-fs'),
     request = require('request'),
     sha = require('sha1'),
-    html = require('html'),
+    html = require('js-beautify').html,
     mime = require('mime');
 
 modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'providerFile', 'model'],
@@ -60,7 +60,8 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             vm.runInNewContext(template, bemhtml);
             htmlStr = bemhtml.BEMHTML.apply(bemjson);
 
-            return html.prettyPrint(htmlStr);
+            //return html.prettyPrint(htmlStr);
+            return html(htmlStr, { indent_size: 4 });
         };
 
         /**

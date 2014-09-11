@@ -12,10 +12,8 @@ modules.define('middleware__redirect', ['logger', 'util', 'model'], function(pro
      */
     provide({
         init: function() {
-            redirects = [];
-
             try {
-                redirects = require(path.join(process.cwd(), 'configs', 'common', 'redirects.js'));
+                redirects = require(path.join(process.cwd(), 'configs/common/redirects.js'));
             }catch(err) {
                 logger.warn('redirects.js file was not found in configs/common directory');
             }
