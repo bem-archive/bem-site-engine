@@ -1,7 +1,7 @@
 {
-  "name": "bem-info",
+  "name": "bem-site-engine",
   "description": "BEM CMS based on Express framework",
-  "version": "3.3.14",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/bem/bem-site-engine.git"
@@ -35,21 +35,20 @@
     "js-beautify": "1.5.1"
   },
   "devDependencies": {
-      "enb": "~0.13.4",
-      "enb-bemxjst": "~1.2.0",
-      "enb-modules": "*",
-      "enb-diverse-js": "*",
-      "enb-autoprefixer": "~0.1.1",
-      "enb-stylus": "^1.1.4",
-      "enb-bembundle": "~1.0.2",
-      "borschik": "~1.0.5",
-      "enb-borschik": "~1.0.4",
-      "roole": "*",
-      "bower": "~1.3.9",
-      "bower-npm-install": "~0.5.8",
-      "inherit": "~2.2.2",
-      "jshint": "~2.5.1",
-      "jscs": "~1.4.5"
+    "borschik": "~1.0.5",
+    "bower": "~1.3.9",
+    "bower-npm-install": "~0.5.8",
+    "enb": "~0.13.4",
+    "enb-autoprefixer": "~0.1.1",
+    "enb-bembundle": "~1.0.2",
+    "enb-bemxjst": "~1.2.0",
+    "enb-borschik": "~1.0.4",
+    "enb-diverse-js": "*",
+    "enb-modules": "*",
+    "enb-stylus": "^1.1.4",
+    "inherit": "~2.2.2",
+    "jscs": "~1.4.5",
+    "jshint": "~2.5.1"
   },
   "scripts": {
     "start": "node bin/app.js",
@@ -60,7 +59,7 @@
     "clean_data": "rm -rf backups/*",
     "test": "node_modules/.bin/jshint . && node_modules/.bin/jscs ."
   },
-  "author": "lego-team@yandex-team.ru",
+  "author": "info@bem.info",
   "readmeFilename": "README.md",
   "private": true
 }

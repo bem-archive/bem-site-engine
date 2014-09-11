@@ -1,17 +1,15 @@
 {
-  "name": "bem-info",
-  "version": "3.0.0",
+  "name": "bem-site-engine",
+  "description": "BEM CMS based on Express framework",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "bem-core": "git://github.com/bem/bem-core.git#v2.3.0",
-    "bem-components": "git://github.com/bem/bem-components.git#74195dc46a12b375393c9ca1d5484d161a83c047"
+    "bem-core": "git://github.com/bem/bem-core.git#v2.4.0",
+    "bem-components": "git://github.com/bem/bem-components.git#b2e0a63522f0636da40996eb6d4042c09f48e1ff"
   },
   "ignore": [
     "node_modules",
     "configs/current",
     ".enb/tmp"
-  ],
-  "resolutions": {
-    "bem-core": "v2.3.0"
-  }
+  ]
 }
