@@ -7,8 +7,8 @@ module.exports = function(config) {
             use('levels', { levels: getLevels(config) }),
             use('files'),
             use('deps', { target: '?.bemdecl.js' }),
-            use('roole', { sourceSuffixes: ['css', 'ie.css', 'roo', 'ie.roo'], target: '?.ie.css' }),
-            use('roole', { target: '?.noprefix.css' }),
+            use('stylus', { sourceSuffixes: ['css', 'ie.css', 'styl', 'ie.styl'], target: '?.ie.css' }),
+            use('stylus', { target: '?.noprefix.css' }),
             use('autoprefixer', {
                 browserSupport: ['last 2 versions', 'last 3 Chrome versions'],
                 sourceTarget: '?.noprefix.css'
@@ -117,7 +117,7 @@ var techs = {
     deps            : require('enb/techs/deps'),
     modules         : require('enb-modules/techs/prepend-modules'),
     js              : require('enb-diverse-js/techs/browser-js'),
-    roole           : require('enb-roole/techs/css-roole'),
+    stylus          : require('enb-stylus/techs/css-stylus'),
     autoprefixer    : require('enb-autoprefixer/techs/css-autoprefixer'),
     bemhtml         : require('enb-bemxjst/techs/bemhtml-old'),
     bemtree         : require('enb-bemxjst/techs/bemtree-old'),

@@ -40,7 +40,7 @@
       "enb-modules": "*",
       "enb-diverse-js": "*",
       "enb-autoprefixer": "~0.1.1",
-      "enb-roole": "~0.2.1",
+      "enb-stylus": "^1.1.4",
       "enb-bembundle": "~1.0.2",
       "borschik": "~1.0.5",
       "enb-borschik": "~1.0.4",
