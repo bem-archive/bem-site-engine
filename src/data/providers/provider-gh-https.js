@@ -30,6 +30,8 @@ exports.GhHttpsProvider = function() {
             }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
 
         https.get(url, function (res) {
+            res.setEncoding('utf8');
+
             var data = '';
 
             res.on('data', function (chunk) {
