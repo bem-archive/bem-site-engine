@@ -106,10 +106,19 @@ function buildFullGithubLinkForDocs(str, node, lang, treeOrBlob) {
  * @returns {*}
  */
 function recognizeRelativeLinkForLibraryDocs(str, node) {
-    var conditions = node.route.conditions,
-        lib = conditions.lib,
-        version = conditions.version,
-        match;
+    var conditions, lib, version, match;
+
+    conditions = node.route.conditions;
+    if(!conditions) {
+        return [str];
+    }
+
+    lib = conditions.lib;
+    version = conditions.version;
+
+    if(!lib || !version) {
+        return [str];
+    }
 
     //common.blocks/button/button.ru.md
     match = str.match(REGEXP.RELATIVE.BLOCKS);
@@ -248,47 +257,43 @@ function overrideLinks(content, node, urlHash, lang) {
                 return buildHref(href + (anchor ? '#' + anchor : ''));
             }
 
-            try {
-                //try to recognize
-                if (isAbsolute(href)) {
-                    links.push(href.replace(/\/tree\//, '/blob/'));
-                    links.push(href.replace(/\/blob\//, '/tree/'));
-                } else {
-                    links.push(buildFullGithubLinkForDocs(href, node, lang, 'tree'));
-                    links.push(buildFullGithubLinkForDocs(href, node, lang, 'blob'));
-                    links = links.concat(recognizeRelativeLinkForLibraryDocs(href, node));
-                    if (node.source.key) {
-                        links.push(recognizeRelativeBlockLinkOnSameLevel(href, node));
-                        links.push(recognizeRelativeBlockLinkOnDifferentLevels(href, node));
-                    }
+            //try to recognize
+            if (isAbsolute(href)) {
+                links.push(href.replace(/\/tree\//, '/blob/'));
+                links.push(href.replace(/\/blob\//, '/tree/'));
+            } else {
+                links.push(buildFullGithubLinkForDocs(href, node, lang, 'tree'));
+                links.push(buildFullGithubLinkForDocs(href, node, lang, 'blob'));
+                links = links.concat(recognizeRelativeLinkForLibraryDocs(href, node));
+                if (node.source.key) {
+                    links.push(recognizeRelativeBlockLinkOnSameLevel(href, node));
+                    links.push(recognizeRelativeBlockLinkOnDifferentLevels(href, node));
                 }
+            }
 
-                //remove links that are the same as original
-                links = links.filter(function (item) {
-                    return item !== href;
-                });
+            //remove links that are the same as original
+            links = links.filter(function (item) {
+                return item !== href;
+            });
 
-                links.some(function(item) {
-                    if(urlHash[item]) {
-                        replaced = urlHash[item];
-                        return true;
-                    }
-                    if(urlHash[item + '/README.md']) {
-                        replaced = urlHash[item + '/README.md'];
-                        return true;
-                    }
-                    if(existedLinks.indexOf(item) > -1) {
-                        replaced = item;
-                        return true;
-                    }
-                    return false;
-                });
-
-                if (replaced) {
-                    href = replaced;
+            links.some(function(item) {
+                if(urlHash[item]) {
+                    replaced = urlHash[item];
+                    return true;
                 }
-            }catch(err) {
-                logger.error(err);
+                if(urlHash[item + '/README.md']) {
+                    replaced = urlHash[item + '/README.md'];
+                    return true;
+                }
+                if(existedLinks.indexOf(item) > -1) {
+                    replaced = item;
+                    return true;
+                }
+                return false;
+            });
+
+            if (replaced) {
+                href = replaced;
             }
             href += (anchor ? '#' + anchor : '');
             logger.verbose('native: %s replaced: %s', nativeHref, href);
@@ -313,17 +318,22 @@ function overrideBlockLinks(obj, node, lang, urlHash) {
 
     var blockHashItem = blocksHash[source.key];
     if(!blockHashItem) {
-        logger.warn('there no block for key %s', source.key);
+        //logger.warn('there no block for key %s', source.key);
         return;
     }
 
     var blockData = blockHashItem.data;
     if(!blockData) {
-        logger.warn('there no block data for key %s', source.key);
+        //logger.warn('there no block data for key %s', source.key);
         return;
     }
 
     var description = blockData[lang] ? blockData[lang].description : blockData.description;
+    if(!description) {
+        //logger.warn('there no description in block data for key %s', source.key);
+        return;
+    }
+
     if(_.isArray(description)) {
         //old bem-sets format
         description.forEach(function (item, index) {
@@ -368,7 +378,7 @@ module.exports = function(obj) {
         return node;
     };
 
-    obj.sitemap.forEach(function(node) {
+    obj.sitemap.forEach(function (node) {
         traverseTreeNodes(node);
     });
 
