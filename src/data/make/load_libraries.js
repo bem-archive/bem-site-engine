@@ -1,9 +1,9 @@
-var u = require('util'),
+var util = require('util'),
     _ = require('lodash'),
     vow = require('vow'),
 
-    logger = require('../lib/logger')(module),
-    config = require('../lib/config'),
+    logger = require('../logger'),
+    config = require('../config'),
     providers = require('../providers');
 
 /**
@@ -23,14 +23,15 @@ function loadLibraryVersions(repo, node, libraries) {
                 return providers.getProviderGhHttps()
                     .load({
                         repository: _.extend({
-                            path: u.format('%s/%s/data.json', node.lib, version.name)
+                            path: util.format('%s/%s/data.json', node.lib, version.name)
                         }, repo)
                     })
                     .then(function(result) {
                         libraries[node.lib][version.name] = result;
                     })
                     .fail(function(err) {
-                        logger.error('Error %s while loading data for library %s version %s', err, node.lib, version.name);
+                        logger.error(util.format('Error %s while loading data for library %s version %s',
+                            err, node.lib, version.name), module);
                     });
             }));
         });
@@ -38,14 +39,14 @@ function loadLibraryVersions(repo, node, libraries) {
 
 module.exports = function(libraryNodes) {
 
-    logger.info('Load all libraries start');
+    logger.info('Load all libraries start', module);
 
     var err,
         libraries = {},
         lr = config.get('github:libraries');
 
     if(!lr) {
-        err = 'Libraries repository was not set in configuration'
+        err = 'Libraries repository was not set in configuration';
     }
 
     if(!lr.type || !_.isString(lr.type) || !lr.type.length) {
@@ -78,10 +79,10 @@ module.exports = function(libraryNodes) {
             return loadLibraryVersions(lr, node, libraries);
         }))
         .then(function() {
-            logger.info('Libraries successfully loaded');
+            logger.info('Libraries successfully loaded', module);
             return libraries;
         })
         .fail(function() {
-            logger.error('Error occur while loading libraries');
+            logger.error('Error occur while loading libraries', module);
         });
 };

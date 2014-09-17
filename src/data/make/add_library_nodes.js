@@ -1,9 +1,8 @@
-var u = require('util'),
-    _ = require('lodash'),
+var _ = require('lodash'),
     vow = require('vow'),
 
-    logger = require('../lib/logger')(module),
-    util  = require('../lib/util'),
+    logger = require('..logger')(module),
+    util  = require('../util'),
     nodes = require('../model');
 
 /**

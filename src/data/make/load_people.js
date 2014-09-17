@@ -1,9 +1,8 @@
-var u = require('util'),
-    _ = require('lodash'),
+var util = require('util'),
     vow = require('vow'),
 
-    logger = require('../lib/logger')(module),
-    config = require('../lib/config'),
+    logger = require('../logger'),
+    config = require('../config'),
     providers = require('../providers');
 
 /**
@@ -11,13 +10,13 @@ var u = require('util'),
  * @returns {Object} people hash
  */
 module.exports = function(obj) {
-    logger.info('Load all people start');
+    logger.info('Load all people start', module);
 
     var err,
         pr = config.get('github:people');
 
     if(!pr) {
-        err = 'Path to people data file has not been set in application configuration'
+        err = 'Path to people data file has not been set in application configuration';
     }
 
     if(!err) {
@@ -34,7 +33,7 @@ module.exports = function(obj) {
                 path: pr[6]
             };
 
-            pr.type = pr.host.indexOf('github.com') > -1 ? 'public' : 'private'
+            pr.type = pr.host.indexOf('github.com') > -1 ? 'public' : 'private';
         }
     }
 
@@ -48,7 +47,7 @@ module.exports = function(obj) {
         .then(
             function(result) {
                 try {
-                    logger.info('People successfully loaded');
+                    logger.info('People successfully loaded', module);
 
                     result = JSON.parse((new Buffer(result.res.content, 'base64')).toString());
                     obj.people = Object.keys(result).reduce(function(prev, key) {
@@ -57,12 +56,12 @@ module.exports = function(obj) {
                     }, {});
                     return obj;
                 }catch(err) {
-                    logger.error('Error occur while parsing people data');
+                    logger.error('Error occur while parsing people data', module);
                     return {};
                 }
             }
         )
         .fail(function(err) {
-            logger.error('Error while loading people %s', err);
+            logger.error(util.format('Error while loading people %s', err), module);
         });
 };

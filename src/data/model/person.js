@@ -1,6 +1,5 @@
-var u = require('util'),
-    _ = require('lodash'),
-    util = require('../lib/util'),
+var util = require('util'),
+    utility = require('../util'),
     DynamicNode = require('./dynamic').DynamicNode;
 
 /**
@@ -31,8 +30,8 @@ PersonNode.prototype = Object.create(DynamicNode.prototype);
  * @returns {PersonNode}
  */
 PersonNode.prototype.setTitle = function(person) {
-    this.title = util.getLanguages().reduce(function(prev, lang) {
-        prev[lang] = u.format('%s %s', person[lang]['firstName'], person[lang]['lastName']);
+    this.title = utility.getLanguages().reduce(function(prev, lang) {
+        prev[lang] = util.format('%s %s', person[lang]['firstName'], person[lang]['lastName']);
         return prev;
     }, {});
     return this;

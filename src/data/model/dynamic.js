@@ -1,5 +1,4 @@
-var u = require('util'),
-    _ = require('lodash'),
+var _ = require('lodash'),
     susanin = require('susanin'),
     BaseNode = require('./base').BaseNode;
 
@@ -8,7 +7,7 @@ var u = require('util'),
  * Base class for all dynamic nodes
  * @constructor
  */
-DynamicNode = function() {};
+var DynamicNode = function() {};
 
 DynamicNode.prototype = Object.create(BaseNode.prototype);
 

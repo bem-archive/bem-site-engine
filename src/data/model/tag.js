@@ -1,6 +1,4 @@
-var u = require('util'),
-    _ = require('lodash'),
-    util = require('../lib/util'),
+var utility = require('../util'),
     DynamicNode = require('./dynamic').DynamicNode;
 
 /**
@@ -11,8 +9,7 @@ var u = require('util'),
  * @constructor
  */
 var TagNode = function(parent, routes, tagKey) {
-    this
-        .setTitle(tagKey)
+    this.setTitle(tagKey)
         .processRoute(routes, parent, {
             conditions: {
                 id: tagKey
@@ -29,7 +26,7 @@ TagNode.prototype = Object.create(DynamicNode.prototype);
  * @returns {TagNode}
  */
 TagNode.prototype.setTitle = function(tagKey) {
-    this.title = util.getLanguages().reduce(function(prev, lang) {
+    this.title = utility.getLanguages().reduce(function(prev, lang) {
         prev[lang] = tagKey;
         return prev;
     }, {});

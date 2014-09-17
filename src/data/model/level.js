@@ -1,6 +1,6 @@
 var _ = require('lodash'),
-    util = require('../lib/util'),
-    logger = require('../lib/logger')(module),
+
+    utility = require('../util'),
     nodes = require('./index');
 
 /**
@@ -14,8 +14,6 @@ var _ = require('lodash'),
  * @constructor
  */
 var LevelNode = function(parent, routes, version, level, search, blocksHash) {
-    logger.verbose('level constructor %s %s %s', version.repo, version.ref, level.name);
-
     //add library block level to library search item
     _.find(search.libraries, function(item) { return version.repo === item.name; })
         .getVersion(version.ref).addLevel(new nodes.search.Level(level.name));
@@ -40,7 +38,7 @@ LevelNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @returns {LevelNode}
  */
 LevelNode.prototype.setTitle = function(level) {
-    this.title = util.getLanguages().reduce(function(prev, lang) {
+    this.title = utility.getLanguages().reduce(function(prev, lang) {
         prev[lang] = level.name.replace(/\.(sets|docs)$/, '');
         return prev;
     }, {});
@@ -75,8 +73,6 @@ LevelNode.prototype.setClass = function() {
  * @param blocksHash - {Object} blocks data hash
  */
 LevelNode.prototype.addItems = function(routes, version, level, search, blocksHash) {
-    logger.verbose('add blocks to level %s of version %s start', level.name, version.ref);
-
     this.items = this.items || [];
 
     var blocks = level.blocks;

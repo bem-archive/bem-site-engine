@@ -2,7 +2,7 @@ var https = require('https'),
     util = require('util'),
 
     vow = require('vow'),
-    _ = require('lodash');
+    logger = require('../logger');
 
 exports.GhHttpsProvider = function() {
 
@@ -29,18 +29,18 @@ exports.GhHttpsProvider = function() {
                 'private': this.GITHUB_PATTERN.PRIVATE
             }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
 
+        logger.debug(util.format('start load data from %s', url), module);
         https.get(url, function (res) {
             res.setEncoding('utf8');
 
             var data = '';
-
             res.on('data', function (chunk) {
                 data += chunk;
             });
-
             res.on('end', function () {
                 var res;
                 try {
+                    logger.debug(util.format('end load data from %s', url), module);
                     res = JSON.parse(data);
                     def.resolve(res);
                 } catch (err) {
@@ -48,8 +48,9 @@ exports.GhHttpsProvider = function() {
                 }
 
             });
-        }).on('error', function (e) {
-            def.reject(e);
+        }).on('error', function (err) {
+            logger.error(util.format('error load data from %s %s', url, err.message), module);
+            def.reject(err);
         });
 
         return def.promise();

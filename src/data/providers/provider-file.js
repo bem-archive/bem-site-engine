@@ -1,6 +1,9 @@
-var _ = require('lodash'),
+var util = require('util'),
+
     vow = require('vow'),
     vowFs = require('vow-fs'),
+
+    logger = require('../logger'),
     fsExtra = require('fs-extra');
 
 exports.FileProvider = function() {
@@ -9,9 +12,10 @@ exports.FileProvider = function() {
      * Returns loaded content of file
      * @param options - {Object} with fields
      * - path {String} path to file
-     * @returns {vow promise object}
+     * @returns {*}
      */
     this.load = function(options) {
+        logger.debug(util.format('load data from file %s', options.path), module);
         return vowFs.read(options.path, 'utf-8');
     };
 
@@ -20,9 +24,10 @@ exports.FileProvider = function() {
      * @param options - {Object} with fields:
      * - path {String} path to target file
      * - data {String} content for file
-     * @returns {vow promise object}
+     * @returns {*}
      */
     this.save = function(options) {
+        logger.debug(util.format('save data to file %s', options.path), module);
         return vowFs.write(options.path, options.data, 'utf8');
     };
 
@@ -34,6 +39,7 @@ exports.FileProvider = function() {
      * @returns {*}
      */
     this.copy = function(options) {
+        logger.debug(util.format('copy file from %s to %s', options.source, options.target), module);
         return vowFs.copy(options.source, options.target);
     };
 
@@ -44,6 +50,7 @@ exports.FileProvider = function() {
      * @returns {*}
      */
     this.makeDir = function(options) {
+        logger.debug(util.format('make directory %s', options.path), module);
         return vowFs.makeDir(options.path);
     };
 
@@ -64,6 +71,7 @@ exports.FileProvider = function() {
      * @returns {*}
      */
     this.removeDir = function(options) {
+        logger.debug(util.format('remove directory from %s', options.path), module);
         var def = vow.defer();
         fsExtra.remove(options.path, function (err) {
             err ? def.reject(err) : def.resolve();
@@ -78,10 +86,11 @@ exports.FileProvider = function() {
      * @returns {*}
      */
     this.remove = function(options) {
+        logger.debug(util.format('remove file from %s', options.path), module);
         return vowFs.remove(options.path);
     };
 
     this.exists = function(options) {
         return vowFs.exists(options.path);
-    }
+    };
 };

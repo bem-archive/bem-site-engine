@@ -1,9 +1,7 @@
-var u = require('util'),
-    _ = require('lodash'),
+var util = require('util'),
     sha = require('sha1'),
 
-    util = require('../lib/util'),
-    logger = require('../lib/logger')(module),
+    utility = require('../util'),
     nodes = require('./index');
 
 /**
@@ -17,8 +15,6 @@ var u = require('util'),
  * @constructor
  */
 var BlockNode = function(parent, routes, version, level, block, blocksHash) {
-    logger.verbose('block constructor %s %s %s start', version.repo, version.ref, block.name);
-
     this.setTitle(block)
         .setSource(version, level, block, blocksHash)
         .processRoute(routes, parent, {
@@ -40,7 +36,7 @@ BlockNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @returns {BlockNode}
  */
 BlockNode.prototype.setTitle = function(block) {
-    this.title = util.getLanguages().reduce(function(prev, lang) {
+    this.title = utility.getLanguages().reduce(function(prev, lang) {
         prev[lang] = block.name;
         return prev;
     }, {});
@@ -65,8 +61,8 @@ BlockNode.prototype.setSource = function(version, level, block, blocksHash) {
         key: shaKey,
         enb: version.enb,
         prefix: version.enb ?
-            u.format('/__example/%s/%s', version.repo, version.ref) :
-            u.format('/__example/%s/%s/%s.sets/%s', version.repo, version.ref, level.name, block.name)
+            util.format('/__example/%s/%s', version.repo, version.ref) :
+            util.format('/__example/%s/%s/%s.sets/%s', version.repo, version.ref, level.name, block.name)
     };
 
     return this;

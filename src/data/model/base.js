@@ -2,7 +2,7 @@ var _ = require('lodash'),
     sha = require('sha1'),
     susanin = require('susanin'),
 
-    constants = require('../lib/constants');
+    constants = require('../constants');
 
 /**
  * Base class for nodes with common nodes methods
@@ -267,14 +267,14 @@ BaseNode.prototype = {
         }
 
         //validate settled changefreq property
-        if(!this.search.changefreq
-            || this.SITEMAP_XML.FREQUENCIES.indexOf(this.search.changefreq) == -1) {
-            this.search.changefreq = def.changefreq
+        if(!this.search.changefreq ||
+            this.SITEMAP_XML.FREQUENCIES.indexOf(this.search.changefreq) === -1) {
+            this.search.changefreq = def.changefreq;
         }
 
         //validate settled priority property
         if(!this.search.priority || this.search.priority < 0 || this.search.priority > 1) {
-            this.search.priority = def.priority
+            this.search.priority = def.priority;
         }
 
         return this;

@@ -1,7 +1,4 @@
-var u = require('util'),
-    _ = require('lodash'),
-    util = require('../lib/util'),
-    logger = require('../lib/logger')(module),
+var utility = require('../util'),
     nodes = require('./index');
 
 /**
@@ -15,9 +12,6 @@ var u = require('util'),
  * @constructor
  */
 var VersionNode = function(parent, routes, version, search, blocksHash, index) {
-
-    logger.verbose('version constructor %s %s', version.repo, version.ref);
-
     this.setTitle(version)
         .setSource(version)
         .processRoute(routes, parent, {
@@ -38,7 +32,7 @@ VersionNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @returns {VersionNode}
  */
 VersionNode.prototype.setTitle = function(version) {
-    this.title = util.getLanguages().reduce(function(prev, lang) {
+    this.title = utility.getLanguages().reduce(function(prev, lang) {
         prev[lang] = version.ref.replace(/\//g, '-');
         return prev;
     }, {});
@@ -56,14 +50,14 @@ VersionNode.prototype.setSource = function(version) {
         content: version.readme
     };
 
-    this.source = util.getLanguages().reduce(function(prev, lang) {
+    this.source = utility.getLanguages().reduce(function(prev, lang) {
         prev[lang] = {
             title: version.repo,
             deps: version.deps,
             url: version.url,
             content: (readme && readme.content) ? readme.content[lang] : null
         };
-        return prev
+        return prev;
     }, {});
 
     return this;
@@ -117,8 +111,6 @@ VersionNode.prototype.addItems = function(routes, version, search, blocksHash, i
             return 'readme' !== item;
         })
         .forEach(function(item) {
-            logger.verbose('add post %s to version %s of library %s', item, version.ref, version.repo);
-
             //verify existed docs
             if(!docs[item] || !docs[item].content) {
                 return;

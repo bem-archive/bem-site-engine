@@ -1,11 +1,5 @@
-var _ = require('lodash'),
-    susanin = require('susanin'),
-    vow = require('vow'),
-
-    logger = require('../lib/logger')(module),
-    config = require('../lib/config'),
-    util = require('../lib/util'),
-    constants = require('../lib/constants'),
+var logger = require('../logger')(module),
+    util = require('../util'),
     nodes = require('../model');
 
 module.exports = function(obj) {

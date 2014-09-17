@@ -1,13 +1,11 @@
-var p = require('path'),
-    u = require('util'),
+var util = require('util'),
     _ = require('lodash'),
     vow = require('vow'),
-    md = require('marked'),
 
-    util = require('../lib/util'),
-    renderer = require('../lib/renderer'),
+    utility = require('../util'),
+    renderer = require('../renderer'),
     providers = require('../providers'),
-    logger = require('../lib/logger')(module);
+    logger = require('../logger');
 
 var Meta = function(meta, lang, collected) {
     Object.keys(meta).forEach(function(key) { this[key] = meta[key]; }, this);
@@ -29,7 +27,7 @@ Meta.prototype = {
      * @returns {Meta}
      */
     convertDate: function(field) {
-        this[field] && (this[field] = util.dateToMilliseconds(this[field]));
+        this[field] && (this[field] = utility.dateToMilliseconds(this[field]));
         return this;
     },
 
@@ -109,7 +107,7 @@ Meta.prototype = {
      */
     generateIssueUrl: function(title) {
         var r = this.repo;
-        return u.format('https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"', r.host, r.user, r.repo, title);
+        return util.format('https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"', r.host, r.user, r.repo, title);
     },
 
     /**
@@ -118,14 +116,14 @@ Meta.prototype = {
      */
     generateProseUrl: function() {
         var r = this.repo;
-        return u.format('http://prose.io/#%s/%s/edit/%s/%s', r.user, r.repo, r.ref, r.path);
+        return util.format('http://prose.io/#%s/%s/edit/%s/%s', r.user, r.repo, r.ref, r.path);
     }
 };
 
 module.exports = function(obj) {
-    logger.info('Load sources for nodes start');
+    logger.info('Load sources for nodes start', modules);
 
-    var nodes = util.findNodesByCriteria(obj.sitemap, function() { return this.source; }, false),
+    var nodes = utility.findNodesByCriteria(obj.sitemap, function() { return this.source; }, false),
         collected = nodes.reduce(function(prev, item) {
             return analyzeMeta(prev, item);
         }, {
@@ -140,11 +138,11 @@ module.exports = function(obj) {
         }
 
         return vow.all(Object.keys(node.source).map(function(lang) {
-            return vow.all[
+            return vow.all([
                 loadMDFile(node, lang),
                 setUpdateDate(node, lang),
                 checkForBranch(node, lang)
-            ];
+            ]);
         }));
     })).then(function() {
         obj.docs = compactCollected.apply(collected);
@@ -170,9 +168,9 @@ function analyzeMeta(collected, node) {
 
     !hasContent && (node.hidden = true);
 
-    util.getLanguages().forEach(function (lang) {
+    utility.getLanguages().forEach(function (lang) {
         if (!source[lang]) {
-            logger.warn('source with lang %s does not exists for node with url %s', lang, node.url);
+            logger.warn(util.format('source with lang %s does not exists for node with url %s', lang, node.url), module);
             source[lang] = null;
             return;
         }
@@ -195,8 +193,8 @@ function loadMDFile(node, lang) {
             var errorMsg = (!md || !md.res) ?
                 'markdown with lang %s does not exists for node %s' :
                 'markdown for lang %s contains errors for node %s';
-            errorMsg = u.format(errorMsg, lang, node.url);
-            logger.error(errorMsg);
+            errorMsg = util.format(errorMsg, lang, node.url);
+            logger.error(errorMsg, module);
             return vow.reject(errorMsg);
         };
 
@@ -208,7 +206,7 @@ function loadMDFile(node, lang) {
         .then(function(md) {
             try {
                 node.source[lang].url = s.content;
-                node.source[lang].content = util.mdToHtml(
+                node.source[lang].content = utility.mdToHtml(
                     (new Buffer(md.res.content, 'base64')).toString(), { renderer: renderer.getRenderer() });
             }catch(err) {
                 return onError(md);
@@ -239,8 +237,8 @@ function setUpdateDate(node, lang) {
         })
         .then(function(res) {
             if(!res || !res[0]) {
-                logger.warn('can not get commits for %s %s %s %s',
-                    repository.user, repository.repo, repository.ref, repository.path);
+                logger.warn(util.format('can not get commits for %s %s %s %s',
+                    repository.user, repository.repo, repository.ref, repository.path), module);
                 return;
             }
 
@@ -275,7 +273,7 @@ function checkForBranch(node, lang) {
                 .then(function(branch) {
                     repository.ref = branch;
                     repository.prose = s.generateProseUrl();
-                })
+                });
         });
 }
 
@@ -284,11 +282,11 @@ function checkForBranch(node, lang) {
  * Remove repeated values
  */
 function compactCollected() {
-    this.authors = util.uniqCompact(this.authors);
-    this.translators = util.uniqCompact(this.translators);
+    this.authors = utility.uniqCompact(this.authors);
+    this.translators = utility.uniqCompact(this.translators);
 
     Object.keys(this.tags).forEach(function(lang) {
-        this.tags[lang] = util.uniqCompact(this.tags[lang]);
+        this.tags[lang] = utility.uniqCompact(this.tags[lang]);
     }, this);
     return this;
 }

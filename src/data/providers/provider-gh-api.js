@@ -1,8 +1,11 @@
-var _ = require('lodash'),
+var util = require('util'),
+
+    _ = require('lodash'),
     vow = require('vow'),
     api = require('github'),
 
-    config = require('../lib/config');
+    config = require('../config'),
+    logger = require('../logger');
 
 var GhApiProvider = function() {
     this.init();
@@ -10,8 +13,8 @@ var GhApiProvider = function() {
 
 GhApiProvider.prototype = {
 
-    gitPublic: null,
-    gitPrivate: null,
+    gitPublic: undefined,
+    gitPrivate: undefined,
     common: {
         version: "3.0.0",
         protocol: "https",
@@ -24,6 +27,8 @@ GhApiProvider.prototype = {
      * with configured credentials
      */
     init: function() {
+        logger.info('Initialize github API module', module);
+
         var ghConfig = config.get('github'),
             ghPublic = ghConfig.public,
             ghPrivate = ghConfig.private;
@@ -37,6 +42,8 @@ GhApiProvider.prototype = {
                     type: 'oauth',
                     token: auth
                 });
+            }else {
+                logger.warn('Github API was not authentificated', module);
             }
         }
 
@@ -69,6 +76,8 @@ GhApiProvider.prototype = {
     load: function(options) {
         var def = vow.defer(),
             repository = options.repository;
+        logger.debug(util.format('Load data from %s %s %s %s',
+            repository.user, repository.repo, repository.ref, repository.path), module);
 
         this.getGit(repository).repos.getContent(repository, function(err, res) {
             if (err || !res) {
@@ -135,7 +144,6 @@ GhApiProvider.prototype = {
         this.getGit(repository).repos.get(repository, function(err, res) {
             def.resolve((err || !res) ? null : res.default_branch);
         });
-
         return def.promise();
     }
 };

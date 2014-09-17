@@ -1,10 +1,14 @@
-var u = require('util'),
+var util = require('util'),
+    path = require('path'),
 
     _ = require('lodash'),
     md = require('marked'),
     semver = require('semver'),
+    vow = require('vow'),
+    vowFs =require('vow-fs'),
 
-    config = require('./config');
+    config = require('./config'),
+    logger = require('./logger');
 
 /**
  * Compile *.md files to html with marked module
@@ -191,4 +195,91 @@ exports.uniqCompact = function(collection) {
  */
 exports.getLanguages = function() {
     return config.get('languages') || [config.get('defaultLanguage') || 'en'];
+};
+
+exports.switchConfig = function(environment) {
+    var symlinkPath = path.join(process.cwd(), 'configs', 'current');
+    return vowFs.exists(symlinkPath)
+        .then(function(exists) {
+            return exists ? vowFs.remove(symlinkPath) : vow.resolve();
+        })
+        .then(function() {
+            return vowFs.symLink(path.join(process.cwd(), 'configs', environment), symlinkPath, 'dir');
+        });
+};
+
+exports.isVersionValid = function(v) {
+    return /^latest$|^previous$|^-\d*$|^0$|^snapshot_\d{1,2}:\d{1,2}:201\d-\d{1,2}:\d{1,2}:\d{1,2}$/.test(v);
+};
+
+/**
+ * Returns name of snapshot as formatted current date
+ * @returns {String}
+ */
+exports.getSnapshotName = function() {
+    var date = new Date();
+
+    return util.format('snapshot_%s:%s:%s-%s:%s:%s',
+        date.getDate(),
+        date.getMonth() + 1,
+        date.getFullYear(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds()
+    );
+};
+
+/**
+ * Method for resolving name of snapshot folder
+ * @param {Object} provider
+ * @param {String|Number} version - version of snapshot
+ * @returns {*}
+ */
+exports.getSnapshot = function(provider, version) {
+    function mapFilterAndSortSnapshotFolderNames(arr) {
+        return arr
+            .map(function(snapshot) {
+                return _.isObject(snapshot) ? snapshot.displayName : snapshot;
+            })
+            .filter(function(snapshot) {
+                return /snapshot_\d{1,2}:\d{1,2}:\d{1,4}-\d{1,2}:\d{1,2}:\d{1,2}/.test(snapshot);
+            })
+            .sort(function(a, b) {
+                var re = /snapshot_(\d{1,2}):(\d{1,2}):(\d{1,4})-(\d{1,2}):(\d{1,2}):(\d{1,2})/;
+                a = a.match(re);
+                b = b.match(re);
+                a = new Date(a[3], a[2]-1, a[1], a[4], a[5], a[6], 0);
+                b = new Date(b[3], b[2]-1, b[1], b[4], b[5], b[6], 0);
+                return b.getTime() - a.getTime();
+            });
+    }
+
+    if(!version || 'latest' === version) {
+        version = 0;
+    }
+    if('previous' === version) {
+        version = -1;
+    }
+
+    return provider
+        .listDir({ path: path.join(config.get('model:dir')) })
+        .then(function(snapshots) {
+            var result;
+            snapshots = mapFilterAndSortSnapshotFolderNames(snapshots);
+
+            if(_.isNumber(+version) && !_.isNaN(+version)) {
+                result = snapshots[(-1)*(+version)];
+
+                if(!result) {
+                    logger.error(util.format('There no available snapshots for rollback step %s', +version), module);
+                }
+            }else {
+                if(snapshots.indexOf(version) < 0) {
+                    logger.error(util.format('Snapshot with name %s was not found in list of snapshots', version), module);
+                }else {
+                    result = version;
+                }
+            }
+            return result;
+        });
 };

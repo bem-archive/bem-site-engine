@@ -1,10 +1,10 @@
-var u = require('util'),
+var util = require('util'),
     p = require('path'),
 
     _ = require('lodash'),
 
-    util = require('../lib/util'),
-    logger = require('../lib/logger')(module);
+    utility = require('../util'),
+    logger = require('../logger');
 
 var REGEXP = {
     LINK: /<a\s+(?:[^>]*?\s+)?href="([^"]*)"/g,
@@ -18,7 +18,7 @@ var REGEXP = {
 };
 
 function buildHref(a) {
-    return u.format('<a href="%s"', a);
+    return util.format('<a href="%s"', a);
 }
 
 /**
@@ -124,7 +124,7 @@ function recognizeRelativeLinkForLibraryDocs(str, node) {
     match = str.match(REGEXP.RELATIVE.BLOCKS);
     if(match) {
         return ['desktop', 'touch-pad', 'touch-phone'].reduce(function(prev, item) {
-            prev.push(u.format('/libs/%s/%s/%s/%s', lib, version, item, match[2]));
+            prev.push(util.format('/libs/%s/%s/%s/%s', lib, version, item, match[2]));
             return prev;
         }, []);
     }
@@ -160,7 +160,7 @@ function recognizeRelativeBlockLinkOnSameLevel(str, node) {
 
     var match = str.match(REGEXP.RELATIVE.BLOCK);
     if(match) {
-        return u.format('/libs/%s/%s/%s/%s', lib, version, level, match[1]);
+        return util.format('/libs/%s/%s/%s/%s', lib, version, level, match[1]);
     }
     return str;
 }
@@ -178,7 +178,7 @@ function recognizeRelativeBlockLinkOnDifferentLevels(str, node) {
 
     var match = str.match(REGEXP.RELATIVE.LEVEL);
     if(match) {
-        return u.format('/libs/%s/%s/%s/%s', lib, version, match[1], match[2]);
+        return util.format('/libs/%s/%s/%s/%s', lib, version, match[1], match[2]);
     }
     return str;
 }
@@ -195,7 +195,7 @@ function collectUrls(sitemap) {
 
     var traverseTreeNodes = function(node) {
         if(node.url && node.source && node.hidden) {
-            util.getLanguages().forEach(function(lang) {
+            utility.getLanguages().forEach(function(lang) {
                 if(!node.hidden[lang]) {
                     if(node.source && node.source[lang] && node.source[lang].url) {
                         urls[node.source[lang].url] = node.url;
@@ -296,7 +296,7 @@ function overrideLinks(content, node, urlHash, lang) {
                 href = replaced;
             }
             href += (anchor ? '#' + anchor : '');
-            logger.verbose('native: %s replaced: %s', nativeHref, href);
+            logger.verbose(util.format('native: %s replaced: %s', nativeHref, href), module);
             return buildHref(href);
         });
 }
@@ -352,9 +352,9 @@ function overrideBlockLinks(obj, node, lang, urlHash) {
 }
 
 module.exports = function(obj) {
-    logger.info('Start overriding links');
+    logger.info('Start overriding links', module);
 
-    var languages = util.getLanguages(),
+    var languages = utility.getLanguages(),
         sitemap = obj.sitemap,
         urlHash = collectUrls(sitemap);
 
@@ -382,6 +382,6 @@ module.exports = function(obj) {
         traverseTreeNodes(node);
     });
 
-    logger.info('links were overrided');
+    logger.info('links were overrided', module);
     return obj;
 };

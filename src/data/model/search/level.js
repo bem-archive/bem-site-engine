@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 var Level = function(name) {
     return this.init(name);
 };

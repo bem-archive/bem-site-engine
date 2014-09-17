@@ -1,6 +1,4 @@
-var _ = require('lodash'),
-    util = require('../lib/util'),
-    logger = require('../lib/logger')(module),
+var utility = require('../util'),
     nodes = require('./index');
 
 /**
@@ -13,9 +11,6 @@ var _ = require('lodash'),
  * @constructor
  */
 var PostNode = function(parent, routes, version, doc, id) {
-
-    logger.verbose('post constructor %s %s %s', version.repo, version.ref, id);
-
     this.setTitle(doc)
         .setSource(doc)
         .processRoute(routes, parent, {
@@ -47,12 +42,12 @@ PostNode.prototype.setTitle = function(doc) {
  * @returns {PostNode}
  */
 PostNode.prototype.setSource = function(doc) {
-    this.source = util.getLanguages().reduce(function(prev, lang) {
+    this.source = utility.getLanguages().reduce(function(prev, lang) {
         prev[lang] = {
             title: doc.title[lang],
             content: doc.content[lang]
         };
-        return prev
+        return prev;
     }, {});
 
     return this;
