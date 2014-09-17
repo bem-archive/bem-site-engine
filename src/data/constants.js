@@ -6,10 +6,10 @@ module.exports = {
         DATA: 'data'
     },
     FILES: [
-        'data.json.gz',
+        'data.json',
         'sitemap.xml',
-        'search_libraries.json.gz',
-        'search_blocks.json.gz',
+        'search_libraries.json',
+        'search_blocks.json',
         'marker.json'
     ]
 };

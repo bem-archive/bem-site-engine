@@ -121,7 +121,7 @@ Meta.prototype = {
 };
 
 module.exports = function(obj) {
-    logger.info('Load sources for nodes start', modules);
+    logger.info('Load sources for nodes start', module);
 
     var nodes = utility.findNodesByCriteria(obj.sitemap, function() { return this.source; }, false),
         collected = nodes.reduce(function(prev, item) {

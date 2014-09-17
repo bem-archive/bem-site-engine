@@ -1,9 +1,11 @@
-var logger = require('../logger')(module),
-    util = require('../util'),
+var util = require('util'),
+
+    logger = require('../logger'),
+    utility = require('../util'),
     nodes = require('../model');
 
 module.exports = function(obj) {
-    logger.info('Add dynamic nodes to sitemap start');
+    logger.info('Add dynamic nodes to sitemap start', module);
 
     var docs = obj.docs,
         tags = docs.tags,
@@ -25,16 +27,16 @@ module.exports = function(obj) {
 };
 
 var addDynamicNodesFor = function(config, obj) {
-    logger.debug('add dynamic nodes for %s', config.key);
+    logger.debug(util.format('add dynamic nodes for %s', config.key), module);
 
     var key = config.key,
         routes = obj.routes,
-        targetNode = util.findNodesByCriteria(obj.sitemap, function() {
+        targetNode = utility.findNodesByCriteria(obj.sitemap, function() {
             return this.dynamic === key;
         }, true);
 
     if(!targetNode) {
-        logger.warn('target node for %s was not found', key);
+        logger.warn(util.format('target node for %s was not found', key), module);
         return;
     }
 

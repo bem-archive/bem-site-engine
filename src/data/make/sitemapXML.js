@@ -1,12 +1,12 @@
 var _ = require('lodash'),
     js2xml = require('js2xmlparser'),
 
-    logger = require('../logger')(module),
+    logger = require('../logger'),
     config = require('../config'),
     utility = require('../util');
 
 module.exports = function(obj) {
-    logger.info('Start to build "sitemap.xml" file');
+    logger.info('Start to build "sitemap.xml" file', module);
 
     var hosts = config.get('hosts') || {},
         nodes = utility
@@ -26,6 +26,6 @@ module.exports = function(obj) {
         }, []);
 
     obj.sitemapXml = js2xml('urlset', { url: map });
-    logger.info('File "sitemap.xml" has been constructed successfully');
+    logger.info('File "sitemap.xml" has been constructed successfully', module);
     return obj;
 };

@@ -51,12 +51,12 @@ module.exports = function() {
         .then(require('./override-links'))
         .then(require('./sitemapXML'))
         .then(require('./save'))
-        .then(function() {
+        .then(function(snapshot) {
             logger.info('Snapshot was created successfully', module);
-            return vow.resolve();
+            return vow.resolve(snapshot);
         })
-        .fail(function() {
+        .fail(function(err) {
             logger.error('Error occur while compile models and loading documentation', module);
-            return vow.reject();
+            return vow.reject(err);
         });
 };

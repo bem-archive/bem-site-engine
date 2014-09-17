@@ -29,7 +29,8 @@ exports.GhHttpsProvider = function() {
                 'private': this.GITHUB_PATTERN.PRIVATE
             }[repository.type], repository.user, repository.repo, repository.ref, repository.path);
 
-        logger.debug(util.format('start load data from %s', url), module);
+        logger.debug(util.format('start load data from %s %s %s %s',
+            repository.user, repository.repo, repository.ref, repository.path), module);
         https.get(url, function (res) {
             res.setEncoding('utf8');
 
@@ -40,7 +41,8 @@ exports.GhHttpsProvider = function() {
             res.on('end', function () {
                 var res;
                 try {
-                    logger.debug(util.format('end load data from %s', url), module);
+                    logger.debug(util.format('end load data from %s %s %s %s',
+                        repository.user, repository.repo, repository.ref, repository.path), module);
                     res = JSON.parse(data);
                     def.resolve(res);
                 } catch (err) {

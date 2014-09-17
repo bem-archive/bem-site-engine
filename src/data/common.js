@@ -2,14 +2,16 @@ var util = require('util'),
     path = require('path'),
 
     vow = require('vow'),
+
+    make = require('./make'),
     config = require('./config'),
     providers = require('./providers'),
     constants = require('./constants'),
     logger = require('./logger'),
-    utility = require('util');
+    utility = require('./util');
 
 exports.makeSnapshot = function() {
-
+    return make();
 };
 
 /**

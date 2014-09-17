@@ -1,10 +1,19 @@
 var util = require('util'),
+    zlib = require('zlib'),
 
     vow = require('vow'),
     vowFs = require('vow-fs'),
 
     logger = require('../logger'),
-    fsExtra = require('fs-extra');
+    fsExtra = require('fs-extra'),
+
+    gzip = function(buf) {
+        var def = vow.defer();
+        zlib.gzip(buf, function(err, result) {
+            err ? def.reject(err) : def.resolve(result);
+        });
+        return def.promise();
+    };
 
 exports.FileProvider = function() {
 
@@ -28,7 +37,11 @@ exports.FileProvider = function() {
      */
     this.save = function(options) {
         logger.debug(util.format('save data to file %s', options.path), module);
-        return vowFs.write(options.path, options.data, 'utf8');
+        var promise = options.archive ?
+            gzip(new Buffer(options.data, 'utf-8')) : vow.resolve(options.data);
+        return promise.then(function(data) {
+            return vowFs.write(options.path, data, 'utf8');
+        });
     };
 
     /**

@@ -1,8 +1,10 @@
-var _ = require('lodash'),
+var util = require('util'),
+
+    _ = require('lodash'),
     vow = require('vow'),
 
-    logger = require('..logger')(module),
-    util  = require('../util'),
+    logger = require('../logger'),
+    utility  = require('../util'),
     nodes = require('../model');
 
 /**
@@ -21,13 +23,13 @@ function addLibraryNodes(routes, nodesWithLibs, libraries) {
         blocksHash = {};
 
     nodesWithLibs.forEach(function(node) {
-        logger.debug('add versions to library %s %s', node.lib, node.url);
+        logger.debug(util.format('add versions to library %s %s', node.lib, node.url), module);
 
         var versions = libraries[node.lib];
         if(!versions) return;
 
         Object.keys(versions)
-            .sort(util.sortLibraryVerions)
+            .sort(utility.sortLibraryVerions)
             .forEach(function(key, index) {
                 node.items = node.items || [];
                 node.items.push(
@@ -41,12 +43,12 @@ function addLibraryNodes(routes, nodesWithLibs, libraries) {
 
 module.exports = function(obj) {
     var routes = obj.routes,
-        nodes = util.findNodesByCriteria(obj.sitemap, function() { return this.lib; }, false);
+        nodes = utility.findNodesByCriteria(obj.sitemap, function() { return this.lib; }, false);
 
-    logger.info('add library nodes start');
+    logger.info('add library nodes start', module);
 
     if(!nodes || !_.isArray(nodes) || !nodes.length) {
-        logger.warn('nodes with lib not found');
+        logger.warn('nodes with lib not found', module);
 
         obj.search = {
             libraries: {},
