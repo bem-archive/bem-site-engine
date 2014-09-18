@@ -51,22 +51,21 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
                 }
             })
             .fail(function(err) {
-                logger.error('Error occur while sitemaXML reloading %s', err.message);
+                logger.error('Error occur while "sitemap.xml" file reloading %s', err.message);
             });
     }
 
     function update(content) {
         logger.warn('Data has been changed. Model will be reloaded');
 
-        marker = content;
-
-        model.reload().then(function() {
-            router.init();
-            redirect.init();
-        });
-
-        reloadCache();
-        reloadSitemapXML();
+        model.reload()
+            .then(function() {
+                router.init();
+                redirect.init();
+                marker = content;
+            })
+            .then(reloadCache)
+            .then(reloadSitemapXML);
     }
 
     function checkForUpdate() {

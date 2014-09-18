@@ -1,5 +1,6 @@
 var path = require('path'),
-    zlib = require('zlib'),
+
+    vow = require('vow'),
     _ = require('lodash');
 
 modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDisk'],
@@ -7,8 +8,7 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
 
     logger = logger(module);
 
-    var model,
-        provider = util.isDev() ? providerFile : providerDisk;
+    var model;
 
     /**
      * Node OOP presentation for runtime
@@ -126,27 +126,45 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
     }
 
     function load() {
-        return provider.load({
-            path: path.join(config.get('model:dir'), util.isDev() ? '' : config.get('NODE_ENV'), 'data.json'),
-            archive: true
-        })
-        .then(function(content) {
-            try {
-                return JSON.parse(content);
-            }catch(err) {
-                logger.error('Error occur while parsing data object');
-            }
-        })
-        .then(function(content) {
-            try {
-                model = content;
-                model.sitemap = addCircularReferences(model.sitemap);
-                model.routes = _.values(model.routes);
-                return model;
-            }catch(err) {
-                logger.error('Error occur while filling model');
-            }
-        });
+        var promise = vow.resolve(),
+            localModelFilePath = path.join('backups', 'data.json');
+        if(!util.isDev()) {
+            promise = providerFile.remove({ path: localModelFilePath })
+                .then(function() {
+                    return providerDisk.downloadFile({
+                        source: path.join(config.get('model:dir'), config.get('NODE_ENV'), 'data.json'),
+                        //source: path.join('lego-site', 'testing', 'data.json'),
+                        target: localModelFilePath
+                    });
+            });
+        }
+        return promise
+            .then(function() {
+                return providerFile.load({
+                    path: localModelFilePath,
+                    archive: true
+                });
+            })
+            .then(function(content) {
+                try {
+                    return JSON.parse(content);
+                }catch(err) {
+                    logger.error('Error occur while parsing data object');
+                }
+            })
+            .then(function(content) {
+                try {
+                    model = content;
+                    model.sitemap = addCircularReferences(model.sitemap);
+                    model.routes = _.values(model.routes);
+                    return model;
+                }catch(err) {
+                    logger.error('Error occur while filling model');
+                }
+            })
+            .fail(function(err) {
+                logger.err('Error occur while loading model %s', err.message);
+            });
     }
 
     provide({

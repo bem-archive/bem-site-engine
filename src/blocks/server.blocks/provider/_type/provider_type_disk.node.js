@@ -42,6 +42,7 @@ modules.define('providerDisk', ['logger', 'config', 'util'], function(provide, l
          * @returns {*}
          */
         downloadFile: function(options) {
+            logger.debug('read file %s from yandex disk to %s', options.source, options.target);
             var def = vow.defer();
             disk.downloadFile(options.source, options.target, function(err) {
                 err ? def.reject(err) : def.resolve();
