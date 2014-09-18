@@ -7,7 +7,7 @@ module.exports = {
             getLibraries(),
             getAuthors(),
             getTags()
-        ]
+        ];
     }
 };
 
@@ -30,6 +30,7 @@ var getMain = function() {
     };
 };
 
+/*
 var getCustom = function() {
     return {
         title: '',
@@ -47,6 +48,7 @@ var getCustom = function() {
         }
     };
 };
+*/
 
 var getDocs = function() {
     return {

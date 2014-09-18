@@ -1,5 +1,4 @@
 var path = require('path'),
-    fs = require('fs'),
 
     _ = require('lodash'),
     vow = require('vow'),

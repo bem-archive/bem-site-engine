@@ -59,7 +59,7 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function(provi
         return function (err, req, res, next) {
             return loadErrorPages()
                 .then(function (errorPages) {
-                    preparation(err, req, res);
+                    preparation(err, req, res, next);
                     res.end(errorPages[req.lang][res.statusCode === 404 ? 'error404' : 'error500']);
                 });
         };

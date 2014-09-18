@@ -4,8 +4,6 @@ var util = require('util'),
     _ = require('lodash'),
     md = require('marked'),
     semver = require('semver'),
-    vow = require('vow'),
-    vowFs =require('vow-fs'),
 
     config = require('./config'),
     logger = require('./logger');

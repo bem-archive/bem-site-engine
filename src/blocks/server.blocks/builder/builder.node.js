@@ -1,6 +1,4 @@
-var path = require('path'),
-    vow = require('vow'),
-    vfs = require('vow-fs');
+var vow = require('vow');
 
 modules.define('builder', ['util'], function(provide, util) {
     var enbBuilder;

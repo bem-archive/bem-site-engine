@@ -47,8 +47,8 @@
     "enb-modules": "*",
     "enb-stylus": "^1.1.4",
     "inherit": "~2.2.2",
-    "jscs": "~1.4.5",
-    "jshint": "~2.5.1"
+    "jscs": "~1.5.9",
+    "jshint": "~2.5.5"
   },
   "scripts": {
     "start": "node bin/app.js",
@@ -57,7 +57,7 @@
     "clean_logs": "rm -rf logs/*",
     "clean_cache": "rm -rf cache/*",
     "clean_data": "rm -rf backups/*",
-    "test": "node_modules/.bin/jshint . && node_modules/.bin/jscs ."
+    "test": "node_modules/.bin/jshint . && node_modules/.bin/jscs -c .jscs.js ."
   },
   "author": "info@bem.info",
   "readmeFilename": "README.md",

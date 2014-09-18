@@ -16,5 +16,5 @@ modules.define('bundles', function(provide) {
 
     provide({
         Bundles: Bundles
-    })
+    });
 });

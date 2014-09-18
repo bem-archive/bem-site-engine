@@ -13,13 +13,17 @@ BEMDOM.decl('block-example', {
     },
 
     setToClipboard: function() {
-        var _this = this;
+        var _this = this,
+            copy;
 
+        /* jshint ignore:start */
         ZeroClipboard.config({
             hoverClass: _this.params.copyHoverClass
         });
 
-        var copy = new ZeroClipboard(_this.elem('source-copy'));
+
+        copy = new ZeroClipboard(_this.elem('source-copy'));
+        /* jshint ignore:end */
 
         copy.on('load', function(client) {
 

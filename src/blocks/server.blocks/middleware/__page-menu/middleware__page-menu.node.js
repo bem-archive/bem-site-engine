@@ -93,6 +93,6 @@ modules.define('middleware__page-menu', ['logger', 'constants', 'model'], functi
 
             req.__data.menu = result;
             return next();
-        }
-    })
+        };
+    });
 });

@@ -1,3 +1,4 @@
+/* jshint ignore:start */
 modules.define('zeroclipboard', function(provide) {
 
 /*!
@@ -15,5 +16,5 @@ ZeroClipboard.config({
 });
 
 provide(ZeroClipboard);
-
 });
+/* jshint ignore:end */

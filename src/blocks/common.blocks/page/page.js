@@ -33,9 +33,11 @@ BEMDOM.decl('page', {
      */
     _isTouch: function() {
         /* Touch detection idea by Modernizr */
+        /* jshint ignore:start */
         if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
             return true;
         }
+        /* jshint ignore:end */
 
         return false;
     }

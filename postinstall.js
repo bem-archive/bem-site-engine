@@ -8,7 +8,7 @@ var path = require('path'),
 
 function getEnvironment() {
     //TODO implement your own environment detection
-    return 'development'
+    return 'development';
 }
 
 function runCommand(cmd, opts, name) {

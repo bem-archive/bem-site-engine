@@ -1,5 +1,4 @@
-var _ = require('lodash'),
-    Susanin = require('susanin');
+var Susanin = require('susanin');
 
 modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 'appError'], function(provide, config, logger, constants, model, error) {
 
@@ -12,7 +11,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
         init: function() {
             router = model.getRoutes().reduce(function(prev, item) {
                 prev.addRoute(item);
-                return prev
+                return prev;
             }, new Susanin());
         },
 

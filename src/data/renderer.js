@@ -14,7 +14,10 @@ function createRenderer() {
      * @returns {String} - result header string
      */
     renderer.heading = function(text, level, raw, options) {
-        var specials = ['-','[',']','/','{','}','(',')','*','+','?','.','\\','^','$','|','\ ','\'','\"'];
+        var specials = null;
+        /* jshint ignore:start */
+        specials = ['-','[',']','/','{','}','(',')','*','+','?','.','\\','^','$','|','\ ','\'','\"'];
+        /* jshint ignore:end */
 
         options = options || {};
         options.headerPrefix = options.headerPrefix || '';

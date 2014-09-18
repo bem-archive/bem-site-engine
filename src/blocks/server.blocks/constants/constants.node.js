@@ -18,5 +18,5 @@ modules.define('constants', function(provide) {
             LEVEL: 'level'
         },
         SITEMAP: 'sitemap.xml'
-    })
+    });
 });

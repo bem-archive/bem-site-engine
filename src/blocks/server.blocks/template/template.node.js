@@ -25,7 +25,7 @@ modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
                             context.req = req;
                             vm.runInNewContext(source, context);
                             return context;
-                        })
+                        });
                     })
                     .then(function(engine) {
                         engine.BEM.I18N.lang(req.lang);

@@ -46,7 +46,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
         return providerFile.exists({ path: XMLTargetPath }).then(function(exists) {
                 if(exists) {
                     return providerFile.remove({ path: XMLTargetPath }).then(function() {
-                        return providerDisk.downloadFile({ source: XMLSourcePath, target: XMLTargetPath })
+                        return providerDisk.downloadFile({ source: XMLSourcePath, target: XMLTargetPath });
                     });
                 }
             })
