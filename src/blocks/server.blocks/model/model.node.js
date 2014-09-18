@@ -133,7 +133,6 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
                 .then(function() {
                     return providerDisk.downloadFile({
                         source: path.join(config.get('model:dir'), config.get('NODE_ENV'), 'data.json'),
-                        //source: path.join('lego-site', 'testing', 'data.json'),
                         target: localModelFilePath
                     });
             });

@@ -20,7 +20,7 @@ modules.define('logger', ['config'], function(provide, config) {
     intel.addHandler(
         new intel.handlers.File({
             file: config.get('logger:stdout'),
-            level: intel.INFO,
+            level: intel.DEBUG,
             formatter: new intel.Formatter({
                 format: '[%(date)s] %(levelname)s %(name)s: %(message)s',
                 colorize: true
