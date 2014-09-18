@@ -1,4 +1,5 @@
 - block: logger
 - block: config
+- block: util
 - mods:
     type: [file, disk]

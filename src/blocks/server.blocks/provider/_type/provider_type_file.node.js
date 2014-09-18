@@ -1,8 +1,8 @@
 var vow = require('vow'),
-    fs = require('vow-fs'),
+    vowFs = require('vow-fs'),
     fsExtra = require('fs-extra');
 
-modules.define('providerFile', ['logger'], function(provide, logger) {
+modules.define('providerFile', ['logger', 'util'], function(provide, logger, util) {
 
     logger = logger(module);
 
@@ -20,7 +20,13 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
          */
         load: function(options) {
             logger.debug('load data from file file %s', options.path);
-            return fs.read(options.path, 'utf-8');
+            return vowFs.read(options.path)
+                .then(function(buf) {
+                    return options.archive ? util.unzip(buf) : vow.resolve(buf);
+                })
+                .then(function(content) {
+                    return content.toString('utf-8');
+                });
         },
 
         /**
@@ -32,7 +38,7 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
          */
         save:  function(options) {
             logger.debug('save data to file file %s', options.path ? options.path : 'unknown file');
-            return fs.write(options.path, options.data, 'utf8');
+            return vowFs.write(options.path, options.data, 'utf8');
         },
 
         /**
@@ -43,7 +49,7 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
          */
         makeDir: function(options) {
             logger.debug('make directory %s', options.path);
-            return fs.makeDir(options.path);
+            return vowFs.makeDir(options.path);
         },
 
         /**
@@ -60,10 +66,8 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
                 if(err) {
                     def.reject(err);
                 }
-
                 def.resolve();
             });
-
             return def.promise();
         },
 
@@ -75,11 +79,11 @@ modules.define('providerFile', ['logger'], function(provide, logger) {
          */
         remove: function(options) {
             logger.debug('remove file %s', options.path);
-            return fs.remove(options.path);
+            return vowFs.remove(options.path);
         },
 
         exists: function(options) {
-            return fs.exists(options.path);
+            return vowFs.exists(options.path);
         }
     });
 });

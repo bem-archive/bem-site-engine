@@ -1,11 +1,12 @@
 'use strict';
 
 var util = require('util'),
+    path = require('path'),
 
-    logger = require('../logger'),
-    providers = require('../providers'),
-    utility = require('../util'),
-    common = require('../common');
+    vow = require('vow'),
+    vowFs = require('vow-fs'),
+
+    logger = require('../logger');
 
 module.exports = function () {
     return this
@@ -15,7 +16,7 @@ module.exports = function () {
             .name('version').title('Version of snapshot')
             .short('v').long('version')
             .val(function(v) {
-                if(!utility.isVersionValid(v)) {
+                if(!/^latest$|^previous$|^-\d*$|^0$|^snapshot_\d{1,2}:\d{1,2}:201\d-\d{1,2}:\d{1,2}:\d{1,2}$/.test(v)) {
                     logger.error(util.format('Invalid version option value. ' +
                     'May be 0, negative number, "latest" or "previous"'), module);
                     return this.reject('fail');
@@ -25,11 +26,27 @@ module.exports = function () {
             .req()
             .end()
         .act(function (opts) {
-            var env = 'production';
-            logger.info(util.format('Try to compile data for %s environment version: %s', env, opts.version), module);
-            return utility.switchConfig(env).then(function() {
-                return common.setSnapshotActive(providers.getProviderYaDisk(), env, opts.version);
-            });
+            var env = 'production',
+                symlinkPath = path.join(process.cwd(), 'configs', 'current');
+
+            logger.info(util.format('TRY TO COMPILE DATA FOR %s ENVIRONMENT. VERSION: %s', env, opts.version || 'latest'), module);
+            return vowFs.exists(symlinkPath)
+                .then(function(exists) {
+                    return exists ? vowFs.remove(symlinkPath) : vow.resolve();
+                })
+                .then(function() {
+                    return vowFs.symLink(path.join(process.cwd(), 'configs', env), symlinkPath, 'dir');
+                })
+                .then(function() {
+                    return require('../common').makeForProduction(opts.version, env);
+                })
+                .then(function() {
+                    logger.info('DATA HAS BEEN COMPILED SUCCESSFULLY FOR PRODUCTION ENVIRONMENT', module);
+                })
+                .fail(function(err) {
+                    logger.error('DATA COMPILATION FAILED WITH ERROR', module);
+                    logger.error(err.message, module);
+                });
         });
 };
 

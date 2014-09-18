@@ -121,6 +121,10 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
          */
         start: function() {
             job.start();
+        },
+
+        getMarker: function() {
+            return marker || {};
         }
     });
 });

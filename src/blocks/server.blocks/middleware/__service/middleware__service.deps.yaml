@@ -1,0 +1,3 @@
+- block: logger
+- block: config
+- block: updater

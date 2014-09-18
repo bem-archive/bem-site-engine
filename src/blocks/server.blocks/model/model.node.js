@@ -1,6 +1,5 @@
 var path = require('path'),
-
-    vow = require('vow'),
+    zlib = require('zlib'),
     _ = require('lodash');
 
 modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDisk'],
@@ -128,7 +127,8 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
 
     function load() {
         return provider.load({
-            path: path.join(config.get('model:dir'), util.isDev() ? '' : config.get('NODE_ENV'), 'data.json')
+            path: path.join(config.get('model:dir'), util.isDev() ? '' : config.get('NODE_ENV'), 'data.json'),
+            archive: true
         })
         .then(function(content) {
             try {
@@ -156,7 +156,7 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
          */
         init: function() {
             providerDisk.init();
-            return load()
+            return load();
         },
 
         /**
@@ -273,5 +273,5 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
                 return item.items && item.items.length > 0;
             });
         }
-    })
+    });
 });

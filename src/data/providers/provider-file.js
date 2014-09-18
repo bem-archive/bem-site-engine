@@ -7,9 +7,9 @@ var util = require('util'),
     logger = require('../logger'),
     fsExtra = require('fs-extra'),
 
-    gzip = function(buf) {
+    gzip = function(content) {
         var def = vow.defer();
-        zlib.gzip(buf, function(err, result) {
+        zlib.gzip(new Buffer(content, 'utf-8'), function(err, result) {
             err ? def.reject(err) : def.resolve(result);
         });
         return def.promise();
@@ -38,7 +38,7 @@ exports.FileProvider = function() {
     this.save = function(options) {
         logger.debug(util.format('save data to file %s', options.path), module);
         var promise = options.archive ?
-            gzip(new Buffer(options.data, 'utf-8')) : vow.resolve(options.data);
+            gzip(options.data) : vow.resolve(options.data);
         return promise.then(function(data) {
             return vowFs.write(options.path, data, 'utf8');
         });

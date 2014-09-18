@@ -1,5 +1,5 @@
-var path = require('path'),
-    fs = require('fs'),
+var fs = require('fs'),
+    zlib = require('zlib'),
 
     vow = require('vow');
 
@@ -57,6 +57,14 @@ modules.define('util', ['logger', 'constants', 'config'], function(provide, logg
          */
         getDefaultLanguage: function() {
             return config.get('defaultLanguage') || 'en';
+        },
+
+        unzip: function(content) {
+            var def = vow.defer();
+            zlib.gunzip(new Buffer(content, 'utf-8'), function(err, result) {
+                def.resolve(err ? content : result);
+            });
+            return def.promise();
         }
     });
 });

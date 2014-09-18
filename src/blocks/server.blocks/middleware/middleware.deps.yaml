@@ -11,3 +11,4 @@
     - router
     - slashes
     - redirect
+    - service

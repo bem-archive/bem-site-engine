@@ -197,21 +197,6 @@ exports.getLanguages = function() {
     return config.get('languages') || [config.get('defaultLanguage') || 'en'];
 };
 
-exports.switchConfig = function(environment) {
-    var symlinkPath = path.join(process.cwd(), 'configs', 'current');
-    return vowFs.exists(symlinkPath)
-        .then(function(exists) {
-            return exists ? vowFs.remove(symlinkPath) : vow.resolve();
-        })
-        .then(function() {
-            return vowFs.symLink(path.join(process.cwd(), 'configs', environment), symlinkPath, 'dir');
-        });
-};
-
-exports.isVersionValid = function(v) {
-    return /^latest$|^previous$|^-\d*$|^0$|^snapshot_\d{1,2}:\d{1,2}:201\d-\d{1,2}:\d{1,2}:\d{1,2}$/.test(v);
-};
-
 /**
  * Returns name of snapshot as formatted current date
  * @returns {String}

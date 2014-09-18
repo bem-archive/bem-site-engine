@@ -1,10 +1,7 @@
-var path = require('path'),
-    util = require('util'),
-
-    YandexDisk = require('yandex-disk'),
+var YandexDisk = require('yandex-disk'),
     vow = require('vow');
 
-modules.define('providerDisk', ['logger', 'config'], function(provide, logger, config) {
+modules.define('providerDisk', ['logger', 'config', 'util'], function(provide, logger, config, util) {
 
     logger = logger(module);
 
@@ -28,15 +25,12 @@ modules.define('providerDisk', ['logger', 'config'], function(provide, logger, c
             logger.debug('read file %s from yandex disk', options.path);
 
             var def = vow.defer();
-
             disk.readFile(options.path, 'utf8', function(err, content) {
                 if(err || !content) {
                     def.reject(err);
                 }
-
-                def.resolve(content);
+                def.resolve(options.archive ? util.unzip(content) : content);
             });
-
             return def.promise();
         },
 
@@ -54,5 +48,5 @@ modules.define('providerDisk', ['logger', 'config'], function(provide, logger, c
             });
             return def.promise();
         }
-    })
+    });
 });

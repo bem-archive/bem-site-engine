@@ -10,16 +10,16 @@ var util = require('util'),
     logger = require('./logger'),
     utility = require('./util');
 
-exports.makeSnapshot = function() {
+function makeSnapshot() {
     return make();
-};
+}
 
 /**
  * Uploads all files in snapshot directory from local filesystem to Yandex Disk
  * @param snapshot - {String} snapshot name
  * @returns {*}
  */
-exports.uploadSnapshot = function(snapshot) {
+ function uploadSnapshot(snapshot) {
     var conf =  config.get('model');
     if(!conf || !conf.dir) {
         var err = 'Target directory for data on Yandex Disk was not configured';
@@ -42,7 +42,7 @@ exports.uploadSnapshot = function(snapshot) {
         .fail(function() {
             logger.error('Error occur while data files upload', module);
         });
-};
+}
 
 /**
  * Method for replacement data and marker files from snapshots directories to target environment directories
@@ -51,9 +51,9 @@ exports.uploadSnapshot = function(snapshot) {
  * @param version - {String} version
  * @returns {*}
  */
-exports.setSnapshotActive = function(provider, folder, version) {
+function setSnapshotActive(provider, folder, version) {
     logger.info(util.format('Start to replace data files for version "%s" environment "%s"',
-        version, (folder.length ? folder : 'dev')), module);
+        version || 'latest', (folder.length ? folder : 'dev')), module);
 
     return utility.getSnapshot(provider, version).then(function(snapshot) {
         return vow
@@ -70,4 +70,25 @@ exports.setSnapshotActive = function(provider, folder, version) {
                 logger.error('Error occur while data files replacement', module);
             });
     });
+}
+
+module.exports = {
+    makeForDevelopment: function(version) {
+        var promise = version ? vow.resolve() : makeSnapshot();
+        return promise.then(function() {
+            return setSnapshotActive(providers.getProviderFile(), '', version);
+        });
+    },
+    makeForTesting: function(version, env) {
+        var promise = version ? vow.resolve() : makeSnapshot();
+        return promise.then(function(snapshot) {
+            return version ? vow.resolve() : uploadSnapshot(snapshot);
+        })
+        .then(function() {
+            return setSnapshotActive(providers.getProviderYaDisk(), env, version);
+        });
+    },
+    makeForProduction: function(version, env) {
+        return setSnapshotActive(providers.getProviderYaDisk(), env, version);
+    }
 };
