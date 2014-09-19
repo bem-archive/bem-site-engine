@@ -17,6 +17,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
      * @returns {*}
      */
     function reloadCache() {
+        logger.debug('reload cache data for examples start');
         return providerFile
             .removeDir({ path: path.join(process.cwd(), 'cache') })
             .then(function() {
@@ -27,6 +28,9 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
                     providerFile.makeDir({ path: path.join(process.cwd(), 'cache/tag') }),
                     providerFile.makeDir({ path: path.join(process.cwd(), 'cache/branch') })
                 ]);
+            })
+            .then(function() {
+                logger.debug('cached data has been reloaded successfully');
             })
             .fail(function(err) {
                 logger.error('Error occur while cache reloading %s', err.message);
@@ -43,12 +47,16 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
                 path.join(config.get('model:dir'), util.isDev() ? '' : config.get('NODE_ENV'), XML),
             XMLTargetPath = path.join(process.cwd(), XML);
 
+        logger.debug('reload load "sitemap.xml" file start');
         return providerFile.exists({ path: XMLTargetPath }).then(function(exists) {
                 if(exists) {
                     return providerFile.remove({ path: XMLTargetPath }).then(function() {
                         return providerDisk.downloadFile({ source: XMLSourcePath, target: XMLTargetPath });
                     });
                 }
+            })
+            .then(function() {
+                logger.debug('"sitemap.xml" file has been loaded successfully');
             })
             .fail(function(err) {
                 logger.error('Error occur while "sitemap.xml" file reloading %s', err.message);
@@ -63,6 +71,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
                 router.init();
                 redirect.init();
                 marker = content;
+                return marker;
             })
             .then(reloadCache)
             .then(reloadSitemapXML);
