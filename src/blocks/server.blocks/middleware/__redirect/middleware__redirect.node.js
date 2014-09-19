@@ -4,7 +4,7 @@ modules.define('middleware__redirect', ['logger', 'util', 'model'], function(pro
 
     logger = logger(module);
 
-    var redirects;
+    var redirects = [];
 
     /**
      * Middleware for old url redirects
