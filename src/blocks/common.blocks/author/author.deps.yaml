@@ -3,11 +3,14 @@
 
 - elems:
     - avatar
-    - name
+    - contact
+    - contact-item
+    - data-wrapper
     - e-mail
     - github
-    - twitter
-    - skype
     - info
     - label
+    - name
+    - skype
+    - twitter
     - value

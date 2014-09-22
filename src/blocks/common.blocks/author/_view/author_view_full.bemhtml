@@ -15,7 +15,7 @@ block('author').mod('view', 'full')(
                 content: [
                     apply('name'),
                     {
-                        block: 'contact-info',
+                        elem: 'contact',
                         content: [
                             apply('e-mail'),
                             apply('github'),
@@ -50,7 +50,8 @@ block('author').mod('view', 'full')(
         return {
             block: 'author',
             elem: 'e-mail',
-            content: this.ctx.content.email
+            content: this.ctx.content.email,
+            mix: { elem: 'contact-item' }
         };
     }),
 
@@ -58,7 +59,8 @@ block('author').mod('view', 'full')(
         return {
             block: 'author',
             elem: 'github',
-            content: this.ctx.content.github
+            content: this.ctx.content.github,
+            mix: { elem: 'contact-item' }
         };
     }),
 
@@ -66,7 +68,8 @@ block('author').mod('view', 'full')(
         return {
             block: 'author',
             elem: 'twitter',
-            content: this.ctx.content.twitter
+            content: this.ctx.content.twitter,
+            mix: { elem: 'contact-item' }
         };
     }),
 
@@ -74,7 +77,8 @@ block('author').mod('view', 'full')(
         return {
             block: 'author',
             elem: 'skype',
-            content: this.ctx.content.skype
+            content: this.ctx.content.skype,
+            mix: { elem: 'contact-item' }
         };
     }),
 
@@ -89,4 +93,4 @@ block('author').mod('view', 'full')(
     match(this.isSimple(this.ctx.content)).content()(function() {
         return this.ctx.content;
     })
-)
+);
