@@ -79,7 +79,14 @@ modules.define('providerFile', ['logger', 'util'], function(provide, logger, uti
          */
         remove: function(options) {
             logger.debug('remove file %s', options.path);
-            return vowFs.remove(options.path);
+            return this.exists(options).then(function(isExists) {
+                if(isExists) {
+                    return vowFs.remove(options.path);
+                } else {
+                    logger.warn('file %s does not exists', options.path);
+                    return vow.resolve();
+                }
+            });
         },
 
         exists: function(options) {
