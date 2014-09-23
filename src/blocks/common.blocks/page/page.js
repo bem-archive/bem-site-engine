@@ -1,6 +1,6 @@
-modules.define('i-bem__dom', ['jquery', 'highlightjs'], function(provide, $, hljs, BEMDOM) {
+modules.define('page', ['i-bem__dom', 'jquery', 'highlightjs'], function(provide, BEMDOM, $, hljs) {
 
-BEMDOM.decl('page', {
+provide(BEMDOM.decl(this.name, {
     onSetMod: {
         js: {
             inited: function() {
@@ -22,9 +22,9 @@ BEMDOM.decl('page', {
         }
     },
 
-    _onClick: function() {
-        this.toggleMod('fullscreen');
-    },
+    _onClick: function() {
+        this.toggleMod('fullscreen');
+    },
 
     /*
      * Проверка тач-устройств (при обнаружении добавляется модификатор _touch_yes)
@@ -43,15 +43,13 @@ BEMDOM.decl('page', {
     }
 },
 {
-    live: function() {
-        this.liveBindTo('fullscreen', 'pointerclick', function() {
-            this._onClick();
-        });
+    live: function() {
+        this.liveBindTo('fullscreen', 'pointerclick', function() {
+            this._onClick();
+        });
 
         return false;
-    }
-});
-
-provide(BEMDOM);
+    }
+}));
 
 });
