@@ -50,7 +50,8 @@ block('block-jsdoc')(
                         content: [
                             {
                                 elem: 'title',
-                                elemMods: { mix: 'post-title-inline', h: '5' },
+                                elemMods: { h: '5' },
+                                mix: { block: 'post', elem: 'title', mods: { inline: 'yes' } },
                                 content: {
                                     elem: 'selection',
                                     elemMods: { color: 'gold' },
