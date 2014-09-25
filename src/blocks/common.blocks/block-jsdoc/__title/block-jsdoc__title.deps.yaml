@@ -1,3 +1,6 @@
 - mods:
     h: ['2', '5', '6']
-    mix: ['post-title', 'post-title-inline']
+
+- block: post
+  elem: title
+  inline: yes
