@@ -14,17 +14,18 @@ function createRenderer() {
      * @returns {String} - result header string
      */
     renderer.heading = function(text, level, raw, options) {
-        var specials = null;
+        var specials = null,
+            anchor;
+
         /* jshint ignore:start */
         specials = ['-','[',']','/','{','}','(',')','*','+','?','.','\\','^','$','|','\ ','\'','\"'];
         /* jshint ignore:end */
 
         options = options || {};
         options.headerPrefix = options.headerPrefix || '';
+        anchor = options.headerPrefix + raw.replace(RegExp('[' + specials.join('\\') + ']', 'g'), '-');
 
-        return '<h' + level + ' id="' + options.headerPrefix +
-            raw.replace(RegExp('[' + specials.join('\\') + ']', 'g'), '-') + '">' +
-            text + '</h' + level + '>\n';
+        return '<h' + level + ' id="' + anchor + '"><a href="#' + anchor + '" class="anchor"></a>' + text + '</h' + level + '>\n';
     };
 
     // Fix(hidden) post scroll, when it contains wide table

@@ -2,6 +2,7 @@
   required: true
   elems: [i18n]
 
+- block: anchor
 - block: author
   mods: { view: [full, menu-item, simple, avatar-only] }
 

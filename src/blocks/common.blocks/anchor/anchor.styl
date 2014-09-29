@@ -1,0 +1,30 @@
+$size = 20px
+
+.anchor
+{
+    opacity: 0
+    position: absolute
+    top: 50%
+    left: -25px
+    margin-top: -10px
+    width: ($size + 5)
+    height: $size
+    background: url('anchor.svg') no-repeat top left
+    background-size: $size
+}
+
+h2,
+h3,
+h4,
+h5,
+h6
+{
+    &:hover
+    {
+        .anchor
+        {
+            opacity: 1
+        }
+    }
+}
+
