@@ -136,10 +136,6 @@ block post, mod view full {
                 block: 'link',
                 url: repo.issue,
                 content: BEM.I18N('post', 'repo-issue')
-            },
-            {
-                tag: 'span',
-                content: BEM.I18N('post', 'repo-on-github')
             }
         ];
 
