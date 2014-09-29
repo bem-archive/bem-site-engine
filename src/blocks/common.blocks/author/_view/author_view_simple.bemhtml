@@ -16,7 +16,9 @@ block('author').mod('view', 'simple')(
         };
     }),
 
-    match(this.isSimple(this.ctx.content)).content()(function(){
+    match(function() {
+        return this.isSimple(this.ctx.content);
+    }).content()(function(){
         return this.ctx.content;
     })
 );

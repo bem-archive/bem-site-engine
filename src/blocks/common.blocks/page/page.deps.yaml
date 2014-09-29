@@ -1,3 +1,6 @@
+- block: styling
+  required: true
+
 - block: i-bem
   required: true
   elems: [dom, html, tree]
