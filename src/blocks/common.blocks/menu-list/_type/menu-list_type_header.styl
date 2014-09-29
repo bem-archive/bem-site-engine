@@ -1,28 +1,30 @@
 .menu-list_type_header
 {
-    overflow: hidden;
+    overflow: hidden
 
-    border-right: none;
+    border-right: none
 
-    align-self: center;
+    align-self: center
+    margin: 5px 0 5px 10px
 
     .menu-list__link
     {
-        font-size: 15px;
+        font-size: 15px
+        line-height: 1.5
 
-        display: inline-block;
-        vertical-align: middle;
+        display: inline-block
+        vertical-align: middle
 
-        margin-right: 20px;
+        margin-right: 20px
 
-        transition: .3s color;
+        transition: $transition-delay
 
-        color: #fff;
+        color: $white
 
         &:hover,
         &_active
         {
-            color: #FFD94D;
+            color: $yellow
         }
     }
 }
