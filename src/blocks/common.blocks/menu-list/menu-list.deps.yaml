@@ -1,10 +1,10 @@
-- elem: group
-- elem: group-select
-- elem: select
-- elem: option
+- elems:
+  - level-group
+  - group-select
+  - level-choose
+  - option
+
 - elem: link
-  mods:
-    type: [delimeter, select]
-    size: [small, normal]
-- mods:
-    type: [main, default, header, level]
+  mods: { type: [delimeter, select], size: [small, normal] }
+
+- mods: { type: [main, default, header, level] }

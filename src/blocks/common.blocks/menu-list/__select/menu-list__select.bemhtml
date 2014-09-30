@@ -1,3 +1,0 @@
-block('menu-list').elem('select')(
-    tag()('select')
-);

@@ -1,5 +1,5 @@
 block('menu-list').mod('type', 'level')(
-    match(this.ctx.content).content()(function(){
+    match(function() { return this.ctx.content; }).content()(function(){
         var levels = ['all levels'],
             _content = this.ctx.content.map(function(item) {
         /* console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
@@ -10,7 +10,7 @@ block('menu-list').mod('type', 'level')(
                 levels.push(item.title);
 
                 return {
-                    elem: 'group',
+                    elem: 'level-group',
                     attrs: { 'data-level': item.title },
                     content: [
                         {
@@ -28,28 +28,38 @@ block('menu-list').mod('type', 'level')(
         });
 
         _content.unshift({
-            elem: 'select',
-            content: levels.map(function(level, idx) {
-                return {
-                    elem: 'option',
-                    content: level
-                };
-            })
+            elem: 'level-choose',
+            content: {
+                block: 'select',
+                mix: { block: this.block, elem: 'level-select' },
+                mods : { mode : 'radio', theme : 'normal', size : 's', width: 'available' },
+                options: levels.map(function(level) {
+                    return {
+                        val: level,
+                        text: level
+                    };
+                })
+            }
         });
 
         return _content;
     }),
 
     mode('item')(function() {
-        var c = this.ctx;
+        var ctx = this.ctx;
+
         return {
-            elem: 'link',
-            url: c.url,
-            title: c.title,
-            elemMods: {
-                active: c.active,
-                type: c.type
-            }
+            block: 'link',
+            mix: {
+                block: 'menu-list',
+                elem: 'link',
+                elemMods: {
+                    active: ctx.active,
+                    type: ctx.type
+                }
+            },
+            url: ctx.url,
+            content: ctx.title
         };
     })
 );
