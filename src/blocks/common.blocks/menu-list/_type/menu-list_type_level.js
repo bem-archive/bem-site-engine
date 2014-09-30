@@ -1,69 +1,36 @@
-modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
+modules.define('menu-list', ['i-bem__dom', 'jquery'], function(provide, BEMDOM, $) {
 
-BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'level' }, {
-    onSetMod: {
-        js: {
-            inited: function() {
-                var _this = this;
+    'use strict';
 
-                _this.__base();
+    provide(BEMDOM.decl({ block: 'menu-list', modName: 'type', modVal: 'level' }, {
+        onSetMod: {
+            js: {
+                inited: function() {
+                    this._selectLevel = this.findBlockInside('level-select', 'select');
 
-                if(_this.getStorage('level')) {
-                    _this
-                        ._setSelectFromStorage()
-                        .showLevel();
+                    this._selectLevel.on('change', this._showLevel, this);
                 }
-
-                this.bindTo('select', 'change', function(e) {
-                    var level = $(e.currentTarget).val();
-
-                    _this.showLevel(level);
-                });
             }
-        }
-    },
+        },
 
-    showLevel: function(level) {
+        _showLevel: function() {
+            var self = this,
+                $groups = this.elem('level-group'),
+                level = this._selectLevel.getVal();
 
-        var _this = this,
-            groups = _this.elem('group');
+            this.delMod($groups, 'hide');
 
-
-        if (!level) {
-            var level = _this.getStorage('level');
-        }
-
-        _this.setStorage('level', level);
-
-        if(level === 'all levels') {
-            _this.delMod(groups, 'hide');
-
-            return _this;
-        }
-
-        groups.each(function(idx, el) {
-            var group = $(el);
-
-            _this.setMod(group, 'hide', 'yes');
-
-            if (group.data('level') === level) {
-                _this.delMod(group, 'hide');
+            if(level === 'all levels') {
+                return false;
             }
-        });
 
-        return _this;
-    },
+            $groups.each(function(idx, el) {
+                var $group = $(el);
 
-    _setSelectFromStorage: function() {
-        var _this = this,
-            level = _this.getStorage('level');
+                !($group.data('level') === level) && self.setMod($group, 'hide', 'yes');
+            });
 
-         _this.elem('select').val(level);
-
-        return _this;
-    }
-});
-
-provide(BEMDOM);
-
+            return this;
+        }
+    }));
 });

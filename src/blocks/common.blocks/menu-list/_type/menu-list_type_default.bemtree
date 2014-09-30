@@ -11,8 +11,8 @@ block('menu-list').mod('type', 'default')(
     }),
 
     mode('item')(
-        match(this.ctx.items)(
-            match('group' === this.ctx.type)(function(){
+        match(function() { return this.ctx.items; })(
+            match(function() { return 'group' === this.ctx.type; })(function(){
                 return {
                     elem: 'group',
                     content: [
@@ -27,42 +27,50 @@ block('menu-list').mod('type', 'default')(
                 };
             }),
 
-            match('select' === this.ctx.type)(function(){
+            match(function() { return 'select' === this.ctx.type; })(function(){
                 return {
                     elem: 'group-select',
                     elemMods: this.ctx.active ? { active: 'yes' } : undefined,
-                    content: [
-                        apply('item', { ctx: (function(c) {
-                            c._selectVal = true;
-                            return c;
-                        })(this.ctx) }),
-                        {
-                            elem: 'select',
-                            content: this.ctx.items.map(function(subitem) {
-                                return {
-                                    elem: 'option',
-                                    content: subitem.title,
-                                    attrs: {
-                                        value: subitem.url,
-                                        selected: subitem.active ? 'selected' : undefined                                    }
-                                };
-                            })
-                        }
-                    ]
+                    content: {
+                        block: 'lib-switch',
+                        content: [
+                            apply('item', { ctx: (function(ctx) {
+                                ctx._selectVal = true;
+                                return ctx;
+                            })(this.ctx) }),
+                            {
+                                block: 'select',
+                                mods : { mode : 'radio', theme : 'normal', size : 's' },
+                                options: this.ctx.items.map(function(subitem) {
+                                    return {
+                                        val: subitem.url,
+                                        text: subitem.title,
+                                        checked: subitem.active
+                                    };
+                                })
+                            }
+                        ]
+                    }
                 };
             })
         ),
 
         match(function() { return this.ctx._selectVal || !this.ctx.items; })(function(){
+            var ctx = this.ctx;
+
             return {
-                elem: 'link',
-                url: this.ctx.url,
-                title: this.ctx.title,
-                elemMods: {
-                    active: this.ctx.active,
-                    type: this.ctx.type
-                }
+                block: 'link',
+                mix: {
+                    block: 'menu-list',
+                    elem: 'link',
+                    elemMods: {
+                        active: ctx.active,
+                        type: ctx.type
+                    }
+                },
+                url: ctx.url,
+                content: ctx.title
             };
         })
     )
-)
+);

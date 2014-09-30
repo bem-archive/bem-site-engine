@@ -6,6 +6,7 @@
     max-width: 300px;
 
     flex: 1 0 auto;
+    padding: 2px 0;
 }
 
 .menu-list_type_default .menu-list__link

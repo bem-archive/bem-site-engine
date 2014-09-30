@@ -17,14 +17,6 @@ BEMDOM.decl('menu-list', {
         }
     },
 
-    getStorage: function(key) {
-        return localStorage.getItem(key);
-    },
-
-    setStorage: function(key, value) {
-        return localStorage.setItem(key, value);
-    },
-
     /**
      * @private
      * [Shows the active menu item is visible to the viewport]
