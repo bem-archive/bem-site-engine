@@ -1,0 +1,38 @@
+.block-example__link
+{
+    font-size: 14px;
+    line-height: 1;
+
+    position: relative;
+
+    display: inline-block;
+
+    margin-right: 15px;
+
+    color: #8f8f8f;
+
+    &:after
+    {
+        display: inline-block;
+
+        width: 24px;
+        height: 24px;
+        margin-left: 3px;
+
+        content: '';
+        vertical-align: middle;
+
+        opacity: .6;
+        background-repeat: no-repeat;
+    }
+
+    &:hover
+    {
+        color: #000;
+
+        &:after
+        {
+            opacity: 1;
+        }
+    }
+}

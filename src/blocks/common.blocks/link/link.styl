@@ -1,5 +1,6 @@
 .page
-    :link
+{
+    &:link
     {
         transition: color $transition-delay;
         text-decoration: none;
@@ -9,13 +10,14 @@
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
-    :visited
+    &:visited
     {
-        color: $linkVisited
+        color: $linkVisited;
     }
 
-    :link:hover,
-    :visited:hover
+    &:link:hover,
+    &:visited:hover
     {
         color: $linkHover;
     }
+}
