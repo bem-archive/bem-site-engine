@@ -1,0 +1,46 @@
+.tabs_theme_default .tabs
+{
+    /* Верхняя черта */
+    &__header
+    {
+        line-height: 34px;
+
+        list-style: none outside none;
+
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    /* Цвет и отступы отдельного таба */
+    &__tab
+    {
+        margin-right: 15px;
+
+        color: #999;
+
+        &:after
+        {
+            position: absolute;
+            right: 0;
+            bottom: -1px;
+            left: 0;
+
+            content: '';
+        }
+
+        &:hover:after
+        {
+            border-bottom: 2px solid #000;
+        }
+
+        &_state_current
+        {
+            color: #000;
+
+            /* Верхнее выделение таба */
+            &:after
+            {
+                border-bottom: 3px solid !important;
+            }
+        }
+    }
+}

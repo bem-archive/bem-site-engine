@@ -1,0 +1,102 @@
+.menu-list_type_default
+{
+    overflow-x: hidden;
+
+    min-width: 150px;
+    max-width: 300px;
+    padding: 2px 0;
+
+    flex: 1 0 auto;
+
+    .menu-list
+    {
+        &__link
+        {
+            padding: 8px 12px 7px 12px;
+
+            transition: background .4s ease;
+
+            color: #333;
+
+            &:hover
+            {
+                background: rgba(255,235,160,.35);
+            }
+
+            &_active
+            {
+                cursor: default;
+
+                background: #ffeba0;
+            }
+        }
+
+        &__title
+        {
+            font-size: 12px;
+
+            position: relative;
+
+            box-sizing: border-box;
+            margin-top: 5px;
+            padding: 15px 12px 7px 12px;
+
+            white-space: nowrap;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+
+            color: #999;
+
+            &:before
+            {
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+
+                height: 1px;
+
+                content: '';
+
+                background: -webkit-linear-gradient(left,  rgba(0,0,0,.15) 20%,#fff 100%);
+                background:         linear-gradient(to right,  rgba(0,0,0,.15) 20%,#fff 100%);
+            }
+        }
+
+        &__group:first-child .menu-list__title
+        {
+            margin-top: 0;
+            padding-top: 10px;
+        }
+
+        &__delimeter
+        {
+            margin: 5px 0;
+
+            background: -webkit-linear-gradient(left, rgba(0,0,0,.15) 20%,#fff 100%);
+            background:         linear-gradient(to right, rgba(0,0,0,.15) 20%,#fff 100%);
+        }
+
+        /* (Begin) Menu-list with select */
+        &__group-select
+        {
+            transition: background .4s ease;
+
+            &:hover
+            {
+                background: rgba(255,235,160,.35);
+            }
+
+            &_active_yes
+            {
+                background: #ffeba0;
+            }
+
+            .menu-list__link,
+            .menu-list__link:hover
+            {
+                background: none;
+            }
+        }
+    }
+}

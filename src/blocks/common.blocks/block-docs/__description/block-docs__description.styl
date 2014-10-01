@@ -1,0 +1,49 @@
+.block-docs__description
+{
+    margin-bottom: 10px;
+
+    /* Поддержать блок b-text из bem.sets */
+    .b-text
+    {
+        &__p
+        {
+            margin-bottom: 20px;
+        }
+
+        &__h3
+        {
+            font-size: 22px;
+
+            margin: 0 0 .5em 0;
+
+            color: #000;
+        }
+
+        &__ul
+        {
+            margin: .5em 0 1em 3.2em;
+            padding: 0;
+        }
+
+        &__li
+        {
+            margin: .35em 0;
+            padding: 0;
+
+            &:before
+            {
+                position: absolute;
+
+                margin: 0 0 0 -1.5em;
+
+                content: '\2014\a0';
+            }
+        }
+    }
+
+    .b-link
+    {
+        display: inline-block;
+    }
+}
+/* (END) Поддержать блок b-text из bem.sets */

@@ -1,9 +1,0 @@
-.posts__list > .post
-{
-    transition: background .4s ease;
-}
-
-.posts__list > .post:hover
-{
-    background: rgba(255,235,160,.35);
-}
