@@ -27,8 +27,7 @@ modules.define('lib-switch', ['i-bem__dom'], function(provide, BEMDOM) {
         _openLibPage: function(url) {
             var loc = window.location;
 
-            loc.origin = loc.origin || loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port: '');
-            loc.href = loc.origin + url;
+            loc.href = (loc.origin || loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port: '')) + url;
 
             return this;
         }
