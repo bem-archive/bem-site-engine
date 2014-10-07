@@ -1,7 +1,7 @@
 {
     "languages": ["en", "ru"],
     "defaultLanguage": "ru",
-    "port": 8080,
+    "port": 3016,
     "statics": "/src",
     "title": {
         "en": "Your application title",
