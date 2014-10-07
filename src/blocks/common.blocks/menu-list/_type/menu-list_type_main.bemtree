@@ -44,12 +44,27 @@ block('menu-list').mod('type', 'main')(
     }),
 
     mode('item')(function() {
-        c = this.ctx;
-        return {
-            elem: 'link',
-            title: c.title,
-            url: c.url,
-            elemMods: { main: true, active: c.active, type: c.type, size: c.size }
-        };
+        var ctx = this.ctx,
+            result = {
+                block: 'link',
+                mix: {
+                    block: 'menu-list',
+                    elem: 'link',
+                    elemMods: {
+                        main: true,
+                        active: ctx.active,
+                        type: ctx.type,
+                        size: ctx.size
+                    }
+                },
+                url: ctx.url,
+                content: ctx.title
+            };
+
+        if (ctx.type === 'delimeter') {
+            result = { elem: 'delimeter'};
+        }
+
+        return result;
     })
 );
