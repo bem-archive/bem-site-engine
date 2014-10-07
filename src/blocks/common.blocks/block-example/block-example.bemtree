@@ -27,7 +27,7 @@ block('block-example')(
             } else {
                 // new structure enb-bem-docs
                 url = prefix + '/' + path + '/' + name + '.html';
-                bemjson = prefix + '/' + path + '/_' + name + '.bemjson.js';
+                bemjson = prefix + '/' + path + '/' + name + '.bemjson.js';
 
                 // get source bemjson if it inline example
                 examplesData.forEach(function(example){
