@@ -58,7 +58,7 @@ block('menu-list').mod('type', 'default')(
         match(function() { return this.ctx._selectVal || !this.ctx.items; })(function(){
             var ctx = this.ctx;
 
-            return {
+            return ctx.type === 'delimeter' ? { elem: 'delimeter'} : {
                 block: 'link',
                 mix: {
                     block: 'menu-list',
