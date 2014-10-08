@@ -1,8 +1,0 @@
-block('menu-list').elem('link').elemMod('type', 'delimeter')(
-    def()(function() {
-        return applyCtx({
-            block: this.block,
-            elem: 'delimeter'
-        });
-    })
-);
