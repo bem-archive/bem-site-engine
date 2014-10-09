@@ -52,14 +52,11 @@ block post, mod view full {
             createDate = ctx.createDate,
             editDate = ctx.editDate;
 
-        if(createDate || editDate) {
-            return {
-                elem: 'date',
-                elemMods: { type: 'human' },
-                createDate: createDate,
-                editDate: editDate
-            }
-        }
+        return {
+            elem: 'date',
+            createDate: createDate,
+            editDate: editDate
+        };
     }
 
     //post categories
