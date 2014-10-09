@@ -120,7 +120,10 @@ block('block-jsdoc')(
             return this.ctx.param.types.map(function(type){
                 return {
                     elem: 'type',
-                    content: '<code>' + type + '</code>'
+                    content: {
+                        elem: 'type-value',
+                        content: type
+                    }
                 };
             });
         }),
@@ -242,4 +245,4 @@ block('block-jsdoc')(
             return null;
         })
     )
-)
+);

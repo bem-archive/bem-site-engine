@@ -15,17 +15,17 @@ block('block')(
             tabsHeader = [],
             tabsContent = [];
 
-        if(_data){
+        if(!_.isEmpty(_data)) {
             tabsHeader.push(apply('docs-header'));
             tabsContent.push(apply('docs-content'));
         }
 
-        if(_source.jsdoc) {
+        if(!_.isEmpty(_source.jsdoc)) {
             tabsHeader.push(apply('jsdoc-header'));
             tabsContent.push(apply('jsdoc-content'));
         }
 
-        if(_examples) {
+        if(!_.isEmpty(_examples)) {
             tabsHeader.push(_examples.header);
             tabsContent.push(_examples.content);
         }
