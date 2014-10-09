@@ -296,7 +296,9 @@ function overrideLinks(content, node, urlHash, lang) {
                 href = replaced;
             }
             href += (anchor ? '#' + anchor : '');
-            logger.verbose(util.format('native: %s replaced: %s', nativeHref, href), module);
+            //if(nativeHref.indexOf('./javascript-docs.md') > -1) {
+            //    logger.debug(util.format('native: %s replaced: %s', nativeHref, href), module);
+            //}
             return buildHref(href);
         });
 }
@@ -340,14 +342,19 @@ function overrideBlockLinks(obj, node, lang, urlHash) {
             if(blockData[lang]) {
                 obj.blocksHash[source.key].data[lang].description[index].content =
                     overrideLinks(item.content || '', node, urlHash, lang);
-            }else {
+            } else {
                 obj.blocksHash[source.key].data.description[index].content =
                     overrideLinks(item.content || '', node, urlHash, lang);
             }
         });
     }else {
-        obj.blocksHash[source.key].data[lang].description =
-            overrideLinks(description, node, urlHash, lang);
+        if(blockData[lang]) {
+            obj.blocksHash[source.key].data[lang].description =
+                overrideLinks(description, node, urlHash, lang);
+        } else {
+            obj.blocksHash[source.key].data.description =
+                overrideLinks(description, node, urlHash, lang);
+        }
     }
 }
 
