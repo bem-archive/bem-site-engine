@@ -3,7 +3,8 @@ var path = require('path'),
 
     vow = require('vow'),
     vfs = require('vow-fs'),
-    stringify = require('json-stringify-safe');
+    stringify = require('json-stringify-safe'),
+    _ = require('lodash');
 
 modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
     function(provide, config, util, builder, bundles, statics) {
@@ -13,7 +14,8 @@ modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
                 Vow: vow,
                 leStatics: new (statics.Statics)(config.get('statics')),
                 leBundles: new (bundles.Bundles)({ defaultLOD: 'desktop' }),
-                console: console
+                console: console,
+                _: _
             };
 
         provide({
