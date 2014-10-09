@@ -15,7 +15,7 @@ block('block')(
             tabsHeader = [],
             tabsContent = [];
 
-        if(!_.isEmpty(_data)){
+        if(!_.isEmpty(_data)) {
             tabsHeader.push(apply('docs-header'));
             tabsContent.push(apply('docs-content'));
         }
