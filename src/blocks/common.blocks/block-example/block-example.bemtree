@@ -15,7 +15,8 @@ block('block-example')(
                 parts = path.split('/'),
                 data = this.data,
                 lang = data.lang,
-                examplesData = data.node.source.data[lang].examples;
+                source = data.node.source,
+                examplesData = source.data[lang] ? source.data[lang].examples : source.data.examples;
 
             // get name of example
             name = parts[parts.length - 1];
