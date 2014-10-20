@@ -13,6 +13,7 @@ logs
 libs
 backups
 cache
+db
 
 .enb/tmp
 src/bundles/*.bundles/*/*.*
