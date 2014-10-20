@@ -18,7 +18,6 @@
     "request": "2.33.0",
     "mime": "1.2.11",
     "fs-extra": "~0.8.1",
-    "susanin": "~0.1.11",
     "nconf": "~0.6.9",
     "vow": "~0.4.x",
     "vow-fs": "0.3.0",
@@ -27,13 +26,10 @@
     "sha1": "~1.1.0",
     "marked": "*",
     "semver": "~2.3.0",
-    "js2xmlparser": "*",
-    "github": "*",
-    "yandex-disk": "0.0.6",
-    "coa": "~0.4.0",
     "deep-extend": "~0.2.10",
     "js-beautify": "1.5.1",
-    "luster": "~0.5.0"
+    "luster": "~0.5.0",
+    "bse-admin": "git://github.com/bem/bse-admin.git"
   },
   "devDependencies": {
     "borschik": "~1.0.5",
@@ -53,15 +49,15 @@
   "scripts": {
     "start": "node bin/app.js",
     "postinst": "npm run prepare_folders && npm run prepare_configs && bower i",
-    "prepare_folders": "mkdir -p logs backups cache cache/branch cache/tag",
+    "prepare_folders": "mkdir -p logs cache",
     "prepare_configs": "ln -snf ${NODE_ENV:-dev} configs/current && ln -sfn configs/current/borschik .borschik",
-    "make": "npm install && npm run postinst && npm run build && node bin/data.js && npm start",
+    "make": "npm install && npm run postinst && npm run build && npm run data && npm start",
     "build": "YENV=${NODE_ENV:-development} enb make",
-    "clean": "enb make clean && rm -rf node_modules libs cache backups logs",
+    "data": "node node_modules/.bin/bse sync-nodes --dev",
+    "clean": "enb make clean && rm -rf node_modules libs cache logs",
     "clean_logs": "rm -rf logs/*",
     "clean_cache": "rm -rf cache/*",
-    "clean_data": "rm -rf backups/*",
-    "test": "jshint . && jscs -c .jscs.js ."
+    "test": "node_modules/.bin/jshint . && node_modules/.bin/jscs -c .jscsrc ."
   },
   "author": "info@bem.info",
   "readmeFilename": "README.md"
