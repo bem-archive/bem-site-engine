@@ -16,13 +16,6 @@
         "stdout": "logs/output.log",
         "stderr": "logs/errors.log"
     },
-    "yandexApi": {
-        "login": "",
-        "password": ""
-    },
-    "model": {
-        "dir": "backups"
-    },
     "github": {
         "libraries": {
             "type": "public",
@@ -31,10 +24,7 @@
             "ref": "master",
             "pattern": "https://raw.githubusercontent.com/%s/%s/%s%s"
         },
-        "public": {
-            "host": "api.github.com",
-            "auth": "57e4fb0c83d3337ffe991d8b61e09c54288c2d7e"
-        },
+        "token": "57e4fb0c83d3337ffe991d8b61e09c54288c2d7e",
         "people": "https://github.com/bem/bem-site-engine/blob/dev/docs/people/people.json"
     },
     "hosts": {
