@@ -1,4 +1,4 @@
-modules.define('middleware__page-title', ['config', 'logger'], function(provide, config, logger) {
+modules.define('middleware__page-title', ['config', 'logger', 'model'], function(provide, config, logger, model) {
 
     logger = logger(module);
 
@@ -6,25 +6,26 @@ modules.define('middleware__page-title', ['config', 'logger'], function(provide,
         return function(req, res, next) {
             logger.debug('get title by request %s', req.url);
 
-            var node = req.__data.node,
-                traverseTreeNodes = function(node) {
-                    node.url && node.title && titles.push(node.title[req.lang]);
-                    node.parent && traverseTreeNodes(node.parent);
-                },
-                titles = [];
+            var node = req.__data.node;
 
             if(req.url === '/') {
                 req.__data.title = node.title[req.lang];
                 return next();
             }
 
-            traverseTreeNodes(node);
+            return model.getParentNodes(node).then(function(nodes) {
+                var titles = nodes.reduce(function(prev, item) {
+                    if(item.url && item.title) {
+                        prev.push(node.title[req.lang]);
+                    }
+                    return prev;
+                }, []);
 
-            //add common suffix from application configuration
-            titles.push(config.get('title')[req.lang]);
-
-            req.__data.title = titles.join(' / ');
-            return next();
+                //add common suffix from application configuration
+                titles.push(config.get('title')[req.lang]);
+                req.__data.title = titles.join(' / ');
+                return next();
+            });
         };
     });
 });

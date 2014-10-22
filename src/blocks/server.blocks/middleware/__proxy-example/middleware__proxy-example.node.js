@@ -9,8 +9,8 @@ var u = require('util'),
     html = require('js-beautify').html,
     mime = require('mime');
 
-modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'providerFile', 'model'],
-    function(provide, config, constants, logger, util, providerFile, model) {
+modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'model'],
+    function(provide, config, constants, logger, util, model) {
 
         logger = logger(module);
 
@@ -89,10 +89,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                                 body = loadHtmlCodeOfBlock(req, originUrl, body);
                             }
 
-                            providerFile.save({
-                                path: path.resolve(constants.DIRS.CACHE, ref, sha(url)),
-                                data: body
-                            });
+                            vowFs.write(path.resolve(constants.DIRS.CACHE, ref, sha(url)), body);
                             res.end(body);
                         } else {
                             res.end('Error while loading example');
@@ -104,8 +101,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
              try to load cached source from local filesystem
              try to load source from github repository if no cached file was found
              */
-            return providerFile
-                .load({ path: path.resolve(constants.DIRS.CACHE, ref, sha(url)) })
+            return vowFs.read(path.resolve(constants.DIRS.CACHE, ref, sha(url)), 'utf-8')
                 .then(returnFromCache)
                 .fail(sendRequest);
         };

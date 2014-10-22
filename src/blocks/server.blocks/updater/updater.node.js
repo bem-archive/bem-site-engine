@@ -3,14 +3,13 @@ var path = require('path'),
     vow = require('vow'),
     cronJob = require('cron').CronJob;
 
-modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__router', 'middleware__redirect', 'providerFile', 'providerDisk'],
-    function(provide, logger, config, util, model, router, redirect, providerFile, providerDisk) {
+modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__router', 'middleware__redirect'],
+    function(provide, logger, config, util, model, router, redirect) {
 
     logger = logger(module);
 
     var job,
-        marker,
-        provider = util.isDev() ? providerFile : providerDisk;
+        marker;
 
     /**
      * Removes and recreates cache folder
@@ -116,7 +115,6 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
          * Initialize updater module
          */
         init: function() {
-            provider.init();
             job = new cronJob({
                 cronTime: config.get('update:cron'),
                 onTick: function() { checkForUpdate() },

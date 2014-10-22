@@ -1,8 +1,6 @@
-var path = require('path'),
-    fs = require('fs'),
+var fs = require('fs'),
 
     zlib = require('zlib'),
-    _ = require('lodash'),
     vow = require('vow');
 
 modules.define('util', ['logger', 'constants', 'config'], function(provide, logger, constants, config) {

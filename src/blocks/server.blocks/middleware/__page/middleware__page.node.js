@@ -1,4 +1,5 @@
 var path = require('path'),
+    vow = require('vow'),
     _ = require('lodash');
 
 modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 'template', 'providerFile'],
@@ -13,37 +14,66 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
              * @returns {*}
              */
             getAdvancedData: function(req, node) {
-                var result = {
-                    people: model.getPeople(),
-                    peopleUrls: model.getPeopleUrls()
-                };
+                var lang = req.lang,
+                    result = {};
+                return vow.all([
+                        model.getPeople(),
+                        model.getPeople('url'),
+                        model.getSourceOfNode(node, lang)
+                    ])
+                    .spread(function(people, peopleUrls, source) {
+                        result.people = people;
+                        result.peopleUrls = peopleUrls;
+                        if(source) {
+                            node.source = {};
+                            node.source[lang] = source;
+                        }
+                        return result;
+                    })
+                    .then(function(result) {
+                        if(node.view === 'block') {
+                            var s = node.source,
+                                dataKey,
+                                jsdocKey;
+                            if(!s) {
+                                return vow.resolve(result);
+                            }
 
-                if(node.VIEW.AUTHOR === node.view) {
-                    return _.extend(result, {
-                        posts: model.getNodesBySourceCriteria(req.lang, ['authors', 'translators'], req.params.id) });
-                }
+                            dataKey = s.data;
+                            jsdocKey = s.jsdoc;
 
-                if(node.VIEW.TAGS === node.view) {
-                    return _.extend(result, {
-                        posts: model.getNodesBySourceCriteria(req.lang, ['tags'], req.params.id) });
-                }
+                            if(!dataKey || !jsdocKey) {
+                                return vow.resolve(result);
+                            }
 
-                if(node.VIEW.AUTHORS === node.view) {
-                    return _.extend(result, {
-                        authors: model.getAuthors() });
-                }
+                            return vow.all([ model.getBlock(dataKey), model.getBlock(jsdocKey) ])
+                                .spread(function(data, jsdoc) {
+                                    s.data = data;
+                                    s.jsdoc = jsdoc;
+                                    return vow.resolve(result);
+                                });
+                        } else if(node.view === 'authors') {
+                            return model.getAuthors().then(function(authors) {
+                                return _.extend(result, { authors: authors });
+                            });
+                        } else if(node.view === 'author') {
+                            //TODO implement this case
+                        } else if(node.view === 'tags') {
+                            //TODO implement this case
+                        } else {
+                            return vow.resolve(result);
+                        }
+                    });
 
-                if(node.VIEW.BLOCK === node.view) {
-                    var s = node.source,
-                        d = model.getBlocks()[s.key];
-
-                    s.data = d.data;
-                    s.jsdoc = d.jsdoc;
-
-                    return {};
-                }
-
-                return result;
+                //if(node.VIEW.AUTHOR === node.view) {
+                //    return _.extend(result, {
+                //        posts: model.getNodesBySourceCriteria(req.lang, ['authors', 'translators'], req.params.id) });
+                //}
+                //
+                //if(node.VIEW.TAGS === node.view) {
+                //    return _.extend(result, {
+                //        posts: model.getNodesBySourceCriteria(req.lang, ['tags'], req.params.id) });
+                //}
             },
 
             run: function () {
@@ -57,18 +87,21 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
                  * @returns {Function}
                  */
                 return function(req, res, next) {
-                    var ctx = {
-                        block: 'i-global',
-                        req: req, //request object //TODO remove it and fix templates
-                        bundleName: 'common',
-                        lang: req.lang, //selected language
-                        statics: ''
-                    };
+                    var node = req.__data.node,
+                        pagePath = path.join(constants.PAGE_CACHE, node.url),
+                        ctx = {
+                            block: 'i-global',
+                            req: req, //request object //TODO remove it and fix templates
+                            bundleName: 'common',
+                            lang: req.lang, //selected language
+                            statics: ''
+                        };
 
-                    var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url);
-                    ctx = _.extend(ctx, req.__data, self.getAdvancedData(req, req.__data.node));
-
-                    return template.apply(ctx, req, req.query.__mode)
+                    return self.getAdvancedData(req, node)
+                        .then(function(advanced) {
+                            ctx = _.extend(ctx, req.__data, advanced);
+                            return template.apply(ctx, req, req.query.__mode);
+                        })
                         .then(function (html) {
                             providerFile.makeDir({ path: pagePath })
                                 .then(function() {

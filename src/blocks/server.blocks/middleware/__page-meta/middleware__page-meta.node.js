@@ -1,4 +1,4 @@
-modules.define('middleware__page-meta', ['logger'], function(provide, logger) {
+modules.define('middleware__page-meta', ['logger', 'model'], function(provide, logger, model) {
     logger = logger(module);
 
     provide(function() {
@@ -18,20 +18,22 @@ modules.define('middleware__page-meta', ['logger'], function(provide, logger) {
             logger.debug('get meta by request %s', req.url);
 
             var node = req.__data.node,
-                source = node.source && node.source[req.lang],
                 meta = {
                     description: node.title ? node.title[req.lang] : '',
                     ogUrl: req.url
                 };
 
-            if(source) {
-                meta.description = meta.ogDescription = source.title;
-                meta.keywords = meta.ogKeywords = source.tags ? source.tags.join(', ') : '';
-                meta.ogType = 'article';
-            }
+            return model.getSourceOfNode(node, req.lang)
+                .then(function(doc) {
+                    if(doc) {
+                        meta.description = meta.ogDescription = doc.title;
+                        meta.keywords = meta.ogKeywords = doc.tags ? doc.tags.join(', ') : '';
+                        meta.ogType = 'article';
+                    }
 
-            req.__data.meta = meta;
-            return next();
+                    req.__data.meta = meta;
+                    return next();
+                });
         };
     });
 });

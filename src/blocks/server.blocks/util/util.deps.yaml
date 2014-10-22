@@ -1,5 +1,4 @@
 - block: logger
 - block: constants
 - block: config
-- block: provider
 

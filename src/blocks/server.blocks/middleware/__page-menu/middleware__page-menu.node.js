@@ -1,98 +1,163 @@
-var _ = require('lodash');
+var _ = require('lodash'),
+    vow = require('vow');
 
 modules.define('middleware__page-menu', ['logger', 'constants', 'model'], function(provide, logger, constants, model) {
     logger = logger(module);
 
-    var getActiveNodeIds = function(node) {
-        var activeIds = [];
+    var MenuItem = function (node, lang, activeIds, targetNode) {
+            this.init(node, lang, activeIds, targetNode);
+        },
 
-        /**
-         * Recursively finds all id of parent nodes for current
-         * @param _node - {RuntimeNode} current node
-         */
-        var traverse = function(_node) {
-            activeIds.push(_node.id);
-            if(_node.parent && _node.parent.id) {
-                traverse(_node.parent);
-            }
+        MenuColumn = function(type) {
+            this.init(type);
         };
 
-        traverse(node);
-        return activeIds;
+    MenuItem.prototype = {
+        title: undefined,
+        url: undefined,
+        active: undefined,
+        type: undefined,
+        size: undefined,
+        view: undefined,
+        hasSource: undefined,
+        hasItems: undefined,
+        isTargetNode: undefined,
+        items: undefined,
+
+        init: function(node, lang, activeIds, targetNode) {
+            this.setTitle(node, lang)
+                .setUrl(node, lang)
+                .setActive(node, activeIds)
+                .setFields(node, ['type', 'size', 'hasSource', 'hasItems', 'view'])
+                .setIsTarget(node, targetNode);
+        },
+
+        setTitle: function(node, lang) {
+            this.title = node.title ? node.title[lang] : '';
+            console.log('level %s title %s', node.level, this.title);
+            return this;
+        },
+
+        setUrl: function(node, lang) {
+            this.url = (node.url && _.isObject(node.url)) ? node.url[lang] : node.url;
+            return this;
+        },
+
+        setActive: function(node, activeIds) {
+            this.active = activeIds.indexOf(node.id) > -1;
+            return this;
+        },
+
+        setFields: function(node, fields) {
+            fields.forEach(function(item) {
+                this[item] = node[item];
+            }, this);
+            return this;
+        },
+
+        setIsTarget: function(node, targetNode) {
+            this.isTargetNode = node.id === targetNode.id;
+        },
+
+        isGroup: function() {
+            return this.type === 'group';
+        },
+
+        isSelect: function() {
+            return this.type === 'select';
+        },
+
+        isIndex: function() {
+            return this.view === 'index';
+        },
+
+        isNeedToDrawNext: function() {
+            return (this.isGroup() || this.isSelect()) || this.isIndex() ||
+                this.active && (!this.isTargetNode || (this.isTargetNode && this.hasItems && this.hasSource));
+        },
+
+        addItem: function(item) {
+            if(!this.items) {
+                this.items = [];
+            }
+            this.items.push(item);
+        },
+
+        getParentForNextItems: function() {
+            return (this.isGroup() || this.isSelect()) ? this : null;
+        }
+    };
+
+    MenuColumn.prototype = {
+        type: constants.MENU.DEFAULT,
+        items: [],
+
+        init: function(type) {
+            this.type = type || constants.MENU.DEFAULT;
+            this.items = [];
+        },
+
+        setType: function (type) {
+            this.type = type;
+        },
+
+        addItem: function (item) {
+            this.items.push(item);
+        }
     };
 
     provide(function() {
-
-        var MenuItem = function(node, lang, activeIds, isTarget) {
-            this.title = node.title ? node.title[lang] : '';
-            this.url = (node.url && _.isObject(node.url)) ? node.url[lang] : node.url;
-
-            this.active = activeIds.indexOf(node.id) !== -1; //detect if node is in active nodes
-            this.type = node.type;
-            this.size = node.size;
-            this.hasSource = !!node.source; //detect if node has source
-            this.hasItems = (node.items && node.items.length); //detect if node has items
-            this.isTargetNode = isTarget; // detect if node is target final node
-            this.isGroup = node.TYPE.GROUP === node.type; // detect if node is group
-            this.isSelect = node.TYPE.SELECT === node.type; //detect if node is select
-            this.isIndex = node.VIEW.INDEX === node.view; //detect if node has index view
-
-            //its a terrible condition for detect if we should create or not create the next menu group
-            this.isNeedToDrawChildNodes = (this.isGroup || this.isSelect) ||
-                this.isIndex || this.active && (!this.isTargetNode || (this.isTargetNode && this.hasItems && this.hasSource));
-        };
-
         return function(req, res, next) {
-            var node = req.__data.node,
-                activeIds = getActiveNodeIds(node),
-                result = [],
+            logger.debug('create menu by request %s', req.url);
 
-                /**
-                 * Recursively traversing through nodes tree and creating menu structure
-                 * @param _node - {RuntimeNode} current node
-                 * @param parent - {RuntimeNode} parent node
-                 */
-                traverseTreeNodesDown = function(_node, parent) {
-                    result[_node.level] = result[_node.level] || {
-                        type: constants.MENU.DEFAULT,
-                        items: []
-                    };
+            var lang = req.lang,
+                node = req.__data.node;
 
-                    //all items with zero level become to be a items of main menu
-                    _node.level === 0 &&
-                    (result[_node.level].type = constants.MENU.MAIN);
+            return vow.all([ model.getMenuTree(), model.getParentNodes(node) ])
+                .spread(function(menuTree, parentNodes) {
+                    var menu = [],
+                        activeIds = parentNodes.map(function(item) {
+                            return item.id;
+                        }),
 
-                    //if level node was found then we should mark menu group as level group
-                    (_node.class && _node.class === 'level') &&
-                    (result[_node.level].type = constants.MENU.LEVEL);
+                        /**
+                         * Recursively traversing through nodes tree and creating menu structure
+                         * @param _node - {RuntimeNode} current node
+                         * @param parent - {RuntimeNode} parent node
+                         */
+                        traverseTreeNodesDown = function(_node, parent) {
+                            var level = _node.level;
+                            menu[level] = menu[level] || new MenuColumn();
 
-                    //create base menu item object
-                    var menuItem = new MenuItem(_node, req.lang, activeIds, _node.id === node.id);
+                            // all items with zero level become to be a items of main menu
+                            level === 0 && menu[level].setType(constants.MENU.MAIN);
 
-                    //if node is not hidden for current selected locale
-                    //then we should draw it corresponded menu item
-                    if(!_node.hidden[req.lang]) {
-                        if (parent) {
-                            parent.items = parent.items || [];
-                            parent.items.push(menuItem);
-                        }else {
-                            result[_node.level].items.push(menuItem);
-                        }
-                    }
+                            // if level node was found then we should mark menu group as level group
+                            _node.class === 'level' && menu[level].setType(constants.MENU.LEVEL);
 
-                    if(menuItem.isNeedToDrawChildNodes && _node.items) {
-                        _node.items.forEach(function (item) {
-                            traverseTreeNodesDown(item, (menuItem.isGroup || menuItem.isSelect) ? menuItem : null);
-                        });
-                    }
-                };
+                            //create base menu item object
+                            var menuItem = new MenuItem(_node, lang, activeIds, node);
 
-            model.getSitemap().forEach(function(item) {
-                traverseTreeNodesDown(item, null);
-            });
+                            //if node is not hidden for current selected locale
+                            //then we should draw it corresponded menu item
+                            if(!_node.hidden[req.lang]) {
+                                parent ? parent.addItem(menuItem) : menu[level].addItem(menuItem);
+                            }
 
-            req.__data.menu = result;
-            return next();
+                            if(menuItem.isNeedToDrawNext() && _node.items) {
+                                _node.items.forEach(function (item) {
+                                    traverseTreeNodesDown(item, menuItem.getParentForNextItems());
+                                });
+                            }
+                        };
+
+                    menuTree.forEach(function(item) {
+                        traverseTreeNodesDown(item, null);
+                    });
+
+                    req.__data.menu = menu;
+                    return next();
+                });
         };
     });
 });
