@@ -76,11 +76,24 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
             return db.getByKeyPrefix('nodes:');
         },
 
-        getPeople: function(field) {
+        getPeople: function() {
             var prefix = 'people:';
             return db.getByKeyPrefix(prefix).then(function(records) {
                 return records.reduce(function(prev, item) {
-                    prev[item.key.replace(prefix, '')] = field ? item.value[field] : item.value;
+                    prev[item.key.replace(prefix, '')] = item.value;
+                    return prev;
+                }, {});
+            });
+        },
+
+        getPeopleUrls: function() {
+            return db.getByCriteria(function(record) {
+                return record.key.indexOf('nodes:') > -1 && record.value.class === 'person';
+            })
+            .then(function(records) {
+                return records.reduce(function(prev, item) {
+                    var value = item.value;
+                    prev[value.route.conditions.id] = value.url;
                     return prev;
                 }, {});
             });
@@ -138,7 +151,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
                     (record.value.translators && record.value.translators.indexOf(value) > -1 ));
                 })
                 .then(function(records) {
-
+                    console.log(records);
                 });
         },
 

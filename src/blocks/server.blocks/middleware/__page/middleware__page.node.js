@@ -18,7 +18,7 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
                     result = {};
                 return vow.all([
                         model.getPeople(),
-                        model.getPeople('url'),
+                        model.getPeopleUrls(),
                         model.getSourceOfNode(node, lang)
                     ])
                     .spread(function(people, peopleUrls, source) {
