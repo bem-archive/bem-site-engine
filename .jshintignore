@@ -1,6 +1,9 @@
-debian
-libs
 node_modules
-configs/current
-.enb/tmp
+.enb
+.bem
+libs
+logs
 src/bundles
+test
+db
+cache
