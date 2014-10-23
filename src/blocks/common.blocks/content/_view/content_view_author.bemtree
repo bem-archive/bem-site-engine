@@ -4,7 +4,7 @@ block content, mod view author {
         {
             block: 'author',
             mods: { view: 'full' },
-            id: this.data.req.params.id
+            id: this.data.node.route.conditions.id
         },
         {
             block: this.block,

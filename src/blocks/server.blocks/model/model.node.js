@@ -1,4 +1,5 @@
 var u = require('util'),
+    _ = require('lodash'),
     vow = require('vow');
 
 modules.define('model', ['config', 'logger', 'util', 'database'],
@@ -10,6 +11,32 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
 
     function load() {
         return db.connect();
+    }
+
+    function combineResults(nodeRecords, docRecords, lang) {
+        var docsMap = docRecords.reduce(function(prev, item) {
+                prev[item.key] = item.value;
+                return prev;
+            }, {}),
+            result = nodeRecords
+                .map(function(record) {
+                    var v = record.value;
+                    v.source = {};
+                    v.source[lang] = docsMap[u.format('docs:%s:%s', v.id, lang)];
+                    return v;
+                })
+                .reduce(function(prev, item) {
+                    prev[item.route.name] = prev[item.route.name] || {
+                        title: item.title[lang],
+                        items: []
+                    };
+                    prev[item.route.name ].items.push(item);
+                    return prev;
+                }, {});
+
+        return _.values(result).filter(function(item) {
+            return item.items.length;
+        });
     }
 
     provide({
@@ -34,6 +61,11 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
             return [];
         },
 
+        /**
+         * Retrieves node by it url
+         * @param {String} url - request url
+         * @returns {*}
+         */
         getNodeByUrl: function(url) {
             return db.get(u.format('urls:%s', url)).then(function(nodeRecordKey) {
                 if(!nodeRecordKey) {
@@ -43,16 +75,31 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
             });
         },
 
+        /**
+         * Returns items of given node.
+         * Get all node records that have given node as their parents
+         * @param {Object} node object
+         * @returns {*}
+         */
         getNodeItems: function(node) {
             return db.getValuesByCriteria(function(value) {
                 return value.parent === node.id;
             });
         },
 
+        /**
+         * Returns parent node record for given node
+         * @param {Object} node object
+         * @returns {*}
+         */
         getParentNode: function(node) {
             return db.get(u.format('nodes:%s', node.parent));
         },
 
+        /**
+         * Returns array of all parent nodes of given node
+         * @param {Object} node object
+         */
         getParentNodes: function(node) {
             var _this = this,
                 result = [],
@@ -68,10 +115,20 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
             return traverse(node);
         },
 
+        /**
+         * Returns doc record corresponded to given node record
+         * @param {Object} node object
+         * @param {String} lang - request locale
+         * @returns {*}
+         */
         getSourceOfNode: function (node, lang) {
             return db.get(u.format('docs:%s:%s', node.id, lang));
         },
 
+        /**
+         * Returns all node records from database
+         * @returns {*}
+         */
         getNodes: function() {
             return db.getByKeyPrefix('nodes:');
         },
@@ -86,6 +143,10 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
             });
         },
 
+        /**
+         * Returns map of urls to people nodes by people keys
+         * @returns {*}
+         */
         getPeopleUrls: function() {
             return db.getByCriteria(function(record) {
                 return record.key.indexOf('nodes:') > -1 && record.value.class === 'person';
@@ -99,14 +160,28 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
             });
         },
 
+        /**
+         * Returns block data or jsdoc by its key
+         * @param {String} key of block data or jsdoc
+         * @returns {*}
+         */
         getBlock: function(key) {
             return db.get(key);
         },
 
+        /**
+         * Returns array of author records
+         * @returns {*}
+         */
         getAuthors: function() {
             return db.get('authors');
         },
 
+        /**
+         * Returns and cache into memory tree of nodes for
+         * suitable menu creation
+         * @returns {*}
+         */
         getMenuTree: function() {
             if(menu) {
                 return vow.resolve(menu);
@@ -142,30 +217,69 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
             });
         },
 
-        getNodesByPeopleCriteria: function(lang, node) {
-            var value = node.route.conditions.id;
-            db.getByCriteria(function(record) {
-                return record.key.indexOf('docs:') > -1 &&
-                        record.key.indexOf(':' + lang) > -1 &&
-                    ((record.value.authors && record.value.authors.indexOf(value) > -1 ) ||
-                    (record.value.translators && record.value.translators.indexOf(value) > -1 ));
-                })
-                .then(function(records) {
-                    console.log(records);
-                });
+        /**
+         * Returns node records corresponded to given doc records
+         * @param {Array} docRecords - array of doc records
+         * @returns {*}
+         */
+        getNodesBySourceRecords: function(docRecords) {
+            var nodeIds = docRecords.map(function(record) {
+                return record.key.split(':')[1];
+            });
+            return db.getByCriteria(function(record) {
+                var k = record.key,
+                    v = record.value;
+                return k.indexOf('nodes:') > -1 && nodeIds.indexOf(v.id) > -1;
+            });
         },
 
+        /**
+         * Returns nodes with their sources that satisfied authors or translators criteria
+         * @param {String} lang - request locale
+         * @param {Object} node - target node
+         * @returns {*}
+         */
+        getNodesByPeopleCriteria: function(lang, node) {
+            var value = node.route.conditions.id;
+            return db.getByCriteria(function(record) {
+                var k = record.key,
+                    v = record.value;
+                return k.indexOf('docs:') > -1 && k.indexOf(':' + lang) > -1 &&
+                    ((v.authors && v.authors.indexOf(value) > -1 ) ||
+                    (v.translators && v.translators.indexOf(value) > -1 ));
+                })
+                .then(function(docRecords) {
+                    return vow.all([ this.getNodesBySourceRecords(docRecords), docRecords ]);
+                }, this)
+                .spread(function(nodeRecords, docRecords) {
+                    return combineResults(nodeRecords, docRecords, lang);
+                }, this);
+        },
+
+        /**
+         * Returns nodes with their sources that satisfied tags criteria
+         * @param {String} lang - request locale
+         * @param {Object} node - target node
+         * @returns {*}
+         */
         getNodesByTagsCriteria: function(lang, node) {
             var value = node.route.conditions.id;
             return db.getByCriteria(function(record) {
-                    return record.key.indexOf('docs:') > -1 &&
-                        record.key.indexOf(':' + lang) > -1 &&
-                        record.value.tags &&
-                        record.value.tags.indexOf(value) > -1;
-                })
-                .then(function(records) {
+                    var k = record.key,
+                        v = record.value,
+                        criteria = k.indexOf('docs:') > -1 && k.indexOf(':' + lang) > -1 && v.tags;
 
-                });
+                    if(value) {
+                        criteria = criteria && v.tags.indexOf(value) > -1;
+                    }
+                    return criteria;
+                })
+                .then(function(docRecords) {
+                    return vow.all([ this.getNodesBySourceRecords(docRecords), docRecords ]);
+                }, this)
+                .spread(function(nodeRecords, docRecords) {
+                    return combineResults(nodeRecords, docRecords, lang);
+                }, this);
         }
     });
 });
