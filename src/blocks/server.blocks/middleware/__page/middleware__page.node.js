@@ -57,29 +57,22 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
                                 return _.extend(result, { authors: authors });
                             });
                         } else if(node.view === 'author') {
-                            //TODO implement this case
+                            return model.getNodesByPeopleCriteria(lang, node).then(function(posts) {
+                                return _.extend(result, { posts: posts });
+                            });
                         } else if(node.view === 'tags') {
-                            //TODO implement this case
+                            return model.getNodesByTagsCriteria(lang, node).then(function(posts) {
+                                return _.extend(result, { posts: posts });
+                            });
                         } else {
                             return vow.resolve(result);
                         }
                     });
-
-                //if(node.VIEW.AUTHOR === node.view) {
-                //    return _.extend(result, {
-                //        posts: model.getNodesBySourceCriteria(req.lang, ['authors', 'translators'], req.params.id) });
-                //}
-                //
-                //if(node.VIEW.TAGS === node.view) {
-                //    return _.extend(result, {
-                //        posts: model.getNodesBySourceCriteria(req.lang, ['tags'], req.params.id) });
-                //}
             },
 
             run: function () {
 
                 var self = this;
-
                 /**
                  * Middleware which performs all logic operations for request
                  * fill the context and push it to templates stack

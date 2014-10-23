@@ -16,7 +16,7 @@ modules.define('middleware__page-title', ['config', 'logger', 'model'], function
             return model.getParentNodes(node).then(function(nodes) {
                 var titles = nodes.reduce(function(prev, item) {
                     if(item.url && item.title) {
-                        prev.push(node.title[req.lang]);
+                        prev.push(item.title[req.lang]);
                     }
                     return prev;
                 }, []);

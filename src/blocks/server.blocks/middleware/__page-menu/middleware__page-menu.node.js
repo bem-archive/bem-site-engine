@@ -34,7 +34,7 @@ modules.define('middleware__page-menu', ['logger', 'constants', 'model'], functi
 
         setTitle: function(node, lang) {
             this.title = node.title ? node.title[lang] : '';
-            console.log('level %s title %s', node.level, this.title);
+            // console.log('level %s title %s', node.level, this.title);
             return this;
         },
 

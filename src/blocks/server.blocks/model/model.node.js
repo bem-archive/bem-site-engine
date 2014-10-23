@@ -127,6 +127,32 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
                 menu = tree;
                 return menu;
             });
+        },
+
+        getNodesByPeopleCriteria: function(lang, node) {
+            var value = node.route.conditions.id;
+            db.getByCriteria(function(record) {
+                return record.key.indexOf('docs:') > -1 &&
+                        record.key.indexOf(':' + lang) > -1 &&
+                    ((record.value.authors && record.value.authors.indexOf(value) > -1 ) ||
+                    (record.value.translators && record.value.translators.indexOf(value) > -1 ));
+                })
+                .then(function(records) {
+
+                });
+        },
+
+        getNodesByTagsCriteria: function(lang, node) {
+            var value = node.route.conditions.id;
+            return db.getByCriteria(function(record) {
+                    return record.key.indexOf('docs:') > -1 &&
+                        record.key.indexOf(':' + lang) > -1 &&
+                        record.value.tags &&
+                        record.value.tags.indexOf(value) > -1;
+                })
+                .then(function(records) {
+
+                });
         }
     });
 });
