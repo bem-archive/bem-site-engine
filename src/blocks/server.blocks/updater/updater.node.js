@@ -52,8 +52,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
             protocol: 'http',
             hostname: host,
             port: port,
-            pathname: '/ping/' + 'testing' // TODO remove this testing code!
-            //pathname: '/ping/' + config.get('NODE_ENV')
+            pathname: '/ping/' + config.get('NODE_ENV')
         });
 
         request(link, function (error, response, body) {
@@ -72,6 +71,8 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
                 // compare sha sums for data objects
                 if (marker !== body) {
                     update(body);
+                } else {
+                    logger.debug('Data was not changed');
                 }
             } else {
                 logger.error(error);
