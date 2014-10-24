@@ -2,9 +2,7 @@ var u = require('util'),
     _ = require('lodash'),
     vow = require('vow');
 
-modules.define('model', ['config', 'logger', 'util', 'database'],
-        function(provide, config, logger, util, db) {
-
+modules.define('model', ['config', 'logger', 'util', 'database'], function (provide, config, logger, util, db) {
     logger = logger(module);
 
     var menu;
@@ -14,18 +12,18 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
     }
 
     function combineResults(nodeRecords, docRecords, lang) {
-        var docsMap = docRecords.reduce(function(prev, item) {
+        var docsMap = docRecords.reduce(function (prev, item) {
                 prev[item.key] = item.value;
                 return prev;
             }, {}),
             result = nodeRecords
-                .map(function(record) {
+                .map(function (record) {
                     var v = record.value;
                     v.source = {};
                     v.source[lang] = docsMap[u.format('docs:%s:%s', v.id, lang)];
                     return v;
                 })
-                .reduce(function(prev, item) {
+                .reduce(function (prev, item) {
                     prev[item.route.name] = prev[item.route.name] || {
                         title: item.title[lang],
                         items: []
@@ -34,7 +32,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
                     return prev;
                 }, {});
 
-        return _.values(result).filter(function(item) {
+        return _.values(result).filter(function (item) {
             return item.items.length;
         });
     }
@@ -44,7 +42,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * Loads data model from local filesystem or yandex Disk depending on environment and fills the model
          * @returns {*}
          */
-        init: function() {
+        init: function () {
             return load();
         },
 
@@ -52,11 +50,11 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * Reloads model data
          * @returns {*}
          */
-        reload: function() {
-
+        reload: function () {
+            // TODO implement this code
         },
 
-        //TODO implement redirects
+        // TODO implement redirects
         getRedirects: function () {
             return [];
         },
@@ -66,9 +64,9 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * @param {String} url - request url
          * @returns {*}
          */
-        getNodeByUrl: function(url) {
-            return db.get(u.format('urls:%s', url)).then(function(nodeRecordKey) {
-                if(!nodeRecordKey) {
+        getNodeByUrl: function (url) {
+            return db.get(u.format('urls:%s', url)).then(function (nodeRecordKey) {
+                if (!nodeRecordKey) {
                     return vow.resolve(null);
                 }
                 return db.get(nodeRecordKey);
@@ -81,8 +79,8 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * @param {Object} node object
          * @returns {*}
          */
-        getNodeItems: function(node) {
-            return db.getValuesByCriteria(function(value) {
+        getNodeItems: function (node) {
+            return db.getValuesByCriteria(function (value) {
                 return value.parent === node.id;
             });
         },
@@ -92,7 +90,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * @param {Object} node object
          * @returns {*}
          */
-        getParentNode: function(node) {
+        getParentNode: function (node) {
             return db.get(u.format('nodes:%s', node.parent));
         },
 
@@ -100,10 +98,10 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * Returns array of all parent nodes of given node
          * @param {Object} node object
          */
-        getParentNodes: function(node) {
+        getParentNodes: function (node) {
             var _this = this,
                 result = [],
-                traverse = function(node) {
+                traverse = function (node) {
                     if (!node) {
                         return vow.resolve(result);
                     }
@@ -129,14 +127,14 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * Returns all node records from database
          * @returns {*}
          */
-        getNodes: function() {
+        getNodes: function () {
             return db.getByKeyPrefix('nodes:');
         },
 
-        getPeople: function() {
+        getPeople: function () {
             var prefix = 'people:';
-            return db.getByKeyPrefix(prefix).then(function(records) {
-                return records.reduce(function(prev, item) {
+            return db.getByKeyPrefix(prefix).then(function (records) {
+                return records.reduce(function (prev, item) {
                     prev[item.key.replace(prefix, '')] = item.value;
                     return prev;
                 }, {});
@@ -147,12 +145,12 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * Returns map of urls to people nodes by people keys
          * @returns {*}
          */
-        getPeopleUrls: function() {
-            return db.getByCriteria(function(record) {
+        getPeopleUrls: function () {
+            return db.getByCriteria(function (record) {
                 return record.key.indexOf('nodes:') > -1 && record.value.class === 'person';
             })
-            .then(function(records) {
-                return records.reduce(function(prev, item) {
+            .then(function (records) {
+                return records.reduce(function (prev, item) {
                     var value = item.value;
                     prev[value.route.conditions.id] = value.url;
                     return prev;
@@ -165,7 +163,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * @param {String} key of block data or jsdoc
          * @returns {*}
          */
-        getBlock: function(key) {
+        getBlock: function (key) {
             return db.get(key);
         },
 
@@ -173,7 +171,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * Returns array of author records
          * @returns {*}
          */
-        getAuthors: function() {
+        getAuthors: function () {
             return db.get('authors');
         },
 
@@ -182,32 +180,32 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * suitable menu creation
          * @returns {*}
          */
-        getMenuTree: function() {
-            if(menu) {
+        getMenuTree: function () {
+            if (menu) {
                 return vow.resolve(menu);
             }
 
-            return this.getNodes().then(function(records) {
-                var nodes = records.map(function(item) {
+            return this.getNodes().then(function (records) {
+                var nodes = records.map(function (item) {
                        return item.value;
                     }),
-                    idMap = nodes.reduce(function(prev, item, index) {
+                    idMap = nodes.reduce(function (prev, item, index) {
                         prev[item.id] = index;
                         return prev;
                     }),
                     tree = [];
 
-                nodes.forEach(function(node) {
-                    if(node.parent) {
+                nodes.forEach(function (node) {
+                    if (node.parent) {
                         nodes[idMap[node.parent]].items = nodes[idMap[node.parent]].items || [];
                         nodes[idMap[node.parent]].items.push(node);
                         nodes[idMap[node.parent]].items =
-                            nodes[idMap[node.parent]].items.sort(function(a, b) {
+                            nodes[idMap[node.parent]].items.sort(function (a, b) {
                             return a.order > b.order;
                         });
                     } else {
                         tree.push(node);
-                        tree = tree.sort(function(a, b) {
+                        tree = tree.sort(function (a, b) {
                             return a.order > b.order;
                         });
                     }
@@ -222,11 +220,11 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * @param {Array} docRecords - array of doc records
          * @returns {*}
          */
-        getNodesBySourceRecords: function(docRecords) {
-            var nodeIds = docRecords.map(function(record) {
+        getNodesBySourceRecords: function (docRecords) {
+            var nodeIds = docRecords.map(function (record) {
                 return record.key.split(':')[1];
             });
-            return db.getByCriteria(function(record) {
+            return db.getByCriteria(function (record) {
                 var k = record.key,
                     v = record.value;
                 return k.indexOf('nodes:') > -1 && nodeIds.indexOf(v.id) > -1;
@@ -239,19 +237,19 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * @param {Object} node - target node
          * @returns {*}
          */
-        getNodesByPeopleCriteria: function(lang, node) {
+        getNodesByPeopleCriteria: function (lang, node) {
             var value = node.route.conditions.id;
-            return db.getByCriteria(function(record) {
+            return db.getByCriteria(function (record) {
                 var k = record.key,
                     v = record.value;
                 return k.indexOf('docs:') > -1 && k.indexOf(':' + lang) > -1 &&
-                    ((v.authors && v.authors.indexOf(value) > -1 ) ||
-                    (v.translators && v.translators.indexOf(value) > -1 ));
+                    ((v.authors && v.authors.indexOf(value) > -1) ||
+                    (v.translators && v.translators.indexOf(value) > -1));
                 })
-                .then(function(docRecords) {
+                .then(function (docRecords) {
                     return vow.all([ this.getNodesBySourceRecords(docRecords), docRecords ]);
                 }, this)
-                .spread(function(nodeRecords, docRecords) {
+                .spread(function (nodeRecords, docRecords) {
                     return combineResults(nodeRecords, docRecords, lang);
                 }, this);
         },
@@ -262,24 +260,40 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          * @param {Object} node - target node
          * @returns {*}
          */
-        getNodesByTagsCriteria: function(lang, node) {
+        getNodesByTagsCriteria: function (lang, node) {
             var value = node.route.conditions.id;
-            return db.getByCriteria(function(record) {
+            return db.getByCriteria(function (record) {
                     var k = record.key,
                         v = record.value,
                         criteria = k.indexOf('docs:') > -1 && k.indexOf(':' + lang) > -1 && v.tags;
 
-                    if(value) {
+                    if (value) {
                         criteria = criteria && v.tags.indexOf(value) > -1;
                     }
                     return criteria;
                 })
-                .then(function(docRecords) {
+                .then(function (docRecords) {
                     return vow.all([ this.getNodesBySourceRecords(docRecords), docRecords ]);
                 }, this)
-                .spread(function(nodeRecords, docRecords) {
+                .spread(function (nodeRecords, docRecords) {
                     return combineResults(nodeRecords, docRecords, lang);
                 }, this);
+        },
+
+        getNodesByCriteria: function (criteria, onlyFirst) {
+            return db.getByCriteria(function(record) {
+                return criteria(record);
+            }).then(function (records) {
+               return onlyFirst ? records[0] : records;
+            });
+        },
+
+        putToCache: function (key, value) {
+            return db.put(key, value);
+        },
+
+        getFromCache: function (key) {
+            return db.get(key);
         }
     });
 });

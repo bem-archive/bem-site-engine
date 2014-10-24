@@ -1,4 +1,4 @@
-modules.define('appError', ['httpError'], function(provide, httpError) {
+modules.define('appError', ['httpError'], function (provide, httpError) {
     provide({
         HttpError: httpError
     });

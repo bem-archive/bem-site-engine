@@ -1,3 +1,3 @@
-modules.define('middleware__slashes', function(provide) {
-    provide(require("connect-slashes"));
+modules.define('middleware__slashes', function (provide) {
+    provide(require('connect-slashes'));
 });

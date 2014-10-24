@@ -1,7 +1,5 @@
 var path = require('path');
-
-modules.define('constants', function(provide) {
-
+modules.define('constants', function (provide) {
     provide({
         ROUTE: {
             NAME: 'name',

@@ -6,7 +6,7 @@ var util = require('util'),
     vowFs = require('vow-fs'),
     levelup = require('levelup');
 
-modules.define('database', ['logger', 'constants', 'config'], function(provide, logger, constants, config) {
+modules.define('database', ['logger'], function (provide, logger) {
     logger = logger(module);
 
     var DB_NAME = 'leveldb',
@@ -26,7 +26,34 @@ modules.define('database', ['logger', 'constants', 'config'], function(provide, 
             }
         },
 
-        db = null;
+        db = null,
+
+        /**
+         * Returns data by criteria
+         * @param {Function} criteria function
+         * @param {Object} config object for set type of data that should be returned
+         * @returns {*}
+         */
+        _getByCriteria = function (criteria, config) {
+            var def = vow.defer(),
+                result = [];
+            db.createReadStream(_.extend(DB_OPTIONS, config))
+                .on('data', function (data) {
+                    if (criteria(data)) {
+                        result.push(data);
+                    }
+                })
+                .on('error', function (err) {
+                    def.reject(err);
+                })
+                .on('close', function () {
+                    def.resolve(result);
+                })
+                .on('end', function () {
+                    def.resolve(result);
+                });
+            return def.promise();
+        };
 
     provide({
         /**
@@ -35,7 +62,7 @@ modules.define('database', ['logger', 'constants', 'config'], function(provide, 
         connect: function () {
             var def = vow.defer();
 
-            logger.info('Initialize leveldb database', module);
+            logger.info('Initialize leveldb database');
             return vowFs
                 .makeDir(path.join(process.cwd(), 'db'))
                 .then(function () {
@@ -58,7 +85,7 @@ modules.define('database', ['logger', 'constants', 'config'], function(provide, 
          * @returns {Object} value of record
          */
         get: function (key) {
-            logger.verbose(util.format('get: %s', key), module);
+            logger.verbose(util.format('get: %s', key));
 
             var def = vow.defer();
             db.get(key, DB_OPTIONS, function (err, value) {
@@ -74,39 +101,19 @@ modules.define('database', ['logger', 'constants', 'config'], function(provide, 
         },
 
         /**
-         * Returns data by criteria
-         * @param {Function} criteria function
-         * @param {Object} config object for set type of data that should be returned
+         * Put value into storage by key
+         * @param {String} key of record
+         * @param {Object} value of record
          * @returns {*}
          */
-        _getByCriteria: function (criteria, config) {
-            var def = vow.defer(),
-                result = [];
-            db.createReadStream(_.extend(DB_OPTIONS, config))
-                .on('data', function (data) {
-                    if (criteria(data)) {
-                        result.push(data);
-                    }
-                })
-                .on('error', function (err) {
-                    def.reject(err);
-                })
-                .on('close', function () {
-                    def.resolve(result);
-                })
-                .on('end', function () {
-                    def.resolve(result);
-                });
-            return def.promise();
-        },
+        put: function (key, value) {
+            logger.verbose(util.format('put: %s %s', key, value), module);
 
-        /**
-         * Returns array of keys by criteria
-         * @param {Function} criteria function
-         * @returns {*}
-         */
-        getKeysByCriteria: function (criteria) {
-            return this._getByCriteria(criteria, { keys: true, values: false });
+            var def = vow.defer();
+            db.put(key, value, DB_OPTIONS, function (err) {
+                err ? def.reject(err) : def.resolve();
+            });
+            return def.promise();
         },
 
         /**
@@ -115,11 +122,11 @@ modules.define('database', ['logger', 'constants', 'config'], function(provide, 
          * @returns {*}
          */
         getValuesByCriteria: function (criteria) {
-            return this._getByCriteria(criteria, { keys: false, values: true });
+            return _getByCriteria(criteria, { keys: false, values: true });
         },
 
         getByCriteria: function (criteria) {
-            return this._getByCriteria(criteria, { keys: true, values: true });
+            return _getByCriteria(criteria, { keys: true, values: true });
         },
 
         getByKeyPrefix: function (prefix) {

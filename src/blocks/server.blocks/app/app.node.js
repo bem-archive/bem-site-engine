@@ -5,16 +5,16 @@ var path = require('path'),
     express = require('express');
 
 modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updater'],
-    function(provide, config, logger, util, model, middleware, updater) {
+    function (provide, config, logger, util, model, middleware, updater) {
         logger = logger(module);
 
         provide({
             /**
              * Adds middlewares for development environment
-             * @param app - {Object} express application
+             * @param {Object} app - express application
              * @returns {Object} app
              */
-            addDevelopmentMW: function(app) {
+            addDevelopmentMW: function (app) {
                 var enbServer = require('enb/lib/server/server-middleware'),
                     rootPath = process.cwd(),
                     staticsDir = path.join(rootPath, 'src');
@@ -27,20 +27,20 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                 return app;
             },
 
-            startServer: function() {
+            startServer: function () {
                 var def = vow.defer(),
                     app = express(),
                     port = config.get('port') || process.env.port || 8080;
 
-                //add middleware for dev environment
+                // add middleware for dev environment
                 util.isDev() && this.addDevelopmentMW(app);
 
                 app.use(express.query());
 
-                middleware().forEach(function(mw) {
-                    if(_.isFunction(mw)) {
+                middleware().forEach(function (mw) {
+                    if (_.isFunction(mw)) {
                         app.use(mw());
-                    }else if(mw.run) {
+                    }else if (mw.run) {
                         app.use(mw.run());
                     }
                 });
@@ -48,7 +48,7 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                 //_.isString(port) && util.unlinkSocket(port);
 
                 app.listen(port, function (err) {
-                    if(err) {
+                    if (err) {
                         def.reject(err);
                         return;
                     }
@@ -61,13 +61,13 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                 return def.promise();
             },
 
-            init: function() {
+            init: function () {
                 model.init()
                     .then(function () {
                         return this.startServer();
                     }, this)
-                    .then(function() {
-                        if(config.get('update:enable')) {
+                    .then(function () {
+                        if (config.get('update:enable')) {
                             updater.init();
                             updater.start();
                         }

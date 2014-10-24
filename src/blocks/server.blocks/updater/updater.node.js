@@ -1,11 +1,11 @@
 var path = require('path'),
 
     vow = require('vow'),
-    cronJob = require('cron').CronJob;
+    vowFs = require('vow-fs'),
+    CronJob = require('cron').CronJob;
 
-modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__router', 'middleware__redirect'],
-    function(provide, logger, config, util, model, router, redirect) {
-
+modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__redirect'],
+    function (provide, logger, config, util, model, redirect) {
     logger = logger(module);
 
     var job,
@@ -19,46 +19,17 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
         logger.debug('reload cache data for examples start');
         return providerFile
             .removeDir({ path: path.join(process.cwd(), 'cache') })
-            .then(function() {
-                return providerFile.makeDir({ path: path.join(process.cwd(), 'cache') });
-            })
-            .then(function() {
+            .then(function () {
                 return vow.all([
-                    providerFile.makeDir({ path: path.join(process.cwd(), 'cache/tag') }),
-                    providerFile.makeDir({ path: path.join(process.cwd(), 'cache/branch') })
+                    vowFs.makeDir(path.join(process.cwd(), 'cache/tag')),
+                    vowFs.makeDir(path.join(process.cwd(), 'cache/branch'))
                 ]);
             })
-            .then(function() {
+            .then(function () {
                 logger.debug('cached data has been reloaded successfully');
             })
-            .fail(function(err) {
+            .fail(function (err) {
                 logger.error('Error occur while cache reloading %s', err.message);
-            });
-    }
-
-    /**
-     * Reloads sitemap.xml file
-     * @returns {*}
-     */
-    function reloadSitemapXML() {
-        var XML = 'sitemap.xml',
-            XMLSourcePath =
-                path.join(config.get('model:dir'), util.isDev() ? '' : config.get('NODE_ENV'), XML),
-            XMLTargetPath = path.join(process.cwd(), XML);
-
-        logger.debug('reload load "sitemap.xml" file start');
-        return providerFile.exists({ path: XMLTargetPath }).then(function(exists) {
-                if(exists) {
-                    return providerFile.remove({ path: XMLTargetPath }).then(function() {
-                        return providerDisk.downloadFile({ source: XMLSourcePath, target: XMLTargetPath });
-                    });
-                }
-            })
-            .then(function() {
-                logger.debug('"sitemap.xml" file has been loaded successfully');
-            })
-            .fail(function(err) {
-                logger.error('Error occur while "sitemap.xml" file reloading %s', err.message);
             });
     }
 
@@ -66,14 +37,12 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
         logger.warn('Data has been changed. Model will be reloaded');
 
         model.reload()
-            .then(function() {
-                router.init();
+            .then(function () {
                 redirect.init();
                 marker = content;
                 return marker;
             })
-            .then(reloadCache)
-            .then(reloadSitemapXML);
+            .then(reloadCache);
     }
 
     function checkForUpdate() {
@@ -89,23 +58,23 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
             .then(function (content) {
                 return JSON.parse(content);
             })
-            .then(function(content) {
-                if(!content) {
+            .then(function (content) {
+                if (!content) {
                     return;
                 }
 
-                //marker is not exist for first check operation
-                if(!marker) {
+                // marker is not exist for first check operation
+                if (!marker) {
                     marker = content;
                     return;
                 }
 
-                //compare sha sums for data objects
-                if(marker.data !== content.data) {
+                // compare sha sums for data objects
+                if (marker.data !== content.data) {
                     update(content);
                 }
             })
-            .fail(function(err) {
+            .fail(function (err) {
                 logger.error('Error %s', err.message);
             });
     }
@@ -114,10 +83,10 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
         /**
          * Initialize updater module
          */
-        init: function() {
-            job = new cronJob({
+        init: function () {
+            job = new CronJob({
                 cronTime: config.get('update:cron'),
-                onTick: function() { checkForUpdate() },
+                onTick: function () { checkForUpdate(); },
                 start: false
             });
         },
@@ -125,11 +94,11 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__rou
         /**
          * Starts updater job
          */
-        start: function() {
+        start: function () {
             job.start();
         },
 
-        getMarker: function() {
+        getMarker: function () {
             return marker || {};
         }
     });
