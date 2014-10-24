@@ -1,24 +1,91 @@
 var u = require('util'),
+    url = require('url'),
     path = require('path'),
+    zlib = require('zlib'),
+
+    tar = require('tar'),
+    request = require('request'),
     _ = require('lodash'),
-    vow = require('vow');
+    vow = require('vow'),
+    vowFs = require('vow-fs');
 
 modules.define('model', ['config', 'logger', 'util', 'database'], function (provide, config, logger, util, db) {
     logger = logger(module);
     
     var menu,
         DB_PATH = {
+            DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),
             PROCESS: path.join(process.cwd(), u.format('db/%s', process.pid))
         };
 
-    function load() {
-        return util.removeDir(DB_PATH.PROCESS)
+    function loadData () {
+        // skip data loading for development environment
+        if( util.isDev()) {
+            return vow.resolve(DB_PATH.BASE);
+        }
+
+        var def = vow.defer(),
+            provider = config.get('provider'),
+            host,
+            port,
+            link;
+
+        if (!provider) {
+            logger.warn('Provider is not configured for application. Update will be skipped');
+            return vow.resolve(DB_PATH.BASE);
+        }
+
+        host = provider.host;
+        port = provider.port;
+
+        if (!host) {
+            logger.warn('Provider host name is not configured for application. Update will be skipped');
+            return vow.resolve(DB_PATH.BASE);
+        }
+
+        if (!port) {
+            logger.warn('Provider port number is not configured for application. Update will be skipped');
+            return vow.resolve(DB_PATH.BASE);
+        }
+
+        link = url.format({
+            protocol: 'http',
+            hostname: host,
+            port: port,
+            pathname: '/data/' + config.get('NODE_ENV')
+        });
+
+        request.get(link)
+            .pipe(zlib.Gunzip())
+            .pipe(tar.Extract({ path:  DB_PATH.PROCESS }))
+            .on('error', function (err) {
+                logger.error('Error %s occur while downloading database snapshot', err);
+                def.reject(err);
+            })
+            .on('end', function () {
+                var extractedPath = path.join(DB_PATH.PROCESS, config.get('NODE_ENV'), 'leveldb');
+                logger.debug(u.format('Data has been successfully loaded from url %s and extracted to path',
+                    link, extractedPath));
+                def.resolve(extractedPath);
+            });
+        return def.promise();
+    }
+
+    function connectToDb(snapshotPath) {
+        var runProcessDBPath = path.join(DB_PATH.PROCESS, 'run', 'leveldb');
+        return util.removeDir(runProcessDBPath)
             .then(function() {
-                return util.copyDir(DB_PATH.BASE, DB_PATH.PROCESS);
+                logger.debug('create dir %s', runProcessDBPath);
+                return vowFs.makeDir(runProcessDBPath);
             })
             .then(function() {
-                return db.connect(DB_PATH.PROCESS);
+                logger.debug('copy database files from %s to %s', snapshotPath, runProcessDBPath);
+                return util.copyDir(snapshotPath, runProcessDBPath);
+            })
+            .then(function() {
+                logger.debug('connect to database in path %s', runProcessDBPath);
+                return db.connect(runProcessDBPath);
             });
     }
 
@@ -54,7 +121,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         init: function () {
-            return load();
+            return loadData().then(connectToDb);
         },
 
         /**
@@ -62,7 +129,14 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         reload: function () {
-            // TODO implement this code
+            return loadData()
+                .then(function(snapshotPath) {
+                    return db.disconnect()
+                        .then(function() {
+                            return snapshotPath;
+                        });
+                })
+                .then(connectToDb);
         },
 
         // TODO implement redirects

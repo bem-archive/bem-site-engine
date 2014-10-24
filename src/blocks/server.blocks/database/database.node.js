@@ -62,7 +62,7 @@ modules.define('database', ['logger'], function (provide, logger) {
         connect: function (dbPath) {
             var def = vow.defer();
 
-            logger.info('Initialize leveldb database');
+            logger.info('Connect to database for process %s', process.pid);
             return vowFs
                 .makeDir(path.join(process.cwd(), 'db'))
                 .then(function () {
@@ -77,6 +77,31 @@ modules.define('database', ['logger'], function (provide, logger) {
                     }
                     return def.promise();
                 });
+        },
+
+        disconnect: function() {
+            var def = vow.defer();
+            logger.info('Close database for process %s', process.pid);
+
+            if (!db) {
+                logger.warn('database was not initialized yet');
+            }
+
+            if (!db.isOpen()) {
+                logger.warn('database was already closed');
+            }
+
+            db.close(function (err) {
+                if (err) {
+                    logger.error('Error %s occur while close the database for process %s', err, process.pid);
+                    def.reject();
+                } else {
+                    logger.info('Database was successfully closed for process %s', process.pid);
+                    def.resolve();
+                }
+            });
+
+            return def.promise();
         },
 
         /**

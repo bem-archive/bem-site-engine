@@ -1,7 +1,6 @@
-var path = require('path'),
+var url = require('url'),
 
-    vow = require('vow'),
-    vowFs = require('vow-fs'),
+    request = require('request'),
     CronJob = require('cron').CronJob;
 
 modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__redirect'],
@@ -11,72 +10,75 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
     var job,
         marker;
 
-    /**
-     * Removes and recreates cache folder
-     * @returns {*}
-     */
-    function reloadCache() {
-        logger.debug('reload cache data for examples start');
-        return providerFile
-            .removeDir({ path: path.join(process.cwd(), 'cache') })
-            .then(function () {
-                return vow.all([
-                    vowFs.makeDir(path.join(process.cwd(), 'cache/tag')),
-                    vowFs.makeDir(path.join(process.cwd(), 'cache/branch'))
-                ]);
-            })
-            .then(function () {
-                logger.debug('cached data has been reloaded successfully');
-            })
-            .fail(function (err) {
-                logger.error('Error occur while cache reloading %s', err.message);
-            });
-    }
+    function update(snapshotName) {
+        logger.warn('Data has been changed. Model will be updated to %s for process %s', snapshotName, process.pid);
 
-    function update(content) {
-        logger.warn('Data has been changed. Model will be reloaded');
-
-        model.reload()
+        model.reload(snapshotName)
             .then(function () {
                 redirect.init();
-                marker = content;
+                marker = snapshotName;
+                logger.info('Model has been reloaded successfully for process %s to version %s',
+                    process.pid, snapshotName);
                 return marker;
-            })
-            .then(reloadCache);
+            });
     }
 
     function checkForUpdate() {
         logger.info('Check for update for start');
+        var provider = config.get('provider'),
+            host,
+            port,
+            link;
 
-        return provider.load({
-                path: path.join(
-                    config.get('model:dir'),
-                    util.isDev() ? '' : config.get('NODE_ENV'),
-                    'marker.json'
-                )
-            })
-            .then(function (content) {
-                return JSON.parse(content);
-            })
-            .then(function (content) {
-                if (!content) {
+        if (!provider) {
+            logger.warn('Provider is not configured for application. Update will be skipped');
+            return;
+        }
+
+        host = provider.host;
+        port = provider.port;
+
+        if (!host) {
+            logger.warn('Provider host name is not configured for application. Update will be skipped');
+            return;
+        }
+
+        if (!port) {
+            logger.warn('Provider port number is not configured for application. Update will be skipped');
+            return;
+        }
+
+        link = url.format({
+            protocol: 'http',
+            hostname: host,
+            port: port,
+            pathname: '/ping/' + 'testing' // TODO remove this testing code!
+            //pathname: '/ping/' + config.get('NODE_ENV')
+        });
+
+        request(link, function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+                if (!body) {
+                    logger.error('Can not retrieve request body');
                     return;
                 }
 
                 // marker is not exist for first check operation
                 if (!marker) {
-                    marker = content;
+                    marker = body;
                     return;
                 }
 
                 // compare sha sums for data objects
-                if (marker.data !== content.data) {
-                    update(content);
+                if (marker !== body) {
+                    update(body);
                 }
-            })
-            .fail(function (err) {
-                logger.error('Error %s', err.message);
-            });
+            } else {
+                logger.error(error);
+                logger.error('Can not receive data from url %s. ' +
+                'Possible provider is in shutdown mode or other network problems occur', link);
+            }
+        });
     }
 
     provide({
