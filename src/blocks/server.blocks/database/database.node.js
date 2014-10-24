@@ -59,7 +59,7 @@ modules.define('database', ['logger'], function (provide, logger) {
         /**
          * Initialize database
          */
-        connect: function () {
+        connect: function (dbPath) {
             var def = vow.defer();
 
             logger.info('Initialize leveldb database');
@@ -67,7 +67,7 @@ modules.define('database', ['logger'], function (provide, logger) {
                 .makeDir(path.join(process.cwd(), 'db'))
                 .then(function () {
                     try {
-                        db = levelup(path.join('db', DB_NAME));
+                        db = levelup(dbPath || path.join('db', DB_NAME));
                         logger.info('Database was initialized successfully');
                         def.resolve();
                     } catch (err) {

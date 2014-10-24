@@ -1,14 +1,25 @@
 var u = require('util'),
+    path = require('path'),
     _ = require('lodash'),
     vow = require('vow');
 
 modules.define('model', ['config', 'logger', 'util', 'database'], function (provide, config, logger, util, db) {
     logger = logger(module);
-
-    var menu;
+    
+    var menu,
+        DB_PATH = {
+            BASE: path.join(process.cwd(), 'db', 'leveldb'),
+            PROCESS: path.join(process.cwd(), u.format('db/%s', process.pid))
+        };
 
     function load() {
-        return db.connect();
+        return util.removeDir(DB_PATH.PROCESS)
+            .then(function() {
+                return util.copyDir(DB_PATH.BASE, DB_PATH.PROCESS);
+            })
+            .then(function() {
+                return db.connect(DB_PATH.PROCESS);
+            });
     }
 
     function combineResults(nodeRecords, docRecords, lang) {

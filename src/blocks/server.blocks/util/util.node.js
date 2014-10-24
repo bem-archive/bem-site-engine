@@ -1,5 +1,6 @@
 var fs = require('fs'),
 
+    fsExtra = require('fs-extra'),
     zlib = require('zlib'),
     vow = require('vow');
 
@@ -70,6 +71,22 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             var def = vow.defer();
             zlib.gunzip(new Buffer(content, 'utf-8'), function (err, result) {
                 def.resolve(err ? content : result);
+            });
+            return def.promise();
+        },
+
+        removeDir: function (p) {
+            var def = vow.defer();
+            fsExtra.remove(p, function (err) {
+                err ? def.reject(err) : def.resolve();
+            });
+            return def.promise();
+        },
+
+        copyDir: function(source, target) {
+            var def = vow.defer();
+            fsExtra.copy(source, target, function (err) {
+                err ? def.reject(err) : def.resolve();
             });
             return def.promise();
         }
