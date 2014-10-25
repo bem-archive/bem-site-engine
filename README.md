@@ -7,7 +7,7 @@ bem-site-engine
 
 В настоящее время на базе данной платформы созданы и работают следующие сайты:
 
-* [Bem-Info](http://bem.info)
+* [bem.info](https://bem.info/)
 
 ### Установка, сборка и запуск
 
@@ -24,7 +24,7 @@ npm run make
 
 ##### Команды
 
-* Установка зависимостей: `npm install && node postinstall.js`
+* Установка зависимостей: `npm i && npm run postinst`
 * Запуск сервера: `npm start`
 * Удаление логов: `npm run clean_logs`
 * Удаление кеша примеров блоков: `npm run clean_cache`
@@ -37,7 +37,7 @@ npm run make
 * testing: `node bin/data.js testing`
 * production: `node bin/data.js production -v latest`
 
-Более подробно о командах сборки данных можно прочитать в [Соответствующем руководстве](./docs/data_compiling.ru.md)
+Более подробно о командах сборки данных можно прочитать в [Соответствующем руководстве](./docs/data_compiling.ru.md).
 
 ### Документация
 

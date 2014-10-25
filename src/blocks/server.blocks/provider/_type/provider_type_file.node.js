@@ -19,7 +19,7 @@ modules.define('providerFile', ['logger', 'util'], function(provide, logger, uti
          * @returns {vow promise object}
          */
         load: function(options) {
-            logger.debug('load data from file file %s', options.path);
+            logger.debug('load data from file %s', options.path);
             return vowFs.read(options.path)
                 .then(function(buf) {
                     return options.archive ? util.unzip(buf) : vow.resolve(buf);

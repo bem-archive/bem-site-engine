@@ -8,6 +8,3 @@ module.exports = require('coa').Cmd()
     .cmd().name('testing').apply(require('./commands/testing')).end()
     .cmd().name('production').apply(require('./commands/production')).end()
     .completable();
-
-
-
