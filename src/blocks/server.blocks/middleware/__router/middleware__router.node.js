@@ -1,3 +1,5 @@
+var vow = require('vow');
+
 modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 'appError'], function(provide, config, logger, constants, model, error) {
 
     logger = logger(module);
@@ -10,15 +12,15 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                 req.__data = req.__data || {};
                 logger.debug('get node by request %s', req.path);
 
-                var url = _this.beforeFindNode(req, res, decodeURIComponent(req.path));
-
-                if(!url) {
-                    throw error.HttpError.createError(404);
-                }
-
-                return _this.findNode(req, url)
+                return _this.beforeFindNode(req, res, decodeURIComponent(req.path))
+                    .then(function(url) {
+                        return _this.findNode(req, url);
+                    })
                     .then(function(node) {
                         return _this.afterFindNode(node, req, res, next);
+                    })
+                    .fail(function(err) {
+                        console.log(err);
                     });
             };
         },
@@ -58,25 +60,31 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
 
             // TODO implement this case
             //Detect /current/ part in url and replace it by actual library version
-            //if(/\/current\/?/.test(url)) {
-            //    var libUrl = url.replace(/\/current\/?.*/, '');
-            //
-            //    url = this.findNode(req, libUrl, function (result) {
-            //        if(!result || !result.items || !result.items.length) {
-            //            return libUrl;
-            //        }
-            //
-            //        var version = result.items.map(function (item) {
-            //            return item.url.substr(item.url.lastIndexOf('/'));
-            //        })[0];
-            //
-            //        url = url.replace(/\/current\/?/, version + '/');
-            //        res.redirect(301, url);
-            //        return null;
-            //    });
-            //}
+            if(!/\/current\/?/.test(url)) {
+                return vow.resolve(url);
+            }
 
-            return url;
+            var libUrl = url.replace(/\/current\/?.*/, '');
+            return this.findNode(req, libUrl).then(function(node) {
+                if(!node) {
+                    return libUrl;
+                }
+
+                return model.getNodeItems(node)
+                    .then(function(items) {
+                        if(!items || !items.length) {
+                            return libUrl;
+                        }
+
+                        var version = items.map(function (item) {
+                            return item.url.substr(item.url.lastIndexOf('/'));
+                        })[0];
+
+                        url = url.replace(/\/current\/?/, version + '/');
+                        res.redirect(301, url);
+                        return null;
+                    });
+            });
         },
 
         /**
