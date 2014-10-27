@@ -21,7 +21,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
 
     function loadData () {
         // skip data loading for development environment
-        if( util.isDev()) {
+        if (util.isDev()) {
             return vow.resolve(DB_PATH.BASE);
         }
 
@@ -74,6 +74,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
 
     function connectToDb(snapshotPath) {
         var runProcessDBPath = path.join(DB_PATH.PROCESS, 'run', 'leveldb');
+
         return util.removeDir(runProcessDBPath)
             .then(function() {
                 logger.debug('create dir %s', runProcessDBPath);
@@ -129,6 +130,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         reload: function () {
+            menu = null;
             return loadData()
                 .then(function(snapshotPath) {
                     return db.disconnect()
@@ -277,24 +279,25 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                     idMap = nodes.reduce(function (prev, item, index) {
                         prev[item.id] = index;
                         return prev;
-                    }),
+                    }, {}),
                     tree = [];
 
                 nodes.forEach(function (node) {
-                    if (node.parent) {
+                    if (node.parent ) {
                         nodes[idMap[node.parent]].items = nodes[idMap[node.parent]].items || [];
                         nodes[idMap[node.parent]].items.push(node);
                         nodes[idMap[node.parent]].items =
-                            nodes[idMap[node.parent]].items.sort(function (a, b) {
-                            return a.order > b.order;
-                        });
+                            nodes[ idMap[ node.parent ] ].items.sort(function (a, b) {
+                                return +a.order - +b.order;
+                            });
                     } else {
                         tree.push(node);
                         tree = tree.sort(function (a, b) {
-                            return a.order > b.order;
+                            return +a.order - +b.order;
                         });
                     }
                 });
+
                 menu = tree;
                 return menu;
             });
