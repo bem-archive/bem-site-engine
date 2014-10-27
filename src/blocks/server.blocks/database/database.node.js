@@ -142,7 +142,7 @@ modules.define('database', ['logger'], function (provide, logger) {
         },
 
         /**
-         * Returns array of values by criteria
+         * Returns array of values by criteria function
          * @param {Function} criteria function
          * @returns {*}
          */
@@ -150,10 +150,20 @@ modules.define('database', ['logger'], function (provide, logger) {
             return _getByCriteria(criteria, { keys: false, values: true });
         },
 
+        /**
+         * Returns array of database records by criteria function
+         * @param {Function} criteria function
+         * @returns {*}
+         */
         getByCriteria: function (criteria) {
             return _getByCriteria(criteria, { keys: true, values: true });
         },
 
+        /**
+         * Returns records from database by prefix of record key
+         * @param {String} prefix of database keys
+         * @returns {*}
+         */
         getByKeyPrefix: function (prefix) {
             return this.getByCriteria(function (record) {
                 return record.key.indexOf(prefix) > -1;
