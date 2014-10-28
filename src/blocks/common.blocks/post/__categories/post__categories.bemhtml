@@ -10,6 +10,8 @@ block('post').elem('categories')(
             buf = [];
 
         breadcrumbs.forEach(function(item, index) {
+            if(!item.title) return;
+
             var crumb = { block: 'link', content: item.title[this.ctx.lang] };
 
             if(index > 0 ) {
