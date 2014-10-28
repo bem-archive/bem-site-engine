@@ -45,21 +45,6 @@
             text-transform: uppercase;
 
             color: #999;
-
-            &:before
-            {
-                position: absolute;
-                top: 0;
-                right: 0;
-                left: 0;
-
-                height: 1px;
-
-                content: '';
-
-                background: -webkit-linear-gradient(left,  rgba(0,0,0,.15) 20%,#fff 100%);
-                background:         linear-gradient(to right,  rgba(0,0,0,.15) 20%,#fff 100%);
-            }
         }
 
         &__group:first-child .menu-list__title
@@ -68,12 +53,31 @@
             padding-top: 10px;
         }
 
+        &__group .menu-list__link:first-child
+        {
+            position: relative;
+        }
+
+        &__group .menu-list__title:before,
+        &__group .menu-list__link:first-child:before
+        {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+
+            height: 1px;
+
+            content: '';
+
+            background: linear-gradient(to right,  rgba(0,0,0,.15) 20%,#fff 100%);
+        }
+
         &__delimeter
         {
             margin: 5px 0;
 
-            background: -webkit-linear-gradient(left, rgba(0,0,0,.15) 20%,#fff 100%);
-            background:         linear-gradient(to right, rgba(0,0,0,.15) 20%,#fff 100%);
+            background: linear-gradient(to right, rgba(0,0,0,.15) 20%,#fff 100%);
         }
 
         /* (Begin) Menu-list with select */

@@ -16,10 +16,10 @@ block('menu-list').mod('type', 'default')(
                 return {
                     elem: 'group',
                     content: [
-                        {
+                        this.ctx.title ? {
                             elem: 'title',
                             content: this.ctx.title
-                        },
+                        } : '',
                         this.ctx.items.map(function(subitem) {
                             return apply('item', { ctx: subitem });
                         })
