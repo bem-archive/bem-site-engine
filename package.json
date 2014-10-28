@@ -36,8 +36,7 @@
   },
   "devDependencies": {
     "borschik": "~1.0.5",
-    "bower": "~1.3.9",
-    "bower-npm-install": "~0.5.8",
+    "bower": "~1.3.12",
     "enb": "~0.13.4",
     "enb-autoprefixer": "~0.1.1",
     "enb-bembundle": "~1.0.2",
@@ -52,14 +51,17 @@
   },
   "scripts": {
     "start": "node bin/app.js",
-    "make": "npm install && node postinstall.js && node bin/data.js && npm start",
-    "clean": "enb make clean && rm -rf node_modules && rm -rf libs && rm -rf cache && rm -rf backups && rm -rf logs",
+    "postinst": "npm run prepare_folders && npm run prepare_configs && bower i",
+    "prepare_folders": "mkdir -p logs backups cache cache/branch cache/tag",
+    "prepare_configs": "ln -snf ${NODE_ENV:-dev} configs/current && ln -sfn configs/current/borschik .borschik",
+    "make": "npm install && npm run postinst && npm run build && node bin/data.js && npm start",
+    "build": "YENV=${NODE_ENV:-development} enb make",
+    "clean": "enb make clean && rm -rf node_modules libs cache backups logs",
     "clean_logs": "rm -rf logs/*",
     "clean_cache": "rm -rf cache/*",
     "clean_data": "rm -rf backups/*",
-    "test": "node_modules/.bin/jshint . && node_modules/.bin/jscs -c .jscs.js ."
+    "test": "jshint . && jscs -c .jscs.js ."
   },
   "author": "info@bem.info",
-  "readmeFilename": "README.md",
-  "private": true
+  "readmeFilename": "README.md"
 }
