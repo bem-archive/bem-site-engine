@@ -1,5 +1,4 @@
-var url = require('url'),
-
+var luster = require('luster'),
     request = require('request'),
     CronJob = require('cron').CronJob;
 
@@ -8,52 +7,28 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
     logger = logger(module);
 
     var job,
+        worker = luster.id || 0,
         marker;
 
     function update(snapshotName) {
-        logger.warn('Data has been changed. Model will be updated to %s for process %s', snapshotName, process.pid);
+        logger.warn('Data has been changed. Model will be updated to %s for worker %s', snapshotName, worker);
 
         model.reload(snapshotName)
             .then(function () {
                 redirect.init();
                 marker = snapshotName;
-                logger.info('Model has been reloaded successfully for process %s to version %s',
-                    process.pid, snapshotName);
+                logger.info('Model has been reloaded successfully for worker %s to version %s', worker, snapshotName);
                 return marker;
             });
     }
 
     function checkForUpdate() {
         logger.info('Check for update for start');
-        var provider = config.get('provider'),
-            host,
-            port,
-            link;
+        var link = util.getPingLink();
 
-        if (!provider) {
-            logger.warn('Provider is not configured for application. Update will be skipped');
+        if(!link) {
             return;
         }
-
-        host = provider.host;
-        port = provider.port;
-
-        if (!host) {
-            logger.warn('Provider host name is not configured for application. Update will be skipped');
-            return;
-        }
-
-        if (!port) {
-            logger.warn('Provider port number is not configured for application. Update will be skipped');
-            return;
-        }
-
-        link = url.format({
-            protocol: 'http',
-            hostname: host,
-            port: port,
-            pathname: '/ping/' + config.get('NODE_ENV')
-        });
 
         request(link, function (error, response, body) {
             if (!error && response.statusCode === 200) {

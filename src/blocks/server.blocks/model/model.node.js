@@ -1,8 +1,8 @@
 var u = require('util'),
-    url = require('url'),
     path = require('path'),
     zlib = require('zlib'),
 
+    luster = require('luster'),
     tar = require('tar'),
     request = require('request'),
     _ = require('lodash'),
@@ -13,107 +13,35 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
     logger = logger(module);
     
     var menu,
+        worker = luster.id || 0,
         DB_PATH = {
             DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),
-            PROCESS: path.join(process.cwd(), u.format('db/%s', process.pid))
+            WORKER: path.join(process.cwd(), u.format('db/worker_%s', worker))
         };
 
     function loadData () {
-        // skip data loading for development environment
-        if (util.isDev()) {
-            return vow.resolve(DB_PATH.BASE);
-        }
-
         var def = vow.defer(),
-            provider = config.get('provider'),
-            host,
-            port,
-            link;
+            link = util.getDataLink();
 
-        if (!provider) {
-            logger.warn('Provider is not configured for application. Update will be skipped');
-            return vow.resolve(DB_PATH.BASE);
+        if (!link) {
+            return vow.reject();
         }
-
-        host = provider.host;
-        port = provider.port;
-
-        if (!host) {
-            logger.warn('Provider host name is not configured for application. Update will be skipped');
-            return vow.resolve(DB_PATH.BASE);
-        }
-
-        if (!port) {
-            logger.warn('Provider port number is not configured for application. Update will be skipped');
-            return vow.resolve(DB_PATH.BASE);
-        }
-
-        link = url.format({
-            protocol: 'http',
-            hostname: host,
-            port: port,
-            pathname: '/data/' + config.get('NODE_ENV')
-        });
 
         request.get(link)
             .pipe(zlib.Gunzip())
-            .pipe(tar.Extract({ path:  DB_PATH.PROCESS }))
+            .pipe(tar.Extract({path: DB_PATH.WORKER}))
             .on('error', function (err) {
                 logger.error('Error %s occur while downloading database snapshot', err);
                 def.reject(err);
             })
             .on('end', function () {
-                var extractedPath = path.join(DB_PATH.PROCESS, config.get('NODE_ENV'), 'leveldb');
+                var extractedPath = path.join(DB_PATH.WORKER, config.get('NODE_ENV'), 'leveldb');
                 logger.debug(u.format('Data has been successfully loaded from url %s and extracted to path',
                     link, extractedPath));
                 def.resolve(extractedPath);
             });
         return def.promise();
-    }
-
-    function connectToDb(snapshotPath) {
-        var runProcessDBPath = path.join(DB_PATH.PROCESS, 'run', 'leveldb');
-
-        return util.removeDir(runProcessDBPath)
-            .then(function() {
-                logger.debug('create dir %s', runProcessDBPath);
-                return vowFs.makeDir(runProcessDBPath);
-            })
-            .then(function() {
-                logger.debug('copy database files from %s to %s', snapshotPath, runProcessDBPath);
-                return util.copyDir(snapshotPath, runProcessDBPath);
-            })
-            .then(function() {
-                logger.debug('connect to database in path %s', runProcessDBPath);
-                return db.connect(runProcessDBPath);
-            });
-    }
-
-    function combineResults(nodeRecords, docRecords, lang) {
-        var docsMap = docRecords.reduce(function (prev, item) {
-                prev[item.key] = item.value;
-                return prev;
-            }, {}),
-            result = nodeRecords
-                .map(function (record) {
-                    var v = record.value;
-                    v.source = {};
-                    v.source[lang] = docsMap[u.format('docs:%s:%s', v.id, lang)];
-                    return v;
-                })
-                .reduce(function (prev, item) {
-                    prev[item.route.name] = prev[item.route.name] || {
-                        title: item.title[lang],
-                        items: []
-                    };
-                    prev[item.route.name ].items.push(item);
-                    return prev;
-                }, {});
-
-        return _.values(result).filter(function (item) {
-            return item.items.length;
-        });
     }
 
     provide({
@@ -122,7 +50,33 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         init: function () {
-            return loadData().then(connectToDb);
+            logger.info('Initialize model for worker %s', worker);
+            var p = path.join(DB_PATH.WORKER, 'run', 'leveldb');
+            return vowFs.exists(p).then(function(exists) {
+                if(exists) {
+                    logger.debug('Database for worker %s already exists. Try to connect to it', worker);
+                    return db.connect(p);
+                }
+
+                var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : loadData();
+                return promise
+                    .then(function(snapshot) {
+                        logger.debug('remove dir %s', p);
+                        return util.removeDir(p)
+                            .then(function () {
+                                logger.debug('create dir %s', p);
+                                return vowFs.makeDir(p);
+                            })
+                            .then(function () {
+                                logger.debug('copy database files from %s to %s', snapshot, p);
+                                return util.copyDir(snapshot, p);
+                            })
+                            .then(function () {
+                                logger.debug('connect to database in path %s', p);
+                                return db.connect(p);
+                            });
+                    });
+            });
         },
 
         /**
@@ -131,14 +85,29 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          */
         reload: function () {
             menu = null;
-            return loadData()
-                .then(function(snapshotPath) {
+            var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : loadData(),
+                p = path.join(DB_PATH.WORKER, 'run', 'leveldb');
+
+            return promise
+                .then(function(snapshot) {
                     return db.disconnect()
                         .then(function() {
-                            return snapshotPath;
+                            logger.debug('remove dir %s', p);
+                            return util.removeDir(p);
+                        })
+                        .then(function () {
+                            logger.debug('create dir %s', p);
+                            return vowFs.makeDir(p);
+                        })
+                        .then(function () {
+                            logger.debug('copy database files from %s to %s', snapshot, p);
+                            return util.copyDir(snapshot, p);
+                        })
+                        .then(function () {
+                            logger.debug('connect to database in path %s', p);
+                            return db.connect(p);
                         });
-                })
-                .then(connectToDb);
+                });
         },
 
         // TODO implement redirects
@@ -384,4 +353,30 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
             return db.get(key);
         }
     });
+
+    function combineResults(nodeRecords, docRecords, lang) {
+        var docsMap = docRecords.reduce(function (prev, item) {
+                prev[item.key] = item.value;
+                return prev;
+            }, {}),
+            result = nodeRecords
+                .map(function (record) {
+                    var v = record.value;
+                    v.source = {};
+                    v.source[lang] = docsMap[u.format('docs:%s:%s', v.id, lang)];
+                    return v;
+                })
+                .reduce(function (prev, item) {
+                    prev[item.route.name] = prev[item.route.name] || {
+                        title: item.title[lang],
+                        items: []
+                    };
+                    prev[item.route.name ].items.push(item);
+                    return prev;
+                }, {});
+
+        return _.values(result).filter(function (item) {
+            return item.items.length;
+        });
+    }
 });
