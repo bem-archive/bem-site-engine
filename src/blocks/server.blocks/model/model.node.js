@@ -22,25 +22,36 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
 
     function loadData () {
         var def = vow.defer(),
-            link = util.getDataLink();
+            pingLink = util.getPingLink(),
+            dataLink = util.getDataLink();
 
-        if (!link) {
+        if (!pingLink || !dataLink) {
             return vow.reject();
         }
 
-        request.get(link)
-            .pipe(zlib.Gunzip())
-            .pipe(tar.Extract({path: DB_PATH.WORKER}))
-            .on('error', function (err) {
-                logger.error('Error %s occur while downloading database snapshot', err);
-                def.reject(err);
-            })
-            .on('end', function () {
-                var extractedPath = path.join(DB_PATH.WORKER, config.get('NODE_ENV'), 'leveldb');
-                logger.debug(u.format('Data has been successfully loaded from url %s and extracted to path',
-                    link, extractedPath));
-                def.resolve(extractedPath);
-            });
+        request(pingLink, function (error, response) {
+            if (!error && response.statusCode === 200) {
+                request.get(dataLink)
+                    .pipe(zlib.Gunzip())
+                    .pipe(tar.Extract({path: DB_PATH.WORKER}))
+                    .on('error', function (err) {
+                        logger.error('Error %s occur while downloading database snapshot', err);
+                        def.reject(err);
+                    })
+                    .on('end', function () {
+                        var extractedPath = path.join(DB_PATH.WORKER, config.get('NODE_ENV'), 'leveldb');
+                        logger.debug(u.format('Data has been successfully loaded from url %s and extracted to path',
+                            dataLink, extractedPath));
+                        def.resolve(extractedPath);
+                    });
+
+            }else {
+                logger.error(error);
+                logger.error('Remote provider is unreachable now. Status code %s', response.statusCode);
+                def.reject(error);
+            }
+        });
+
         return def.promise();
     }
 

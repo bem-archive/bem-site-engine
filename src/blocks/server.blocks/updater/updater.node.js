@@ -23,7 +23,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
     }
 
     function checkForUpdate() {
-        logger.info('Check for update for start');
+        logger.info('Check for update for start for worker %s', worker);
         var link = util.getPingLink();
 
         if(!link) {
@@ -47,7 +47,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
                 if (marker !== body) {
                     update(body);
                 } else {
-                    logger.debug('Data was not changed');
+                    logger.debug('Data was not changed for worker %s', worker);
                 }
             } else {
                 logger.error(error);
