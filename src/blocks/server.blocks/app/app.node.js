@@ -53,7 +53,7 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                         return;
                     }
 
-                    _.isString(port) && util.chmodSocket(port);
+                    //_.isString(port) && util.chmodSocket(port);
                     logger.info('start application on port or socket %s', port);
                     def.resolve();
                 });
