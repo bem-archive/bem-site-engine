@@ -35,7 +35,7 @@
     "luster": "~0.2.6"
   },
   "devDependencies": {
-    "bse-admin": "~0.0.6",
+    "bse-admin": "git://github.com/bem/bse-admin.git#v0.0.9",
     "borschik": "~1.0.5",
     "bower": "~1.3.12",
     "enb": "~0.13.4",
