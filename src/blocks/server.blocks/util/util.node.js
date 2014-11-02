@@ -1,6 +1,9 @@
 var fs = require('fs'),
     url = require('url'),
 
+    _ = require('lodash'),
+    vow = require('vow'),
+    vowFs = require('vow-fs'),
     fsExtra = require('fs-extra'),
     zlib = require('zlib'),
     vow = require('vow');
@@ -23,13 +26,10 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
          * @param {String} socket - path to socket file
          */
         chmodSocket: function (socket) {
-            if (socket) {
-                try {
-                    fs.chmod(socket, '0777');
-                }catch (e) {
-                    logger.error('Can\'t chmod 0777 to socket');
-                }
-            }
+            return _.isString(socket) ?
+                vowFs.exists(socket).then(function (exists) {
+                    return exists ? vowFs.chmod(socket, '0777') : vow.resolve();
+                }) : vow.resolve();
         },
 
         /**
@@ -37,11 +37,10 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
          * @param {String} socket - path to socket file
          */
         unlinkSocket: function (socket) {
-            try {
-                fs.unlinkSync(socket);
-            }catch (e) {
-                logger.warn('Can\'t unlink socket %s', socket);
-            }
+            return _.isString(socket) ?
+                vowFs.exists(socket).then(function (exists) {
+                    return exists ? vowFs.remove(socket) : vow.resolve();
+                }) : vow.resolve();
         },
 
         /**

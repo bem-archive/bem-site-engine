@@ -2,6 +2,7 @@ var path = require('path'),
 
     _ = require('lodash'),
     vow = require('vow'),
+    vowFs = require('vow-fs'),
     express = require('express');
 
 modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updater'],
@@ -45,17 +46,18 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                     }
                 });
 
-                //_.isString(port) && util.unlinkSocket(port);
+                util.unlinkSocket(port).then(function() {
+                    app.listen(port, function (err) {
+                        if (err) {
+                            def.reject(err);
+                            return;
+                        }
 
-                app.listen(port, function (err) {
-                    if (err) {
-                        def.reject(err);
-                        return;
-                    }
-
-                    //_.isString(port) && util.chmodSocket(port);
-                    logger.info('start application on port or socket %s', port);
-                    def.resolve();
+                        util.chmodSocket(port).then(function() {
+                            logger.info('start application on port or socket %s', port);
+                            def.resolve();
+                        });
+                    });
                 });
 
                 return def.promise();
