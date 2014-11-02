@@ -13,7 +13,9 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
     logger = logger(module);
     
     var menu,
-        worker = luster.id || 0,
+        people,
+        peopleUrls,
+        worker = luster.isWorker ? luster.id : 0,
         DB_PATH = {
             DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),
@@ -199,12 +201,17 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
         },
 
         getPeople: function () {
+            if (people) {
+                return vow.resolve(people);
+            }
+
             var prefix = 'people:';
             return db.getByKeyPrefix(prefix).then(function (records) {
-                return records.reduce(function (prev, item) {
+                people = records.reduce(function (prev, item) {
                     prev[item.key.replace(prefix, '')] = item.value;
                     return prev;
                 }, {});
+                return people;
             });
         },
 
@@ -213,15 +220,20 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         getPeopleUrls: function () {
+            if (peopleUrls) {
+                return vow.resolve(peopleUrls);
+            }
+
             return db.getByCriteria(function (record) {
                 return record.key.indexOf('nodes:') > -1 && record.value.class === 'person';
             })
             .then(function (records) {
-                return records.reduce(function (prev, item) {
+                peopleUrls = records.reduce(function (prev, item) {
                     var value = item.value;
                     prev[value.route.conditions.id] = value.url;
                     return prev;
                 }, {});
+                return peopleUrls;
             });
         },
 
