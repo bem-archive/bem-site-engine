@@ -3,6 +3,7 @@ modules.define('middleware', [
         'middleware__logger',
         'middleware__service',
         'middleware__proxy-example',
+        'middleware__search',
         'middleware__slashes',
         'middleware__redirect',
         'middleware__router',
@@ -13,7 +14,7 @@ modules.define('middleware', [
         'middleware__page',
         'middleware__error'
     ],
-    function(provide, locale, logger, service, proxyExample, slashes, redirect, router, pageTitle, pageMeta, pageMenu, langSwitcher, page, error) {
+    function(provide, locale, logger, service, proxyExample, search, slashes, redirect, router, pageTitle, pageMeta, pageMenu, langSwitcher, page, error) {
 
         return provide(function() {
             return [
@@ -21,6 +22,7 @@ modules.define('middleware', [
                 logger,
                 service,
                 proxyExample,
+                search,
                 slashes,
                 redirect,
                 router,

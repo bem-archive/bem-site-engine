@@ -1,0 +1,7 @@
+- block: link
+  required: true
+
+- block: icon
+  mods: { view: [desktop, touch-pad, touch-phone] }
+
+- mods: { icon: [desktop, touch-pad, touch-phone] }

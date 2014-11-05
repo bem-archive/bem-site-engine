@@ -1,10 +1,9 @@
 block('lang-switch')(
-    def()(function() {
-        return applyCtx({
+    content()(function() {
+        return {
             block: 'link',
-            mix: [{ block: this.block }],
             url: this.ctx.url,
             content: BEM.I18N('lang-switch', 'name')
-        });
+        }
     })
 );

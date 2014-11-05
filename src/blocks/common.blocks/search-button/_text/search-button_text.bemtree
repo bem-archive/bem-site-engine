@@ -1,0 +1,11 @@
+block('search-button').mod('text', true)(
+    content()(function() {
+        return [
+            applyNext(),
+            {
+                elem: 'text',
+                content: BEM.I18N('search-button', 'title')
+            }
+        ];
+    })
+);

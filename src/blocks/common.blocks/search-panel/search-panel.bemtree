@@ -1,0 +1,13 @@
+block('search-panel')(
+    content()(function() {
+        return [
+            { block: 'search-form', mods: { type: 'default' } },
+            {
+                block: 'spin',
+                mods: { theme: 'normal', size: 'xl' },
+                mix: { block: this.block, elem: 'spin' }
+            },
+            { elem: 'content' }
+        ];
+    })
+);

@@ -1,0 +1,3 @@
+block('search-panel')(
+    js()(true)
+);

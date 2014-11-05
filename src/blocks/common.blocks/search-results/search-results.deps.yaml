@@ -1,0 +1,5 @@
+- block: search-item
+
+- elems:
+  - error
+  - error-text

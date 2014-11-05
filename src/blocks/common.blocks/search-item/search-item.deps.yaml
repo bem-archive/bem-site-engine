@@ -1,0 +1,10 @@
+- elems:
+  - choose
+  - description
+  - levels
+  - post
+  - category
+  - lib
+  - title
+
+- mods: { type: [block, post] }

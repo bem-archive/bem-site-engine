@@ -1,5 +1,5 @@
-block page, mod page error {
-
-    default: applyNext(this._isErrorPage = true)
-
-}
+block('page').mod('page', 'error')(
+    def()(function() {
+        return applyNext({ isErrorPage: true });
+    })
+);

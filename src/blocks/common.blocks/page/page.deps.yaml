@@ -1,3 +1,6 @@
+- elems: [css, js, fullscreen]
+- mods: { page: error, touch: yes, fullscreen: true, search: true }
+
 - block: styling
   required: true
 
@@ -9,14 +12,11 @@
   elem: event
   mods: { type: pointer }
 
-- elems: [css, js, fullscreen]
-- mods: { page: error }
-- mods: { touch: yes }
-- mods: { fullscreen: true }
-
-- link
-- menus
-- content
-- metrika
-- highlightjs
-- note
+- block: link
+- block: menus
+- block: content
+- block: metrika
+- block: highlightjs
+- block: search-panel
+- block: search-button
+- block: content-wrapper
