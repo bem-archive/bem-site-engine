@@ -9,7 +9,7 @@ block post, mod view full {
             return [];
         }
 
-        console.log('url %s deps %s', source.url, source.deps);
+        //console.log('url %s deps %s', source.url, source.deps);
 
         return [
 
