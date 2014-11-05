@@ -1,0 +1,29 @@
+.search-panel
+{
+    position: absolute;
+    z-index: 1001;
+    top: 0;
+    right: -350px;
+
+    overflow-y: auto;
+
+    box-sizing: border-box;
+    width: 350px;
+    height: 100%;
+    padding: 20px;
+
+    transition: right .3s ease-out;
+
+    background-color: #fafafa;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,.3);
+
+    &_state_open
+    {
+        right: 0;
+    }
+
+    .search-form
+    {
+        margin-bottom: 10px;
+    }
+}

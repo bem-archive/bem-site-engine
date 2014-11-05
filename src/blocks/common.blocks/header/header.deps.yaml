@@ -1,8 +1,7 @@
+- block: logo
+  mods: { type: bem }
+
 - block: menu-list
-  mods: { type: 'header' }
+  mods: { type: header }
 
-- block: form
-  mods: { visible: 'hidden' }
-
-- block: input
-  mods: { theme: 'normal', 'has-clear': true }
+- block: search-button

@@ -1,0 +1,4 @@
+- block: logger
+- block: config
+- block: model
+- block: template

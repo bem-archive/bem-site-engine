@@ -1,0 +1,22 @@
+block('page').mod('header', true)(
+    content()(function() {
+        var data = this.data;
+
+        return [
+            {
+                block: 'header',
+                content: data.menu.shift()
+            },
+            {
+                block: 'content-wrapper',
+                content: [
+                    { block: 'menus' },
+                    { block: 'content', mods: { view: data.node.view }, js: true },
+                    { block: 'search-panel' }
+                ]
+            },
+            { block: 'metrika' },
+            { elem: 'js' }
+        ];
+    })
+);

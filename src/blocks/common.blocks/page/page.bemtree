@@ -1,20 +1,22 @@
-block page {
+block('page')(
+    def().match(function() { return !this._myGuard; })(function() {
+        this._myGuard = true;
+        this._pathToBundle = leStatics.getUrl(leBundles.getBundlePath(this.data.bundleName) + '/' + this.data.bundleName + '.min');
 
-    default: {
         return applyCtx({
-            block : this.block,
-            title : this.data.title,
-            mods : this.extend({ theme : 'normal', page : this.data.req.route }, this.ctx.mods),
-            head : apply('head'),
-            favicon : this.data.statics + '/favicon.ico'
+            block: this.block,
+            title: this.data.title,
+            mods: this.extend({ theme: 'normal', page: this.data.req.route, search: true }, this.ctx.mods),
+            head: apply('head'),
+            favicon: this.data.statics + '/favicon.ico'
         });
-    }
+    }),
 
-    head: {
+    mode('head')(function() {
         var c = [],
             meta = this.data.meta;
 
-        c.push({ elem : 'css' });
+        c.push({ elem: 'css' });
 
         if(meta) {
             if(meta.description)
@@ -44,17 +46,20 @@ block page {
         }
 
         return applyCtx(c);
-    }
+    }),
 
-    asset, this.elem !== '': {
-        prefix : leStatics.getUrl(leBundles.getBundlePath(this.data.bundleName) + '/' + this.data.bundleName + '.min'),
-        suffix : this.ctx.ext
-    }
-
-    content: [
-        { block: 'menus' },
-        { block : 'content', mods: { view: this.data.node.view }, js: true },
-        { block : 'metrika' },
-        { elem : 'js' }
-    ]
-}
+    content()(function() {
+        return [
+            {
+                block: 'content-wrapper',
+                content: [
+                    { block: 'menus' },
+                    { block: 'content', mods: { view: this.data.node.view }, js: true },
+                    { block: 'search-panel' }
+                ]
+            },
+            { block: 'metrika' },
+            { elem: 'js' }
+        ];
+    })
+);

@@ -1,0 +1,42 @@
+block('search-item').mod('type', 'post')(
+    content()(function() {
+        var self = this,
+            content = applyNext();
+
+        return [
+            {
+                elem: 'category',
+                content: content.category
+            },
+            content.items.map(function(item) {
+                var source = item.source && item.source[req.lang];
+
+                return source ? {
+                    elem: 'post',
+                    content: [
+                        {
+                            block: 'link',
+                            url: item.url,
+                            attrs: { target: '_blank', title: source.title },
+                            mix: { block: self.block, elem: 'title' },
+                            content: source.title
+                        },
+                        source.summary ? {
+                            elem: 'description',
+                            content: source.summary
+                        } : undefined
+                    ]
+                } : {
+                    elem: 'post',
+                    content: {
+                        block: 'link',
+                        url: item.url,
+                        attrs: { target: '_blank', title: item.title[req.lang] },
+                        mix: { block: self.block, elem: 'title' },
+                        content: item.title[req.lang]
+                    }
+                };
+            })
+        ];
+    })
+);

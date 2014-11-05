@@ -1,6 +1,6 @@
 block('menu-list').mod('type', 'main')(
-    match(this.ctx.content).content()(function() {
-        var _content = this.ctx.content.map(function(item, index) {
+    match(function() { return this.ctx.content; }).content()(function() {
+        return this.ctx.content.map(function(item, index) {
             //console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
             //                        item.title, item.url, item.type, item.active, item.size);
 
@@ -25,14 +25,12 @@ block('menu-list').mod('type', 'main')(
 
             return apply('item', { ctx: item });
 
-        });
-        _content.push({ block: 'lang-switch', url: this.data.langSwitch });
-        _content.push({
-            block: 'menu-list',
-            elem: 'delimeter'
-        });
-
-        return _content;
+        }).concat(
+            { block: 'menu-list', elem: 'delimeter' },
+            { block: 'lang-switch', url: this.data.langSwitch },
+            { block: 'menu-list', elem: 'delimeter' },
+            { block: 'search-button', mods: { text: true } }
+        );
     }),
 
     mode('logo')(function() {

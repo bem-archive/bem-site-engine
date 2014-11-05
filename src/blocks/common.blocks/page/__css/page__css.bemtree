@@ -1,14 +1,10 @@
-block page, elem css {
+block('page').elem('css')(
+    def()(function() {
+        var elem = this.elem;
 
-    default: {
-        var url = apply('asset', this.ctx.ext = this.elem),
-            elem = this.elem,
-            prefix = url.prefix,
-            suffix = url.suffix;
         return [
-            { elem : elem, url : prefix + '.' + suffix, ie : false },
-            { elem : elem, url : prefix + '.ie.' + suffix, ie : 'lte IE 9' }
+            { elem : elem, url : this._pathToBundle + '.css', ie : false },
+            { elem : elem, url : this._pathToBundle + '.ie.css', ie : 'lte IE 9' }
         ];
-    }
-
-}
+    })
+);

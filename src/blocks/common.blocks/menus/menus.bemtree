@@ -1,16 +1,17 @@
-block menus, this.data.menu, default: {
-
-    return applyCtx([
-        this.data.menu.map(function(column, index) {
-            return {
-                block: 'menu-list',
-                content: column.items,
-                mods: { type: column.type }
-            }
-        }),
-        this.data.menu.length > 1 ? {
-            block: 'page',
-            elem: 'fullscreen'
-        } : ''
-    ])
-}
+block('menus')(
+    def().match(function() { return this.data.menu; })(function() {
+        return applyCtx([
+            this.data.menu.map(function(column) {
+                return {
+                    block: 'menu-list',
+                    content: column.items,
+                    mods: { type: column.type }
+                };
+            }),
+            this.data.menu.length > 1 ? {
+                block: 'page',
+                elem: 'fullscreen'
+            } : ''
+        ]);
+    })
+);

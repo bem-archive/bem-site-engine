@@ -95,7 +95,9 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
             }
         }else {
             if(_.isArray(data[field])) {
-                return data[field].indexOf(value) !== -1;
+                return data[field].some(function(item) {
+                    return item.indexOf(value) !== -1;
+                });
             }else {
                 return data[field] === value;
             }

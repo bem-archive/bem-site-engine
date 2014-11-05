@@ -1,0 +1,10 @@
+- elems:
+  - content
+  - spin
+
+- block: search-results
+- block: search-form
+- block: events
+  elem: channels
+
+

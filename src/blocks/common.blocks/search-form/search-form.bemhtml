@@ -1,0 +1,4 @@
+block('search-form')(
+    tag()('form'),
+    js()(true)
+);

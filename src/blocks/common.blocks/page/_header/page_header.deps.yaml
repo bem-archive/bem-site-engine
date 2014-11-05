@@ -1,0 +1,5 @@
+- mods: { search: true }
+
+- block: header
+- block: content-wrapper
+- block: search-panel

@@ -1,0 +1,28 @@
+block('header')(
+    match(function() { return this.ctx.content.items; }).content()(function() {
+
+        var items = this.ctx.content.items.filter(function(item, idx) {
+            return idx > 0;
+        });
+
+        return [
+            {
+                block: 'logo',
+                mods: { type: 'bem' },
+                url: '/'
+            },
+            {
+                block: 'menu-list',
+                mods: { type: 'header' },
+                content: items
+            },
+            {
+                block: 'lang-switch',
+                url: this.data.langSwitch
+            },
+            {
+                block: 'search-button'
+            }
+        ];
+    })
+);
