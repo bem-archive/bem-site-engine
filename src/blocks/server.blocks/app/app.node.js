@@ -46,19 +46,19 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                     }
                 });
 
-                util.unlinkSocket(port).then(function() {
+                //util.unlinkSocket(port).then(function() {
                     app.listen(port, function (err) {
                         if (err) {
                             def.reject(err);
                             return;
                         }
 
-                        //util.chmodSocket(port).then(function() {
+                        util.chmodSocket(port).then(function() {
                             logger.info('start application on port or socket %s', port);
                             def.resolve();
-                        //});
+                        });
                     });
-                });
+                //});
 
                 return def.promise();
             },
