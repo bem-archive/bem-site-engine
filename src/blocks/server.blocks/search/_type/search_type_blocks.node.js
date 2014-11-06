@@ -56,14 +56,14 @@ modules.define('search_type_blocks', ['logger', 'model'], function(provide, logg
         },
 
         search: function (text, lang) {
+            // var startTime = +(new Date());
             return model
                 .getNodesByCriteria(function (record) {
-                    var k = record.key,
-                        v = record.value;
-                    return text.length > 1 && k.indexOf('nodes:') > -1 &&
-                        v.class === 'block' && v.title && v.title[lang].indexOf(text) > -1;
+                    var v = record.value;
+                    return v.class === 'block' && v.title && v.title[lang].indexOf(text) > -1;
                 }, false)
                 .then(function (records) {
+                    // console.log('SEARCH BLOCKS TIME: %s', (+(new Date() - startTime)));
                     var results = _.values(this.convert(records.map(function(record) {
                         return record.value;
                     }), lang));

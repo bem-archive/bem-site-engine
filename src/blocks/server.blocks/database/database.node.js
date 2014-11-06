@@ -35,6 +35,8 @@ modules.define('database', ['logger'], function (provide, logger) {
          * @returns {*}
          */
         _getByCriteria = function (criteria, config) {
+            logger.verbose(JSON.stringify(config));
+
             var def = vow.defer(),
                 result = [];
             db.createReadStream(_.extend(DB_OPTIONS, config))
@@ -77,6 +79,10 @@ modules.define('database', ['logger'], function (provide, logger) {
                 });
         },
 
+        /**
+         * Disconnect from leveldb database
+         * @returns {*}
+         */
         disconnect: function() {
             var def = vow.defer();
             if (!db) {
@@ -140,19 +146,21 @@ modules.define('database', ['logger'], function (provide, logger) {
         /**
          * Returns array of values by criteria function
          * @param {Function} criteria function
+         * @param {Object} options - advanced options object
          * @returns {*}
          */
-        getValuesByCriteria: function (criteria) {
-            return _getByCriteria(criteria, { keys: false, values: true });
+        getValuesByCriteria: function (criteria, options) {
+            return _getByCriteria(criteria, _.extend({ keys: false, values: true }, options || {}));
         },
 
         /**
          * Returns array of database records by criteria function
          * @param {Function} criteria function
+         * @param {Object} options - advanced options object
          * @returns {*}
          */
-        getByCriteria: function (criteria) {
-            return _getByCriteria(criteria, { keys: true, values: true });
+        getByCriteria: function (criteria, options) {
+            return _getByCriteria(criteria, _.extend({ keys: true, values: true }, options || {}));
         },
 
         /**
@@ -163,7 +171,7 @@ modules.define('database', ['logger'], function (provide, logger) {
         getByKeyPrefix: function (prefix) {
             return this.getByCriteria(function (record) {
                 return record.key.indexOf(prefix) > -1;
-            });
+            }, undefined);
         }
     });
 });

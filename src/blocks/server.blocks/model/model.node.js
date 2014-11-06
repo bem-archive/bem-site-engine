@@ -151,7 +151,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
         getNodeItems: function (node) {
             return db.getValuesByCriteria(function (value) {
                 return value.parent === node.id;
-            });
+            }, { gte: 'nodes:', lt: 'people', fillCache: true });
         },
 
         /**
@@ -341,17 +341,18 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         getNodesByTagsCriteria: function (lang, node) {
-            var value = node.route ? node.route.conditions.id : node;
+            var value = node.route ? node.route.conditions.id : node,
+                hint = { gte: 'docs:', lt: 'nodes', fillCache: true };
             return db.getByCriteria(function (record) {
                     var k = record.key,
                         v = record.value,
-                        criteria = k.indexOf('docs:') > -1 && k.indexOf(':' + lang) > -1 && v.tags;
+                        criteria = k.indexOf(':' + lang) > -1 && v.tags;
 
                     if (value) {
                         criteria = criteria && v.tags.indexOf(value) > -1;
                     }
                     return criteria;
-                })
+                }, hint)
                 .then(function (docRecords) {
                     return vow.all([ this.getNodesBySourceRecords(docRecords), docRecords ]);
                 }, this)
@@ -360,18 +361,38 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                 }, this);
         },
 
+        /**
+         * Retrieve nodes by criteria function
+         * @param {Function} criteria function
+         * @param {Boolean} onlyFirst - if true then only first founded record will be returned
+         * @returns {*}
+         */
         getNodesByCriteria: function (criteria, onlyFirst) {
-            return db.getByCriteria(function(record) {
-                return criteria(record);
-            }).then(function (records) {
-               return onlyFirst ? records[0] : records;
-            });
+            var hint = { gte: 'nodes:', lt: 'people', fillCache: true };
+            return db
+                .getByCriteria(function(record) {
+                    return criteria(record);
+                }, hint)
+                .then(function (records) {
+                   return onlyFirst ? records[0] : records;
+                });
         },
 
+        /**
+         * Wrapper method for put example files data to cache
+         * @param {String} key - database key
+         * @param {Object} value - database value
+         * @returns {*}
+         */
         putToCache: function (key, value) {
             return db.put(key, value);
         },
 
+        /**
+         * Wrapper method for retrieving example files from cache
+         * @param {String} key - database key
+         * @returns {*}
+         */
         getFromCache: function (key) {
             return db.get(key);
         }
