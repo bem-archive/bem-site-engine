@@ -39,7 +39,8 @@ modules.define('search_type_blocks', ['logger', 'model'], function(provide, logg
                             lib: library,
                             title: item.title,
                             description: item.source.data, //getDescription(item, lang),
-                            versions: {}
+                            versions: {},
+                            class: 'block'
                         };
 
                 existed.versions[version] = existed.versions[version] || [];
