@@ -1,5 +1,5 @@
 modules.define('search-form', ['i-bem__dom', 'functions__debounce', 'events__channels'], function(provide, BEMDOM, debounce, channels) {
-    provide(BEMDOM.decl({ modName: 'type', modVal: 'default' }, {
+    provide(BEMDOM.decl({ block: this.name, modName: 'type', modVal: 'default' }, {
         onSetMod: {
             js: {
                 inited: function() {
