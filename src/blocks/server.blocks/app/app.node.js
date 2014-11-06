@@ -45,7 +45,7 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                     }
                 });
 
-                _.isString(port) && util.unlinkSocket(port);
+                //_.isString(port) && util.unlinkSocket(port);
 
                 app.listen(port, function (err) {
                     if(err) {
