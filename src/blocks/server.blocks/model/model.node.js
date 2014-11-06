@@ -341,7 +341,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         getNodesByTagsCriteria: function (lang, node) {
-            var value = node.route.conditions.id;
+            var value = node.route ? node.route.conditions.id : node;
             return db.getByCriteria(function (record) {
                     var k = record.key,
                         v = record.value,
