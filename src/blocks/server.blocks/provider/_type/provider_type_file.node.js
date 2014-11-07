@@ -89,6 +89,18 @@ modules.define('providerFile', ['logger', 'util'], function(provide, logger, uti
             });
         },
 
+        /**
+         * Copy file from one place on filesystem to another
+         * @param options - {Object} with fields:
+         * - source {String} path to source file
+         * - target {String} path to target file
+         * @returns {*}
+         */
+        copy: function(options) {
+            logger.debug('copy file from %s to %s', options.source, options.target);
+            return vowFs.copy(options.source, options.target);
+        },
+
         exists: function(options) {
             return vowFs.exists(options.path);
         }
