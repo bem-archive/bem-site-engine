@@ -1,5 +1,6 @@
 var path = require('path'),
 
+    luster = require('luster'),
     vow = require('vow'),
     _ = require('lodash');
 
@@ -128,18 +129,31 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
     }
 
     function load() {
-        var promise = vow.resolve(),
-            localModelFilePath = path.join('backups', 'data.json');
-        if(!util.isDev()) {
-            promise = providerFile.remove({ path: localModelFilePath })
-                .then(function() {
+        var workerId = luster.id || 0,
+            localModelDirPath = path.join('backups', workerId.toString()),
+            localModelFilePath = path.join(localModelDirPath, 'data.json')
+
+        return providerFile
+            .makeDir({ path: localModelDirPath })
+            .then(function () {
+                return providerFile.exists({ path: localModelFilePath });
+            })
+            .then(function (exists) {
+                return exists ? providerFile.remove({ path: localModelFilePath }) : vow.resolve();
+            })
+            .then(function() {
+                if(util.isDev()) {
+                    return providerFile.copy({
+                        source: path.join('backups', 'data.json'),
+                        target: localModelFilePath
+                    });
+                } else {
                     return providerDisk.downloadFile({
                         source: path.join(config.get('model:dir'), config.get('NODE_ENV'), 'data.json'),
                         target: localModelFilePath
                     });
-            });
-        }
-        return promise
+                }
+            })
             .then(function() {
                 return providerFile.load({
                     path: localModelFilePath,
