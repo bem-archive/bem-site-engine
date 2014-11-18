@@ -17,7 +17,6 @@ modules.define('middleware', [
     ],
     function(provide, locale, logger, service, proxyExample, search, slashes, redirect, router,
              htmlCache, pageTitle, pageMeta, pageMenu, langSwitcher, page, error) {
-
         return provide(function() {
             return [
                 locale,

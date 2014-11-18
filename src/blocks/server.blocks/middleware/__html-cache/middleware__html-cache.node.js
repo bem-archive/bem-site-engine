@@ -36,4 +36,3 @@ modules.define('middleware__html-cache', ['logger', 'constants'], function(provi
         };
     });
 });
-

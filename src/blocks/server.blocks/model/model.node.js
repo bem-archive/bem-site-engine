@@ -395,27 +395,35 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          */
         getFromCache: function (key) {
             return db.get(key);
+        },
+
+        getPageFromCache: function (url) {
+            return db.get(u.format('_page:%s', url));
+        },
+
+        setPageToCache: function (url, html) {
+            return db.put(u.format('_page:%s', url), html);
         }
     });
 
     function combineResults(nodeRecords, docRecords, lang) {
         var docsMap = docRecords.reduce(function (prev, item) {
-                prev[item.key] = item.value;
+                prev[ item.key ] = item.value;
                 return prev;
             }, {}),
             result = nodeRecords
                 .map(function (record) {
                     var v = record.value;
                     v.source = {};
-                    v.source[lang] = docsMap[u.format('docs:%s:%s', v.id, lang)];
+                    v.source[ lang ] = docsMap[ u.format('docs:%s:%s', v.id, lang) ];
                     return v;
                 })
                 .reduce(function (prev, item) {
-                    prev[item.route.name] = prev[item.route.name] || {
-                        title: item.title[lang],
+                    prev[ item.route.name ] = prev[ item.route.name ] || {
+                        title: item.title[ lang ],
                         items: []
                     };
-                    prev[item.route.name ].items.push(item);
+                    prev[ item.route.name ].items.push(item);
                     return prev;
                 }, {});
 
