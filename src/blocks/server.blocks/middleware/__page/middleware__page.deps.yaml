@@ -2,3 +2,4 @@
 - block: logger
 - block: model
 - block: template
+- block: provider

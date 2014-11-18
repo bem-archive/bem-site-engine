@@ -38,7 +38,10 @@ modules.define('providerFile', ['logger', 'util'], function(provide, logger, uti
          */
         save:  function(options) {
             logger.debug('save data to file file %s', options.path ? options.path : 'unknown file');
-            return vowFs.write(options.path, options.data, 'utf8');
+            var promise = options.archive ? util.zip(options.data) : vow.resolve(options.data);
+            return promise.then(function(data) {
+                return vowFs.write(options.path, data, 'utf8');
+            });
         },
 
         /**
