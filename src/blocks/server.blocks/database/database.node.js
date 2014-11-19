@@ -39,7 +39,7 @@ modules.define('database', ['logger'], function (provide, logger) {
 
             var def = vow.defer(),
                 result = [];
-            db.createReadStream(_.extend(DB_OPTIONS, config))
+            db.createReadStream(_.extend({}, DB_OPTIONS, config))
                 .on('data', function (data) {
                     if (criteria(data)) {
                         result.push(data);
@@ -111,11 +111,12 @@ modules.define('database', ['logger'], function (provide, logger) {
          * @param {String} key of record
          * @returns {Object} value of record
          */
-        get: function (key) {
+        get: function (key, options) {
+            options = options || {};
             logger.verbose(util.format('get: %s', key));
 
             var def = vow.defer();
-            db.get(key, DB_OPTIONS, function (err, value) {
+            db.get(key, _.extend({}, DB_OPTIONS, options), function (err, value) {
                 if (err) {
                     if (err.type === 'NotFoundError') {
                         return def.resolve();
@@ -133,11 +134,12 @@ modules.define('database', ['logger'], function (provide, logger) {
          * @param {Object} value of record
          * @returns {*}
          */
-        put: function (key, value) {
+        put: function (key, value, options) {
+            options = options || {};
             logger.verbose(util.format('put: %s %s', key, value), module);
 
             var def = vow.defer();
-            db.put(key, value, DB_OPTIONS, function (err) {
+            db.put(key, value, _.extend({}, DB_OPTIONS, options), function (err) {
                 err ? def.reject(err) : def.resolve();
             });
             return def.promise();
@@ -172,6 +174,27 @@ modules.define('database', ['logger'], function (provide, logger) {
             return this.getByCriteria(function (record) {
                 return record.key.indexOf(prefix) > -1;
             }, undefined);
+        },
+
+        /**
+         * Performs batch operations in database
+         * @param {Array} operations - array of operations that should be performed in batch mode
+         * @returns {*}
+         */
+        batch: function (operations) {
+            if (!operations.length) {
+                return vow.resolve();
+            }
+
+            var def = vow.defer();
+            db.batch(operations, DB_OPTIONS, function (err) {
+                if (err) {
+                    def.reject(err);
+                } else {
+                    def.resolve();
+                }
+            });
+            return def.promise();
         }
     });
 });
