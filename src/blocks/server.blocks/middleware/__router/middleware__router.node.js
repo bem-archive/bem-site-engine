@@ -19,8 +19,8 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                     .then(function(node) {
                         return _this.afterFindNode(node, req, res, next);
                     })
-                    .fail(function(err) {
-                        console.log(err);
+                    .fail(function() {
+                        throw error.HttpError.createError(500);
                     });
             };
         },
@@ -94,25 +94,37 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
          * @returns {boolean}
          */
         afterFindNode: function(node, req, res, next) {
-            return model.getNodeItems(node)
-                .then(function(items) {
-                    if(items.length) {
+            var isLib = !!node.lib,
+                isGroupType = node.type === 'group',
+                isPostsView =  node.view === 'posts',
+                cb = function () {
+                    req.__data.node = node;
+                    return next();
+                };
+
+            if (isLib || isGroupType || isPostsView) {
+                return model.getNodeItems(node)
+                    .then(function(items) {
+                        if(!items.length) {
+                            return cb();
+                        }
+                        
                         //redirect to newest library version
-                        if(node.lib) {
+                        if(isLib) {
                             return res.redirect(301, items[0].url);
                         }
 
                         //redirect to first post of child posts
-                        if('group' === node.type || 'posts' === node.view) {
+                        if(isGroupType || isPostsView) {
                             return res.redirect(301, items.filter(function (item) {
                                     return !item.hidden[req.lang];
                                 })[0].url
                             );
                         }
-                    }
-                    req.__data.node = node;
-                    return next();
-                });
+                    });
+            } else {
+                return cb();
+            }
         }
     });
 });

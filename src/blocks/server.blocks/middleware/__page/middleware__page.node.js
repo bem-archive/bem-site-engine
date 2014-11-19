@@ -2,8 +2,8 @@ var path = require('path'),
     vow = require('vow'),
     _ = require('lodash');
 
-modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 'template', 'providerFile'],
-    function(provide, config, logger, constants, model, template, providerFile) {
+modules.define('middleware__page', ['config', 'logger', 'util', 'model', 'template'],
+    function(provide, config, logger, util, model, template) {
 
         provide({
 
@@ -81,7 +81,6 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
                  */
                 return function(req, res, next) {
                     var node = req.__data.node,
-                        pagePath = path.join(constants.PAGE_CACHE, node.url),
                         ctx = {
                             block: 'i-global',
                             req: req, //request object //TODO remove it and fix templates
@@ -96,14 +95,7 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
                             return template.apply(ctx, req, req.query.__mode);
                         })
                         .then(function (html) {
-                            providerFile.makeDir({ path: pagePath })
-                                .then(function() {
-                                    return providerFile.save({
-                                        path: path.join(pagePath, (req.lang + '.html.gzip')),
-                                        archive: true,
-                                        data: html
-                                    });
-                                });
+                            util.putPageToCache(req, html);
                             res.end(html);
                         })
                         .fail(function(err) {

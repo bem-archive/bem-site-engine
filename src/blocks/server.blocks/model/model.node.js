@@ -2,7 +2,6 @@ var u = require('util'),
     path = require('path'),
     zlib = require('zlib'),
 
-    luster = require('luster'),
     tar = require('tar'),
     request = require('request'),
     _ = require('lodash'),
@@ -16,7 +15,8 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
         people,
         peopleUrls,
         nodeMap,
-        worker = (luster && luster.isWorker) ? luster.wid : 0,
+        luster = util.isDev() ? { id: 0 } : require('luster'),
+        worker = luster.id || 0,
         DB_PATH = {
             DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),

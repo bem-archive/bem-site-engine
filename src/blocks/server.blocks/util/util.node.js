@@ -1,4 +1,4 @@
-var fs = require('fs'),
+var path = require('path'),
     url = require('url'),
 
     _ = require('lodash'),
@@ -151,6 +151,21 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
                 port: port,
                 pathname: '/ping/' + config.get('NODE_ENV')
             });
+        },
+
+        putPageToCache: function(req, pageContent) {
+            var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url);
+            return vowFs.makeDir(pagePath).then(function () {
+                return this.zip(pageContent).then(function(archive) {
+                    return vowFs.write(path.join(pagePath, 'page.html.gzip'), archive, 'utf8');
+                });
+            }, this);
+        },
+
+        clearPageCache: function() {
+            return vowFs.exists(constants.PAGE_CACHE).then(function (exists) {
+                return exists ? this.removeDir(constants.PAGE_CACHE) : vow.resolve();
+            }, this);
         }
     });
 });

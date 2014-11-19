@@ -1,5 +1,4 @@
-var luster = require('luster'),
-    request = require('request'),
+var request = require('request'),
     CronJob = require('cron').CronJob;
 
 modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__redirect'],
@@ -7,13 +6,17 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
     logger = logger(module);
 
     var job,
+        luster = util.isDev() ? { id: 0 } : require('luster'),
         worker = luster.id || 0,
         marker;
 
     function update(snapshotName) {
         logger.warn('Data has been changed. Model will be updated to %s for worker %s', snapshotName, worker);
 
-        model.reload(snapshotName)
+        return model.reload(snapshotName)
+            .then(function() {
+                return util.clearPageCache();
+            })
             .then(function () {
                 redirect.init();
                 marker = snapshotName;

@@ -8,19 +8,14 @@ modules.define('middleware__html-cache', ['logger', 'constants'], function(provi
     provide(function() {
         return function(req, res, next) {
             var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url, (req.lang + '.html.gzip'));
-
             fs.exists(pagePath, function (exists) {
                 if(!exists) {
                     return next();
                 }
 
                 logger.debug('load page from cache: %s', pagePath);
-
-                var raw = fs.createReadStream(pagePath);
-                var acceptEncoding = req.headers['accept-encoding'];
-                if (!acceptEncoding) {
-                    acceptEncoding = '';
-                }
+                var raw = fs.createReadStream(pagePath),
+                    acceptEncoding = req.headers['accept-encoding'] || '';
 
                 if (acceptEncoding.match(/\bgzip\b/)) {
                     res.writeHead(200, { 'content-encoding': 'gzip' });
