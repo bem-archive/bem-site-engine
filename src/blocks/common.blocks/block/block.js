@@ -1,6 +1,6 @@
-modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
+modules.define('block', ['i-bem__dom', 'jquery'], function(provide, BEMDOM, $) {
 
-BEMDOM.decl('block', {
+provide(BEMDOM.decl(this.name, {
 
     onSetMod: {
         js: {
@@ -74,19 +74,19 @@ BEMDOM.decl('block', {
         return tabName ? tabName[1] : false;
     },
 
-
     _setTabUrl: function(tabName) {
         // inherit form page block
         if(window.legacyIE) return;
 
         // Fix duplicate name tab in location.pathname, 'button/docs/jsdoc/examples/docs/'
-        // when tabname is isset in location.pathname,
+        // when tabname is set in location.pathname,
         // in this case get direct block path with regexp + tab name
+        var location = window.location;
         if(this._isTabNameInPath()) {
-            tabName = window.location.pathname.match(/\S+(?=(docs)|(jsdoc)|(examples))/)[0] + tabName;
+            tabName = location.pathname.match(/\S+(?=(docs)|(jsdoc)|(examples))/)[0] + tabName;
         }
 
-        window.history.pushState(null, null, tabName + '/');
+        window.history.pushState(null, null, tabName + '/' + location.hash);
     },
 
     _loadExamples: function() {
@@ -104,8 +104,6 @@ BEMDOM.decl('block', {
         });
     }
 
-});
-
-provide(BEMDOM);
+}));
 
 });

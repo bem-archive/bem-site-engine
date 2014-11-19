@@ -1,0 +1,17 @@
+.block-example__anchor .anchor
+{
+    left: -23px;
+
+    width: 24px;
+    height: 16px;
+
+    //hack for Fx which doesn't work well with opacity in this case
+    display: none;
+
+    opacity: 1;
+
+    .block-example__header:hover &
+    {
+        display: block;
+    }
+}

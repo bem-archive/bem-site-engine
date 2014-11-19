@@ -62,7 +62,12 @@ block('block-example')(
         return [
             {
                 elem: 'header',
+                attrs: { id: name },
                 content: [
+                    {
+                        elem: 'anchor',
+                        url: '#' + name
+                    },
                     {
                         elem: 'blank',
                         url: url,

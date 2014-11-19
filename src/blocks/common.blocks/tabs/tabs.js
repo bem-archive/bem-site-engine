@@ -179,6 +179,7 @@ BEMDOM.decl('tabs', {
 }, {
     live: function() {
         this.liveBindTo('tab', 'pointerclick', function(e) {
+            window.location.hash = '';
             this.setActiveTab(e.currentTarget, e);
         });
     }
