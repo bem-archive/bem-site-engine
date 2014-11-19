@@ -1,0 +1,7 @@
+block('block-example').elem('anchor').content()(function(){
+    return {
+        block: 'link',
+        url: this.ctx.url,
+        mix: { block: 'anchor' }
+    };
+});

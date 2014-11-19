@@ -3,6 +3,7 @@
   elem: i18n
 
 - elems:
+  - anchor
   - blank
   - header
   - link

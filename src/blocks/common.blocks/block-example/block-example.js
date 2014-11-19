@@ -90,6 +90,8 @@ BEMDOM.decl('block-example', {
             _this.changeHeight(el);
 
             _this.loadComplete[el] = true;
+
+            _this.emit('iframeLoaded');
         });
     },
 
