@@ -14,7 +14,6 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
     var menu,
         people,
         peopleUrls,
-        nodeMap,
         luster = util.isDev() ? { id: 0 } : require('luster'),
         worker = luster.id || 0,
         DB_PATH = {
@@ -135,18 +134,11 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         getNodeByUrl: function (url) {
-            nodeMap = nodeMap || {};
-            var node = nodeMap[url];
-            if(node) {
-                return vow.resolve(node);
-            }
-
             return db.get(u.format('urls:%s', url)).then(function (nodeRecordKey) {
                 if (!nodeRecordKey) {
                     return vow.resolve(null);
                 }
                 return db.get(nodeRecordKey).then(function (node) {
-                    nodeMap[url] = node;
                     return node;
                 });
             });
