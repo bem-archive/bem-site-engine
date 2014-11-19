@@ -59,6 +59,11 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             return config.get('defaultLanguage') || 'en';
         },
 
+        /**
+         * Zip given string content
+         * @param {String} content - data for zipping
+         * @returns {*}
+         */
         zip: function(content) {
             var def = vow.defer();
             zlib.gzip(new Buffer(content, 'utf-8'), function(err, result) {
@@ -67,6 +72,11 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             return def.promise();
         },
 
+        /**
+         * Unzip given zipped content
+         * @param {String} content - zipped data
+         * @returns {*}
+         */
         unzip: function (content) {
             var def = vow.defer();
             zlib.gunzip(new Buffer(content, 'utf-8'), function (err, result) {
@@ -75,6 +85,11 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             return def.promise();
         },
 
+        /**
+         * Removes all files and folders from given path
+         * @param {String} p - path that should be removed
+         * @returns {*}
+         */
         removeDir: function (p) {
             var def = vow.defer();
             fsExtra.remove(p, function (err) {
@@ -83,6 +98,12 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             return def.promise();
         },
 
+        /**
+         * Copy all files from source folder to target folder
+         * @param {String} source - path to source folder
+         * @param {String} target - path to target folder
+         * @returns {*}
+         */
         copyDir: function(source, target) {
             var def = vow.defer();
             fsExtra.copy(source, target, function (err) {
@@ -91,6 +112,10 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             return def.promise();
         },
 
+        /**
+         * Constrain link for data updates retrieve
+         * @returns {*}
+         */
         getDataLink: function() {
             var provider = config.get('provider'),
                 host,
@@ -122,6 +147,10 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             });
         },
 
+        /**
+         * Constrain link for data version ping
+         * @returns {*}
+         */
         getPingLink: function() {
             var provider = config.get('provider'),
                 host,
@@ -153,6 +182,12 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             });
         },
 
+        /**
+         * Save html code of pages as cached files
+         * @param {Object} req - request object
+         * @param {String} pageContent - html code of page
+         * @returns {*}
+         */
         putPageToCache: function(req, pageContent) {
             var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url);
             return vowFs.makeDir(pagePath).then(function () {
@@ -162,6 +197,10 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             }, this);
         },
 
+        /**
+         * Clears folder with html pages
+         * @returns {*}
+         */
         clearPageCache: function() {
             return vowFs.exists(constants.PAGE_CACHE).then(function (exists) {
                 return exists ? this.removeDir(constants.PAGE_CACHE) : vow.resolve();
