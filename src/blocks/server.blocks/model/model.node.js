@@ -15,7 +15,8 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
     var menu,
         people,
         peopleUrls,
-        worker = luster.isWorker ? luster.id : 0,
+        nodeMap,
+        worker = (luster && luster.isWorker) ? luster.wid : 0,
         DB_PATH = {
             DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),
@@ -134,11 +135,20 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         getNodeByUrl: function (url) {
+            nodeMap = nodeMap || {};
+            var node = nodeMap[url];
+            if(node) {
+                return vow.resolve(node);
+            }
+
             return db.get(u.format('urls:%s', url)).then(function (nodeRecordKey) {
                 if (!nodeRecordKey) {
                     return vow.resolve(null);
                 }
-                return db.get(nodeRecordKey);
+                return db.get(nodeRecordKey).then(function (node) {
+                    nodeMap[url] = node;
+                    return node;
+                });
             });
         },
 
@@ -395,14 +405,6 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          */
         getFromCache: function (key) {
             return db.get(key);
-        },
-
-        getPageFromCache: function (url) {
-            return db.get(u.format('_page:%s', url));
-        },
-
-        setPageToCache: function (url, html) {
-            return db.put(u.format('_page:%s', url), html);
         }
     });
 
