@@ -1,7 +1,4 @@
-block content, mod view post {
-
-    content: {
-        block: 'post',
-        mods: { view: 'full' }
-    }
-}
+block('content').mod('view', 'post').content()({
+    block: 'post',
+    mods: { view: 'full' }
+});

@@ -1,15 +1,6 @@
-block posts {
-
-    content: {
-        var node = this.ctx.node;
-
-        if(!node.items) {
-            return [];
-        }
-
-        return {
-            elem: 'list',
-            content: node.items
-        };
-    }
-}
+block('posts').content()(function() {
+    return this.ctx.node.items ? {
+        elem: 'list',
+        content: node.items
+    } : [];
+});
