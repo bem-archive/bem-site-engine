@@ -10,6 +10,7 @@
     - proxy-example
     - search
     - router
+    - html-cache
     - slashes
     - redirect
     - service

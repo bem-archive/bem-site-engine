@@ -61,6 +61,14 @@ modules.define('util', ['logger', 'constants', 'config'], function(provide, logg
             return config.get('defaultLanguage') || 'en';
         },
 
+        zip: function(content) {
+            var def = vow.defer();
+            zlib.gzip(new Buffer(content, 'utf-8'), function(err, result) {
+                def.resolve(err ? content : result);
+            });
+            return def.promise();
+        },
+
         unzip: function(content) {
             var def = vow.defer();
             zlib.gunzip(new Buffer(content, 'utf-8'), function(err, result) {

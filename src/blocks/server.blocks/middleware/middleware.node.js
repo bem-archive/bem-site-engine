@@ -7,6 +7,7 @@ modules.define('middleware', [
         'middleware__slashes',
         'middleware__redirect',
         'middleware__router',
+        'middleware__html-cache',
         'middleware__page-title',
         'middleware__page-meta',
         'middleware__page-menu',
@@ -14,7 +15,8 @@ modules.define('middleware', [
         'middleware__page',
         'middleware__error'
     ],
-    function(provide, locale, logger, service, proxyExample, search, slashes, redirect, router, pageTitle, pageMeta, pageMenu, langSwitcher, page, error) {
+    function(provide, locale, logger, service, proxyExample, search, slashes, redirect, router,
+             htmlCache, pageTitle, pageMeta, pageMenu, langSwitcher, page, error) {
 
         return provide(function() {
             return [
@@ -26,6 +28,7 @@ modules.define('middleware', [
                 slashes,
                 redirect,
                 router,
+                htmlCache,
                 pageTitle,
                 pageMeta,
                 pageMenu,
