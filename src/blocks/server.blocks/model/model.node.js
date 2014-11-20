@@ -1,6 +1,6 @@
 var path = require('path'),
 
-    luster = require('luster'),
+    luster,
     vow = require('vow'),
     _ = require('lodash');
 
@@ -129,6 +129,7 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
     }
 
     function load() {
+        luster = util.isDev() ? { id: 0 } : require('luster');
         var workerId = luster.id || 0,
             localModelDirPath = path.join('backups', workerId.toString()),
             localModelFilePath = path.join(localModelDirPath, 'data.json')
