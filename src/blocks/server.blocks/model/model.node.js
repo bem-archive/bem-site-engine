@@ -132,7 +132,7 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
         luster = util.isDev() ? { id: 0 } : require('luster');
         var workerId = luster.id || 0,
             localModelDirPath = path.join('backups', workerId.toString()),
-            localModelFilePath = path.join(localModelDirPath, 'data.json')
+            localModelFilePath = path.join(localModelDirPath, 'data.json');
 
         return providerFile
             .makeDir({ path: localModelDirPath })

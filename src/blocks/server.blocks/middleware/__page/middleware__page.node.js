@@ -73,7 +73,7 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
                             providerFile.makeDir({ path: pagePath })
                                 .then(function() {
                                     return providerFile.save({
-                                        path: path.join(pagePath, req.lang + '.html.gzip'),
+                                        path: path.join(pagePath, (req.lang + '.html.gzip')),
                                         archive: true,
                                         data: html
                                     });
