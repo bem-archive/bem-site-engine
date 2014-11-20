@@ -1,8 +1,8 @@
 var path = require('path'),
     _ = require('lodash');
 
-modules.define('middleware__page', ['config', 'logger', 'model', 'template', 'providerFile'],
-    function(provide, config, logger, model, template, providerFile) {
+modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 'template', 'providerFile'],
+    function(provide, config, logger, constants, model, template, providerFile) {
 
         provide({
 
@@ -65,7 +65,7 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template', 'pr
                         statics: ''
                     };
 
-                    var pagePath = path.join(process.cwd(), 'cache', 'page', req.__data.node.url);
+                    var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url);
                     ctx = _.extend(ctx, req.__data, self.getAdvancedData(req, req.__data.node));
 
                     return template.apply(ctx, req, req.query.__mode)
@@ -73,7 +73,7 @@ modules.define('middleware__page', ['config', 'logger', 'model', 'template', 'pr
                             providerFile.makeDir({ path: pagePath })
                                 .then(function() {
                                     return providerFile.save({
-                                        path: path.join(pagePath, 'page.html'),
+                                        path: path.join(pagePath, req.lang + '.html.gzip'),
                                         archive: true,
                                         data: html
                                     });

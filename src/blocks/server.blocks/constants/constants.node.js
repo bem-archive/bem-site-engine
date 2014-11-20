@@ -1,3 +1,5 @@
+var path = require('path');
+
 modules.define('constants', function(provide) {
 
     provide({
@@ -17,6 +19,7 @@ modules.define('constants', function(provide) {
             MAIN: 'main',
             LEVEL: 'level'
         },
-        SITEMAP: 'sitemap.xml'
+        SITEMAP: 'sitemap.xml',
+        PAGE_CACHE: path.join(process.cwd(), 'cache', 'page')
     });
 });
