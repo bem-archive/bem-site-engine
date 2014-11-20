@@ -1,29 +1,30 @@
 block('post').elem('deps')(
-    match(function () { return !(this.ctx && this.ctx.content); }).def()(function () {
-        return false;
-    }),
+    match(function () { return !(this.ctx && this.ctx.content); }).def()(),
 
     content()(function () {
-        var _this = this;
+        var libs = this.ctx.content;
 
-        return Object.keys(this.ctx.content).reduce(function (prev, item) {
-                var libUrl = _this.ctx.content[item].replace('git:', '');
+        return Object.keys(libs).reduce(function (prev, lib) {
+                var libUrl = libs[lib],
+                    hashIndex = libUrl.indexOf('#'),
+                    isFullPath = hashIndex > -1,
+                    version = isFullPath ? '@' + libUrl.substr(hashIndex + 1) : '',
+                    text = lib + version;
 
                 prev.push({
                     content: [
-                        '&mdash; ',
-                        {
+                        '— ',
+                        isFullPath ? {
                             block: 'link',
-                            url: libUrl,
+                            url: libUrl.replace('git:', ''),
                             attrs: { target: '_blank' },
-                            content: item
-                        }
+                            content: text
+                        } : text
                     ]
                 });
 
                 return prev;
-            },
-            [{
+            }, [{
                 block: 'post',
                 elem: 'title',
                 elemMods: { level: '3' },
