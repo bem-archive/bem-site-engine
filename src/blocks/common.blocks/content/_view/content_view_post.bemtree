@@ -1,6 +1,4 @@
-block('content').mod('view', 'post').content()(function () {
-    return {
-        block: 'post',
-        mods: { view: 'full' }
-    };
+block('content').mod('view', 'post').content()({
+    block: 'post',
+    mods: { view: 'full' }
 });
