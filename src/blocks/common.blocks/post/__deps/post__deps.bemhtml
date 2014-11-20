@@ -4,32 +4,30 @@ block('post').elem('deps')(
     content()(function() {
         var libs = this.ctx.content;
 
-        return Object.keys(libs).reduce(function(prev, lib) {
+        return [{
+                block: 'post',
+                elem: 'title',
+                elemMods: { level: '3' },
+                content: BEM.I18N('post', 'deps')
+            }].concat(Object.keys(libs).map(function(lib) {
                 var libUrl = libs[lib],
                     hashIndex = libUrl.indexOf('#'),
                     isFullPath = hashIndex > -1,
                     version = isFullPath ? '@' + libUrl.substr(hashIndex + 1) : '',
                     text = lib + version;
 
-                prev.push({
+                return {
                     content: [
                         '— ',
                         isFullPath ? {
                             block: 'link',
-                            url: libUrl.replace('git:', ''),
+                            url: libUrl.replace('git:', 'https:'),
                             attrs: { target: '_blank' },
                             content: text
                         } : text
                     ]
-                });
-
-                return prev;
-            }, [{
-                block: 'post',
-                elem: 'title',
-                elemMods: { level: '3' },
-                content: BEM.I18N('post', 'deps')
-            }]
+                };
+            })
         );
     })
 );
