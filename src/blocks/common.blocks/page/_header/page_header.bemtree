@@ -15,7 +15,7 @@ block('page').mod('header', true)(
                     { block: 'search-panel' }
                 ]
             },
-            { block: 'metrika' },
+            { block: 'metrika', id: req.metrika },
             { elem: 'js' }
         ];
     })
