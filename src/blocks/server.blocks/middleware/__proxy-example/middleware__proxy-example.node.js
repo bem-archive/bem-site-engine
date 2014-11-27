@@ -83,8 +83,11 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                     res.end(content);
                 },
                 sendRequest = function() {
+                    logger.debug('send request to: %s', url);
                     request(url, function (error, response, body) {
                         if (!error && response.statusCode === 200) {
+                            logger.debug('request successfully performed');
+
                             if(/\.bemhtml\.js$/.test(url)) {
                                 body = loadHtmlCodeOfBlock(req, originUrl, body);
                             }
@@ -95,6 +98,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                             });
                             res.end(body);
                         } else {
+                            logger.debug('request failed with code: %s and error: %s', response.statusCode, error.message);
                             res.end('Error while loading example');
                         }
                     });
