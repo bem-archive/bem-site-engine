@@ -1,5 +1,5 @@
 block('post').elem('deps')(
-    match(function () { return !(this.ctx && this.ctx.content); }).def()(),
+    match(function () { return !(this.ctx && this.ctx.content); }).def()(false),
 
     content()(function () {
         var libs = this.ctx.content;
