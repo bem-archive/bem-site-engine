@@ -76,9 +76,13 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                             return libUrl;
                         }
 
-                        var version = items.map(function (item) {
-                            return item.url.substr(item.url.lastIndexOf('/'));
-                        })[0];
+                        var version = items
+                            .sort(function (a, b) {
+                                return a.order - b.order;
+                            })
+                            .map(function (item) {
+                                return item.url.substr(item.url.lastIndexOf('/'));
+                            })[0];
 
                         url = url.replace(/\/current\/?/, version + '/');
                         res.redirect(301, url);
