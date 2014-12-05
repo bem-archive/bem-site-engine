@@ -53,10 +53,6 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                 request({ url: url }).pipe(ws);
             }
 
-            /*
-             try to load cached source from local filesystem
-             try to load source from github repository if no cached file was found
-             */
             return model.getFromCache(sha(url)).then(function (response) {
                 return response ? res.end(response) : (function () {
                     logger.debug('request to url: %s', url);
@@ -69,7 +65,6 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                             if (/\.bemhtml\.js$/.test(url)) {
                                 response = loadCode(req, originUrl, response);
                             }
-                            //TODO uncomment it
                             model.putToCache(sha(url), response);
                             res.end(response);
                         }
