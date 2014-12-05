@@ -63,14 +63,20 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                             res.end('Error while loading example');
                         } else {
                             if (/\.bemhtml\.js$/.test(url)) {
-                                response = loadCode(req, originUrl, response);
+                                loadCode(req, originUrl, response)
+                                    .then(function (html) {
+                                        //model.putToCache(sha(url), html);
+                                        res.end(html);
+                                    }).done();
+                            }else {
+                                //model.putToCache(sha(url), response);
+                                res.end(response);
                             }
-                            model.putToCache(sha(url), response);
-                            res.end(response);
+
                         }
                     });
                 })();
-            });
+            }).done();
         };
 
         /**
@@ -112,23 +118,23 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
 
             return model
                 .getNodesByCriteria(function (record) {
-                    var k = record.key,
-                        v = record.value,
-                        r = v.route;
-                    return k.indexOf(':nodes') > -1 && v.class === 'block' && r && r.conditions &&
-                        match[1] === r.conditions.lib &&
-                        match[2] === r.conditions.version &&
-                        match[3].replace(/\.examples$/, '') === r.conditions.level &&
-                        match[4] === r.conditions.block;
+                    var v = record.value,
+                        r = v.route,
+                        c = r.conditions;
+                    return v.class === 'block' && r && c &&
+                        match[1] === c.lib &&
+                        match[2] === c.version &&
+                        match[3].replace(/\.examples$/, '') === c.level &&
+                        match[4] === c.block;
                 }, true)
                 .then(function (node) {
                     if (!node) { return vow.resolve(null); }
-                    return model.getBlocks()[node.source.key];
+                    return model.getBlock(node.value.source.data);
                 })
                 .then(function (blockData) {
                     var example, htmlStr;
                     if (!blockData) { return vow.resolve(null); }
-                    example = blockData.data[req.lang].examples.filter(function (item) {
+                    example = blockData[req.lang].examples.filter(function (item) {
                         return item.name && match[5] === item.name;
                     })[0];
 
