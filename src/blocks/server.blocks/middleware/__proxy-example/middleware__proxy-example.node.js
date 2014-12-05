@@ -2,7 +2,6 @@ var u = require('util'),
     vm = require('vm'),
     zlib = require('zlib'),
     WritableStream = require('stream').Writable,
-    //https = require('https'),
 
     vow = require('vow'),
     request = require('request'),
@@ -54,28 +53,29 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             }
 
             return model.getFromCache(sha(url)).then(function (response) {
-                return response ? res.end(response) : (function () {
-                    logger.debug('request to url: %s', url);
+                if(response) {
+                    return res.end(response);
+                }
 
-                    getGzipped(url, function (error, response) {
-                        if (error) {
-                            logger.warn('req to %s failed with err %s', url, error);
-                            res.end('Error while loading example');
-                        } else {
-                            if (/\.bemhtml\.js$/.test(url)) {
-                                loadCode(req, originUrl, response)
-                                    .then(function (html) {
-                                        //model.putToCache(sha(url), html);
-                                        res.end(html);
-                                    }).done();
-                            }else {
-                                //model.putToCache(sha(url), response);
-                                res.end(response);
-                            }
+                logger.debug('request to url: %s', url);
 
+                return getGzipped(url, function (error, response) {
+                    if (error) {
+                        logger.warn('req to %s failed with err %s', url, error);
+                        res.end('Error while loading example');
+                    } else {
+                        if (/\.bemhtml\.js$/.test(url)) {
+                            loadCode(req, originUrl, response)
+                                .then(function (html) {
+                                    //model.putToCache(sha(url), html);
+                                    res.end(html);
+                                }).done();
+                        }else {
+                            model.putToCache(sha(url), response);
+                            res.end(response);
                         }
-                    });
-                })();
+                    }
+                });
             }).done();
         };
 
