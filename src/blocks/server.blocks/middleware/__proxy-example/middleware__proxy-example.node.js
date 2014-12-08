@@ -59,20 +59,19 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
 
                 logger.debug('request to url: %s', url);
 
-                return getGzipped(url, function (error, response) {
+                getGzipped(url, function (error, response) {
                     if (error) {
                         logger.warn('req to %s failed with err %s', url, error);
-                        res.end('Error while loading example');
+                        return res.end('Error while loading example');
                     } else {
                         if (/\.bemhtml\.js$/.test(url)) {
-                            loadCode(req, originUrl, response)
-                                .then(function (html) {
-                                    //model.putToCache(sha(url), html);
-                                    res.end(html);
-                                }).done();
+                            return loadCode(req, originUrl, response).then(function (html) {
+                                model.putToCache(sha(url), html);
+                                res.end(html);
+                            }).done();
                         }else {
                             model.putToCache(sha(url), response);
-                            res.end(response);
+                            return res.end(response);
                         }
                     }
                 });
