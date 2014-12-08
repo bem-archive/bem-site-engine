@@ -15,7 +15,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
         people,
         peopleUrls,
         luster = util.isDev() ? { id: 0 } : require('luster'),
-        worker = luster.id || 0,
+        worker = luster.wid || 0,
         DB_PATH = {
             DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),
@@ -64,6 +64,10 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          */
         init: function () {
             logger.info('Initialize model for worker %s', worker);
+
+            //clear page cache
+            util.clearPageCache();
+
             var p = path.join(DB_PATH.WORKER, 'run', 'leveldb');
             return vowFs.exists(p).then(function(exists) {
                 if(exists) {
