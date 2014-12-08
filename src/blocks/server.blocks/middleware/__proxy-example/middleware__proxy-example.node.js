@@ -1,7 +1,7 @@
 var u = require('util'),
     vm = require('vm'),
     zlib = require('zlib'),
-    https = require('https'),
+    WritableStream = require('stream').Writable,
 
     vow = require('vow'),
     request = require('request'),
@@ -30,76 +30,63 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             res.type(mime.lookup(url));
             url = u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
-            /**
-             * Retrieve gzipped files via request
-             * @param {String} url - request url
-             * @param {Function} callback - callback function
-             */
             function getGzipped(url, callback) {
-                var buffer = [],
-                    gunzip = zlib.createGunzip(),
-                    resultStream;
+                var ws = new WritableStream();
 
-                https.get(url, function (response) {
-                    resultStream = response;
-
-                    if (response.headers['content-encoding'] === 'gzip') {
-                        response.pipe(gunzip);
-                        resultStream = gunzip;
-                    }
-
-                    resultStream.on('data', function (data) {
-                        buffer.push(data.toString());
-                    }).on('end', function() {
-                        callback(null, buffer.join(''));
-                    }).on('error', function (err) {
-                        callback(err);
-                    });
-                }).on('error', function (err) {
+                ws.chunks = [];
+                ws._write = function (chunk, enc, next) {
+                    this.chunks.push(chunk);
+                    next();
+                };
+                ws.on('error', function (err) {
                     callback(err);
                 });
+                ws.on('finish', function() {
+                    var buf = Buffer.concat(this.chunks);
+                    zlib.gunzip(buf, function (err, data) {
+                        callback(null, (err ? buf : data).toString('utf-8'));
+                    });
+
+                });
+
+                request({ url: url }).pipe(ws);
             }
 
-            /**
-             * Error callback function
-             * @param {Error} error - error object
-             */
-            function onError (error) {
-                if (error) {
-                    logger.warn('req to %s failed with err %s', url, error);
-                    res.end('Error while loading example');
+            return model.getFromCache(sha(url)).then(function (response) {
+                if(response) {
+                    return res.end(response);
                 }
-            }
 
-            /**
-             * Success callback function
-             * @param {Object} response - response object
-             */
-            function onSuccess (response) {
-                if (/\.bemhtml\.js$/.test(url)) {
-                    response = loadCode(req, originUrl, response);
-                }
-                model.putToCache(sha(url), response);
-                res.end(response);
-            }
-
-            function sendRequest () {
                 logger.debug('request to url: %s', url);
 
                 getGzipped(url, function (error, response) {
-                    onError(error);
-                    onSuccess(response);
+                    if (error) {
+                        logger.warn('req to %s failed with err %s', url, error);
+                        return res.end('Error while loading example');
+                    } else {
+                        if (/\.bemhtml\.js$/.test(url)) {
+                            return loadCode(req, originUrl, response).then(function (html) {
+                                model.putToCache(sha(url), html);
+                                res.end(html);
+                            }).done();
+                        }else {
+                            model.putToCache(sha(url), response);
+                            return res.end(response);
+                        }
+                    }
                 });
-            }
-
-            /*
-             try to load cached source from local filesystem
-             try to load source from github repository if no cached file was found
-             */
-            return model.getFromCache(sha(url)).then(function (response) {
-                return response ? res.end(response) : sendRequest();
-            });
+            }).done();
         };
+
+        /**
+         * Proxy image files from gh
+         * @param {String} url
+         * @param {Object} res - response object
+         */
+        function proxyImageFiles(url, res) {
+            res.type(mime.lookup(url));
+            request.get(u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url)).pipe(res);
+        }
 
         provide(function () {
             var PATTERN = {
@@ -122,16 +109,6 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             };
         });
 
-        /**
-         * Proxy image files from gh
-         * @param {String} url
-         * @param {Object} res - response object
-         */
-        function proxyImageFiles(url, res) {
-            res.type(mime.lookup(url));
-            request.get(u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url)).pipe(res);
-        }
-
         function loadCode(req, url, template) {
             var urlRegExp = /^\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\.bemhtml\.js$/,
                 match = url.match(urlRegExp);
@@ -140,23 +117,23 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
 
             return model
                 .getNodesByCriteria(function (record) {
-                    var k = record.key,
-                        v = record.value,
-                        r = v.route;
-                    return k.indexOf(':nodes') > -1 && v.class === 'block' && r && r.conditions &&
-                        match[1] === r.conditions.lib &&
-                        match[2] === r.conditions.version &&
-                        match[3].replace(/\.examples$/, '') === r.conditions.level &&
-                        match[4] === r.conditions.block;
+                    var v = record.value,
+                        r = v.route,
+                        c = r.conditions;
+                    return v.class === 'block' && r && c &&
+                        match[1] === c.lib &&
+                        match[2] === c.version &&
+                        match[3].replace(/\.examples$/, '') === c.level &&
+                        match[4] === c.block;
                 }, true)
                 .then(function (node) {
                     if (!node) { return vow.resolve(null); }
-                    return model.getBlocks()[node.source.key];
+                    return model.getBlock(node.value.source.data);
                 })
                 .then(function (blockData) {
                     var example, htmlStr;
                     if (!blockData) { return vow.resolve(null); }
-                    example = blockData.data[req.lang].examples.filter(function (item) {
+                    example = blockData[req.lang].examples.filter(function (item) {
                         return item.name && match[5] === item.name;
                     })[0];
 
