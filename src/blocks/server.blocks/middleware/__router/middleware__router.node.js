@@ -14,13 +14,13 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
 
                 return _this.beforeFindNode(req, res, decodeURIComponent(req.path))
                     .then(function(url) {
-                        return _this.findNode(req, url);
+                        return _this.findNode(req, url, next);
                     })
                     .then(function(node) {
                         return _this.afterFindNode(node, req, res, next);
                     })
-                    .fail(function() {
-                        throw error.HttpError.createError(500);
+                    .fail(function(err) {
+                        return next(err || error.HttpError.createError(500));
                     });
             };
         },
@@ -32,11 +32,11 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
          * @param callback - {Function} function that should be called for result
          * @returns {*}
          */
-        findNode: function(req, url) {
+        findNode: function(req, url, next) {
             return model.getNodeByUrl(url).then(function(node) {
                 if (!node || node.hidden[req.lang]) {
                     logger.error('cannot find node by url %s', url);
-                    throw error.HttpError.createError(404);
+                    return vow.reject(error.HttpError.createError(404));
                 }
 
                 return node;
@@ -112,7 +112,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                         if(!items.length) {
                             return cb();
                         }
-                        
+
                         //redirect to newest library version
                         if(isLib) {
                             return res.redirect(301, items[0].url);
