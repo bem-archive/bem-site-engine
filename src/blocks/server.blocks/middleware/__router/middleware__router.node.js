@@ -112,6 +112,10 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                         if(!items.length) {
                             return cb();
                         }
+                        
+                        items = items.sort(function (a, b) {
+                            return a.order - b.order;
+                        });
 
                         //redirect to newest library version
                         if(isLib) {
