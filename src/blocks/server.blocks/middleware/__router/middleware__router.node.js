@@ -112,22 +112,11 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
                         if(!items.length) {
                             return cb();
                         }
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-=======
-                        items = items.sort(function (a, b) {
-                            return a.order - b.order;
-                        });
-                        
->>>>>>> Fix issue with invalid /libs/{lib} ---> /libs/{lib/}{lastest version} redirecting
-=======
                         
                         items = items.sort(function (a, b) {
                             return a.order - b.order;
                         });
 
->>>>>>> Fix issue with request timeout for invalid routes
                         //redirect to newest library version
                         if(isLib) {
                             return res.redirect(301, items[0].url);
