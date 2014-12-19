@@ -42,5 +42,7 @@ block('block-example').mod('view', 'inline')(
                 }
             ];
         })
-    )
+    ),
+
+    elem('blank').content()(false)
 );
