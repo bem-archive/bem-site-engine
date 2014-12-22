@@ -46,9 +46,11 @@
     "enb-diverse-js": "*",
     "enb-modules": "*",
     "enb-stylus": "^1.1.4",
+    "git-hooks": "~0.0.6",
     "inherit": "~2.2.2",
-    "jscs": "~1.5.9",
-    "jshint": "~2.5.5"
+    "jscs": "1.8.1",
+    "jshint": "2.5.10",
+    "jshint-groups": "0.6.2"
   },
   "scripts": {
     "start": "node bin/app.js",
@@ -61,7 +63,7 @@
     "clean_logs": "rm -rf logs/*",
     "clean_cache": "rm -rf cache/*",
     "clean_data": "rm -rf backups/*",
-    "test": "jshint . && jscs -c .jscs.js ."
+    "lint": "jshint-groups && jscs ."
   },
   "author": "info@bem.info",
   "readmeFilename": "README.md"
