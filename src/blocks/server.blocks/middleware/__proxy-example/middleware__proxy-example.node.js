@@ -103,7 +103,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                             });
                             res.end(body);
                         } else {
-                            logger.debug('request failed with code: %s and error: %s', response.statusCode, error);
+                            logger.debug('request failed with code: %s and error: %s', response && response.statusCode, error);
                             res.end('Error while loading example');
                         }
                     });
