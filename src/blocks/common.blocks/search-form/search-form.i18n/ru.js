@@ -1,5 +1,5 @@
 module.exports = {
     "search-form": {
-        "placeholder": "Имя блока или ключевое слово(тег)"
+        "placeholder": "Имя блока или ключевое слово (тег)"
     }
 };
