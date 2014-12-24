@@ -1,24 +1,18 @@
-block i-global {
-
-default: {
+block('i-global')(
+    def()(function () {
         this.data = this.ctx;
-        return apply(
-            this._mode = '',
-            this.ctx = [
-                { block : 'page' , mods : { theme : 'white'} }
-            ]
-        );
-    }
 
-    BEM && BEM.I18N: {
-        var lang = this.ctx.lang;
+        return apply('', { ctx: [
+            { block: 'page', mods: { theme: 'white' } }
+        ] });
+    }),
 
-        BEM.I18N.lang(lang);
+    match(BEM && BEM.I18N)(function () {
+        BEM.I18N.lang(this.ctx.lang);
         return applyNext();
-    }
+    }),
 
-    this._.isArray(this.ctx): {
-        return applyNext(this.ctx = this.ctx[0]);
-    }
-
-}
+    match(function () { return this.isArray(this.ctx); })(function () {
+        return applyNext({ ctx: this.ctx[0] });
+    })
+);
