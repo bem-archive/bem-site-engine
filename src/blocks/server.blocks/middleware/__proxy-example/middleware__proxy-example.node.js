@@ -30,6 +30,11 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             res.type(mime.lookup(url));
             url = u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
+            // fix firefox charsets for bemjson files
+            if (url.indexOf('bemjson.js') > -1) {
+                res.header('Content-Type', 'application/json; charset=utf-8');
+            }
+
             function getGzipped(url, callback) {
                 var ws = new WritableStream();
 
