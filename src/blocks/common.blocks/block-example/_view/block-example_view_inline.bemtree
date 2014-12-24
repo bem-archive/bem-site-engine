@@ -9,7 +9,7 @@ block('block-example').mod('view', 'inline')(
                     js: { urlBemhtml: this._urlBemhtml },
                     content: 'html'
                 }
-            ]
+            ];
         })
     ),
 
