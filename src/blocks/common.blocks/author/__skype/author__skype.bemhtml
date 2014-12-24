@@ -1,8 +1,6 @@
 block('author').elem('skype')(
 
-    def().match(!this.ctx.content)(function() {
-        return false;
-    }),
+    def()(match(function () { return !this.ctx.content; })(false)),
 
     content()(function() {
         return [
