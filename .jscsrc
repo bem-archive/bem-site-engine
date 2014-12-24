@@ -1,0 +1,61 @@
+{
+    "excludeFiles": [
+        ".enb/**",
+        ".githooks/**",
+        "bin/**",
+        "libs/**",
+        "node_modules/**",
+        "src/bundles/**",
+        "**/*.i18n/**",
+        ".changelogger.js",
+        ".jshint-groups.js",
+        "src/blocks/common.blocks/highlightjs/**",
+        "src/blocks/common.blocks/zeroclipboard/**"
+    ],
+    "fileExtensions": [".js", ".bemtree", ".bemhtml"],
+    "requireSpaceAfterKeywords": ["if", "else", "for", "while", "do", "switch", "return", "try", "catch"],
+    "requireSpaceBeforeKeywords": ["else", "while", "catch"],
+    "disallowKeywords": ["with"],
+    "disallowKeywordsOnNewLine": ["else", "catch"],
+    "requireOperatorBeforeLineBreak": true,
+    "disallowOperatorBeforeLineBreak": ["."],
+    "requireSpaceBeforeBinaryOperators": true,
+    "requireSpaceAfterBinaryOperators": true,
+    "disallowSpaceBeforeBinaryOperators": [","],
+    "disallowSpaceAfterPrefixUnaryOperators": true,
+    "disallowSpaceBeforePostfixUnaryOperators": true,
+    "requireSpacesInsideObjectBrackets": "all",
+    "disallowSpaceAfterObjectKeys": true,
+    "requireSpaceBeforeObjectValues": true,
+    "disallowSpacesInsideArrayBrackets": true,
+    "disallowSpacesInCallExpression": true,
+    "requireSpacesInNamedFunctionExpression": {
+        "beforeOpeningCurlyBrace": true
+    },
+    "disallowSpacesInNamedFunctionExpression": {
+        "beforeOpeningRoundBrace": true
+    },
+    "requireSpacesInFunction": {
+        "beforeOpeningCurlyBrace": true
+    },
+    "requireSpacesInAnonymousFunctionExpression": {
+        "beforeOpeningRoundBrace": true
+    },
+    "requireBlocksOnNewline": 1,
+    "disallowSpacesInsideParentheses": true,
+    "requireCommaBeforeLineBreak": true,
+    "requireCamelCaseOrUpperCaseIdentifiers": true,
+    "disallowMultipleLineStrings": true,
+    "disallowMultipleLineBreaks": true,
+    "validateLineBreaks": "LF",
+    "disallowMixedSpacesAndTabs": true,
+    "requireCapitalizedConstructors": true,
+    "disallowYodaConditions": true,
+    "requireSpaceAfterLineComment": true,
+    "disallowNewlineBeforeBlockStatements": true,
+    "requireSpacesInConditionalExpression": true,
+    "requireLineFeedAtFileEnd": true,
+    "disallowTrailingWhitespace": true,
+    "requireSpaceBeforeBlockStatements": true,
+    "safeContextKeyword": ["_this"]
+}
