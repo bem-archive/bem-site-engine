@@ -1,20 +1,17 @@
-block posts, elem list {
+block('posts').elem('list').match(function() {
+    return this.isArray(this.ctx.content);
+}).content()(function(){
+    var data = this.data;
 
-	(this.ctx.content && this._.isArray(this.ctx.content)), content: {
+    return this.ctx.content.map(function(item) {
+        if(!item.source || !item.source[data.lang]) {
+            return '';
+        }
 
-		var _this = this;
-
-		return this.ctx.content.map(function(item, idx) {
-
-			if(!item.source || !item.source[_this.data.lang]) {
-				return '';
-			}
-
-			return {
-				block: 'post',
-				mods: { view: 'list-item' },
-				node: item
-			}
-		});
-	}
-}
+        return {
+            block: 'post',
+            mods: { view: 'list-item' },
+            node: item
+        };
+    });
+});

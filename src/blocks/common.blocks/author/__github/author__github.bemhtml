@@ -1,8 +1,7 @@
 block('author').elem('github')(
+    def().match(function () { return !this.ctx.content; })(false),
 
-    def().match(!this.ctx.content)(function() { return false; }),
-
-    content()(function() {
+    content()(function () {
         return [
             {
                 block: 'author',

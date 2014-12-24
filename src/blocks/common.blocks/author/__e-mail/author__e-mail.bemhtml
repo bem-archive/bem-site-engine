@@ -3,9 +3,7 @@ block('author').elem('e-mail')(
     def().match(function() {
         var c = this.ctx.content;
         return !c || !c.length
-    })(function() {
-        return false;
-    }),
+    })(false),
 
     content()(function() {
         return [

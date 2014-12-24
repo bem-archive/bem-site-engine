@@ -1,6 +1,7 @@
-block post, elem content {
-
-    (!this.ctx.content || this.ctx.content.length == 0), content: {
+block('post').elem('content').match(function () {
+    return !(this.ctx.content || []).length;
+}).content()(function () {
+    return {
         block: 'plug',
         content: [
             BEM.I18N('post', 'plug'),
@@ -10,5 +11,5 @@ block post, elem content {
                 content: BEM.I18N('post', 'plugLink')
             }
         ]
-    }
-}
+    };
+});

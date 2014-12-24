@@ -1,14 +1,11 @@
 block('author').elem('name')(
 
-    def().match(!this.ctx.content)(function() {
-        return false;
-    }),
+    def().match(function () { return !this.ctx.content; })(false),
 
     tag()('span'),
 
     content()(
-
-        match(this.ctx.content.lastName)(function() {
+        match(function () { return this.ctx.content.lastName; })(function() {
             return this.ctx.content.lastName
         }),
 

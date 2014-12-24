@@ -1,11 +1,11 @@
 block('post').elem('date')(
 
     match(function(){ return !this.ctx.createDate && !this.ctx.editDate; })(
-        def()(function(){ return false; }
-    )),
+        def()(false)),
 
     content()(function(){
-        var ctx = this.ctx;
+        var ctx = this.ctx,
+            actionType = ctx.editDate ? 'editDate' : 'createDate';
 
         function format(postDate) {
             var date = new Date();
@@ -18,18 +18,10 @@ block('post').elem('date')(
             return d + ' ' + BEM.I18N('post', 'month' + m) + ' ' + y;
         }
 
-        if (ctx.editDate) {
-            return [
-                BEM.I18N('post', 'editDate'),
-                ' ',
-                format(ctx.editDate)
-            ];
-        } else {
-            return [
-                BEM.I18N('post', 'createDate'),
-                ' ',
-                format(ctx.createDate)
-            ];
-        }
+        return [
+            BEM.I18N('post', actionType),
+            ' ',
+            format(ctx[actionType])
+        ];
     })
 );
