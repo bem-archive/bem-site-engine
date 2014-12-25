@@ -1,10 +1,9 @@
-block content, mod view authors {
-
-    content: this.data.authors.map(function(author) {
+block('content').mod('view', 'authors').content()(function() {
+    return this.data.authors.map(function(author) {
         return {
             block: 'author',
             mods: { view: 'grid-cell' },
             id: author
-        }
-    })
-}
+        };
+    });
+});

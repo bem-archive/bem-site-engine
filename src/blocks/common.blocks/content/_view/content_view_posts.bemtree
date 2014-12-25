@@ -1,7 +1,6 @@
-block content, mod view posts {
-
-    content: {
+block('content').mod('view', 'posts').content()(function () {
+    return {
         block: 'posts',
         node: this.data.node
-    }
-}
+    };
+});

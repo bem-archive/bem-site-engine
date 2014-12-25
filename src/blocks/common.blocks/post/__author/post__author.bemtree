@@ -1,48 +1,37 @@
-block post, elem author {
+block('post')
+    .elem('author')
+    .match(function () {return this.isArray(this.ctx.authors); })
+    .content()(function () {
+        var buf = [],
+            self = this,
+            ctx = this.ctx,
+            translators = ctx.translators,
+            splitter = {
+                tag: 'span',
+                content: ', '
+            };
 
-    content {
+        ctx.authors.forEach(function(item, index){
+            index++ > 0 && buf.push(splitter);
 
-        this._.isArray(this.ctx.authors): {
-            var buf = [],
-                self = this,
-                splitter = {
-                    tag: 'span',
-                    content: ', '
-                };
-
-            //console.log('block post elem author');
-
-            this.ctx.authors.forEach(function(item, index){
-                //console.log('author: %s', item)
-                index++ > 0 && buf.push(splitter);
-
-
-                buf.push({
-                    block: 'author',
-                    mods: { view: 'simple' },
-                    id: item
-                });
-
+            buf.push({
+                block: 'author',
+                mods: { view: 'simple' },
+                id: item
             });
 
-            if(this._.isArray(this.ctx.translators) && this.ctx.translators.length > 0) {
+        });
 
-                this.ctx.translators.filter(function(item) {
-                    return self.ctx.authors.indexOf(item) == -1;
-                }).forEach(function(item, index) {
 
-                    buf.push(splitter);
+        this.isArray(translators) && translators.filter(function(item) {
+            return self.ctx.authors.indexOf(item) == -1;
+        }).forEach(function(item, index) {
+            buf.push(splitter, {
+                block: 'author',
+                mods: { view: 'simple' },
+                id: item
+            });
+        });
 
-                    buf.push({
-                        block: 'author',
-                        mods: { view: 'simple' },
-                        id: item
-                    });
-
-                });
-            }
-
-            return buf;
-        }
-    }
-}
+        return buf;
+});

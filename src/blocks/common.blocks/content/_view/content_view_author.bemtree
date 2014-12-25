@@ -1,21 +1,22 @@
-block content, mod view author {
+block('content').mod('view', 'author').content()(function() {
+    var data = this.data;
 
-    content: [
+    return [
         {
             block: 'author',
             mods: { view: 'full' },
-            id: this.data.req.params.id
+            id: data.req.params.id
         },
         {
             block: this.block,
             elem: 'author-posts',
-            content: this.data.posts.map(function(node) {
+            content: data.posts.map(function(node) {
                 return {
                     block: 'posts',
                     title: node.title,
                     node: node
-                }
+                };
             })
         }
-    ]
-}
+    ];
+});
