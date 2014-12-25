@@ -74,6 +74,20 @@ block('block-example')(
                         content: (title && name) ? title + ' (' + name + ')' : ''
                     },
                     {
+                        block: 'dropdown',
+                        mods: { switcher : 'link', theme: 'normal' },
+                        mix: [
+                            { block: 'block-example', elem: 'qr' },
+                            { block: 'block-example', elem: 'link' }
+                        ],
+                        switcher: 'QR',
+                        popup: {
+                            block: 'image',
+                            url: 'https://disk.yandex.net/qr/?format=svg&text=' + 'http://' + req.headers.host + url,
+                            width : 220
+                        }
+                    },
+                    {
                         elem: 'source-switcher',
                         elemMods: { type: 'bemjson' },
                         content: 'bemjson'
@@ -98,14 +112,10 @@ block('block-example')(
 
     match(function() { return !this._bemjson; })(
         elem('source-switcher')(
-            def()(function() {
-                return false;
-            })
+            def()(false)
         ),
         elem('source')(
-            def()(function() {
-                return false;
-            })
+            def()(false)
         )
     )
 );
