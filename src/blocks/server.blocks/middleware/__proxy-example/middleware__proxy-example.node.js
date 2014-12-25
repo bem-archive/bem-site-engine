@@ -31,7 +31,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             url = u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
             // fix firefox charsets for bemjson files
-            if (url.indexOf('bemjson.js') > -1) {
+            if (/\.bemjson\.js$/.test(url)) {
                 res.header('Content-Type', 'application/json; charset=utf-8');
             }
 
