@@ -2,6 +2,14 @@
   required: true
   elem: i18n
 
+- block: dropdown
+  mods: { switcher: link, theme: normal }
+
+- block: link
+  mods: { pseudo: true, theme: normal }
+
+- block: image
+
 - elems:
   - anchor
   - blank
@@ -15,5 +23,6 @@
   - source-copy
   - source-item
   - source-switcher
+  - qr
 
 - mods: { view: [inline, default] }
