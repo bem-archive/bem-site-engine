@@ -1,4 +1,29 @@
 .block-example__qr
 {
-    margin-left: -15px;
+    &:hover
+    {
+        cursor: pointer;
+    }
+
+    &:after
+    {
+        display: none;
+    }
+
+    .link:after
+    {
+        display: inline-block;
+
+        width: 24px;
+        height: 24px;
+        margin-left: 3px;
+
+        content: '';
+        vertical-align: middle;
+
+        opacity: .6;
+        background-repeat: no-repeat;
+        background: url(block-example__qr.png) no-repeat;
+        background-position: 3px 3px;
+    }
 }
