@@ -7,9 +7,10 @@
 
     display: inline-block;
 
-    margin-right: 15px;
+    padding: 5px 8px 3px;
 
     color: #8f8f8f;
+    border-right: 1px solid $grey;
 
     &:after
     {
@@ -26,7 +27,8 @@
         background-repeat: no-repeat;
     }
 
-    &:hover
+    &:hover,
+    &:hover .link
     {
         color: #000;
 
@@ -36,7 +38,8 @@
         }
     }
 
-    & .link
+    & .link,
+    &:visited
     {
         color: #8f8f8f;
     }
