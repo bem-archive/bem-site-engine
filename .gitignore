@@ -26,7 +26,3 @@ src/www/freeze
 *.upload
 *.dsc
 *.tar.gz
-
-.githooks
-.jshint-groups.js
-.jscsrc

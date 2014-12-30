@@ -33,8 +33,7 @@
     "coa": "~0.4.0",
     "deep-extend": "~0.2.10",
     "js-beautify": "1.5.1",
-    "luster": "~0.5.0",
-    "bem-site-codestyle": "~0.1.9"
+    "luster": "~0.5.0"
   },
   "devDependencies": {
     "borschik": "~1.0.5",
@@ -47,7 +46,9 @@
     "enb-diverse-js": "*",
     "enb-modules": "*",
     "enb-stylus": "^1.1.4",
-    "inherit": "~2.2.2"
+    "inherit": "~2.2.2",
+    "jscs": "~1.5.9",
+    "jshint": "~2.5.5"
   },
   "scripts": {
     "start": "node bin/app.js",
@@ -60,7 +61,7 @@
     "clean_logs": "rm -rf logs/*",
     "clean_cache": "rm -rf cache/*",
     "clean_data": "rm -rf backups/*",
-    "lint": "jscs . && jshint-groups"
+    "test": "jshint . && jscs -c .jscs.js ."
   },
   "author": "info@bem.info",
   "readmeFilename": "README.md"
