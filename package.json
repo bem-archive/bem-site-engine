@@ -32,10 +32,8 @@
     "levelup": "~0.19.0",
     "leveldown": "0.10.0",
     "tar": "1.0.1",
-    "bse-admin": "git://github.com/bem/bse-admin.git#v0.1.1",
-    "luster": "~0.5.1",
-    "assert": "^1.1.2",
-    "cocaine": "^0.4.1-6"
+    "bse-admin": "git://github.com/bem/bse-admin.git#v0.0.16",
+    "luster": "~0.5.1"
   },
   "devDependencies": {
     "borschik": "~1.0.5",

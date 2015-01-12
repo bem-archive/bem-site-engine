@@ -1,131 +1,22 @@
 var util = require('util'),
-    vow = require('vow'),
+    WritableStream = require('stream').Writable,
 
-    assert = require('assert'),
-    EventEmitter = require('events').EventEmitter,
-    Client = require('cocaine').Client;
+    vow = require('vow'),
+    request = require('request');
 
 modules.define('storage', ['config', 'logger'], function(provide, config, logger) {
 
     logger = logger(module);
 
-    var OPTIONS = {
-            NAME_SPACE: 'defaultnamespace',
-            HOST: 'apefront.tst.ape.yandex.net',
-            PORT: 10053
-        },
-        ERROR_CODE_NOT_FOUND = 2,
-        error = new Error('Storage has not been connected'),
-        storage;
-
-    function __uid() {
-        return (Math.random() * 0x100000000).toString(36);
-    }
-
-    function Storage(options) {
-        options = options || {};
-        this._namespace = options.namespace || OPTIONS.NAME_SPACE;
-        this._locator = options.locator || util.format('%s:%s', OPTIONS.HOST, OPTIONS.PORT);
-
-        this._debug = options.debug || false;
-        this._app = process.argv.app || 'defaultapp';
-        this._logger = null;
-
-        this._client = new Client(this._locator);
-        this._storage = this._client.Service('storage');
-
-        this.STATE = {
-            DEFAULT: 0,
-            CONNECTING: 1,
-            CONNECTED: 2
-        };
-
-        this.state = this.STATE.DEFAULT;
-        this.isInDefaultState = function () {
-            return this.state === this.STATE.DEFAULT;
-        };
-        this.isInConnectedState = function () {
-            return this.state === this.STATE.CONNECTED;
-        };
-    }
-
-    util.inherits(Storage, EventEmitter);
-
-    Storage.prototype._log = function () {
-        if (this._debug) {
-            this._logger.debug.apply(this._logger, arguments);
-        }
-    };
-
-    /**
-     * Connect to storage
-     */
-    Storage.prototype.connect = function () {
-        var _this = this;
-
-        this.state = this.STATE.CONNECTING;
-
-        if (this._debug) {
-            _connectLogger();
-        } else {
-            _connectStorage();
-        }
-
-        function _connectLogger() {
-            _this._logger = _this._client.Logger(_this._app);
-            _this._logger.connect();
-            _this._logger.once('connect', function () {
-                _this._logger._verbosity = 4;
-                _connectStorage();
-            });
-        }
-
-        function _connectStorage() {
-            var id = __uid();
-            _this._log('[%s] connecting to storage service', id);
-            _this._storage.connect();
-            _this._storage.once('connect', function () {
-                assert(_this.state === _this.STATE.CONNECTING);
-                _this._log('[%s] connected to storage', id);
-                _this.state = _this.STATE.CONNECTED;
-                _this.emit('connect');
-            });
-        }
-    };
-
-    /**
-     * Reads record for key
-     * @param {String} key - record key
-     * @param {Function} cb - callback function
-     */
-    Storage.prototype.read = function (key, cb) {
-        this._storage.read(this._namespace, key, function (err, result) {
-            cb(err, result);
-        });
-    };
-
     provide({
 
         /**
-         * Initialize cocaine storage
+         * Initialize storage
          * @returns {*}
          */
         init: function () {
-            logger.info('Initialize cocaine storage');
-            if (storage && !storage.isInDefaultState()) {
-                return vow.resolve();
-            }
-
-            storage = new Storage(config.get('storage:cocaine'));
-            storage.connect();
-
-            var def = vow.defer();
-            storage.on('connect', function (err) {
-                logger.info('Application has been connected to cocaine storage');
-                err ? def.reject(err) : def.resolve();
-            });
-
-            return def.promise();
+            logger.info('Initialize storage');
+            return vow.resolve();
         },
 
         /**
@@ -135,19 +26,26 @@ modules.define('storage', ['config', 'logger'], function(provide, config, logger
          * @returns {*}
          */
         read: function (key, callback) {
-            if (!storage.isInConnectedState()) {
-                callback(error);
-            }
+            var libRepo = config.get('github:libraries'),
+                url = util.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, key);
 
-            storage.read(key, function (err, value) {
-                if (!err) {
-                    callback(null, value);
-                }else if (err.code === ERROR_CODE_NOT_FOUND) {
-                    callback(null, null);
-                }else {
-                    callback(err);
-                }
+            var ws = new WritableStream();
+
+            ws.chunks = [];
+            ws._write = function (chunk, enc, next) {
+                this.chunks.push(chunk);
+                next();
+            };
+            ws.on('error', function (err) {
+                callback(err);
             });
+
+            ws.on('finish', function() {
+                var buf = Buffer.concat(this.chunks);
+                callback(null, buf);
+            });
+
+            request({ url: url }).pipe(ws);
         }
     });
 });

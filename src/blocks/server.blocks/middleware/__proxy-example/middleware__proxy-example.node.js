@@ -24,7 +24,6 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
 
             // set the content-types by mime type
             res.type(mime.lookup(url));
-            url = url.replace(/^\//, '');
 
             // fix firefox charsets for bemjson files
             if (/\.bemjson\.js$/.test(url)) {
