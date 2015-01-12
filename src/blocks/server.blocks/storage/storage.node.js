@@ -121,6 +121,7 @@ modules.define('storage', ['config', 'logger'], function(provide, config, logger
 
             var def = vow.defer();
             storage.on('connect', function (err) {
+                logger.info('Application has been connected to cocaine storage');
                 err ? def.reject(err) : def.resolve();
             });
 
@@ -130,25 +131,23 @@ modules.define('storage', ['config', 'logger'], function(provide, config, logger
         /**
          * Reads data from storage by key
          * @param {String} key - record key
+         * @param {Function} callback - callback function
          * @returns {*}
          */
-        read: function (key) {
+        read: function (key, callback) {
             if (!storage.isInConnectedState()) {
-                return vow.reject(error);
+                callback(error);
             }
 
-            var def = vow.defer();
             storage.read(key, function (err, value) {
                 if (!err) {
-                    def.resolve(value);
+                    callback(null, value);
                 }else if (err.code === ERROR_CODE_NOT_FOUND) {
-                    def.resolve(null);
+                    callback(null, null);
                 }else {
-                    def.reject(err);
+                    callback(err);
                 }
             });
-
-            return def.promise();
         }
     });
 });
