@@ -82,7 +82,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
         provide(function () {
             var PATTERN = {
                     EXAMPLE: '/__example',
-                    FREEZE: '/output/'
+                    FREEZE: '/output'
                 },
                 VERSION_REGEXP = /\/v?\d+\.\d+\.\d+\//;
 
