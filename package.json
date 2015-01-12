@@ -33,7 +33,8 @@
     "leveldown": "0.10.0",
     "tar": "1.0.1",
     "bse-admin": "git://github.com/bem/bse-admin.git#v0.0.16",
-    "luster": "~0.5.1"
+    "luster": "~0.5.1",
+    "bem-site-codestyle": "~0.1.0"
   },
   "devDependencies": {
     "borschik": "~1.0.5",
@@ -46,9 +47,7 @@
     "enb-diverse-js": "*",
     "enb-modules": "*",
     "enb-stylus": "^1.1.4",
-    "inherit": "~2.2.2",
-    "jscs": "~1.5.9",
-    "jshint": "~2.5.5"
+    "inherit": "~2.2.2"
   },
   "scripts": {
     "start": "node bin/app.js",
@@ -61,7 +60,7 @@
     "clean": "enb make clean && rm -rf node_modules libs cache logs",
     "clean_logs": "rm -rf logs/*",
     "clean_cache": "rm -rf cache/*",
-    "test": "node_modules/.bin/jshint . && node_modules/.bin/jscs -c .jscsrc ."
+    "lint": "jscs . && jshint-groups"
   },
   "author": "info@bem.info",
   "readmeFilename": "README.md"
