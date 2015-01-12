@@ -30,11 +30,13 @@ block('author').mod('view', 'full')(
     }),
 
     mode('avatar')(function() {
+        var content = this.ctx.content;
+
         return {
             block: 'author',
             elem: 'avatar',
-            elemMods: { size: 'medium', 'no-image': !this.ctx.content.avatar && 'yes' },
-            content: this.ctx.content
+            elemMods: { size: 'medium', 'no-image': !content.avatar && 'yes' },
+            content: content
         };
     }),
 
@@ -90,7 +92,7 @@ block('author').mod('view', 'full')(
         };
     }),
 
-    match(this.isSimple(this.ctx.content)).content()(function() {
+    match(function () { return this.isSimple(this.ctx.content); }).content()(function() {
         return this.ctx.content;
     })
 );

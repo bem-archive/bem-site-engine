@@ -33,8 +33,14 @@ modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
 
                         return engine.BEMTREE.apply(ctx)
                             .then(function (bemjson) {
-                                return mode === 'bemjson' ?
-                                    stringify(bemjson, null, 2) : engine.BEMHTML.apply(bemjson);
+                                if (mode === 'bemjson') return stringify(bemjson, null, 2);
+
+                                try {
+                                    return engine.BEMHTML.apply(bemjson);
+                                } catch(err) {
+                                    console.log('BEMHTML ERROR', err);
+                                    throw new Error();
+                                };
                             });
                     });
             }

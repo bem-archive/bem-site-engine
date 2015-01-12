@@ -1,8 +1,10 @@
 block('block-example').elem('blank')(
     def()(function() {
+        var ctx = this.ctx;
+
         return applyCtx({
             block: 'link',
-            url: this.ctx.url,
+            url: ctx.url,
             attrs: {
                 target: '_blank',
                 title: BEM.I18N('block-example', 'example-title')
@@ -12,7 +14,7 @@ block('block-example').elem('blank')(
                 elem: 'link',
                 elemMods: { icon: 'blank' }
             },
-            content: this.ctx.content
+            content: ctx.content
         });
     })
 );

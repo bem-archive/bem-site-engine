@@ -1,10 +1,9 @@
 block('author').elem('twitter')(
-
-    def().match(!this.ctx.content)(function() {
-        return false;
-    }),
+    def().match(function () { return !this.ctx.content; })(false),
 
     content()(function() {
+        var content = this.ctx.content;
+
         return [
             {
                 block: 'author',
@@ -16,8 +15,8 @@ block('author').elem('twitter')(
                 content: [
                     {
                         block: 'link',
-                        url: 'https://twitter.com/' + this.ctx.content,
-                        content: '@' + this.ctx.content
+                        url: 'https://twitter.com/' + content,
+                        content: '@' + content
                     }
                 ]
             }

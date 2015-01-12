@@ -1,27 +1,21 @@
-block post, elem tags {
+block('post').elem('tags')(
+    def().match(function () {
+        return !(this.ctx.content || []).length;
+    })(false),
 
-    default, !(this.ctx && this.ctx.content && this.ctx.content.length): {
-        return false;
-    }
-
-    content, this._.isArray(this.ctx.content): {
-        var buf = [],
-            delimeter = {
-                tag: 'span',
-                content: ' '
-            };
-
-        this.ctx.content.forEach(function(item, index) {
-            index > 0 && buf.push(delimeter);
-
-            buf.push({
-                block: 'link',
-                url: '/tags/' + item,
-                content: item
-            });
+    content()(function () {
+        return this.ctx.content.map(function (item) {
+            return [
+                {
+                    block: 'link',
+                    url: '/tags/' + item,
+                    content: item
+                },
+                {
+                    tag: 'span',
+                    content: ' '
+                }
+            ];
         });
-
-        return buf;
-
-    }
-}
+    })
+);

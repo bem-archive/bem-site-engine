@@ -1,1 +1,1 @@
-block block, js: true
+block('block').js()(true);

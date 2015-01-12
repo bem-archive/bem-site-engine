@@ -7,17 +7,19 @@ block('author').mod('view', 'grid-cell')(
     }),
 
     content()(function() {
+        var content = this.ctx.content;
+
         return [
             {
                 block: 'author',
                 elem: 'avatar',
-                elemMods: { size: 'medium', 'no-image': !this.ctx.content.avatar && 'yes' },
-                content: this.ctx.content
+                elemMods: { size: 'medium', 'no-image': !content.avatar && 'yes' },
+                content: content
             },
             {
                 block: 'author',
                 elem: 'name',
-                content: this.ctx.content
+                content: content
             }
         ];
     })

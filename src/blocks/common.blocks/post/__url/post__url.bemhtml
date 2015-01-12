@@ -1,7 +1,7 @@
 block('post').elem('url')(
-    match(function() { return !(this.ctx && this.ctx.content && this.ctx.content.length); }).def()(function() {
-        return false;
-    }),
+    match(function() {
+        return !(this.ctx.content || []).length; }
+    ).def()(false),
 
     content()(function() {
         return {
