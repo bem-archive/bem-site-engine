@@ -16,14 +16,13 @@
         "stdout": "logs/output.log",
         "stderr": "logs/errors.log"
     },
+    "storage": {
+        "cocaine": {
+            "debug": false,
+            "namespace": ""
+        }
+    },
     "github": {
-        "libraries": {
-            "type": "public",
-            "user": "bem",
-            "repo": "bem-info-libs",
-            "ref": "master",
-            "pattern": "https://raw.githubusercontent.com/%s/%s/%s%s"
-        },
         "token": "57e4fb0c83d3337ffe991d8b61e09c54288c2d7e",
         "people": "https://github.com/bem/bem-site-engine/blob/dev/docs/people/people.json"
     },
