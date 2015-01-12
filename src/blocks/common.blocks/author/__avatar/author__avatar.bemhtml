@@ -1,13 +1,16 @@
 block('author').elem('avatar')(
     match(function() {
         var c = this.ctx.content;
+
         return c && c.avatar;
     })(
         tag()('img'),
         attrs()(function() {
+            var content = this.ctx.content;
+
             return {
-                src : this.ctx.content.avatar,
-                alt : this.ctx.content.slug
+                src: content.avatar,
+                alt: content.slug
             };
         })
     )

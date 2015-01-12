@@ -1,6 +1,7 @@
-block error-billboard {
+block('error-billboard')(
+    content()(function () {
+        var code = this.ctx.code;
 
-    content: {
         return [
             {
                 elem: 'logo'
@@ -10,11 +11,11 @@ block error-billboard {
                 content: [
                     {
                         elem: 'title',
-                        code: this.ctx.code
+                        code: code
                     },
                     {
                         elem: 'description',
-                        code: this.ctx.code
+                        code: code
                     },
                     {
                         elem: 'report'
@@ -25,53 +26,54 @@ block error-billboard {
 
                 ]
             }
-        ]
-    }
+        ];
+    }),
 
-    elem title {
+    elem('title')(
+        tag()('h1'),
 
-        tag: 'h1'
+        content()(function () {
+            var code = this.ctx.code;
 
-        content: BEM.I18N('error-billboard', 'title')
+            return BEM.I18N('error-billboard', 'title') + (code ? (' ' + code) : '');
+        })
+    ),
 
-        this.ctx.code, content: BEM.I18N('error-billboard', 'title') + ' ' + this.ctx.code
-    }
+    elem('description')(
+        def()(match(function () {
+            return !this.ctx.code
+        })(false)),
 
-    elem description {
+        tag()('h3'),
 
-        tag: 'h3'
+        content()(function () {
+            return BEM.I18N('error-billboard', 'description') + this.ctx.code;
+        })
+    ),
 
-        !this.ctx.code, default: {
-            return false;
-        }
+    elem('report')(
+        tag()('h3'),
 
-        this.ctx.code, content: BEM.I18N('error-billboard', 'description' + this.ctx.code)
-    }
+        content()(function () {
+            return [
+                {
+                    tag: 'span',
+                    content: BEM.I18N('error-billboard', 'report')
+                },
+                {
+                    block: 'link',
+                    url: 'mailto:info@bem.info',
+                    content: 'info@bem.info'
+                }
+            ];
+        })
+    ),
 
-    elem report {
-
-        tag: 'h3'
-
-        content: [
-            {
-                tag: 'span',
-                content: BEM.I18N('error-billboard', 'report')
-            },
-            {
-                block: 'link',
-                url: 'mailto:info@bem.info',
-                content: 'info@bem.info'
-            }
-        ]
-    }
-
-    elem sitemap {
-        content: [
-            {
-                block: 'link',
-                url: '/tags',
-                content: BEM.I18N('error-billboard', 'sitemap')
-            }
-        ]
-    }
-}
+    elem('sitemap')(
+        content()({
+            block: 'link',
+            url: '/tags',
+            content: BEM.I18N('error-billboard', 'sitemap')
+        })
+    )
+);

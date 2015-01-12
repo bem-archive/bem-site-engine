@@ -1,3 +1,0 @@
-block('block-jsdoc').elem('title').elemMod('h', '5')(
-    tag()('h5')
-)

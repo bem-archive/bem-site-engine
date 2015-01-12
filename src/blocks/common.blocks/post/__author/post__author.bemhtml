@@ -1,6 +1,3 @@
-block post, elem author {
-
-    default, !(this.ctx && this.ctx.content && this.ctx.content.length): {
-        return false;
-    }
-}
+block('post').elem('author').def().match(function () {
+    return !(this.ctx.content || []).length;
+})(false);

@@ -1,6 +1,3 @@
-block post, elem summary {
-
-    default, !(this.ctx && this.ctx.content): {
-        return false;
-    }
-}
+block('post').elem('summary').def().match(function () {
+    return !this.ctx.content;
+})(false);
