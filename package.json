@@ -34,7 +34,7 @@
     "deep-extend": "~0.2.10",
     "js-beautify": "1.5.1",
     "luster": "~0.5.0",
-    "bem-site-codestyle": "~0.1.0"
+    "bem-site-codestyle": "git://github.com/bem-site/bem-site-codestyle.git"
   },
   "devDependencies": {
     "borschik": "~1.0.5",
