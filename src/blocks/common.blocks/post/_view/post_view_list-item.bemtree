@@ -1,49 +1,57 @@
-block post, mod view list-item {
+block('post').mod('view', 'list-item')(
 
-    content: {
+    content()(function () {
         var node = this.ctx.node,
             source = node.source && node.source[this.data.lang];
 
         return [
-            apply('author', this.ctx = {
+            apply('author', { ctx: {
                 authors: source.authors,
                 translators: source.translators
-            }),
+            } }),
 
-            apply('tags', this.ctx.content = source.tags),
+            apply('tags', { 'ctx.content': source.tags }),
 
-            apply('title', this.ctx = {
+            apply('title', { ctx: {
                 node: node,
                 content: source
-            }),
+            } }),
 
-            apply('summary', this.ctx.content = source.summary)
+            apply('summary', { 'ctx.content': source.summary })
         ];
-    }
+    }),
 
-    //authors of post
-    author: {
-        elem: 'author',
-        authors: this.ctx.authors,
-        translators: this.ctx.translators
-    }
+    // authors of post
+    mode('author')(function () {
+        return {
+            elem: 'author',
+            authors: this.ctx.authors,
+            translators: this.ctx.translators
+        };
+    }),
 
-    //tags array of post
-    tags: {
-        elem: 'tags',
-        content: this.ctx.content
-    }
+    // tags array of post
+    mode('tags')(function () {
+        return {
+            elem: 'tags',
+            content: this.ctx.content
+        };
+    }),
 
-    //title of post
-    title: {
-        elem: 'title',
-        url: this.ctx.node.url,
-        content: this.ctx.content.longTitle || this.ctx.content.title
-    }
+    // title of post
+    mode('title')(function () {
+        return {
+            elem: 'title',
+            url: this.ctx.node.url,
+            content: this.ctx.content.longTitle || this.ctx.content.title
+        };
+    }),
 
-    //summary of post
-    summary: {
-        elem: 'summary',
-        content: this.ctx.content
-    }
-}
+    // summary of post
+    mode('summary')(function () {
+        return {
+            elem: 'summary',
+            content: this.ctx.content
+        };
+    })
+);
