@@ -1,6 +1,5 @@
-block posts {
-
-    content: {
+block('posts').content()(function () {
+    return {
         var node = this.ctx.node;
 
         if(!node.items) {
@@ -12,4 +11,4 @@ block posts {
             content: node.items
         };
     }
-}
+});
