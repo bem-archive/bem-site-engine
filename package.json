@@ -32,7 +32,7 @@
     "levelup": "~0.19.0",
     "leveldown": "0.10.0",
     "tar": "1.0.1",
-    "bse-admin": "git://github.com/bem/bse-admin.git#v0.0.16",
+    "bse-admin": "git://github.com/bem/bse-admin.git#v0.2.0",
     "luster": "~0.5.1",
     "bem-site-codestyle": "~0.1.0"
   },
@@ -56,7 +56,7 @@
     "prepare_configs": "ln -snf ${NODE_ENV:-dev} configs/current && ln -sfn configs/current/borschik .borschik",
     "make": "npm install && npm run postinst && npm run build && npm run data && npm start",
     "build": "YENV=${NODE_ENV:-development} enb make",
-    "data": "node node_modules/.bin/bse sync-nodes --dev",
+    "data": "node node_modules/.bin/bse sync-nodes",
     "clean": "enb make clean && rm -rf node_modules libs cache logs",
     "clean_logs": "rm -rf logs/*",
     "clean_cache": "rm -rf cache/*",
