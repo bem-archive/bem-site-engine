@@ -1,14 +1,8 @@
 block('posts').content()(function () {
-    return {
-        var node = this.ctx.node;
+    var items = this.ctx.node && this.ctx.node.items;
 
-        if(!node.items) {
-            return [];
-        }
-
-        return {
-            elem: 'list',
-            content: node.items
-        };
-    }
+    return items ? {
+        elem: 'list',
+        content: items
+    } : [];
 });
