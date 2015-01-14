@@ -1,9 +1,9 @@
 var util = require('util'),
     _ = require('lodash'),
     vow = require('vow'),
+    renderer = require('bem-md-renderer'),
 
     utility = require('../util'),
-    renderer = require('../renderer'),
     providers = require('../providers'),
     logger = require('../logger');
 
