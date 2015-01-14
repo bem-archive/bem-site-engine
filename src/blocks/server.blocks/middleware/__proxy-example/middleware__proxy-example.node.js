@@ -1,19 +1,15 @@
 var u = require('util'),
     vm = require('vm'),
     zlib = require('zlib'),
-    WritableStream = require('stream').Writable,
 
     vow = require('vow'),
-    request = require('request'),
     sha = require('sha1'),
     html = require('js-beautify').html,
     mime = require('mime');
 
-modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'model'],
-    function (provide, config, constants, logger, util, model) {
+modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'model', 'storage'],
+    function (provide, config, constants, logger, util, model, storage) {
         logger = logger(module);
-
-        var libRepo = config.get('github:libraries');
 
         /**
          * Loads sources for url and sent them to response
@@ -28,7 +24,6 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
 
             // set the content-types by mime type
             res.type(mime.lookup(url));
-            url = u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
             // fix firefox charsets for bemjson files
             if (/\.bemjson\.js$/.test(url)) {
@@ -36,25 +31,14 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             }
 
             function getGzipped(url, callback) {
-                var ws = new WritableStream();
-
-                ws.chunks = [];
-                ws._write = function (chunk, enc, next) {
-                    this.chunks.push(chunk);
-                    next();
-                };
-                ws.on('error', function (err) {
-                    callback(err);
-                });
-                ws.on('finish', function() {
-                    var buf = Buffer.concat(this.chunks);
-                    zlib.gunzip(buf, function (err, data) {
-                        callback(null, (err ? buf : data).toString('utf-8'));
+                storage.read(url, function(err, zipped) {
+                    if(err) {
+                        callback(err);
+                    }
+                    zlib.gunzip(zipped, function (err, data) {
+                        callback(null, (err ? zipped : data).toString('utf-8'));
                     });
-
                 });
-
-                request({ url: url }).pipe(ws);
             }
 
             return model.getFromCache(sha(url)).then(function (response) {
@@ -90,7 +74,9 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
          */
         function proxyImageFiles(url, res) {
             res.type(mime.lookup(url));
-            request.get(u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url)).pipe(res);
+            storage.read(url, function (err, data) {
+                return res.end(err ? '' : data);
+            });
         }
 
         provide(function () {

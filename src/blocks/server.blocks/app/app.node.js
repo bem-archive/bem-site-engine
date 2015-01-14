@@ -5,8 +5,8 @@ var path = require('path'),
     vowFs = require('vow-fs'),
     express = require('express');
 
-modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updater'],
-    function (provide, config, logger, util, model, middleware, updater) {
+modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updater', 'storage'],
+    function (provide, config, logger, util, model, middleware, updater, storage) {
         logger = logger(module);
 
         provide({
@@ -64,7 +64,7 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
             },
 
             init: function () {
-                model.init()
+                return vow.all([model.init(), storage.init()])
                     .then(function () {
                         return this.startServer();
                     }, this)
