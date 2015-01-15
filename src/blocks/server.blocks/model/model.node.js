@@ -93,6 +93,10 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                             .then(function () {
                                 logger.debug('connect to database in path %s', p);
                                 return db.connect(p);
+                            })
+                            .then(function () {
+                                logger.debug('extract sitemap.xml file', p);
+                                return extractSitemapXMLFile();
                             });
                     });
             });
@@ -125,6 +129,10 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                         .then(function () {
                             logger.debug('connect to database in path %s', p);
                             return db.connect(p);
+                        })
+                        .then(function () {
+                            logger.debug('extract sitemap.xml file', p);
+                            return extractSitemapXMLFile();
                         });
                 });
         },
@@ -446,6 +454,17 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
 
         return _.values(result).filter(function (item) {
             return item.items.length;
+        });
+    }
+
+    function extractSitemapXMLFile() {
+        return db.get('sitemapXml').then(function (data) {
+            if(!data) {
+                logger.warn('sitemap.xml was not found in database');
+                return vow.resolve();
+            }
+
+            return vowFs.write(path.join(process.cwd(), 'sitemap.xml'), data, 'utf-8');
         });
     }
 });
