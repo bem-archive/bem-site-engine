@@ -29,12 +29,11 @@
     "deep-extend": "~0.2.10",
     "js-beautify": "1.5.1",
     "luster": "~0.5.0",
-    "levelup": "~0.19.0",
-    "leveldown": "~0.10.0",
+    "level": "~0.18.0",
     "tar": "1.0.1",
     "luster": "~0.5.1",
     "bem-site-codestyle": "~0.1.0",
-    "bse-admin": "git://github.com/bem/bse-admin.git#v0.4.0"
+    "bse-admin": "git://github.com/bem/bse-admin.git#v0.4.1"
   },
   "devDependencies": {
     "borschik": "~1.0.5",
