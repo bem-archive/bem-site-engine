@@ -326,19 +326,25 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          * @returns {*}
          */
         getNodesByPeopleCriteria: function (lang, node) {
-            var value = node.route.conditions.id;
+            var value = node.route.conditions.id,
+                hint = { gte: 'docs:', lt: 'nodes', fillCache: true };
             return db.getByCriteria(function (record) {
                 var k = record.key,
-                    v = record.value;
-                return k.indexOf('docs:') > -1 && k.indexOf(':' + lang) > -1 &&
+                    v = record.value,
+                    criteria = k.indexOf(':' + lang) > -1;
+
+                if (value) {
+                    criteria = criteria &&
                     ((v.authors && v.authors.indexOf(value) > -1) ||
                     (v.translators && v.translators.indexOf(value) > -1));
-                })
+                }
+                return criteria;
+                }, hint)
                 .then(function (docRecords) {
-                    return vow.all([this.getNodesBySourceRecords(docRecords), docRecords]);
+                    return vow.all([this.getNodesBySourceRecords(docRecords), docRecords, this.getSectionNodes()]);
                 }, this)
-                .spread(function (nodeRecords, docRecords) {
-                    return combineResults(nodeRecords, docRecords, lang);
+                .spread(function (nodeRecords, docRecords, sectionNodes) {
+                    return combineResults(nodeRecords, docRecords, sectionNodes, lang);
                 }, this);
         },
 
@@ -362,10 +368,10 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                     return criteria;
                 }, hint)
                 .then(function (docRecords) {
-                    return vow.all([this.getNodesBySourceRecords(docRecords), docRecords]);
+                    return vow.all([this.getNodesBySourceRecords(docRecords), docRecords, this.getSectionNodes()]);
                 }, this)
-                .spread(function (nodeRecords, docRecords) {
-                    return combineResults(nodeRecords, docRecords, lang);
+                .spread(function (nodeRecords, docRecords, sectionNodes) {
+                    return combineResults(nodeRecords, docRecords, sectionNodes, lang);
                 }, this);
         },
 
@@ -403,12 +409,23 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          */
         getFromCache: function (key) {
             return db.get(key);
+        },
+
+        getSectionNodes: function () {
+            return this.getNodesByCriteria(function (record) {
+                return record.value.isCategory;
+            }, false);
         }
     });
 
-    function combineResults(nodeRecords, docRecords, lang) {
+    function combineResults(nodeRecords, docRecords, sectionNodes, lang) {
         var docsMap = docRecords.reduce(function (prev, item) {
                 prev[item.key] = item.value;
+                return prev;
+            }, {}),
+            sectionTitlesMap = sectionNodes.reduce(function (prev, item) {
+                var v = item.value;
+                prev[v.route.name] = v.title[lang];
                 return prev;
             }, {}),
             result = nodeRecords
@@ -419,8 +436,8 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                     return v;
                 })
                 .reduce(function (prev, item) {
-                    prev[item.route.name] = prev[item.route.name] || {
-                        title: item.title[lang],
+                    prev[ item.route.name ] = prev[ item.route.name ] || {
+                        title: sectionTitlesMap[item.route.name],
                         items: []
                     };
                     prev[item.route.name].items.push(item);
