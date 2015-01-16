@@ -1,5 +1,5 @@
 block('block-docs')(
-    content()(function() {
+    content()(function () {
         var data = this.data,
             _data = data.node.source.data,
             _lang = data.lang;
@@ -8,34 +8,34 @@ block('block-docs')(
 
         return [
             applyNext(),
-            apply('description', { ctx: { description: _data.description }}),
-            apply('mods', { ctx: {mods: _data.mods }}),
-            apply('elems', { ctx: {elems: _data.elems }})
+            apply('description', { ctx: { description: _data.description } }),
+            apply('mods', { ctx: { mods: _data.mods } }),
+            apply('elems', { ctx: { elems: _data.elems } })
         ];
     }),
 
     mode('description')(
-        (function() {
+        function () {
             var buf = [],
                 sign = '<!--bem-example-->',
                 inlineExamples = [],
                 description = this.ctx.description,
                 source = this.data.node.source;
 
-            if(source.enb) {
+            if (source.enb) {
                 // parse inline examples
-                description = description.replace(/<!--\sbem-example:\s(\S+)\s-->/g, function(str, url) {
+                description = description.replace(/<!--\sbem-example:\s(\S+)\s-->/g, function (str, url) {
                     inlineExamples.push(apply('examples', {
                         ctx: {
                             examples: [{ url: url }],
                             source: source
                         }
-                    } ));
+                    }));
 
                     return sign;
                 });
 
-                description.split(sign).forEach(function(item, index) {
+                description.split(sign).forEach(function (item, index) {
                     buf.push(item, inlineExamples[index]);
                 });
 
@@ -46,19 +46,19 @@ block('block-docs')(
                 elem: 'description',
                 content: description
             };
-        }),
+        },
 
-        match(function() {
+        match(function () {
             var d = this.ctx.description;
             return this.isArray(d) && d.length;
-        })(function() {
+        })(function () {
             var desc = this.ctx.description;
 
             // support old structure bem-sets, when first item of desc array was a bemjson
             // islands-page < 2.2.0, 2.1.0 & others old versions.
-            if(!(desc[0].content && desc[0].content !== null && typeof desc[0].content === 'object')) {
-                var md = desc.filter(function(item) {
-                    return !item.tech || (item.tech && 'desc.md' === item.tech)
+            if (!(desc[0].content && desc[0].content !== null && typeof desc[0].content === 'object')) {
+                var md = desc.filter(function (item) {
+                    return !item.tech || (item.tech && item.tech === 'desc.md');
                 })[0];
 
                 this.ctx = this.extend(this.ctx, { description: md ? md.content : '' });
@@ -67,18 +67,18 @@ block('block-docs')(
             return applyNext();
         }),
 
-        match(function() {
+        match(function () {
             return !this.ctx.description;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
     mode('examples')(
-        (function() {
+        function () {
             var source = this.ctx.source;
 
-            return this.ctx.examples.map(function(example) {
+            return this.ctx.examples.map(function (example) {
                 return {
                     block: 'block-example',
                     mods: { view: 'inline' },
@@ -87,20 +87,20 @@ block('block-docs')(
                     example: example
                 };
             });
-        }),
+        },
 
-        match(function() {
+        match(function () {
             return !this.ctx.examples || !this.ctx.examples.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
     mode('mods')(
-        (function() {
+        function () {
             return [
                 apply('mods-title'),
-                this.ctx.mods.map(function(mod) {
+                this.ctx.mods.map(function (mod) {
                     return {
                         elem: 'item',
                         content: [
@@ -118,21 +118,21 @@ block('block-docs')(
                                 elemMods: { inline: 'yes' },
                                 content: mod.title ? mod.title[0].content : ''
                             },
-                            apply('mod-values', { ctx: { values: mod.vals }})
+                            apply('mod-values', { ctx: { values: mod.vals } })
                         ]
                     };
                 })
             ];
-        }),
+        },
 
-        match(function() {
+        match(function () {
             return !this.ctx.mods || !this.ctx.mods.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
-    mode('mods-title')(function() {
+    mode('mods-title')(function () {
         return {
             elem: 'title',
             elemMods: { mix: 'post-title', h: '4' },
@@ -141,8 +141,8 @@ block('block-docs')(
     }),
 
     mode('mod-values')(
-        (function() {
-            return this.ctx.values.map(function(value){
+        function () {
+            return this.ctx.values.map(function (value) {
                 return [
                     {
                         elem: 'values',
@@ -160,20 +160,20 @@ block('block-docs')(
                     }
                 ];
             });
-        }),
+        },
 
-        match(function() {
+        match(function () {
             return !this.ctx.values || !this.ctx.values.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
     mode('elems')(
-        (function() {
+        function () {
             return [
                 apply('elems-title'),
-                this.ctx.elems.map(function(elem) {
+                this.ctx.elems.map(function (elem) {
                     return {
                         elem: 'item',
                         content: [
@@ -191,21 +191,21 @@ block('block-docs')(
                                 elemMods: { inline: 'yes' },
                                 content: elem.title ? elem.title[0].content : ''
                             },
-                            apply('elem-mods', { ctx: { eMods: elem.mods }})
+                            apply('elem-mods', { ctx: { eMods: elem.mods } })
                         ]
                     };
                 })
             ];
-        }),
+        },
 
-        match(function() {
+        match(function () {
             return !this.ctx.elems || !this.ctx.elems.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
-    mode('elems-title')(function() {
+    mode('elems-title')(function () {
         return {
             elem: 'title',
             elemMods: { mix: 'post-title', h: '4' },
@@ -214,8 +214,8 @@ block('block-docs')(
     }),
 
     mode('elem-mods')(
-        (function() {
-            return this.ctx.eMods.map(function(eMod){
+        function () {
+            return this.ctx.eMods.map(function (eMod) {
                 return [
                     {
                         elem: 'values',
@@ -235,23 +235,23 @@ block('block-docs')(
                                 elemMods: { inline: 'yes' },
                                 content: eMod.title ? eMod.title[0].content : ''
                             },
-                            apply('elem-mod-values', { ctx: { values: eMod.vals }})
+                            apply('elem-mod-values', { ctx: { values: eMod.vals } })
                         ]
                     }
                 ];
             });
-        }),
+        },
 
-        match(function() {
+        match(function () {
             return !this.ctx.eMods || !this.ctx.eMods.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
     mode('elem-mod-values')(
-        (function() {
-            return this.ctx.values.map(function(value){
+        function () {
+            return this.ctx.values.map(function (value) {
                 return [
                     {
                         elem: 'values',
@@ -269,11 +269,11 @@ block('block-docs')(
                     }
                 ];
             });
-        }),
+        },
 
-        match(function() {
+        match(function () {
             return !this.ctx.values || !this.ctx.values.length;
-        })(function() {
+        })(function () {
             return null;
         })
     )

@@ -41,7 +41,7 @@ block('error-billboard')(
 
     elem('description')(
         def()(match(function () {
-            return !this.ctx.code
+            return !this.ctx.code;
         })(false)),
 
         tag()('h3'),

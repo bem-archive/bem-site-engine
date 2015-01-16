@@ -1,5 +1,5 @@
 block('block-jsdoc').elem('type-value')(
-    content()(function() {
+    content()(function () {
         return this.xmlEscape(applyNext());
     })
 );

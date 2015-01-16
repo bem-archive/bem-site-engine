@@ -1,9 +1,9 @@
 var u = require('util');
 
-modules.define('middleware__lang-switcher', function(provide) {
+modules.define('middleware__lang-switcher', function (provide) {
 
-    provide(function() {
-        return function(req, res, next) {
+    provide(function () {
+        return function (req, res, next) {
             var node = req.__data.node,
                 lang = {
                     en: 'ru',

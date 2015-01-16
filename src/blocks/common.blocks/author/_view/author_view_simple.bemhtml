@@ -4,11 +4,11 @@ block('author').mod('view', 'simple')(
 
     mix()({ block: 'link' }),
 
-    attrs()(function() {
-        return { href : this.ctx.content.url };
+    attrs()(function () {
+        return { href: this.ctx.content.url };
     }),
 
-    content()(function() {
+    content()(function () {
         return {
             block: 'author',
             elem: 'name',
@@ -16,9 +16,9 @@ block('author').mod('view', 'simple')(
         };
     }),
 
-    match(function() {
+    match(function () {
         return this.isSimple(this.ctx.content);
-    }).content()(function(){
+    }).content()(function () {
         return this.ctx.content;
     })
 );

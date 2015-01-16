@@ -1,54 +1,57 @@
+/* global leStatics, leBundles */
+
 block('page')(
-    def().match(function() { return !this._myGuard; })(function() {
+    def().match(function () { return !this._myGuard; })(function () {
         this._myGuard = true;
-        this._pathToBundle = leStatics.getUrl(leBundles.getBundlePath(this.data.bundleName) + '/' + this.data.bundleName + '.min');
+        this._pathToBundle = leStatics.getUrl(leBundles.getBundlePath(this.data.bundleName) + '/' +
+            this.data.bundleName + '.min');
 
         return applyCtx({
-            block : this.block,
-            title : this.data.title,
-            mods : this.extend({ theme : 'normal', page : this.data.node.route.name }, this.ctx.mods),
-            head : apply('head'),
-            favicon : this.data.statics + '/favicon.ico'
+            block: this.block,
+            title: this.data.title,
+            mods: this.extend({ theme: 'normal', page: this.data.node.route.name }, this.ctx.mods),
+            head: apply('head'),
+            favicon: this.data.statics + '/favicon.ico'
         });
     }),
 
-    mode('head')(function() {
+    mode('head')(function () {
         var c = [],
             meta = this.data.meta;
 
         c.push({ elem: 'css' });
 
-        if(meta) {
-            if(meta.description)
-                c.push({ elem: 'meta', attrs: { name: 'description', content: meta.description }});
+        if (meta) {
+            if (meta.description)
+                c.push({ elem: 'meta', attrs: { name: 'description', content: meta.description } });
 
-            if(meta.keywords)
-                c.push({ elem: 'meta', attrs: { name: 'keywords', content: meta.keywords }});
+            if (meta.keywords)
+                c.push({ elem: 'meta', attrs: { name: 'keywords', content: meta.keywords } });
 
-            if(meta.ogTitle)
-                c.push({ elem: 'meta', attrs: { property: 'og:title', content: meta.ogTitle }});
+            if (meta.ogTitle)
+                c.push({ elem: 'meta', attrs: { property: 'og:title', content: meta.ogTitle } });
 
-            if(meta.ogDescription)
-                c.push({ elem: 'meta', attrs: { property: 'og:description', content: meta.ogDescription }});
+            if (meta.ogDescription)
+                c.push({ elem: 'meta', attrs: { property: 'og:description', content: meta.ogDescription } });
 
-            if(meta.ogType)
-                c.push({ elem: 'meta', attrs: { property: 'og:type', content: meta.ogType }});
+            if (meta.ogType)
+                c.push({ elem: 'meta', attrs: { property: 'og:type', content: meta.ogType } });
 
-            if(meta.ogKeywords)
-                c.push({ elem: 'meta', attrs: { property: 'og:article:tag', content: meta.ogKeywords }});
+            if (meta.ogKeywords)
+                c.push({ elem: 'meta', attrs: { property: 'og:article:tag', content: meta.ogKeywords } });
 
-            if(meta.ogUrl)
-                c.push({ elem: 'meta', attrs: { property: 'og:url', content: meta.ogUrl }});
+            if (meta.ogUrl)
+                c.push({ elem: 'meta', attrs: { property: 'og:url', content: meta.ogUrl } });
 
-            if(meta.ogImage)
-                c.push({ elem: 'meta', attrs: { property: 'og:image', content: meta.ogImage }});
+            if (meta.ogImage)
+                c.push({ elem: 'meta', attrs: { property: 'og:image', content: meta.ogImage } });
 
         }
 
         return applyCtx(c);
     }),
 
-    content()(function() {
+    content()(function () {
         return [
             {
                 block: 'content-wrapper',

@@ -1,7 +1,7 @@
-modules.define('search_type_tags', ['logger', 'model'], function(provide, logger, model) {
+modules.define('search_type_tags', ['logger', 'model'], function (provide, logger, model) {
     provide({
         convert: function (result) {
-            return result.map(function(item) {
+            return result.map(function (item) {
                 return {
                     class: 'post',
                     category: item.title,

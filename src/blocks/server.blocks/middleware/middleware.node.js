@@ -15,9 +15,9 @@ modules.define('middleware', [
         'middleware__page',
         'middleware__error'
     ],
-    function(provide, locale, logger, service, proxyExample, search, slashes, redirect, router,
+    function (provide, locale, logger, service, proxyExample, search, slashes, redirect, router,
              htmlCache, pageTitle, pageMeta, pageMenu, langSwitcher, page, error) {
-        return provide(function() {
+        return provide(function () {
             return [
                 locale,
                 logger,

@@ -1,4 +1,4 @@
-block('block-example').elem('anchor').content()(function(){
+block('block-example').elem('anchor').content()(function () {
     return {
         block: 'link',
         url: this.ctx.url,

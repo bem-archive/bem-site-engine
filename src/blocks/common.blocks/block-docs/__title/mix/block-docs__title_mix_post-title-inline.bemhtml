@@ -1,3 +1,3 @@
 block('block-docs').elem('title').elemMod('mix', 'post-title-inline')(
     mix()([{ block: 'post', elem: 'title', elemMods: { inline: 'yes' } }])
-)
+);

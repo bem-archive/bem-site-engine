@@ -1,14 +1,14 @@
 var vow = require('vow'),
     _ = require('lodash');
 
-modules.define('search_type_blocks', ['logger', 'model'], function(provide, logger, model) {
+modules.define('search_type_blocks', ['logger', 'model'], function (provide, logger, model) {
 
     function getDescription(item, lang) {
         return model.getBlock(item.description)
-            .then(function(data) {
+            .then(function (data) {
                 var description;
 
-                if(!data) {
+                if (!data) {
                     item.description = '';
                     return item;
                 }
@@ -16,7 +16,7 @@ modules.define('search_type_blocks', ['logger', 'model'], function(provide, logg
                 data = data[lang] || data;
                 description = data.description;
 
-                if(_.isArray(description)) {
+                if (_.isArray(description)) {
                     description = description[0].content;
                 }
                 item.description = description;
@@ -26,7 +26,7 @@ modules.define('search_type_blocks', ['logger', 'model'], function(provide, logg
 
     provide({
         convert: function (result) {
-            return result.reduce(function(prev, item) {
+            return result.reduce(function (prev, item) {
                 var route = item.route,
                     conditions = route.conditions,
                     library = conditions.lib,
@@ -38,7 +38,7 @@ modules.define('search_type_blocks', ['logger', 'model'], function(provide, logg
                             block: block,
                             lib: library,
                             title: item.title,
-                            description: item.source.data, //getDescription(item, lang),
+                            description: item.source.data, // getDescription(item, lang),
                             versions: {},
                             class: 'block'
                         };
@@ -64,11 +64,11 @@ modules.define('search_type_blocks', ['logger', 'model'], function(provide, logg
                 }, false)
                 .then(function (records) {
                     // console.log('SEARCH BLOCKS TIME: %s', (+(new Date() - startTime)));
-                    var results = _.values(this.convert(records.map(function(record) {
+                    var results = _.values(this.convert(records.map(function (record) {
                         return record.value;
                     }), lang));
 
-                    return vow.all(results.map(function(item) {
+                    return vow.all(results.map(function (item) {
                         return getDescription(item, lang);
                     }));
                 }, this)

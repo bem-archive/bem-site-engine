@@ -1,13 +1,13 @@
 block('post').elem('deps')(
-    match(function() { return !(this.ctx && this.ctx.content); }).def()(function() {
+    match(function () { return !(this.ctx && this.ctx.content); }).def()(function () {
         return false;
     }),
 
-    content()(function() {
-        var self = this;
+    content()(function () {
+        var _this = this;
 
-        return Object.keys(this.ctx.content).reduce(function(prev, item) {
-                var libUrl = self.ctx.content[item].replace('git:', '');
+        return Object.keys(this.ctx.content).reduce(function (prev, item) {
+                var libUrl = _this.ctx.content[item].replace('git:', '');
 
                 prev.push({
                     content: [

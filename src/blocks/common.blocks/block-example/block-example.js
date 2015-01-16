@@ -1,34 +1,34 @@
-modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
+modules.define('i-bem__dom', ['jquery'], function (provide, $, BEMDOM) {
 
 BEMDOM.decl('block-example', {
 
     onSetMod: {
-        'js' : {
-            'inited': function() {
-                var self = this;
+        'js': {
+            'inited': function () {
+                var _this = this;
 
-                this.bindTo('source-switcher', 'pointerclick', function(e) {
+                this.bindTo('source-switcher', 'pointerclick', function (e) {
                     e.preventDefault();
 
                     var target = $(e.target),
                         typeSource = this.getMod(target, 'type');
 
-                    if(self._typeSource && self._typeSource !== typeSource) {
-                        self
-                            .delMod(self.elem('source-switcher'), 'active')
-                            .delMod(self.elem('source-item'), 'visible');
+                    if (_this._typeSource && _this._typeSource !== typeSource) {
+                        _this
+                            .delMod(_this.elem('source-switcher'), 'active')
+                            .delMod(_this.elem('source-item'), 'visible');
                     }
 
-                    self._typeSource = typeSource;
+                    _this._typeSource = typeSource;
 
-                    self.toggleSource(typeSource);
+                    _this.toggleSource(typeSource);
 
-                    if(typeSource === 'html') {
-                        self._getHtml(self.elemParams(target).urlBemhtml);
+                    if (typeSource === 'html') {
+                        _this._getHtml(_this.elemParams(target).urlBemhtml);
                     }
 
-                    if(typeSource === 'bemjson') {
-                        self.loadIframe('source-code');
+                    if (typeSource === 'bemjson') {
+                        _this.loadIframe('source-code');
                     }
                 });
 
@@ -37,7 +37,7 @@ BEMDOM.decl('block-example', {
         }
     },
 
-    changeHeight: function(el) {
+    changeHeight: function (el) {
         var iframe = this.elem(el),
             doc = iframe[0].contentDocument || iframe[0].contentWindow && iframe[0].contentWindow.document,
             height;
@@ -46,7 +46,7 @@ BEMDOM.decl('block-example', {
 
         height = doc.documentElement.scrollHeight || doc.body.scrollHeight;
 
-        if(el === 'source-code') {
+        if (el === 'source-code') {
             // fix visible scroll
             height += 5;
         }
@@ -57,23 +57,23 @@ BEMDOM.decl('block-example', {
         }
     },
 
-    toggleSource: function(type) {
+    toggleSource: function (type) {
         this
             .toggleMod(this.elem('source-switcher', 'type', type), 'active', 'yes', '')
             .toggleMod(this.elem('source-item', 'type', type), 'visible', true, '');
     },
 
-    _getHtml: function(url) {
+    _getHtml: function (url) {
         $.ajax({ url: url, dataType: 'text', context: this })
-            .done(function(html) {
+            .done(function (html) {
                 html += ' ';
                 this.elem('source-code', 'type', 'html').text(html);
             })
-            .fail(function(error) { console.log('error', error); });
+            .fail(function (error) { console.log('error', error); });
     },
 
-    loadIframe: function(el) {
-        if(this.loadComplete[el]) return;
+    loadIframe: function (el) {
+        if (this.loadComplete[el]) return;
 
         var _this = this,
             iframe = _this.elem(el),
@@ -84,7 +84,7 @@ BEMDOM.decl('block-example', {
 
         iframe.attr('src', url);
 
-        iframe.load(function() {
+        iframe.load(function () {
             isLive && _this._toggleSpin();
 
             _this.changeHeight(el);
@@ -95,7 +95,7 @@ BEMDOM.decl('block-example', {
         });
     },
 
-    _toggleSpin: function() {
+    _toggleSpin: function () {
         this.findBlockInside('live-spin', 'spin').toggleMod('progress', true, '');
     }
 

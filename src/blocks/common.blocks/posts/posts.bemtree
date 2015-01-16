@@ -1,6 +1,5 @@
 block('posts').content()(function () {
     var items = this.ctx.node && this.ctx.node.items;
-
     return items ? {
         elem: 'list',
         content: items

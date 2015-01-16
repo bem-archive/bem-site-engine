@@ -1,8 +1,8 @@
 var intel = require('intel');
 
-modules.define('logger', ['config'], function(provide, config) {
+modules.define('logger', ['config'], function (provide, config) {
 
-    //set logger verbosity level from configuration file
+    // set logger verbosity level from configuration file
     intel.setLevel(config.get('logger:level') || 'debug');
 
     // add console logger handler

@@ -37,10 +37,10 @@ modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
 
                                 try {
                                     return engine.BEMHTML.apply(bemjson);
-                                } catch(err) {
+                                } catch (err) {
                                     console.log('BEMHTML ERROR', err);
                                     throw new Error();
-                                };
+                                }
                             });
                     });
             }

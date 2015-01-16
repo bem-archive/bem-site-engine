@@ -64,9 +64,9 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
          * @param {String} content - data for zipping
          * @returns {*}
          */
-        zip: function(content) {
+        zip: function (content) {
             var def = vow.defer();
-            zlib.gzip(new Buffer(content, 'utf-8'), function(err, result) {
+            zlib.gzip(new Buffer(content, 'utf-8'), function (err, result) {
                 def.resolve(err ? content : result);
             });
             return def.promise();
@@ -104,7 +104,7 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
          * @param {String} target - path to target folder
          * @returns {*}
          */
-        copyDir: function(source, target) {
+        copyDir: function (source, target) {
             var def = vow.defer();
             fsExtra.copy(source, target, function (err) {
                 err ? def.reject(err) : def.resolve();
@@ -116,7 +116,7 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
          * Constrain link for data updates retrieve
          * @returns {*}
          */
-        getDataLink: function() {
+        getDataLink: function () {
             var provider = config.get('provider'),
                 host,
                 port;
@@ -151,7 +151,7 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
          * Constrain link for data version ping
          * @returns {*}
          */
-        getPingLink: function() {
+        getPingLink: function () {
             var provider = config.get('provider'),
                 host,
                 port;
@@ -188,10 +188,10 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
          * @param {String} pageContent - html code of page
          * @returns {*}
          */
-        putPageToCache: function(req, pageContent) {
+        putPageToCache: function (req, pageContent) {
             var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url);
             return vowFs.makeDir(pagePath).then(function () {
-                return this.zip(pageContent).then(function(archive) {
+                return this.zip(pageContent).then(function (archive) {
                     return vowFs.write(path.join(pagePath, req.lang + '.html.gzip'), archive, 'utf8');
                 });
             }, this);
@@ -201,7 +201,7 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
          * Clears folder with html pages
          * @returns {*}
          */
-        clearPageCache: function() {
+        clearPageCache: function () {
             return vowFs.exists(constants.PAGE_CACHE).then(function (exists) {
                 return exists ? this.removeDir(constants.PAGE_CACHE) : vow.resolve();
             }, this);

@@ -1,5 +1,5 @@
 block('search-item').mod('type', 'block')(
-    content()(function() {
+    content()(function () {
         var content = applyNext(),
             versions = content.versions,
             listVersions = Object.keys(versions),
@@ -32,19 +32,19 @@ block('search-item').mod('type', 'block')(
     }),
 
     elem('choose')(
-        content()(function() {
-            var self = this,
+        content()(function () {
+            var _this = this,
                 ctx = this.ctx,
                 versions = ctx.versions,
                 listVersions = ctx.listVersions;
 
             return [
                 {
-                    block : 'select',
-                    mods : { mode : 'radio', theme : 'normal', size : 's' },
-                    name : 'versions',
+                    block: 'select',
+                    mods: { mode: 'radio', theme: 'normal', size: 's' },
+                    name: 'versions',
                     mix: { block: this.block, elem: 'select' },
-                    options: listVersions.map(function(version) {
+                    options: listVersions.map(function (version) {
                         return {
                             val: version,
                             text: version
@@ -53,12 +53,12 @@ block('search-item').mod('type', 'block')(
                 },
                 {
                     elem: 'levels',
-                    content: versions[listVersions[0]].map(function(level) {
+                    content: versions[listVersions[0]].map(function (level) {
                         return {
                             block: 'link',
                             url: level.url,
                             attrs: { target: 'blank', title: level.level },
-                            mix: { block: self.block, elem: 'level'},
+                            mix: { block: _this.block, elem: 'level' },
                             content: {
                                 block: 'icon',
                                 mods: { view: level.level }

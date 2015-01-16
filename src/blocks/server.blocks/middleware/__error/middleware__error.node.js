@@ -5,7 +5,7 @@ var path = require('path'),
     vowFs = require('vow-fs'),
     terror = require('terror');
 
-modules.define('middleware__error', ['config', 'logger', 'util'], function(provide, config, logger, util) {
+modules.define('middleware__error', ['config', 'logger', 'util'], function (provide, config, logger, util) {
 
     logger = logger(module);
 
@@ -20,18 +20,18 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function(provi
             errorBundlesPath = path.join(process.cwd(), 'src', 'bundles', 'errors.bundles'),
             errorPages = {};
 
-        return vow.all(langs.map(function(lang) {
+        return vow.all(langs.map(function (lang) {
             return vow.all([
                 vowFs.read(path.join(errorBundlesPath, 'error-404', 'error-404.' + lang + '.html'), 'utf-8'),
                 vowFs.read(path.join(errorBundlesPath, 'error-500', 'error-500.' + lang + '.html'), 'utf-8')
-            ]).spread(function(error404, error500) {
+            ]).spread(function (error404, error500) {
                 errorPages[lang] = {
                     error404: error404.replace(/\{STATICS_HOST\}/g, staticsUrl),
                     error500: error500.replace(/\{STATICS_HOST\}/g, staticsUrl)
                 };
             });
         }))
-            .then(function() {
+            .then(function () {
                 return errorPages;
             });
     }
@@ -46,16 +46,16 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function(provi
         var code = err.code || 500,
             terr = terror.ensureError(err);
 
-        if(terr) {
+        if (terr) {
             logger.error('%s %s', code, terr.message);
-        }else {
+        } else {
             logger.error(err);
         }
 
         res.statusCode = code;
     }
 
-    provide(function() {
+    provide(function () {
         return function (err, req, res, next) {
             loadErrorPages()
                 .then(function (errorPages) {
