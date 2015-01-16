@@ -1,5 +1,5 @@
 block('search-panel')(
-    content()(function() {
+    content()(function () {
         return [
             { block: 'search-form', mods: { type: 'default' } },
             {

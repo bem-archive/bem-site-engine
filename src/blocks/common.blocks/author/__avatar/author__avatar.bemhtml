@@ -1,11 +1,11 @@
 block('author').elem('avatar')(
-    match(function() {
+    match(function () {
         var c = this.ctx.content;
 
         return c && c.avatar;
     })(
         tag()('img'),
-        attrs()(function() {
+        attrs()(function () {
             var content = this.ctx.content;
 
             return {

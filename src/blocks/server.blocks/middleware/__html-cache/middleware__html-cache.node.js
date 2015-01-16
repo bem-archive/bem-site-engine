@@ -2,15 +2,15 @@ var fs = require('fs'),
     zlib = require('zlib'),
     path = require('path');
 
-modules.define('middleware__html-cache', ['logger', 'constants'], function(provide, logger, constants) {
+modules.define('middleware__html-cache', ['logger', 'constants'], function (provide, logger, constants) {
     logger = logger(module);
 
-    provide(function() {
-        return function(req, res, next) {
+    provide(function () {
+        return function (req, res, next) {
             var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url, (req.lang + '.html.gzip'));
 
             fs.exists(pagePath, function (exists) {
-                if(!exists) {
+                if (!exists) {
                     return next();
                 }
 
@@ -36,4 +36,3 @@ modules.define('middleware__html-cache', ['logger', 'constants'], function(provi
         };
     });
 });
-

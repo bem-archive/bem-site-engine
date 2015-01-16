@@ -10,7 +10,7 @@ var utility = require('../util'),
  * @param id - {String} key of doc
  * @constructor
  */
-var PostNode = function(parent, routes, version, doc, id) {
+var PostNode = function (parent, routes, version, doc, id) {
     this.setTitle(doc)
         .setSource(doc)
         .processRoute(routes, parent, {
@@ -31,7 +31,7 @@ PostNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @param doc - {Object} doc object
  * @returns {PostNode}
  */
-PostNode.prototype.setTitle = function(doc) {
+PostNode.prototype.setTitle = function (doc) {
     this.title = doc.title;
     return this;
 };
@@ -41,8 +41,8 @@ PostNode.prototype.setTitle = function(doc) {
  * @param doc - {Object} doc object
  * @returns {PostNode}
  */
-PostNode.prototype.setSource = function(doc) {
-    this.source = utility.getLanguages().reduce(function(prev, lang) {
+PostNode.prototype.setSource = function (doc) {
+    this.source = utility.getLanguages().reduce(function (prev, lang) {
         prev[lang] = {
             title: doc.title[lang],
             content: doc.content[lang]
@@ -57,7 +57,7 @@ PostNode.prototype.setSource = function(doc) {
  * Sets class for node
  * @returns {PostNode}
  */
-PostNode.prototype.setClass = function() {
+PostNode.prototype.setClass = function () {
     this.class = 'post';
     return this;
 };

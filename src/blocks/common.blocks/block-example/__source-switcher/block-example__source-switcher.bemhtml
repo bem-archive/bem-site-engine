@@ -1,9 +1,9 @@
 block('block-example').elem('source-switcher')(
-    mix()(function() {
+    mix()(function () {
         return {
             block: this.block,
             elem: 'link',
             elemMods: { icon: 'source' }
-        }
+        };
     })
 );

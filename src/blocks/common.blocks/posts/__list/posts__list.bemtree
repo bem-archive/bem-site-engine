@@ -1,10 +1,10 @@
-block('posts').elem('list').match(function() {
+block('posts').elem('list').match(function () {
 	return this.isArray(this.ctx.content);
-}).content()(function(){
+}).content()(function () {
 	var data = this.data;
 
-	return this.ctx.content.map(function(item) {
-		if(!item.source || !item.source[data.lang]) {
+	return this.ctx.content.map(function (item) {
+		if (!item.source || !item.source[data.lang]) {
 			return '';
 		}
 

@@ -1,4 +1,4 @@
-block('content').mod('view', 'author').content()(function() {
+block('content').mod('view', 'author').content()(function () {
     var data = this.data;
 
     return [
@@ -10,7 +10,7 @@ block('content').mod('view', 'author').content()(function() {
         {
             block: this.block,
             elem: 'author-posts',
-            content: data.posts.map(function(node) {
+            content: data.posts.map(function (node) {
                 return {
                     block: 'posts',
                     title: node.title,

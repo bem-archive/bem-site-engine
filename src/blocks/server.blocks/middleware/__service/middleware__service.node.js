@@ -1,11 +1,11 @@
 modules.define('middleware__service', ['config', 'logger', 'updater'],
-    function(provide, config, logger, updater) {
+    function (provide, config, logger, updater) {
         logger = logger(module);
 
-        provide(function() {
-            return function(req, res, next) {
+        provide(function () {
+            return function (req, res, next) {
                 var url = req.path;
-                if(url.indexOf('/__service') === -1) {
+                if (url.indexOf('/__service') === -1) {
                     return next();
                 }
                 logger.info('Service request has been received');

@@ -10,31 +10,31 @@ var u = require('util'),
     mime = require('mime');
 
 modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'providerFile', 'model'],
-    function(provide, config, constants, logger, util, providerFile, model) {
+    function (provide, config, constants, logger, util, providerFile, model) {
 
         logger = logger(module);
 
         var libRepo = config.get('github:libraries');
 
-        var loadHtmlCodeOfBlock = function(req, url, template) {
+        var loadHtmlCodeOfBlock = function (req, url, template) {
             var urlRegExp = /^\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\.bemhtml\.js$/,
                 match = url.match(urlRegExp),
                 node;
 
-            if(!match) {
+            if (!match) {
                 return null;
             }
 
-            node = model.getNodesByCriteria(function() {
+            node = model.getNodesByCriteria(function () {
                 var r = this.route;
-                return 'block' === this.class && r && r.conditions &&
+                return this.class === 'block' && r && r.conditions &&
                     match[1] === r.conditions.lib &&
                     match[2] === r.conditions.version &&
                     match[3].replace(/\.examples$/, '') === r.conditions.level &&
                     match[4] === r.conditions.block;
             }, true);
 
-            if(!node) {
+            if (!node) {
                 return null;
             }
 
@@ -42,15 +42,15 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                 example,
                 htmlStr;
 
-            if(!blockData) {
+            if (!blockData) {
                 return null;
             }
 
-            example = blockData.data[req.lang].examples.filter(function(item) {
+            example = blockData.data[req.lang].examples.filter(function (item) {
                 return item.name && match[5] === item.name;
             })[0];
 
-            if(!example) {
+            if (!example) {
                 return null;
             }
 
@@ -60,7 +60,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             vm.runInNewContext(template, bemhtml);
             htmlStr = bemhtml.BEMHTML.apply(bemjson);
 
-            //return html.prettyPrint(htmlStr);
+            // return html.prettyPrint(htmlStr);
             return html(htmlStr, { indent_size: 4 });
         };
 
@@ -71,11 +71,11 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
          * @param res - {Object} response
          * @returns {*}
          */
-        var proxyTextFiles = function(url, ref, req, res) {
+        var proxyTextFiles = function (url, ref, req, res) {
 
             var originUrl = url;
 
-            //set the content-types by mime type
+            // set the content-types by mime type
             res.type(mime.lookup(url));
             url = u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
@@ -84,16 +84,16 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                 res.header('Content-Type', 'application/json; charset=utf-8');
             }
 
-            var returnFromCache = function(content) {
+            var returnFromCache = function (content) {
                     res.end(content);
                 },
-                sendRequest = function() {
+                sendRequest = function () {
                     logger.debug('send request to: %s', url);
                     request(url, function (error, response, body) {
                         if (!error && response.statusCode === 200) {
                             logger.debug('request successfully performed');
 
-                            if(/\.bemhtml\.js$/.test(url)) {
+                            if (/\.bemhtml\.js$/.test(url)) {
                                 body = loadHtmlCodeOfBlock(req, originUrl, body);
                             }
 
@@ -103,7 +103,8 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                             });
                             res.end(body);
                         } else {
-                            logger.debug('request failed with code: %s and error: %s', response && response.statusCode, error);
+                            logger.debug('request failed with code: %s and error: %s', response &&
+                                response.statusCode, error);
                             res.end('Error while loading example');
                         }
                     });
@@ -119,17 +120,17 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                 .fail(sendRequest);
         };
 
-        var proxyImageFiles = function(url, res) {
-            //set the content-types by mime type
+        var proxyImageFiles = function (url, res) {
+            // set the content-types by mime type
             res.type(mime.lookup(url));
             url = u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
 
             var p = path.resolve(constants.DIRS.CACHE, sha(url));
 
-            vowFs.exists(p).then(function(exists) {
-                if(exists) {
+            vowFs.exists(p).then(function (exists) {
+                if (exists) {
                     fs.createReadStream(p).pipe(res);
-                }else {
+                } else {
                     var x = request.get(url);
                     x.pipe(fs.createWriteStream(p));
                     x.pipe(res);
@@ -137,22 +138,22 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             });
         };
 
-        provide(function() {
+        provide(function () {
             var PATTERN = {
                     EXAMPLE: '/__example',
                     FREEZE: '/output'
                 },
                 VERSION_REGEXP = /\/v?\d+\.\d+\.\d+\//;
 
-            return function(req, res, next) {
+            return function (req, res, next) {
                 var url = req.path;
 
-                if(url.indexOf(PATTERN.EXAMPLE) > -1) {
+                if (url.indexOf(PATTERN.EXAMPLE) > -1) {
                     return proxyTextFiles(url.replace(PATTERN.EXAMPLE, ''),
                         VERSION_REGEXP.test(url) ? constants.DIRS.TAG : constants.DIRS.BRANCH, req, res);
                 }
 
-                if(url.indexOf(PATTERN.FREEZE) > -1) {
+                if (url.indexOf(PATTERN.FREEZE) > -1) {
                     return proxyImageFiles(url.replace(PATTERN.FREEZE, ''), res);
                 }
 

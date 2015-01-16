@@ -7,8 +7,8 @@ var util = require('util'),
     providers = require('../providers'),
     logger = require('../logger');
 
-var Meta = function(meta, lang, collected) {
-    Object.keys(meta).forEach(function(key) { this[key] = meta[key]; }, this);
+var Meta = function (meta, lang, collected) {
+    Object.keys(meta).forEach(function (key) { this[key] = meta[key]; }, this);
 
     this
         .convertDate('createDate')
@@ -26,7 +26,7 @@ Meta.prototype = {
      * @param field - {String} name of field
      * @returns {Meta}
      */
-    convertDate: function(field) {
+    convertDate: function (field) {
         this[field] && (this[field] = utility.dateToMilliseconds(this[field]));
         return this;
     },
@@ -37,7 +37,7 @@ Meta.prototype = {
      * @param collected - {Object} hash of collected data
      * @returns {Meta}
      */
-    collectPeople: function(field, collected) {
+    collectPeople: function (field, collected) {
         this[field] && (collected[field] = collected[field].concat(this[field]));
         return this;
     },
@@ -48,8 +48,8 @@ Meta.prototype = {
      * @param collected - {Object} hash of collected data
      * @returns {Meta}
      */
-    collectTags: function(lang, collected) {
-        if(this.tags) {
+    collectTags: function (lang, collected) {
+        if (this.tags) {
             collected.tags[lang] = collected.tags[lang] || [];
             collected.tags[lang] = collected.tags[lang].concat(this.tags);
         }
@@ -61,8 +61,8 @@ Meta.prototype = {
      * for issues and prose.io edit
      * @returns {Meta}
      */
-    setRepo: function() {
-        if(!this.content && this.stub) {
+    setRepo: function () {
+        if (!this.content && this.stub) {
             this.repo = null;
             return this;
         }
@@ -70,7 +70,7 @@ Meta.prototype = {
         var regExp = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/,
             parsedRepo = this.content.match(regExp);
 
-        if(!parsedRepo) {
+        if (!parsedRepo) {
             this.repo = null;
             return this;
         }
@@ -83,7 +83,7 @@ Meta.prototype = {
             path: parsedRepo[6]
         };
 
-        //generate advanced params for repository
+        // generate advanced params for repository
         this.repo = _.extend(this.repo, {
             type: this.getTypeOfRepository(),
             issue: this.generateIssueUrl(this.title),
@@ -96,7 +96,7 @@ Meta.prototype = {
     /**
      * Returns type of repository
      */
-    getTypeOfRepository: function() {
+    getTypeOfRepository: function () {
         return this.repo.host.indexOf('github.com') > -1 ? 'public' : 'private';
     },
 
@@ -105,7 +105,7 @@ Meta.prototype = {
      * @param title - {String} title of post
      * @returns {String}
      */
-    generateIssueUrl: function(title) {
+    generateIssueUrl: function (title) {
         var r = this.repo;
         return util.format('https://%s/%s/%s/issues/new?title=Feedback+for+\"%s\"', r.host, r.user, r.repo, title);
     },
@@ -114,17 +114,17 @@ Meta.prototype = {
      * Returns generated url for editing post by prose.io service
      * @returns {String}
      */
-    generateProseUrl: function() {
+    generateProseUrl: function () {
         var r = this.repo;
         return util.format('http://prose.io/#%s/%s/edit/%s/%s', r.user, r.repo, r.ref, r.path);
     }
 };
 
-module.exports = function(obj) {
+module.exports = function (obj) {
     logger.info('Load sources for nodes start', module);
 
-    var nodes = utility.findNodesByCriteria(obj.sitemap, function() { return this.source; }, false),
-        collected = nodes.reduce(function(prev, item) {
+    var nodes = utility.findNodesByCriteria(obj.sitemap, function () { return this.source; }, false),
+        collected = nodes.reduce(function (prev, item) {
             return analyzeMeta(prev, item);
         }, {
             authors: [],
@@ -132,19 +132,19 @@ module.exports = function(obj) {
             tags: {}
         });
 
-    return vow.all(nodes.map(function(node) {
-        if(!_.isObject(node.source)) {
+    return vow.all(nodes.map(function (node) {
+        if (!_.isObject(node.source)) {
             return vow.resolve();
         }
 
-        return vow.all(Object.keys(node.source).map(function(lang) {
+        return vow.all(Object.keys(node.source).map(function (lang) {
             return vow.all([
                 loadMDFile(node, lang),
                 setUpdateDate(node, lang),
                 checkForBranch(node, lang)
             ]);
         }));
-    })).then(function() {
+    })).then(function () {
         obj.docs = compactCollected.apply(collected);
         return obj;
     });
@@ -157,7 +157,7 @@ module.exports = function(obj) {
  * @returns {Object} collected
  */
 function analyzeMeta(collected, node) {
-    if(!_.isObject(node.source)) {
+    if (!_.isObject(node.source)) {
         return collected;
     }
 
@@ -189,7 +189,7 @@ function analyzeMeta(collected, node) {
  */
 function loadMDFile(node, lang) {
     var s = node.source[lang],
-        onError = function(md) {
+        onError = function (md) {
             var errorMsg = (!md || !md.res) ?
                 'markdown with lang %s does not exists for node %s' :
                 'markdown for lang %s contains errors for node %s';
@@ -198,21 +198,21 @@ function loadMDFile(node, lang) {
             return vow.reject(errorMsg);
         };
 
-    if(!s || !s.repo) {
+    if (!s || !s.repo) {
         return vow.resolve(null);
     }
 
     return providers.getProviderGhApi().load({ repository: s.repo })
-        .then(function(md) {
+        .then(function (md) {
             try {
                 node.source[lang].url = s.content;
                 node.source[lang].content = utility.mdToHtml(
                     (new Buffer(md.res.content, 'base64')).toString(), { renderer: renderer.getRenderer() });
-            }catch(err) {
+            } catch (err) {
                 return onError(md);
             }
         })
-        .fail(function() {
+        .fail(function () {
             return onError();
         });
 }
@@ -226,7 +226,7 @@ function loadMDFile(node, lang) {
 function setUpdateDate(node, lang) {
     var s = node.source[lang],
         repository;
-    if(!s || !s.repo || s.editDate) {
+    if (!s || !s.repo || s.editDate) {
         return vow.resolve(null);
     }
 
@@ -235,8 +235,8 @@ function setUpdateDate(node, lang) {
     return providers.getProviderGhApi().getCommits({
             repository: _.extend(repository, { sha: repository.ref })
         })
-        .then(function(res) {
-            if(!res || !res[0]) {
+        .then(function (res) {
+            if (!res || !res[0]) {
                 logger.warn(util.format('can not get commits for %s %s %s %s',
                     repository.user, repository.repo, repository.ref, repository.path), module);
                 return;
@@ -257,7 +257,7 @@ function checkForBranch(node, lang) {
     var s = node.source[lang],
         repository;
 
-    if(!s || !s.repo) {
+    if (!s || !s.repo) {
         return vow.resolve(null);
     }
 
@@ -266,11 +266,11 @@ function checkForBranch(node, lang) {
     return providers.getProviderGhApi().isBranchExists({
             repository: _.extend(repository, { branch: repository.ref })
         })
-        .then(function(exists) {
-            if(exists) return;
+        .then(function (exists) {
+            if (exists) return;
 
             return providers.getProviderGhApi().getDefaultBranch({ repository: repository })
-                .then(function(branch) {
+                .then(function (branch) {
                     repository.ref = branch;
                     repository.prose = s.generateProseUrl();
                 });
@@ -285,9 +285,8 @@ function compactCollected() {
     this.authors = utility.uniqCompact(this.authors);
     this.translators = utility.uniqCompact(this.translators);
 
-    Object.keys(this.tags).forEach(function(lang) {
+    Object.keys(this.tags).forEach(function (lang) {
         this.tags[lang] = utility.uniqCompact(this.tags[lang]);
     }, this);
     return this;
 }
-

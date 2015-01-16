@@ -18,13 +18,13 @@ function prepareToSave(content) {
     };
 }
 
-module.exports = function(obj) {
+module.exports = function (obj) {
 
     var snapshot = utility.getSnapshotName(),
         data = prepareToSave(obj);
     return providers.getProviderFile()
         .makeDir({ path: path.join('backups', snapshot) })
-        .then(function() {
+        .then(function () {
             var tasksForSave = [
                 {
                     data: JSON.stringify(data),
@@ -50,12 +50,12 @@ module.exports = function(obj) {
             ];
 
             return tasksForSave.reduce(function (prev, item, index) {
-                    return prev.then(function() {
+                    return prev.then(function () {
                         item.path = path.join('backups', snapshot, constants.FILES[index]);
                         return providers.getProviderFile().save(item);
                     });
                 }, vow.resolve())
-                .then(function() {
+                .then(function () {
                     return snapshot;
                 });
         });

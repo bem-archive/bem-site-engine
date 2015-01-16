@@ -1,6 +1,6 @@
 block('block-example').mod('view', 'inline')(
     elem('header')(
-        content()(function() {
+        content()(function () {
             return [
                 applyNext(),
                 {
@@ -14,7 +14,7 @@ block('block-example').mod('view', 'inline')(
     ),
 
     elem('source')(
-        content()(function() {
+        content()(function () {
             return [
                 {
                     elem: 'source-item',

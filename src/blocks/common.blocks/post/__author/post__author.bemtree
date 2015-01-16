@@ -3,7 +3,7 @@ block('post')
     .match(function () {return this.isArray(this.ctx.authors); })
     .content()(function () {
         var buf = [],
-            self = this,
+            _this = this,
             ctx = this.ctx,
             translators = ctx.translators,
             splitter = {
@@ -11,7 +11,7 @@ block('post')
                 content: ', '
             };
 
-        ctx.authors.forEach(function(item, index){
+        ctx.authors.forEach(function (item, index) {
             index++ > 0 && buf.push(splitter);
 
             buf.push({
@@ -22,10 +22,9 @@ block('post')
 
         });
 
-
-        this.isArray(translators) && translators.filter(function(item) {
-            return self.ctx.authors.indexOf(item) == -1;
-        }).forEach(function(item, index) {
+        this.isArray(translators) && translators.filter(function (item) {
+            return _this.ctx.authors.indexOf(item) === -1;
+        }).forEach(function (item) {
             buf.push(splitter, {
                 block: 'author',
                 mods: { view: 'simple' },

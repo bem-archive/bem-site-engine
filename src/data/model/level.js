@@ -13,9 +13,9 @@ var _ = require('lodash'),
  * @param blocksHash - {Object} blocks data hash
  * @constructor
  */
-var LevelNode = function(parent, routes, version, level, search, blocksHash) {
-    //add library block level to library search item
-    _.find(search.libraries, function(item) { return version.repo === item.name; })
+var LevelNode = function (parent, routes, version, level, search, blocksHash) {
+    // add library block level to library search item
+    _.find(search.libraries, function (item) { return version.repo === item.name; })
         .getVersion(version.ref).addLevel(new nodes.search.Level(level.name));
 
     this.setTitle(level)
@@ -37,8 +37,8 @@ LevelNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @param level - {Object} level
  * @returns {LevelNode}
  */
-LevelNode.prototype.setTitle = function(level) {
-    this.title = utility.getLanguages().reduce(function(prev, lang) {
+LevelNode.prototype.setTitle = function (level) {
+    this.title = utility.getLanguages().reduce(function (prev, lang) {
         prev[lang] = level.name.replace(/\.(sets|docs)$/, '');
         return prev;
     }, {});
@@ -50,7 +50,7 @@ LevelNode.prototype.setTitle = function(level) {
  * Sets type for node
  * @returns {LevelNode}
  */
-LevelNode.prototype.setType = function() {
+LevelNode.prototype.setType = function () {
     this.type = this.TYPE.GROUP;
     return this;
 };
@@ -59,7 +59,7 @@ LevelNode.prototype.setType = function() {
  * Sets class for node
  * @returns {LevelNode}
  */
-LevelNode.prototype.setClass = function() {
+LevelNode.prototype.setClass = function () {
     this.class = 'level';
     return this;
 };
@@ -72,19 +72,19 @@ LevelNode.prototype.setClass = function() {
  * @param search - {Object} search model
  * @param blocksHash - {Object} blocks data hash
  */
-LevelNode.prototype.addItems = function(routes, version, level, search, blocksHash) {
+LevelNode.prototype.addItems = function (routes, version, level, search, blocksHash) {
     this.items = this.items || [];
 
     var blocks = level.blocks;
-    if(!blocks) return;
+    if (!blocks) return;
 
-    blocks.forEach(function(block) {
+    blocks.forEach(function (block) {
 
-        //add library block to library search item
-        _.find(search.libraries, function(item) { return version.repo === item.name; })
+        // add library block to library search item
+        _.find(search.libraries, function (item) { return version.repo === item.name; })
             .getVersion(version.ref).getLevel(level.name).addBlock(block.name);
 
-        //create node
+        // create node
         var node = new nodes.block.BlockNode(this, routes, version, level, block, blocksHash);
 
         search.blocks.push(

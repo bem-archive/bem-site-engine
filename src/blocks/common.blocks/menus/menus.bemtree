@@ -1,7 +1,7 @@
 block('menus')(
-    def().match(function() { return this.data.menu; })(function() {
+    def().match(function () { return this.data.menu; })(function () {
         return applyCtx([
-            this.data.menu.map(function(column) {
+            this.data.menu.map(function (column) {
                 return {
                     block: 'menu-list',
                     content: column.items,

@@ -1,4 +1,4 @@
-modules.define('bundles', function(provide) {
+modules.define('bundles', function (provide) {
     var PATH = require('path'),
         LOD_DIR = 'bundles',
         LOD_SUFFIX = '.bundles';
@@ -8,7 +8,7 @@ modules.define('bundles', function(provide) {
         this._defaultLOD = (settings && settings.defaultLOD) || 'common';
     }
 
-    Bundles.prototype.getBundlePath = function(name, LOD) {
+    Bundles.prototype.getBundlePath = function (name, LOD) {
         LOD || (LOD = this._defaultLOD);
 
         return PATH.join(this._rootPath, LOD_DIR, LOD + LOD_SUFFIX, name);

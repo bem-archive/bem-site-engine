@@ -1,4 +1,4 @@
-modules.define('middleware__locale', ['logger', 'util'], function(provide, logger, util) {
+modules.define('middleware__locale', ['logger', 'util'], function (provide, logger, util) {
 
     logger = logger(module);
 
@@ -9,12 +9,12 @@ modules.define('middleware__locale', ['logger', 'util'], function(provide, logge
      * Middleware for lang detection by subdomain
      * @returns {Function}
      */
-    provide(function() {
+    provide(function () {
         languages = util.getLanguages();
         defaultLanguage = util.getDefaultLanguage();
 
-        return function(req, res, next) {
-            //TODO Here you can implement your own lang detection mechanism
+        return function (req, res, next) {
+            // TODO Here you can implement your own lang detection mechanism
 
             req.lang = defaultLanguage;
             logger.debug('request locale was set to %s', req.lang);
@@ -22,4 +22,3 @@ modules.define('middleware__locale', ['logger', 'util'], function(provide, logge
         };
     });
 });
-

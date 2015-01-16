@@ -1,11 +1,11 @@
-modules.define('lib-switch', ['i-bem__dom'], function(provide, BEMDOM) {
+modules.define('lib-switch', ['i-bem__dom'], function (provide, BEMDOM) {
 
     'use strict';
 
     provide(BEMDOM.decl(this.name, {
         onSetMod: {
             js: {
-                inited: function() {
+                inited: function () {
                     this._select = this.findBlockInside('select');
 
                     this._setLinkVal();
@@ -14,22 +14,22 @@ modules.define('lib-switch', ['i-bem__dom'], function(provide, BEMDOM) {
             }
         },
 
-        _setLinkVal: function() {
+        _setLinkVal: function () {
             this.findBlockInside('link').domElem.attr('href', this._select.getVal());
 
             return this;
         },
 
-        _onChange: function() {
+        _onChange: function () {
             this._openLibPage(this._select.getVal());
         },
 
-        _openLibPage: function(url) {
+        _openLibPage: function (url) {
             var loc = window.location;
 
-            loc.href = (loc.origin || loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port: '')) + url;
+            loc.href = (loc.origin || loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port : '')) + url;
 
             return this;
         }
-    }))
+    }));
 });

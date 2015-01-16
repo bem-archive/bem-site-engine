@@ -1,5 +1,5 @@
 block('block-example').elem('source-copy')(
-    def()(function() {
+    def()(function () {
         return applyCtx({
             block: 'link',
             mods: { pseudo: true },

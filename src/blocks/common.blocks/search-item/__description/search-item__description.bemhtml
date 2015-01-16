@@ -1,5 +1,5 @@
 block('search-item').mod('type', 'block').elem('description')(
-    content()(function() {
+    content()(function () {
         return {
             tag: 'p',
             content: applyNext()

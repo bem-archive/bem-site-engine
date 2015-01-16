@@ -4,7 +4,7 @@ block('post').mod('view', 'full')(
             node = data.node,
             source = node.source[data.req.lang];
 
-        if(!source) {
+        if (!source) {
             console.error('source not found for node %s and locale %s', node.id, data.req.lang);
             return [];
         }
@@ -36,7 +36,7 @@ block('post').mod('view', 'full')(
         ];
     }),
 
-    //authors of post
+    // authors of post
     mode('author')(function () {
         return {
             elem: 'author',
@@ -45,7 +45,7 @@ block('post').mod('view', 'full')(
         };
     }),
 
-    //date of creation and last modification
+    // date of creation and last modification
     mode('date')(function () {
         var ctx = this.ctx,
             createDate = ctx.createDate,
@@ -58,7 +58,7 @@ block('post').mod('view', 'full')(
         };
     }),
 
-    //post categories
+    // post categories
     mode('categories')(function () {
         return {
             elem: 'categories',
@@ -67,12 +67,12 @@ block('post').mod('view', 'full')(
         };
     }),
 
-    //post title + tags || link to github
-    mode('title')(function() {
+    // post title + tags || link to github
+    mode('title')(function () {
         var content = this.ctx.content,
             tags = content.tags;
 
-        if(tags) {
+        if (tags) {
             return {
                 elem: 'title-line',
                 content: [
@@ -103,7 +103,7 @@ block('post').mod('view', 'full')(
             tags = content.tags,
             routeName = ctx.node.route.name;
 
-        if(routeName === 'index' || tags) {
+        if (routeName === 'index' || tags) {
             return false;
         }
 
@@ -113,7 +113,7 @@ block('post').mod('view', 'full')(
         };
     }),
 
-    //post content
+    // post content
     mode('contentFull')(function () {
         return {
             elem: 'content',
@@ -125,7 +125,7 @@ block('post').mod('view', 'full')(
     mode('issue')(function () {
         var repo = this.ctx.content;
 
-        if(!repo) return [];
+        if (!repo) return [];
 
         var issueContent = [
             {
@@ -155,14 +155,13 @@ block('post').mod('view', 'full')(
             }
         ]) : issueContent;
 
-
         return {
             elem: 'issue',
             content: issueContent
         };
     }),
 
-    //library url on github
+    // library url on github
     mode('url')(function () {
         return {
             elem: 'url',
@@ -170,7 +169,7 @@ block('post').mod('view', 'full')(
         };
     }),
 
-    //library dependencies
+    // library dependencies
     mode('deps')(function () {
         return {
             elem: 'deps',
@@ -180,11 +179,11 @@ block('post').mod('view', 'full')(
 
     mode('getUrl')(function () {
         var req = this.data.req,
-            lang = req.lang == 'en' ? 'ru' : 'en',
+            lang = req.lang === 'en' ? 'ru' : 'en',
             host = req.headers.host,
             path = req._parsedUrl.pathname;
 
             return 'http://' + lang +
-                (host.indexOf(req.lang) == 0 ? host.slice(host.indexOf('.')) : ('.' + host)) + path;
+                (host.indexOf(req.lang) === 0 ? host.slice(host.indexOf('.')) : ('.' + host)) + path;
     })
 );

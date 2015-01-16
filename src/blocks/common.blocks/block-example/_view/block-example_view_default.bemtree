@@ -1,6 +1,6 @@
 block('block-example').mod('view', 'default')(
     elem('source')(
-        content()(function() {
+        content()(function () {
             return {
                 elem: 'source-item',
                 elemMods: { type: 'bemjson' },
@@ -15,7 +15,7 @@ block('block-example').mod('view', 'default')(
                         js: { urlBemjson: this._bemjson }
                     }
                 ]
-            }
+            };
         })
     )
 );

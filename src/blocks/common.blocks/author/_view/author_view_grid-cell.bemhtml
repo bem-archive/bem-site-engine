@@ -2,11 +2,11 @@ block('author').mod('view', 'grid-cell')(
 
     tag()('a'),
 
-    attrs()(function() {
+    attrs()(function () {
         return { href: this.ctx.content.url };
     }),
 
-    content()(function() {
+    content()(function () {
         var content = this.ctx.content;
 
         return [

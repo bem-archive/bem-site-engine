@@ -4,7 +4,7 @@ var https = require('https'),
     vow = require('vow'),
     logger = require('../logger');
 
-exports.GhHttpsProvider = function() {
+exports.GhHttpsProvider = function () {
 
     this.GITHUB_PATTERN = {
         PRIVATE: 'https://github.yandex-team.ru/%s/%s/raw/%s/%s',

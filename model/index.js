@@ -1,8 +1,8 @@
 module.exports = {
-    get: function() {
+    get: function () {
         return [
             getMain(),
-            //getCustom(),
+            // getCustom(),
             getDocs(),
             getLibraries(),
             getAuthors(),
@@ -11,7 +11,7 @@ module.exports = {
     }
 };
 
-var getMain = function() {
+var getMain = function () {
     return {
         title: 'Привет Bem-Engine',
         route: {
@@ -31,7 +31,7 @@ var getMain = function() {
 };
 
 /*
-var getCustom = function() {
+var getCustom = function () {
     return {
         title: '',
         route: {
@@ -50,7 +50,7 @@ var getCustom = function() {
 };
 */
 
-var getDocs = function() {
+var getDocs = function () {
     return {
         title: 'Документация',
         route: {
@@ -114,7 +114,7 @@ var getDocs = function() {
     };
 };
 
-var getLibraries = function() {
+var getLibraries = function () {
     return {
         title: 'Библиотеки',
         route: {
@@ -133,13 +133,13 @@ var getLibraries = function() {
     };
 };
 
-var getAuthors = function() {
+var getAuthors = function () {
     return {
         title: {
             en: "Authors",
             ru: "Авторы"
         },
-        route:{
+        route: {
             name: "authors",
             pattern: "/authors(/<id>)(/)"
         },
@@ -156,13 +156,13 @@ var getAuthors = function() {
     };
 };
 
-var getTags = function() {
+var getTags = function () {
     return {
         title: {
             en: "Tags",
             ru: "Теги"
         },
-        route:{
+        route: {
             name: "tags",
             pattern: "/tags(/<id>)(/)"
         },
@@ -178,7 +178,7 @@ var getTags = function() {
     };
 };
 
-var getLib = function(lib) {
+var getLib = function (lib) {
     return {
         title: lib,
         route: {

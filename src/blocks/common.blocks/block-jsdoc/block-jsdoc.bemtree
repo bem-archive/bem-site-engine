@@ -1,30 +1,30 @@
 block('block-jsdoc')(
     content()(
-        (function() {
+        function () {
             var jsdoc = this.data.node.source.jsdoc;
 
             return [
-                apply('description', { ctx: { description: jsdoc.description }}),
-                apply('methods', { ctx: { methods: jsdoc.methods }}),
-                apply('events', { ctx: { events: jsdoc.events }})
+                apply('description', { ctx: { description: jsdoc.description } }),
+                apply('methods', { ctx: { methods: jsdoc.methods } }),
+                apply('events', { ctx: { events: jsdoc.events } })
             ];
-        }),
+        },
 
-        match(function() {
-            return 'string' === typeof this.data.node.source.jsdoc;
-        })(function() {
+        match(function () {
+            return typeof this.data.node.source.jsdoc === 'string';
+        })(function () {
             return this.data.node.source.jsdoc;
         })
     ),
 
-    mode('description')(function() {
+    mode('description')(function () {
         return {
             elem: 'description',
             content: this.ctx.description
         };
     }),
 
-    mode('methods-title')(function() {
+    mode('methods-title')(function () {
         return {
             elem: 'title',
             elemMods: { mix: 'post-title', h: '2' },
@@ -32,7 +32,7 @@ block('block-jsdoc')(
         };
     }),
 
-    mode('events-title')(function() {
+    mode('events-title')(function () {
         return {
             elem: 'title',
             elemMods: { mix: 'post-title', h: '2' },
@@ -41,10 +41,10 @@ block('block-jsdoc')(
     }),
 
     mode('methods')(
-        (function() {
+        function () {
             return [
                 apply('methods-title'),
-                this.ctx.methods.map(function(method) {
+                this.ctx.methods.map(function (method) {
                     return {
                         elem: 'item',
                         content: [
@@ -66,38 +66,38 @@ block('block-jsdoc')(
                                 elem: 'description',
                                 content: method.description
                             },
-                            apply('method-params', { ctx: { method: method }}),
-                            apply('method-returns', { ctx: { method: method }})
+                            apply('method-params', { ctx: { method: method } }),
+                            apply('method-returns', { ctx: { method: method } })
                         ]
                     };
                 })
             ];
-        }),
+        },
 
-        match(function() {
+        match(function () {
             var methods = this.ctx.methods;
             return !methods || !methods.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
     mode('method-params')(
-        (function() {
+        function () {
             return [
                 {
                     elem: 'title',
                     elemMods: { mix: 'post-title', h: '6' },
                     content: BEM.I18N('block-jsdoc', 'params') + ':'
                 },
-                this.ctx.method.params.map(function(param) {
+                this.ctx.method.params.map(function (param) {
                     return [
                         {
                             elem: 'value',
                             mix: [{ elem: 'selection', elemMods: { color: 'grey' } }],
                             content: param.name
                         },
-                        apply('method-params-type', { ctx: { param: param }}),
+                        apply('method-params-type', { ctx: { param: param } }),
                         {
                             elem: 'js-description',
                             content: param.description
@@ -105,19 +105,19 @@ block('block-jsdoc')(
                     ];
                 })
             ];
-        }),
+        },
 
-        match(function() {
+        match(function () {
             var params = this.ctx.method.params;
             return !params || !params.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
     mode('method-params-type')(
-        (function() {
-            return this.ctx.param.types.map(function(type){
+        function () {
+            return this.ctx.param.types.map(function (type) {
                 return {
                     elem: 'type',
                     content: {
@@ -126,29 +126,29 @@ block('block-jsdoc')(
                     }
                 };
             });
-        }),
+        },
 
-        match(function() {
+        match(function () {
             var types = this.ctx.param.types;
             return !types || !types.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
     mode('method-returns')(
-        (function() {
+        function () {
             return [
                 {
                     elem: 'title',
                     elemMods: { mix: 'post-title-inline', h: '6' },
                     content: BEM.I18N('block-jsdoc', 'returns') + ':'
                 },
-                this.ctx.method.returns.map(function(returns) {
+                this.ctx.method.returns.map(function (returns) {
                     return [
                         {
                             elem: 'types',
-                            content: returns.types.map(function(type) {
+                            content: returns.types.map(function (type) {
                                 return {
                                     elem: 'type',
                                     content: '<code>' + type + '</code>'
@@ -162,21 +162,21 @@ block('block-jsdoc')(
                     ];
                 })
             ];
-        }),
+        },
 
-        match(function() {
+        match(function () {
             var returns = this.ctx.method.returns;
             return !returns || !returns.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
     mode('events')(
-        (function() {
+        function () {
             return [
                 apply('events-title'),
-                this.ctx.events.map(function(event) {
+                this.ctx.events.map(function (event) {
                     return {
                         elem: 'item',
                         content: [
@@ -193,37 +193,37 @@ block('block-jsdoc')(
                                 elem: 'description',
                                 content: event.description
                             },
-                            apply('event-params', { ctx: { event: event }})
+                            apply('event-params', { ctx: { event: event } })
                         ]
                     };
                 })
             ];
-        }),
+        },
 
-        match(function() {
+        match(function () {
             var events = this.ctx.events;
             return !events || !events.length;
-        })(function() {
+        })(function () {
             return null;
         })
     ),
 
     mode('event-params')(
-        (function() {
+        function () {
             return [
                 {
                     elem: 'title',
                     elemMods: { mix: 'post-title', h: '6' },
                     content: BEM.I18N('block-jsdoc', 'params') + ':'
                 },
-                this.ctx.event.params.map(function(param) {
+                this.ctx.event.params.map(function (param) {
                     return [
                         {
                             elem: 'value',
                             mix: [{ elem: 'selection', elemMods: { color: 'grey' } }],
                             content: param.name
                         },
-                        param.types.map(function(type){
+                        param.types.map(function (type) {
                             return {
                                 elem: 'type',
                                 content: '<code>' + type + '</code>'
@@ -235,13 +235,13 @@ block('block-jsdoc')(
                         }
                     ];
                 })
-            ]
-        }),
+            ];
+        },
 
-        match(function() {
+        match(function () {
             var params = this.ctx.event.params;
             return !params || !params.length;
-        })(function() {
+        })(function () {
             return null;
         })
     )

@@ -7,7 +7,7 @@ var _ = require('lodash'),
  * Base class for all dynamic nodes
  * @constructor
  */
-var DynamicNode = function() {};
+var DynamicNode = function () {};
 
 DynamicNode.prototype = Object.create(BaseNode.prototype);
 
@@ -16,7 +16,7 @@ DynamicNode.prototype = Object.create(BaseNode.prototype);
  * @param parent - {Object} parent node
  * @returns {DynamicNode}
  */
-DynamicNode.prototype.init = function(parent) {
+DynamicNode.prototype.init = function (parent) {
 
     this.setType()
         .setSize()
@@ -35,7 +35,7 @@ DynamicNode.prototype.init = function(parent) {
  * Sets type for node
  * @returns {DynamicNode}
  */
-DynamicNode.prototype.setType = function() {
+DynamicNode.prototype.setType = function () {
     this.type = this.TYPE.SIMPLE;
     return this;
 };
@@ -44,7 +44,7 @@ DynamicNode.prototype.setType = function() {
  * Sets size for node
  * @returns {DynamicNode}
  */
-DynamicNode.prototype.setSize = function() {
+DynamicNode.prototype.setSize = function () {
     this.size = this.SIZE.NORMAL;
     return this;
 };
@@ -53,7 +53,7 @@ DynamicNode.prototype.setSize = function() {
  * Sets view for node
  * @returns {DynamicNode}
  */
-DynamicNode.prototype.setView = function() {
+DynamicNode.prototype.setView = function () {
     this.view = this.VIEW.POST;
     return this;
 };
@@ -62,7 +62,7 @@ DynamicNode.prototype.setView = function() {
  * Sets hidden state for node
  * @returns {DynamicNode}
  */
-DynamicNode.prototype.setHidden = function() {
+DynamicNode.prototype.setHidden = function () {
     this.hidden = {};
     return this;
 };
@@ -71,7 +71,7 @@ DynamicNode.prototype.setHidden = function() {
  * Sets class for node
  * @returns {DynamicNode}
  */
-DynamicNode.prototype.setClass = function() {
+DynamicNode.prototype.setClass = function () {
     this.class = 'dynamic';
     return this;
 };
@@ -83,11 +83,11 @@ DynamicNode.prototype.setClass = function() {
  * @param params - {Object} route params of node
  * @returns {DynamicNode}
  */
-DynamicNode.prototype.processRoute = function(routes, parent, params) {
+DynamicNode.prototype.processRoute = function (routes, parent, params) {
     var baseRoute = parent.getBaseRoute(),
         conditions = routes[baseRoute.name].conditions;
 
-    routes[baseRoute.name].conditions = Object.keys(params.conditions).reduce(function(prev, key) {
+    routes[baseRoute.name].conditions = Object.keys(params.conditions).reduce(function (prev, key) {
         prev[key] = prev[key] || [];
         prev[key] = prev[key].concat(params.conditions[key]);
         return prev;

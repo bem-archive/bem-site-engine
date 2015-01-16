@@ -7,7 +7,7 @@ var path = require('path'),
     _ = require('lodash');
 
 modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
-    function(provide, config, util, builder, bundles, statics) {
+    function (provide, config, util, builder, bundles, statics) {
 
         var target = 'src/bundles/desktop.bundles/common/common.min.template.i18n.js',
             context = {
@@ -19,29 +19,29 @@ modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
             };
 
         provide({
-            apply: function(ctx, req, mode) {
+            apply: function (ctx, req, mode) {
                 return builder
                     .build([target])
-                    .then(function() {
-                        return vfs.read(path.join(process.cwd(), target)).then(function(source) {
+                    .then(function () {
+                        return vfs.read(path.join(process.cwd(), target)).then(function (source) {
                             context.req = req;
                             vm.runInNewContext(source, context);
                             return context;
                         });
                     })
-                    .then(function(engine) {
+                    .then(function (engine) {
                         engine.BEM.I18N.lang(req.lang);
 
                         return engine.BEMTREE.apply(ctx)
-                            .then(function(bemjson) {
+                            .then(function (bemjson) {
                                 if (mode === 'bemjson') return stringify(bemjson, null, 2);
 
                                 try {
                                     return engine.BEMHTML.apply(bemjson);
-                                } catch(err) {
+                                } catch (err) {
                                     console.log('BEMHTML ERROR', err);
                                     throw new Error();
-                                };
+                                }
 
                             });
                     });

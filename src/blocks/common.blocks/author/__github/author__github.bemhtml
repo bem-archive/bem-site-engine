@@ -21,7 +21,7 @@ block('author').elem('github')(
         ];
     }),
 
-    mode('url')(function() {
+    mode('url')(function () {
         var GITHUB_URL = 'https://github.com/',
             content = this.ctx.content;
 

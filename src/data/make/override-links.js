@@ -91,7 +91,7 @@ function fixGithubLinks(str) {
  */
 function buildFullGithubLinkForDocs(str, node, lang, treeOrBlob) {
     var sourceFoLang = node.source[lang];
-    if(sourceFoLang && sourceFoLang.repo) {
+    if (sourceFoLang && sourceFoLang.repo) {
         var repo = sourceFoLang.repo;
         return 'https://' + p.join(repo.host, repo.user, repo.repo, treeOrBlob, repo.ref,
             str.indexOf('.') === 0 ? p.dirname(repo.path) : '', str.replace(/^\//, ''));
@@ -109,38 +109,38 @@ function recognizeRelativeLinkForLibraryDocs(str, node) {
     var conditions, lib, version, match;
 
     conditions = node.route.conditions;
-    if(!conditions) {
+    if (!conditions) {
         return [str];
     }
 
     lib = conditions.lib;
     version = conditions.version;
 
-    if(!lib || !version) {
+    if (!lib || !version) {
         return [str];
     }
 
-    //common.blocks/button/button.ru.md
+    // common.blocks/button/button.ru.md
     match = str.match(REGEXP.RELATIVE.BLOCKS);
-    if(match) {
-        return ['desktop', 'touch-pad', 'touch-phone'].reduce(function(prev, item) {
+    if (match) {
+        return ['desktop', 'touch-pad', 'touch-phone'].reduce(function (prev, item) {
             prev.push(util.format('/libs/%s/%s/%s/%s', lib, version, item, match[2]));
             return prev;
         }, []);
     }
 
-    //./changelog
+    // ./changelog
     match = str.match(REGEXP.RELATIVE.DOC);
-    if(match) {
+    if (match) {
         match[1] = match[1].toLowerCase();
         return match[1] === 'readme' ?
             [util.format('/libs/%s/%s', lib, version)] :
             [util.format('/libs/%s/%s/%s', lib, version, match[1])];
     }
 
-    //3.1.0-changelog.md
+    // 3.1.0-changelog.md
     match = str.match(REGEXP.RELATIVE.VERSION_DOC);
-    if(match) {
+    if (match) {
         return [util.format('/libs/%s/v%s/%s', lib, match[1], match[2])];
     }
     return [str];
@@ -159,7 +159,7 @@ function recognizeRelativeBlockLinkOnSameLevel(str, node) {
         level = conditions.level;
 
     var match = str.match(REGEXP.RELATIVE.BLOCK);
-    if(match) {
+    if (match) {
         return util.format('/libs/%s/%s/%s/%s', lib, version, level, match[1]);
     }
     return str;
@@ -177,7 +177,7 @@ function recognizeRelativeBlockLinkOnDifferentLevels(str, node) {
         version = conditions.version;
 
     var match = str.match(REGEXP.RELATIVE.LEVEL);
-    if(match) {
+    if (match) {
         return util.format('/libs/%s/%s/%s/%s', lib, version, match[1], match[2]);
     }
     return str;
@@ -193,29 +193,29 @@ function recognizeRelativeBlockLinkOnDifferentLevels(str, node) {
 function collectUrls(sitemap) {
     var urls = {};
 
-    var traverseTreeNodes = function(node) {
-        if(node.url && node.source && node.hidden) {
-            utility.getLanguages().forEach(function(lang) {
-                if(!node.hidden[lang]) {
-                    if(node.source && node.source[lang] && node.source[lang].url) {
+    var traverseTreeNodes = function (node) {
+        if (node.url && node.source && node.hidden) {
+            utility.getLanguages().forEach(function (lang) {
+                if (!node.hidden[lang]) {
+                    if (node.source && node.source[lang] && node.source[lang].url) {
                         urls[node.source[lang].url] = node.url;
-                    }else {
+                    } else {
                         urls[node.id] = node.url;
                     }
                 }
             });
         }
 
-        node.items && node.items.forEach(function(item) {
+        node.items && node.items.forEach(function (item) {
             traverseTreeNodes(item);
         });
         return node;
     };
 
-    sitemap.forEach(function(node) {
+    sitemap.forEach(function (node) {
         traverseTreeNodes(node);
     });
-    return  urls;
+    return urls;
 }
 
 /**
@@ -231,7 +231,7 @@ function overrideLinks(content, node, urlHash, lang) {
 
         return content.replace(REGEXP.LINK, function (str, href) {
 
-            //decode html entities
+            // decode html entities
             href = href.replace(/&#(x?)([0-9a-fA-F]+);?/g, function (str, bs, match) {
                 return String.fromCharCode(parseInt(match, bs === 'x' ? 16 : 10));
             });
@@ -247,7 +247,7 @@ function overrideLinks(content, node, urlHash, lang) {
             href = fixBrokenLinkWithBracket(href);
             href = fixGithubLinks(href);
 
-            var hrefArr = href.split('#'), //extrude anchor from link
+            var hrefArr = href.split('#'), // extrude anchor from link
                 href = hrefArr[0],
                 anchor = hrefArr[1],
                 links = [],
@@ -257,7 +257,7 @@ function overrideLinks(content, node, urlHash, lang) {
                 return buildHref(href + (anchor ? '#' + anchor : ''));
             }
 
-            //try to recognize
+            // try to recognize
             if (isAbsolute(href)) {
                 links.push(href.replace(/\/tree\//, '/blob/'));
                 links.push(href.replace(/\/blob\//, '/tree/'));
@@ -271,21 +271,21 @@ function overrideLinks(content, node, urlHash, lang) {
                 }
             }
 
-            //remove links that are the same as original
+            // remove links that are the same as original
             links = links.filter(function (item) {
                 return item !== href;
             });
 
-            links.some(function(item) {
-                if(urlHash[item]) {
+            links.some(function (item) {
+                if (urlHash[item]) {
                     replaced = urlHash[item];
                     return true;
                 }
-                if(urlHash[item + '/README.md']) {
+                if (urlHash[item + '/README.md']) {
                     replaced = urlHash[item + '/README.md'];
                     return true;
                 }
-                if(existedLinks.indexOf(item) > -1) {
+                if (existedLinks.indexOf(item) > -1) {
                     replaced = item;
                     return true;
                 }
@@ -296,9 +296,9 @@ function overrideLinks(content, node, urlHash, lang) {
                 href = replaced;
             }
             href += (anchor ? '#' + anchor : '');
-            //if(nativeHref.indexOf('./javascript-docs.md') > -1) {
+            // if (nativeHref.indexOf('./javascript-docs.md') > -1) {
             //    logger.debug(util.format('native: %s replaced: %s', nativeHref, href), module);
-            //}
+            // }
             return buildHref(href);
         });
 }
@@ -314,32 +314,32 @@ function overrideBlockLinks(obj, node, lang, urlHash) {
     var source = node.source,
         blocksHash = obj.blocksHash;
 
-    if(!source.key) {
+    if (!source.key) {
         return;
     }
 
     var blockHashItem = blocksHash[source.key];
-    if(!blockHashItem) {
-        //logger.warn('there no block for key %s', source.key);
+    if (!blockHashItem) {
+        // logger.warn('there no block for key %s', source.key);
         return;
     }
 
     var blockData = blockHashItem.data;
-    if(!blockData) {
-        //logger.warn('there no block data for key %s', source.key);
+    if (!blockData) {
+        // logger.warn('there no block data for key %s', source.key);
         return;
     }
 
     var description = blockData[lang] ? blockData[lang].description : blockData.description;
-    if(!description) {
-        //logger.warn('there no description in block data for key %s', source.key);
+    if (!description) {
+        // logger.warn('there no description in block data for key %s', source.key);
         return;
     }
 
-    if(_.isArray(description)) {
-        //old bem-sets format
+    if (_.isArray(description)) {
+        // old bem-sets format
         description.forEach(function (item, index) {
-            if(blockData[lang]) {
+            if (blockData[lang]) {
                 obj.blocksHash[source.key].data[lang].description[index].content =
                     overrideLinks(item.content || '', node, urlHash, lang);
             } else {
@@ -347,8 +347,8 @@ function overrideBlockLinks(obj, node, lang, urlHash) {
                     overrideLinks(item.content || '', node, urlHash, lang);
             }
         });
-    }else {
-        if(blockData[lang]) {
+    } else {
+        if (blockData[lang]) {
             obj.blocksHash[source.key].data[lang].description =
                 overrideLinks(description, node, urlHash, lang);
         } else {
@@ -358,20 +358,20 @@ function overrideBlockLinks(obj, node, lang, urlHash) {
     }
 }
 
-module.exports = function(obj) {
+module.exports = function (obj) {
     logger.info('Start overriding links', module);
 
     var languages = utility.getLanguages(),
         sitemap = obj.sitemap,
         urlHash = collectUrls(sitemap);
 
-    var traverseTreeNodes = function(node) {
+    var traverseTreeNodes = function (node) {
         var s = node.source;
 
-        if(s) {
+        if (s) {
             languages.forEach(function (lang) {
-                //override docs links
-                if(s[lang] && s[lang].content) {
+                // override docs links
+                if (s[lang] && s[lang].content) {
                     node.source[lang].content = overrideLinks(s[lang].content, node, urlHash, lang);
                     return;
                 }

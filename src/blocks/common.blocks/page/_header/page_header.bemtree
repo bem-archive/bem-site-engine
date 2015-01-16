@@ -1,5 +1,5 @@
 block('page').mod('header', true)(
-    content()(function() {
+    content()(function () {
         var data = this.data;
 
         return [

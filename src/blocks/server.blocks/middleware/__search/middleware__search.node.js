@@ -1,25 +1,28 @@
 var _ = require('lodash');
 
-modules.define('middleware__search', ['config', 'logger', 'model', 'template'], function(provide, config, logger, model, template) {
+modules.define(
+    'middleware__search',
+    ['config', 'logger', 'model', 'template'],
+    function (provide, config, logger, model, template) {
 
     function getBlocks(text, lang) {
         var nodes,
             results;
 
-        nodes = model.getNodesByCriteria(function() {
-            return text.length > 1 && 'block' === this.class &&
+        nodes = model.getNodesByCriteria(function () {
+            return text.length > 1 && this.class === 'block' &&
                 this.title && this.title[lang].indexOf(text) !== -1;
         }, false);
 
         results = nodes.length ? _.values(convertBlockResults(nodes, lang)) : [];
 
-        return _.sortBy(results, function(item) {
+        return _.sortBy(results, function (item) {
             return item.block;
         });
     }
 
     function getLibs(text, lang) {
-        var libs = model.getNodesByCriteria(function() {
+        var libs = model.getNodesByCriteria(function () {
             return this.lib && !!~this.lib.indexOf(text);
         }, false);
 
@@ -41,21 +44,21 @@ modules.define('middleware__search', ['config', 'logger', 'model', 'template'], 
             block = model.getBlocks()[key],
             description;
 
-        if(!block || !block.data) {
+        if (!block || !block.data) {
             return '';
         }
 
         block = block.data[lang] || block.data;
         description = block.description;
 
-        if(_.isArray(description)) {
+        if (_.isArray(description)) {
             description = description[0].content;
         }
         return description;
     }
 
     function convertBlockResults(result, lang) {
-        return result.reduce(function(prev, item) {
+        return result.reduce(function (prev, item) {
             var route = item.route,
                 conditions = route.conditions,
                 library = conditions.lib,
@@ -84,7 +87,7 @@ modules.define('middleware__search', ['config', 'logger', 'model', 'template'], 
     }
 
     function convertPostsByTagResults(result) {
-        return result.map(function(item) {
+        return result.map(function (item) {
             return {
                 class: 'post',
                 category: item.title,
@@ -103,22 +106,22 @@ modules.define('middleware__search', ['config', 'logger', 'model', 'template'], 
     }
 
     provide({
-        run: function(){
-            var self = this;
+        run: function () {
+            var _this = this;
 
-            return function(req, res, next) {
+            return function (req, res, next) {
                 var url = req.path,
                     text = req.query.text || '',
                     ctx,
                     data;
 
-                if(!url.match(/^\/search\/?$/)) {
+                if (!url.match(/^\/search\/?$/)) {
                     return next();
                 }
 
                 data = getData(text, req);
 
-                if(!data.length) data = self.getDataFallback();
+                if (!data.length) data = _this.getDataFallback();
 
                 ctx = {
                     req: req,
@@ -134,13 +137,13 @@ modules.define('middleware__search', ['config', 'logger', 'model', 'template'], 
                     .then(function (html) {
                         res.end(html);
                     })
-                    .fail(function(err) {
+                    .fail(function (err) {
                         next(err);
                     });
             };
         },
 
-        getDataFallback: function() {
+        getDataFallback: function () {
             return [];
         }
     });

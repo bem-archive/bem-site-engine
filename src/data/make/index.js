@@ -9,11 +9,11 @@ function analyze() {
 
     var def = vow.defer(),
         routes = {},
-        traverseTreeNodes = function(node, parent) {
+        traverseTreeNodes = function (node, parent) {
             node = new nodes.base.BaseNode(node, parent);
             node.processRoute(routes).createBreadcrumbs();
-            if(node.items) {
-                node.items = node.items.map(function(item) {
+            if (node.items) {
+                node.items = node.items.map(function (item) {
                     return traverseTreeNodes(item, node);
                 });
             }
@@ -24,7 +24,7 @@ function analyze() {
         var map = require(path.join(process.cwd(), 'model/index.js')).get();
         def.resolve({
             routes: routes,
-            sitemap: map.map(function(item) {
+            sitemap: map.map(function (item) {
                 return traverseTreeNodes(item, {
                     level: -1,
                     route: { name: null },
@@ -33,14 +33,14 @@ function analyze() {
             })
         });
         logger.info('Sitemap object has been analyzed successfully', module);
-    } catch(e) {
+    } catch (e) {
         logger.error('Error occur while analyze sitemap object', module);
         def.reject(e);
     }
     return def.promise();
 }
 
-module.exports = function() {
+module.exports = function () {
     logger.info('Create snapshot start', module);
 
     return analyze()
@@ -51,11 +51,11 @@ module.exports = function() {
         .then(require('./override-links'))
         .then(require('./sitemapXML'))
         .then(require('./save'))
-        .then(function(snapshot) {
+        .then(function (snapshot) {
             logger.info('Snapshot was created successfully', module);
             return vow.resolve(snapshot);
         })
-        .fail(function(err) {
+        .fail(function (err) {
             logger.error('Error occur while compile models and loading documentation', module);
             return vow.reject(err);
         });

@@ -10,8 +10,8 @@ var _ = require('lodash'),
  * @param parent - {Object} parent node object
  * @constructor
  */
-var BaseNode = function(node, parent) {
-    Object.keys(node).forEach(function(key) { this[key] = node[key]; }, this);
+var BaseNode = function (node, parent) {
+    Object.keys(node).forEach(function (key) { this[key] = node[key]; }, this);
 
     this.generateUniqueId()
         .setParent(parent)
@@ -135,13 +135,13 @@ BaseNode.prototype = {
      */
     setHidden: function () {
 
-        //show node for all locales
+        // show node for all locales
         if (!this.hidden) {
             this.hidden = {};
             return this;
         }
 
-        //hide node for locales that exists in node hidden array
+        // hide node for locales that exists in node hidden array
         if (_.isArray(this.hidden)) {
             this.hidden = {
                 en: this.hidden.indexOf('en') !== -1,
@@ -150,7 +150,7 @@ BaseNode.prototype = {
             return this;
         }
 
-        //hide node for all locales
+        // hide node for all locales
         if (this.hidden === true) {
             this.hidden = {
                 en: true,
@@ -178,10 +178,10 @@ BaseNode.prototype = {
     createBreadcrumbs: function () {
         this.breadcrumbs = [];
 
-        var self = this,
+        var _this = this,
             traverse = function (node) {
                 if (node.url) {
-                    self.breadcrumbs.unshift({
+                    _this.breadcrumbs.unshift({
                         title: node.title,
                         url: node.url
                     });
@@ -201,10 +201,10 @@ BaseNode.prototype = {
      * @param node {Object} - single node of sitemap model
      * @param level {Number} - menu deep level
      */
-    processRoute: function(routes) {
+    processRoute: function (routes) {
         this.params = _.extend({}, this.parent.params);
 
-        if(!this.route) {
+        if (!this.route) {
             this.route = {
                 name: this.parent.route.name
             };
@@ -212,8 +212,8 @@ BaseNode.prototype = {
             return this;
         }
 
-        //BEMINFO-195
-        if(_.isString(this.route)) {
+        // BEMINFO-195
+        if (_.isString(this.route)) {
             this.route = {
                 conditions: {
                     id: this.route
@@ -223,10 +223,10 @@ BaseNode.prototype = {
 
         var r = this.route;
 
-        if(r[constants.ROUTE.NAME]) {
+        if (r[constants.ROUTE.NAME]) {
             routes[r.name] = routes[r.name] || { name: r.name, pattern: r.pattern };
             this.url = susanin.Route(routes[r.name]).build(this.params);
-        }else {
+        } else {
             r.name = this.parent.route.name;
         }
 
@@ -234,16 +234,16 @@ BaseNode.prototype = {
             constants.ROUTE.DEFAULTS,
             constants.ROUTE.CONDITIONS,
             constants.ROUTE.DATA
-        ].forEach(function(item) {
+        ].forEach(function (item) {
                 routes[r.name][item] = routes[r.name][item] || {};
 
-                if(r[item]) {
-                    Object.keys(r[item]).forEach(function(key) {
-                        if(item === constants.ROUTE.CONDITIONS) {
+                if (r[item]) {
+                    Object.keys(r[item]).forEach(function (key) {
+                        if (item === constants.ROUTE.CONDITIONS) {
                             routes[r.name][item][key] = routes[r.name][item][key] || [];
                             routes[r.name][item][key] = routes[r.name][item][key].concat(r[item][key]);
                             this.url = susanin.Route(routes[r.name]).build(_.extend(this.params, r[item]));
-                        }else {
+                        } else {
                             routes[r.name][item][key] = r[item][key];
                         }
                     }, this);
@@ -258,22 +258,22 @@ BaseNode.prototype = {
      * Sets params for indexation by search engines
      * @returns {BaseNode}
      */
-    setSearch: function() {
+    setSearch: function () {
         var def = this.SITEMAP_XML.DEFAULT;
 
-        if(!this.search) {
+        if (!this.search) {
             this.search = def;
             return this;
         }
 
-        //validate settled changefreq property
-        if(!this.search.changefreq ||
+        // validate settled changefreq property
+        if (!this.search.changefreq ||
             this.SITEMAP_XML.FREQUENCIES.indexOf(this.search.changefreq) === -1) {
             this.search.changefreq = def.changefreq;
         }
 
-        //validate settled priority property
-        if(!this.search.priority || this.search.priority < 0 || this.search.priority > 1) {
+        // validate settled priority property
+        if (!this.search.priority || this.search.priority < 0 || this.search.priority > 1) {
             this.search.priority = def.priority;
         }
 

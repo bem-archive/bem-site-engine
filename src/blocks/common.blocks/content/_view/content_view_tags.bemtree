@@ -1,9 +1,9 @@
 block('content').mod('view', 'tags')
-    .content()(function() {
+    .content()(function () {
         return {
             block: this.block,
             elem: 'tag-posts',
-            content: this.data.posts.map(function(node) {
+            content: this.data.posts.map(function (node) {
                 return {
                     block: 'posts',
                     title: node.title,
