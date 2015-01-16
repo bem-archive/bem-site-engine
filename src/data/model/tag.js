@@ -8,7 +8,7 @@ var utility = require('../util'),
  * @param tagKey - {String} tag
  * @constructor
  */
-var TagNode = function(parent, routes, tagKey) {
+var TagNode = function (parent, routes, tagKey) {
     this.setTitle(tagKey)
         .processRoute(routes, parent, {
             conditions: {
@@ -25,8 +25,8 @@ TagNode.prototype = Object.create(DynamicNode.prototype);
  * @param tagKey - {String} tag key
  * @returns {TagNode}
  */
-TagNode.prototype.setTitle = function(tagKey) {
-    this.title = utility.getLanguages().reduce(function(prev, lang) {
+TagNode.prototype.setTitle = function (tagKey) {
+    this.title = utility.getLanguages().reduce(function (prev, lang) {
         prev[lang] = tagKey;
         return prev;
     }, {});
@@ -37,7 +37,7 @@ TagNode.prototype.setTitle = function(tagKey) {
  * Sets view for node
  * @returns {TagNode}
  */
-TagNode.prototype.setView = function() {
+TagNode.prototype.setView = function () {
     this.view = this.VIEW.TAGS;
     return this;
 };
@@ -46,7 +46,7 @@ TagNode.prototype.setView = function() {
  * Sets class for node
  * @returns {TagNode}
  */
-TagNode.prototype.setClass = function() {
+TagNode.prototype.setClass = function () {
     this.class = 'tag';
     return this;
 };

@@ -1,5 +1,5 @@
 block('author')(
-    content()(function() {
+    content()(function () {
         var data = this.data,
             id = this.ctx.id,
             author = data.people[id][data.lang] || id;

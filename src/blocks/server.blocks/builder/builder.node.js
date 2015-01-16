@@ -1,12 +1,12 @@
 var vow = require('vow');
 
-modules.define('builder', ['util'], function(provide, util) {
+modules.define('builder', ['util'], function (provide, util) {
     var enbBuilder;
 
     provide({
-        build: function(targets) {
+        build: function (targets) {
 
-            if(!util.isDev()) {
+            if (!util.isDev()) {
                 return vow.resolve();
             }
 

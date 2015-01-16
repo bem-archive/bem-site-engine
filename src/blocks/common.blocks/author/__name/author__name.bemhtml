@@ -5,14 +5,14 @@ block('author').elem('name')(
     tag()('span'),
 
     content()(
-        match(function () { return this.ctx.content.lastName; })(function() {
-            return this.ctx.content.lastName
+        match(function () { return this.ctx.content.lastName; })(function () {
+            return this.ctx.content.lastName;
         }),
 
-        match(function() {
+        match(function () {
             var c = this.ctx.content;
             return c.firstName && c.lastName;
-        })(function() {
+        })(function () {
             var c = this.ctx.content;
             return [c.firstName, ' ', c.lastName];
         })

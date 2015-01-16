@@ -3,7 +3,7 @@ var nconf = require('nconf'),
 
 nconf.env();
 
-['current/app', 'common/app'].forEach(function(item) {
+['current/app', 'common/app'].forEach(function (item) {
     nconf.add(item,   {
         type: 'file',
         file: path.resolve(process.cwd(), 'configs', (item + '.json'))

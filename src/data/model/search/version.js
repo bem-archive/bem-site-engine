@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-var Version = function(name, link, doc, current) {
+var Version = function (name, link, doc, current) {
     return this.init(name, link, doc, current);
 };
 
@@ -20,7 +20,7 @@ Version.prototype = {
      * @param current - {Boolean} indicates that this library version is current
      * @returns {Version}
      */
-    init: function(name, link, readme, current) {
+    init: function (name, link, readme, current) {
         this.name = name;
         this.link = link;
         this.doc = readme;
@@ -34,7 +34,7 @@ Version.prototype = {
      * @param level - {Level} level object
      * @returns {Version}
      */
-    addLevel: function(level) {
+    addLevel: function (level) {
         this.levels.push(level);
         return this;
     },
@@ -44,8 +44,8 @@ Version.prototype = {
      * @param name - {String} name of level
      * @returns {Level}
      */
-    getLevel: function(name) {
-        return _.find(this.levels, function(item) {
+    getLevel: function (name) {
+        return _.find(this.levels, function (item) {
             return item.name && name.indexOf(item.name) > -1;
         });
     }

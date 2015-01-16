@@ -1,6 +1,6 @@
 block('search-item').mod('type', 'post')(
-    content()(function() {
-        var self = this,
+    content()(function () {
+        var _this = this,
             content = applyNext();
 
         return [
@@ -8,7 +8,7 @@ block('search-item').mod('type', 'post')(
                 elem: 'category',
                 content: content.category
             },
-            content.items.map(function(item) {
+            content.items.map(function (item) {
                 var source = item.source && item.source[req.lang];
 
                 return source ? {
@@ -18,7 +18,7 @@ block('search-item').mod('type', 'post')(
                             block: 'link',
                             url: item.url,
                             attrs: { target: '_blank', title: source.title },
-                            mix: { block: self.block, elem: 'title' },
+                            mix: { block: _this.block, elem: 'title' },
                             content: source.title
                         },
                         source.summary ? {
@@ -32,7 +32,7 @@ block('search-item').mod('type', 'post')(
                         block: 'link',
                         url: item.url,
                         attrs: { target: '_blank', title: item.title[req.lang] },
-                        mix: { block: self.block, elem: 'title' },
+                        mix: { block: _this.block, elem: 'title' },
                         content: item.title[req.lang]
                     }
                 };

@@ -1,13 +1,13 @@
-modules.define('i-bem__dom', ['jquery'], function(provide, $, BEMDOM) {
+modules.define('i-bem__dom', ['jquery'], function (provide, $, BEMDOM) {
 
 BEMDOM.decl('tabs', {
 	onSetMod: {
 		js: {
-			inited: function() {
+			inited: function () {
                 this._disabled = false;
                 /* показываем текущий pane для активного таба */
                 var currentIndex = this.getCurrentIndex();
-                if(currentIndex > -1 && !this.getCurrentPane().length) {
+                if (currentIndex > -1 && !this.getCurrentPane().length) {
                     this.setMod(this.getPane(currentIndex), 'state', 'current');
                 }
 			}
@@ -21,13 +21,13 @@ BEMDOM.decl('tabs', {
     * @returns {BEM}
     * @fires tabs#beforeSelect, tabs#select
     */
-    setActiveTab: function(ctx, ev) {
+    setActiveTab: function (ctx, ev) {
         var tab = {},
             pane = {},
             currentTab,
             index;
 
-        if (typeof ctx === 'object') { //domElem
+        if (typeof ctx === 'object') { // domElem
             // проверяем наличие элемента в списке табов
             index = this.getTabIndex(ctx);
             if (index === -1) return this;
@@ -72,7 +72,7 @@ BEMDOM.decl('tabs', {
      * Возвращает индекс текущего таба
      * @returns {Number} Число или -1 если нету выбранных табов
      */
-    getCurrentIndex: function() {
+    getCurrentIndex: function () {
         return this.getTabIndex(this.getTab('state', 'current'));
     },
 
@@ -81,7 +81,7 @@ BEMDOM.decl('tabs', {
      * @param {jQuery} элемент таба
      * @returns {Number} Число или -1 если нету выбранных табов
      */
-    getTabIndex: function(elem) {
+    getTabIndex: function (elem) {
         return this.getTabs().index(elem);
     },
 
@@ -90,7 +90,7 @@ BEMDOM.decl('tabs', {
      * @param {jQuery} элемент панели
      * @returns {Number} Число или -1 если нету выбранной панели
      */
-    getPaneIndex: function(elem) {
+    getPaneIndex: function (elem) {
         return this.getPanes().index(elem);
     },
 
@@ -98,7 +98,7 @@ BEMDOM.decl('tabs', {
      * Включает переключение табов
      * @returns {BEM}
      */
-    enable: function() {
+    enable: function () {
         this._disabled = false;
         return this;
     },
@@ -107,7 +107,7 @@ BEMDOM.decl('tabs', {
      * Выключает переключение табов
      * @returns {BEM}
      */
-    disable: function() {
+    disable: function () {
         this._disabled = true;
         return this;
     },
@@ -132,7 +132,7 @@ BEMDOM.decl('tabs', {
      * Получение списка панелей
      * @returns {jQuery[]}
      */
-    getPanes: function() {
+    getPanes: function () {
         return this.elem('pane');
     },
 
@@ -140,7 +140,7 @@ BEMDOM.decl('tabs', {
      * Получение текущего таба
      * @returns {jQuery}
      */
-    getCurrentTab: function() {
+    getCurrentTab: function () {
         return this.getTab('state', 'current');
     },
 
@@ -148,7 +148,7 @@ BEMDOM.decl('tabs', {
      * Получение текущей панели
      * @returns {jQuery}
      */
-    getCurrentPane: function() {
+    getCurrentPane: function () {
         return this.getPane('state', 'current');
     },
 
@@ -177,8 +177,8 @@ BEMDOM.decl('tabs', {
     }
 
 }, {
-    live: function() {
-        this.liveBindTo('tab', 'pointerclick', function(e) {
+    live: function () {
+        this.liveBindTo('tab', 'pointerclick', function (e) {
             window.location.hash = '';
             this.setActiveTab(e.currentTarget, e);
         });

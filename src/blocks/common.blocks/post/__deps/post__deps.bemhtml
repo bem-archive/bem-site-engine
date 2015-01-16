@@ -1,7 +1,7 @@
 block('post').elem('deps')(
-    match(function() { return !(this.ctx && this.ctx.content); }).def()(false),
+    match(function () { return !(this.ctx && this.ctx.content); }).def()(false),
 
-    content()(function() {
+    content()(function () {
         var libs = this.ctx.content;
 
         return [{
@@ -9,7 +9,7 @@ block('post').elem('deps')(
                 elem: 'title',
                 elemMods: { level: '3' },
                 content: BEM.I18N('post', 'deps')
-            }].concat(Object.keys(libs).map(function(lib) {
+            }].concat(Object.keys(libs).map(function (lib) {
                 var libUrl = libs[lib],
                     hashIndex = libUrl.indexOf('#'),
                     isFullPath = hashIndex > -1,

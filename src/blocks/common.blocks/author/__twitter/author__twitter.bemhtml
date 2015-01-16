@@ -1,7 +1,7 @@
 block('author').elem('twitter')(
     def().match(function () { return !this.ctx.content; })(false),
 
-    content()(function() {
+    content()(function () {
         var content = this.ctx.content;
 
         return [

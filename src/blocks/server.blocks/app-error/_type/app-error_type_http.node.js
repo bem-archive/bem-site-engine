@@ -1,6 +1,6 @@
 var Terror = require('terror');
 
-modules.define('httpError', function(provide) {
+modules.define('httpError', function (provide) {
 
     provide(Terror.create('HttpError', {
         NOT_FOUND: [404, 'Resource not found'],

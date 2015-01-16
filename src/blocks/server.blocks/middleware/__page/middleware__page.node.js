@@ -2,7 +2,7 @@ var path = require('path'),
     _ = require('lodash');
 
 modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 'template', 'providerFile'],
-    function(provide, config, logger, constants, model, template, providerFile) {
+    function (provide, config, logger, constants, model, template, providerFile) {
 
         provide({
 
@@ -12,28 +12,28 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
              * @param node - {RuntimeNode} node from sitemap model
              * @returns {*}
              */
-            getAdvancedData: function(req, node) {
+            getAdvancedData: function (req, node) {
                 var result = {
                     people: model.getPeople(),
                     peopleUrls: model.getPeopleUrls()
                 };
 
-                if(node.VIEW.AUTHOR === node.view) {
+                if (node.VIEW.AUTHOR === node.view) {
                     return _.extend(result, {
                         posts: model.getNodesBySourceCriteria(req.lang, ['authors', 'translators'], req.params.id) });
                 }
 
-                if(node.VIEW.TAGS === node.view) {
+                if (node.VIEW.TAGS === node.view) {
                     return _.extend(result, {
                         posts: model.getNodesBySourceCriteria(req.lang, ['tags'], req.params.id) });
                 }
 
-                if(node.VIEW.AUTHORS === node.view) {
+                if (node.VIEW.AUTHORS === node.view) {
                     return _.extend(result, {
                         authors: model.getAuthors() });
                 }
 
-                if(node.VIEW.BLOCK === node.view) {
+                if (node.VIEW.BLOCK === node.view) {
                     var s = node.source,
                         d = model.getBlocks()[s.key];
 
@@ -48,7 +48,7 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
 
             run: function () {
 
-                var self = this;
+                var _this = this;
 
                 /**
                  * Middleware which performs all logic operations for request
@@ -56,22 +56,22 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
                  * Finally returns html to response
                  * @returns {Function}
                  */
-                return function(req, res, next) {
+                return function (req, res, next) {
                     var ctx = {
                         block: 'i-global',
-                        req: req, //request object //TODO remove it and fix templates
+                        req: req, // request object //TODO remove it and fix templates
                         bundleName: 'common',
-                        lang: req.lang, //selected language
+                        lang: req.lang, // selected language
                         statics: ''
                     };
 
                     var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url);
-                    ctx = _.extend(ctx, req.__data, self.getAdvancedData(req, req.__data.node));
+                    ctx = _.extend(ctx, req.__data, _this.getAdvancedData(req, req.__data.node));
 
                     return template.apply(ctx, req, req.query.__mode)
                         .then(function (html) {
                             providerFile.makeDir({ path: pagePath })
-                                .then(function() {
+                                .then(function () {
                                     return providerFile.save({
                                         path: path.join(pagePath, (req.lang + '.html.gzip')),
                                         archive: true,
@@ -80,7 +80,7 @@ modules.define('middleware__page', ['config', 'logger', 'constants', 'model', 't
                                 });
                             res.end(html);
                         })
-                        .fail(function(err) {
+                        .fail(function (err) {
                             next(err);
                         });
                 };

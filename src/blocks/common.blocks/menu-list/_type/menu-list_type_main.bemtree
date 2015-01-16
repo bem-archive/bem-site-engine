@@ -1,14 +1,14 @@
 block('menu-list').mod('type', 'main')(
-    match(function() { return this.ctx.content; }).content()(function() {
-        return this.ctx.content.map(function(item, index) {
-            //console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
+    match(function () { return this.ctx.content; }).content()(function () {
+        return this.ctx.content.map(function (item, index) {
+            // console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
             //                        item.title, item.url, item.type, item.active, item.size);
 
-            if(index === 0) {
+            if (index === 0) {
                 return apply('logo', { ctx: item });
             }
 
-            if(item.type === 'group' && item.items) {
+            if (item.type === 'group' && item.items) {
                 return {
                     elem: 'group',
                     content: [
@@ -16,11 +16,11 @@ block('menu-list').mod('type', 'main')(
                             elem: 'title',
                             content: item.title
                         },
-                        item.items.map(function(subitem) {
+                        item.items.map(function (subitem) {
                             return apply('item', { ctx: subitem });
                         })
                     ]
-                }
+                };
             }
 
             return apply('item', { ctx: item });
@@ -33,7 +33,7 @@ block('menu-list').mod('type', 'main')(
         );
     }),
 
-    mode('logo')(function() {
+    mode('logo')(function () {
         return {
             block: 'logo',
             mods: { type: 'bem' },
@@ -41,10 +41,10 @@ block('menu-list').mod('type', 'main')(
         };
     }),
 
-    mode('item')(function() {
+    mode('item')(function () {
         var ctx = this.ctx;
 
-        return ctx.type === 'delimeter' ? { elem: 'delimeter'} : {
+        return ctx.type === 'delimeter' ? { elem: 'delimeter' } : {
             block: 'link',
             mix: {
                 block: 'menu-list',

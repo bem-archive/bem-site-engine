@@ -1,14 +1,14 @@
 var YandexDisk = require('yandex-disk'),
     vow = require('vow');
 
-modules.define('providerDisk', ['logger', 'config', 'util'], function(provide, logger, config, util) {
+modules.define('providerDisk', ['logger', 'config', 'util'], function (provide, logger, config, util) {
 
     logger = logger(module);
 
     var disk;
 
     provide({
-        init: function() {
+        init: function () {
             disk = new YandexDisk.YandexDisk(
                 config.get('yandexApi:login'),
                 config.get('yandexApi:password')
@@ -21,12 +21,12 @@ modules.define('providerDisk', ['logger', 'config', 'util'], function(provide, l
          * - path {String} path to file
          * @returns {*}
          */
-        load: function(options) {
+        load: function (options) {
             logger.debug('read file %s from yandex disk', options.path);
 
             var def = vow.defer();
-            disk.readFile(options.path, 'utf8', function(err, content) {
-                if(err || !content) {
+            disk.readFile(options.path, 'utf8', function (err, content) {
+                if (err || !content) {
                     def.reject(err);
                 }
                 def.resolve(options.archive ? util.unzip(content) : content);
@@ -41,10 +41,10 @@ modules.define('providerDisk', ['logger', 'config', 'util'], function(provide, l
          * - target {String} target path on local filesystem
          * @returns {*}
          */
-        downloadFile: function(options) {
+        downloadFile: function (options) {
             logger.debug('read file %s from yandex disk to %s', options.source, options.target);
             var def = vow.defer();
-            disk.downloadFile(options.source, options.target, function(err) {
+            disk.downloadFile(options.source, options.target, function (err) {
                 err ? def.reject(err) : def.resolve();
             });
             return def.promise();

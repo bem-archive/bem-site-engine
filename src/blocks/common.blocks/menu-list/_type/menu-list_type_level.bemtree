@@ -1,11 +1,11 @@
 block('menu-list').mod('type', 'level')(
-    match(function() { return this.ctx.content; }).content()(function(){
+    match(function () { return this.ctx.content; }).content()(function () {
         var levels = ['all levels'],
-            _content = this.ctx.content.map(function(item) {
+            _content = this.ctx.content.map(function (item) {
         /* console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
                         item.title, item.url, item.type, item.active, item.size);*/
 
-            if(item.type === 'group' && item.items) {
+            if (item.type === 'group' && item.items) {
 
                 levels.push(item.title);
 
@@ -17,7 +17,7 @@ block('menu-list').mod('type', 'level')(
                             elem: 'title',
                             content: item.title
                         },
-                        item.items.map(function(subitem) {
+                        item.items.map(function (subitem) {
                             return apply('item', { ctx: subitem });
                         })
                     ]
@@ -32,8 +32,8 @@ block('menu-list').mod('type', 'level')(
             content: {
                 block: 'select',
                 mix: { block: this.block, elem: 'level-select' },
-                mods : { mode : 'radio', theme : 'normal', size : 's', width: 'available' },
-                options: levels.map(function(level) {
+                mods: { mode: 'radio', theme: 'normal', size: 's', width: 'available' },
+                options: levels.map(function (level) {
                     return {
                         val: level,
                         text: level
@@ -45,7 +45,7 @@ block('menu-list').mod('type', 'level')(
         return _content;
     }),
 
-    mode('item')(function() {
+    mode('item')(function () {
         var ctx = this.ctx;
 
         return {

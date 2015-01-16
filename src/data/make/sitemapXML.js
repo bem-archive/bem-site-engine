@@ -5,20 +5,20 @@ var _ = require('lodash'),
     config = require('../config'),
     utility = require('../util');
 
-module.exports = function(obj) {
+module.exports = function (obj) {
     logger.info('Start to build "sitemap.xml" file', module);
 
     var hosts = config.get('hosts') || {},
         nodes = utility
-            .findNodesByCriteria(obj.sitemap, function() {
+            .findNodesByCriteria(obj.sitemap, function () {
                 return this.hidden && _.isString(this.url) && !/^(https?:)?\/\//.test(this.url);
             }, false)
-            .map(function(item) {
+            .map(function (item) {
                 return _.pick(item, 'url', 'hidden', 'search');
             }),
-        map = nodes.reduce(function(prev, item) {
-            Object.keys(hosts).forEach(function(lang) {
-                if(!item.hidden[lang]) {
+        map = nodes.reduce(function (prev, item) {
+            Object.keys(hosts).forEach(function (lang) {
+                if (!item.hidden[lang]) {
                     prev.push(_.extend({ loc: hosts[lang] + item.url }, item.search));
                 }
             });

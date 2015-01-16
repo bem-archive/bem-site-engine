@@ -21,7 +21,7 @@ function makeSnapshot() {
  */
  function uploadSnapshot(snapshot) {
     var conf =  config.get('model');
-    if(!conf || !conf.dir) {
+    if (!conf || !conf.dir) {
         var err = 'Target directory for data on Yandex Disk was not configured';
         logger.error(err, module);
         return vow.reject(err);
@@ -30,16 +30,16 @@ function makeSnapshot() {
     logger.debug(util.format('Start to upload snapshot %s to Yandex Disk. Please Wait ....', snapshot), module);
 
     return providers.getProviderYaDisk().makeDir({ path: path.join(conf.dir, snapshot) })
-        .then(function() {
+        .then(function () {
             return providers.getProviderYaDisk().uploadDir({
                 source: path.join('backups', snapshot),
                 target: path.join(conf.dir, snapshot)
             });
         })
-        .then(function() {
+        .then(function () {
             logger.info('Data files have been successfully uploaded', module);
         })
-        .fail(function() {
+        .fail(function () {
             logger.error('Error occur while data files upload', module);
         });
 }
@@ -55,40 +55,40 @@ function setSnapshotActive(provider, folder, version) {
     logger.info(util.format('Start to replace data files for version "%s" environment "%s"',
         version || 'latest', (folder.length ? folder : 'dev')), module);
 
-    return utility.getSnapshot(provider, version).then(function(snapshot) {
+    return utility.getSnapshot(provider, version).then(function (snapshot) {
         return vow
-            .all(constants.FILES.map(function(item) {
+            .all(constants.FILES.map(function (item) {
                 return provider.copy({
                     source: path.join(config.get('model:dir'), snapshot, item),
                     target: path.join(config.get('model:dir'), folder, item)
                 });
             }))
-            .then(function() {
+            .then(function () {
                 logger.info('Data files have been successfully replaced', module);
             })
-            .fail(function() {
+            .fail(function () {
                 logger.error('Error occur while data files replacement', module);
             });
     });
 }
 
 module.exports = {
-    makeForDevelopment: function(version) {
+    makeForDevelopment: function (version) {
         var promise = version ? vow.resolve() : makeSnapshot();
-        return promise.then(function() {
+        return promise.then(function () {
             return setSnapshotActive(providers.getProviderFile(), '', version);
         });
     },
-    makeForTesting: function(version, env) {
+    makeForTesting: function (version, env) {
         var promise = version ? vow.resolve() : makeSnapshot();
-        return promise.then(function(snapshot) {
+        return promise.then(function (snapshot) {
             return version ? vow.resolve() : uploadSnapshot(snapshot);
         })
-        .then(function() {
+        .then(function () {
             return setSnapshotActive(providers.getProviderYaDisk(), env, version);
         });
     },
-    makeForProduction: function(version, env) {
+    makeForProduction: function (version, env) {
         return setSnapshotActive(providers.getProviderYaDisk(), env, version);
     }
 };

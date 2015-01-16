@@ -2,12 +2,12 @@ var util = require('util'),
 
     _ = require('lodash'),
     vow = require('vow'),
-    api = require('github'),
+    Api = require('github'),
 
     config = require('../config'),
     logger = require('../logger');
 
-var GhApiProvider = function() {
+var GhApiProvider = function () {
     this.init();
 };
 
@@ -26,29 +26,29 @@ GhApiProvider.prototype = {
      * Initialize github api connections to public and private repositories
      * with configured credentials
      */
-    init: function() {
+    init: function () {
         logger.info('Initialize github API module', module);
 
         var ghConfig = config.get('github'),
             ghPublic = ghConfig.public,
             ghPrivate = ghConfig.private;
 
-        if(ghPublic) {
-            this.gitPublic = new api(_.extend(ghPublic, this.common));
+        if (ghPublic) {
+            this.gitPublic = new Api(_.extend(ghPublic, this.common));
 
             var auth = ghPublic.auth;
-            if(auth && auth.length) {
+            if (auth && auth.length) {
                 this.gitPublic.authenticate({
                     type: 'oauth',
                     token: auth
                 });
-            }else {
+            } else {
                 logger.warn('Github API was not authentificated', module);
             }
         }
 
-        if(ghPrivate) {
-            this.gitPrivate = new api(_.extend(ghPrivate, this.common));
+        if (ghPrivate) {
+            this.gitPrivate = new Api(_.extend(ghPrivate, this.common));
         }
 
         return this;
@@ -59,7 +59,7 @@ GhApiProvider.prototype = {
      * @param r - {Object} repository type
      * @returns {Object}
      */
-    getGit: function(r) {
+    getGit: function (r) {
         return r.type === 'private' ? this.gitPrivate : this.gitPublic;
     },
 
@@ -73,17 +73,17 @@ GhApiProvider.prototype = {
      * - path {String} relative path from the root of repository
      * @returns {*}
      */
-    load: function(options) {
+    load: function (options) {
         var def = vow.defer(),
             repository = options.repository;
         logger.debug(util.format('Load data from %s %s %s %s',
             repository.user, repository.repo, repository.ref, repository.path), module);
 
-        this.getGit(repository).repos.getContent(repository, function(err, res) {
+        this.getGit(repository).repos.getContent(repository, function (err, res) {
             if (err || !res) {
-                def.reject({res: null, repo: repository});
-            }else {
-                def.resolve({res: res, repo: repository});
+                def.reject({ res: null, repo: repository });
+            } else {
+                def.resolve({ res: res, repo: repository });
             }
         });
         return def.promise();
@@ -98,11 +98,11 @@ GhApiProvider.prototype = {
      * - branch {String} name of branch
      * @returns {*}
      */
-    isBranchExists: function(options) {
+    isBranchExists: function (options) {
         var def = vow.defer(),
             repository = options.repository;
 
-        this.getGit(repository).repos.getBranch(repository, function(err, res) {
+        this.getGit(repository).repos.getBranch(repository, function (err, res) {
             def.resolve((err || !res) ? false : true);
         });
 
@@ -118,11 +118,11 @@ GhApiProvider.prototype = {
      * - path {String} relative path from the root of repository
      * @returns {*}
      */
-    getCommits: function(options) {
+    getCommits: function (options) {
         var def = vow.defer(),
             repository = options.repository;
 
-        this.getGit(repository).repos.getCommits(repository, function(err, res) {
+        this.getGit(repository).repos.getCommits(repository, function (err, res) {
             def.resolve(res);
         });
 
@@ -137,11 +137,11 @@ GhApiProvider.prototype = {
      * - repo {String} name of repository
      * @returns {*}
      */
-    getDefaultBranch: function(options) {
+    getDefaultBranch: function (options) {
         var def = vow.defer(),
             repository = options.repository;
 
-        this.getGit(repository).repos.get(repository, function(err, res) {
+        this.getGit(repository).repos.get(repository, function (err, res) {
             def.resolve((err || !res) ? null : res.default_branch);
         });
         return def.promise();

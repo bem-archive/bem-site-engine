@@ -14,7 +14,7 @@ module.exports = {
      * Returns module which provide all operations with files on local filesystem
      * @returns {*|FileProvider}
      */
-    getProviderFile: function() {
+    getProviderFile: function () {
         providerFile = providerFile || new FileProvider();
         return providerFile;
     },
@@ -23,7 +23,7 @@ module.exports = {
      * Returns module which provide all operations via github API
      * @returns {*|GhApiProvider}
      */
-    getProviderGhApi: function() {
+    getProviderGhApi: function () {
         providerGhApi = providerGhApi || new GhApiProvider();
         return providerGhApi;
     },
@@ -32,7 +32,7 @@ module.exports = {
      * Returns module which provides operations via https protocol
      * @returns {*|GhHttpsProvider}
      */
-    getProviderGhHttps: function() {
+    getProviderGhHttps: function () {
         providerGhHttps = providerGhHttps || new GhHttpsProvider();
         return providerGhHttps;
     },
@@ -41,9 +41,8 @@ module.exports = {
      * Returns module which provides operations via Yandex Disk API
      * @returns {*|YaDiskProvider}
      */
-    getProviderYaDisk: function() {
+    getProviderYaDisk: function () {
         providerYaDisk = providerYaDisk || new YaDiskProvider();
         return providerYaDisk;
     }
 };
-

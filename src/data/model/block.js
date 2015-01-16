@@ -14,7 +14,7 @@ var util = require('util'),
  * @param blocksHash - {Object} blocks data hash
  * @constructor
  */
-var BlockNode = function(parent, routes, version, level, block, blocksHash) {
+var BlockNode = function (parent, routes, version, level, block, blocksHash) {
     this.setTitle(block)
         .setSource(version, level, block, blocksHash)
         .processRoute(routes, parent, {
@@ -35,8 +35,8 @@ BlockNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @param block - {Object} block
  * @returns {BlockNode}
  */
-BlockNode.prototype.setTitle = function(block) {
-    this.title = utility.getLanguages().reduce(function(prev, lang) {
+BlockNode.prototype.setTitle = function (block) {
+    this.title = utility.getLanguages().reduce(function (prev, lang) {
         prev[lang] = block.name;
         return prev;
     }, {});
@@ -48,7 +48,7 @@ BlockNode.prototype.setTitle = function(block) {
  * @param source - {Object} source
  * @returns {BlockNode}
  */
-BlockNode.prototype.setSource = function(version, level, block, blocksHash) {
+BlockNode.prototype.setSource = function (version, level, block, blocksHash) {
     var source = {
             data: block.data,
             jsdoc: block.jsdoc
@@ -72,7 +72,7 @@ BlockNode.prototype.setSource = function(version, level, block, blocksHash) {
  * Sets view for node
  * @returns {BlockNode}
  */
-BlockNode.prototype.setView = function() {
+BlockNode.prototype.setView = function () {
     this.view = this.VIEW.BLOCK;
     return this;
 };
@@ -81,7 +81,7 @@ BlockNode.prototype.setView = function() {
  * Sets class for node
  * @returns {BlockNode}
  */
-BlockNode.prototype.setClass = function() {
+BlockNode.prototype.setClass = function () {
     this.class = 'block';
     return this;
 };

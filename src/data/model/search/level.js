@@ -1,4 +1,4 @@
-var Level = function(name) {
+var Level = function (name) {
     return this.init(name);
 };
 
@@ -11,7 +11,7 @@ Level.prototype = {
      * Initialize level object
      * @param name - {String} level name
      */
-    init: function(name) {
+    init: function (name) {
         this.name = name.replace(/\.(sets|blocks)/, '');
         this.blocks = [];
     },
@@ -21,7 +21,7 @@ Level.prototype = {
      * @param block - {String} name of block
      * @returns {Level}
      */
-    addBlock: function(block) {
+    addBlock: function (block) {
         this.blocks.push(block);
         return this;
     }

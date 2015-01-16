@@ -11,7 +11,7 @@ var utility = require('../util'),
  * @param index - {Number}
  * @constructor
  */
-var VersionNode = function(parent, routes, version, search, blocksHash, index) {
+var VersionNode = function (parent, routes, version, search, blocksHash, index) {
     this.setTitle(version)
         .setSource(version)
         .processRoute(routes, parent, {
@@ -31,8 +31,8 @@ VersionNode.prototype = Object.create(nodes.dynamic.DynamicNode.prototype);
  * @param version - {Object} library version
  * @returns {VersionNode}
  */
-VersionNode.prototype.setTitle = function(version) {
-    this.title = utility.getLanguages().reduce(function(prev, lang) {
+VersionNode.prototype.setTitle = function (version) {
+    this.title = utility.getLanguages().reduce(function (prev, lang) {
         prev[lang] = version.ref.replace(/\//g, '-');
         return prev;
     }, {});
@@ -44,13 +44,13 @@ VersionNode.prototype.setTitle = function(version) {
  * @param version - {Object} library version
  * @returns {VersionNode}
  */
-VersionNode.prototype.setSource = function(version) {
+VersionNode.prototype.setSource = function (version) {
     var readme = version.docs ? version.docs.readme : {
-        title: { en: 'Readme', ru: 'Readme'},
+        title: { en: 'Readme', ru: 'Readme' },
         content: version.readme
     };
 
-    this.source = utility.getLanguages().reduce(function(prev, lang) {
+    this.source = utility.getLanguages().reduce(function (prev, lang) {
         prev[lang] = {
             title: version.repo,
             deps: version.deps,
@@ -67,7 +67,7 @@ VersionNode.prototype.setSource = function(version) {
  * Sets class for node
  * @returns {VersionNode}
  */
-VersionNode.prototype.setClass = function() {
+VersionNode.prototype.setClass = function () {
     this.class = 'version';
     return this;
 };
@@ -80,10 +80,10 @@ VersionNode.prototype.setClass = function() {
  * @param blocksHash - {Object} blocks data hash
  * @returns {VersionNode}
  */
-VersionNode.prototype.addItems = function(routes, version, search, blocksHash, index) {
+VersionNode.prototype.addItems = function (routes, version, search, blocksHash, index) {
     var sl = search.libraries[version.repo];
 
-    //TODO fix this.source.ru.content !
+    // TODO fix this.source.ru.content !
     sl = sl || new nodes.search.Library(version.repo);
     sl.addVersion(new nodes.search.Version(version.ref, this.url, this.source.ru.content, !index));
     search.libraries[version.repo] = sl;
@@ -92,7 +92,7 @@ VersionNode.prototype.addItems = function(routes, version, search, blocksHash, i
 
     var docs = version.docs || {
         changelog: {
-            title: { en: 'Changelog', ru: 'История изменений'},
+            title: { en: 'Changelog', ru: 'История изменений' },
             content: version.changelog
         },
         migration: {
@@ -105,36 +105,36 @@ VersionNode.prototype.addItems = function(routes, version, search, blocksHash, i
         }
     };
 
-    //add doc nodes to library version
+    // add doc nodes to library version
     Object.keys(docs)
-        .filter(function(item) {
-            return 'readme' !== item;
+        .filter(function (item) {
+            return item !== 'readme';
         })
-        .forEach(function(item) {
-            //verify existed docs
-            if(!docs[item] || !docs[item].content) {
+        .forEach(function (item) {
+            // verify existed docs
+            if (!docs[item] || !docs[item].content) {
                 return;
             }
             this.items.push(new nodes.post.PostNode(this, routes, version, docs[item], item));
         }, this);
 
-    //add custom nodes to library version
-    if(version.custom) {
-        version.custom.forEach(function(item) {
+    // add custom nodes to library version
+    if (version.custom) {
+        version.custom.forEach(function (item) {
             item.url += '#';
             this.items.push(new nodes.base.BaseNode(item, this));
         }, this);
     }
 
     var levels = version.levels;
-    if(!levels) return this;
+    if (!levels) return this;
 
-    //add level nodes to library version
-    levels.forEach(function(level) {
+    // add level nodes to library version
+    levels.forEach(function (level) {
         level.name = level.name.replace(/\.(sets|docs)$/, '');
 
-        //verify existed blocks for level
-        if(level.blocks) {
+        // verify existed blocks for level
+        if (level.blocks) {
             this.items.push(new nodes.level.LevelNode(this, routes, version, level, search, blocksHash));
         }
     }, this);

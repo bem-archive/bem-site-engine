@@ -1,9 +1,9 @@
-modules.define('page', ['i-bem__dom', 'jquery', 'highlightjs'], function(provide, BEMDOM, $, hljs) {
+modules.define('page', ['i-bem__dom', 'jquery', 'highlightjs'], function (provide, BEMDOM, $, hljs) {
 
 provide(BEMDOM.decl(this.name, {
     onSetMod: {
         js: {
-            inited: function() {
+            inited: function () {
 
                 var userAgent = navigator.userAgent;
 
@@ -11,8 +11,8 @@ provide(BEMDOM.decl(this.name, {
                     window.legacyIE = true;
                 }
 
-                if(!window.legacyIE) {
-                    $('pre code').each(function(idx, el) {
+                if (!window.legacyIE) {
+                    $('pre code').each(function (idx, el) {
                         hljs.highlightBlock(el);
                     });
                 }
@@ -22,7 +22,7 @@ provide(BEMDOM.decl(this.name, {
         }
     },
 
-    _onClick: function() {
+    _onClick: function () {
         this.toggleMod('fullscreen');
     },
 
@@ -31,7 +31,7 @@ provide(BEMDOM.decl(this.name, {
      * @private
      * @returns {Boolean}
      */
-    _isTouch: function() {
+    _isTouch: function () {
         /* Touch detection idea by Modernizr */
         /* jshint ignore:start */
         if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
@@ -43,8 +43,8 @@ provide(BEMDOM.decl(this.name, {
     }
 },
 {
-    live: function() {
-        this.liveBindTo('fullscreen', 'pointerclick', function() {
+    live: function () {
+        this.liveBindTo('fullscreen', 'pointerclick', function () {
             this._onClick();
         });
 

@@ -1,7 +1,7 @@
 var nconf = require('nconf'),
     path = require('path');
 
-modules.define('config', function(provide) {
+modules.define('config', function (provide) {
 
     nconf
         .argv()
@@ -12,7 +12,7 @@ modules.define('config', function(provide) {
         'current/app',
         'common/common',
         'common/app'
-    ].forEach(function(item) {
+    ].forEach(function (item) {
         nconf.add(item,   {
             type: 'file',
             file: path.resolve(process.cwd(), 'configs', (item + '.json'))

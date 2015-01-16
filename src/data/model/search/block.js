@@ -12,7 +12,7 @@ var _ = require('lodash');
  * @returns {Block}
  * @constructor
  */
-var Block = function(name, url, lib, version, level, data, jsdoc) {
+var Block = function (name, url, lib, version, level, data, jsdoc) {
     return this.init(name, url, lib, version, level, data, jsdoc);
 };
 
@@ -38,7 +38,7 @@ Block.prototype = {
      * @param jsdoc - {Object/String} jsdoc
      * @returns {Block}
      */
-    init: function(name, url, lib, version, level, data, jsdoc) {
+    init: function (name, url, lib, version, level, data, jsdoc) {
         this.name = name;
         this.link = url;
         this.lib = lib;
@@ -54,8 +54,8 @@ Block.prototype = {
      * @param data - {Object}
      * @returns {Block}
      */
-    processData: function(data) {
-        if(!data) {
+    processData: function (data) {
+        if (!data) {
             this.elems = [];
             this.mods = [];
             this.doc = '';
@@ -69,11 +69,11 @@ Block.prototype = {
         this.mods = (data.mods && _.isArray(data.mods)) ?
             _.pluck(data.mods, 'name') : [];
 
-        if(data.description && _.isArray(data.description)) {
+        if (data.description && _.isArray(data.description)) {
             var doc = (_.pluck(data.description, 'content'))[0];
             this.doc = _.isString(doc) ? doc : '';
-            //this.doc = (_.pluck(data.description, 'content'))[0];
-        }else {
+            // this.doc = (_.pluck(data.description, 'content'))[0];
+        } else {
             this.doc = '';
         }
 

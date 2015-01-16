@@ -1,8 +1,8 @@
-modules.define('search-panel', ['i-bem__dom', 'jquery', 'events__channels'], function(provide, BEMDOM, $, channels) {
+modules.define('search-panel', ['i-bem__dom', 'jquery', 'events__channels'], function (provide, BEMDOM, $, channels) {
     provide(BEMDOM.decl(this.name, {
         onSetMod: {
             js: {
-                inited: function() {
+                inited: function () {
                     this._spin = this.findBlockInside('spin', 'spin');
                     this._form = this.findBlockInside({ block: 'search-form', modName: 'type', modVal: 'default' });
 
@@ -10,23 +10,23 @@ modules.define('search-panel', ['i-bem__dom', 'jquery', 'events__channels'], fun
                 }
             },
 
-            loading: function(modName, modVal) {
+            loading: function (modName, modVal) {
                 this._spin.setMod('progress', modVal);
                 this.setMod(this.elem('content'), 'loading', modVal);
             },
 
             state: {
-                open: function() {
+                open: function () {
                     this._form.activate();
                 }
             }
         },
 
-        _toggle: function() {
+        _toggle: function () {
             this.setMod('state', 'open');
         },
 
-        _sendRequest: function(e, data) {
+        _sendRequest: function (e, data) {
             this._abortRequest();
             this.setMod('loading');
 
@@ -39,16 +39,16 @@ modules.define('search-panel', ['i-bem__dom', 'jquery', 'events__channels'], fun
             });
         },
 
-        _abortRequest: function() {
+        _abortRequest: function () {
             this._xhr && this._xhr.abort();
         },
 
-        _onSuccess: function(result) {
+        _onSuccess: function (result) {
             this._updateContent(result);
             this.delMod('loading');
         },
 
-        _updateContent: function(html) {
+        _updateContent: function (html) {
             BEMDOM.update(this.elem('content'), html);
         }
     }));

@@ -1,6 +1,6 @@
 block('block-example')(
 
-    def()(function() {
+    def()(function () {
         var enb = this.ctx.builder && this.ctx.builder.enb,
             prefix = this.ctx.prefix,
             example = this.ctx.example,
@@ -10,7 +10,7 @@ block('block-example')(
             url,
             urlBemhtml;
 
-        if(enb) {
+        if (enb) {
             var path = (example.url || example.path).replace(/\.(ru|en)/, ''),
                 parts = path.split('/'),
                 data = this.data,
@@ -22,7 +22,7 @@ block('block-example')(
             name = parts[parts.length - 1];
 
             // check what data structure
-            if(parts[parts.length - 1] === parts[parts.length - 2]) {
+            if (parts[parts.length - 1] === parts[parts.length - 2]) {
                 // old structure enb-bem-docs
                 url = prefix + '/' + path + '.html';
             } else {
@@ -31,8 +31,8 @@ block('block-example')(
                 bemjson = prefix + '/' + path + '/' + name + '.bemjson.js';
 
                 // get source bemjson if it inline example
-                examplesData.forEach(function(example){
-                    if(example.source && example.name === name) {
+                examplesData.forEach(function (example) {
+                    if (example.source && example.name === name) {
                         bemjson = example.source;
                         urlBemhtml = prefix + '/' + path + '/' + name + '.bemhtml.js';
                     }
@@ -54,7 +54,7 @@ block('block-example')(
         });
     }),
 
-    content()(function() {
+    content()(function () {
         var title = this._title,
             name = this._name,
             url = this._url;
@@ -75,7 +75,7 @@ block('block-example')(
                     },
                     {
                         block: 'dropdown',
-                        mods: { switcher : 'link', theme: 'normal' },
+                        mods: { switcher: 'link', theme: 'normal' },
                         mix: [
                             { block: 'block-example', elem: 'qr' },
                             { block: 'block-example', elem: 'link' }
@@ -84,7 +84,7 @@ block('block-example')(
                         popup: {
                             block: 'image',
                             url: 'https://disk.yandex.net/qr/?format=svg&text=' + 'http://' + req.headers.host + url,
-                            width : 220
+                            width: 220
                         }
                     },
                     {
@@ -110,7 +110,7 @@ block('block-example')(
         ];
     }),
 
-    match(function() { return !this._bemjson; })(
+    match(function () { return !this._bemjson; })(
         elem('source-switcher')(
             def()(false)
         ),

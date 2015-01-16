@@ -1,6 +1,9 @@
 var Susanin = require('susanin');
 
-modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 'appError'], function(provide, config, logger, constants, model, error) {
+modules.define(
+    'middleware__router',
+    ['config', 'logger', 'constants', 'model', 'appError'],
+    function (provide, config, logger, constants, model, error) {
 
     logger = logger(module);
 
@@ -8,39 +11,39 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
 
     provide({
 
-        init: function() {
-            router = model.getRoutes().reduce(function(prev, item) {
+        init: function () {
+            router = model.getRoutes().reduce(function (prev, item) {
                 prev.addRoute(item);
                 return prev;
             }, new Susanin());
         },
 
-        run: function() {
+        run: function () {
             this.init();
 
-            var self = this;
+            var _this = this;
 
-            return function(req, res, next) {
+            return function (req, res, next) {
                 var url, route;
                 req.__data = req.__data || {};
 
                 logger.debug('get node by request %s', req.path);
 
-                url = self.beforeFindNode(req, res, decodeURIComponent(req.path));
+                url = _this.beforeFindNode(req, res, decodeURIComponent(req.path));
 
-                if(!url) return;
+                if (!url) return;
 
                 route = router.findFirst(url);
 
-                if(!route) {
+                if (!route) {
                     throw error.HttpError.createError(404);
                 }
 
                 req.route = route[0].getName();
                 req.params = route[1];
 
-                return self.findNode(req, url, function(result) {
-                    return self.afterFindNode(result, req, res, next);
+                return _this.findNode(req, url, function (result) {
+                    return _this.afterFindNode(result, req, res, next);
                 });
             };
         },
@@ -52,7 +55,7 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
          * @param callback - {Function} function that should be called for result
          * @returns {*}
          */
-        findNode: function(req, url, callback) {
+        findNode: function (req, url, callback) {
 
             var result = null;
 
@@ -62,32 +65,32 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
              * @param url - {String} url
              * @returns {Object} node
              */
-            var traverseTreeNodes = function(node, url) {
-                //console.log('url %s nodeUrl %s', url, node.url);
-                if(node.url === url) {
-                    if(node.hidden[req.lang]) {
+            var traverseTreeNodes = function (node, url) {
+                // console.log('url %s nodeUrl %s', url, node.url);
+                if (node.url === url) {
+                    if (node.hidden[req.lang]) {
                         throw error.HttpError.createError(404);
                     }
                     result = node;
                     return result;
                 }
 
-                //deep into node items
-                if(!result && node.items) {
-                    node.items.some(function(item) {
+                // deep into node items
+                if (!result && node.items) {
+                    node.items.some(function (item) {
                         return traverseTreeNodes(item, url);
                     });
                 }
             };
 
-            model.getSitemap().some(function(item) {
+            model.getSitemap().some(function (item) {
                 return traverseTreeNodes(item, url);
             });
 
-            if(result) {
+            if (result) {
                 logger.debug('find node %s %s', result.id, result.source);
                 return callback ? callback.call(null, result) : result;
-            }else {
+            } else {
                 logger.error('cannot find node by url %s', url);
                 throw error.HttpError.createError(404);
             }
@@ -99,20 +102,20 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
          * @param url - {String} request url
          * @returns {String} processed url
          */
-        beforeFindNode: function(req, res, url) {
-            //remove level suffixes
-            //Remove tab parts of url before processing it
-            //Remove trailing slash for url
+        beforeFindNode: function (req, res, url) {
+            // remove level suffixes
+            // Remove tab parts of url before processing it
+            // Remove trailing slash for url
             url = url.replace(/\.(sets|docs)/, '');
             url = url.replace(/(\/docs\/)|(\/jsdoc\/)|(\/examples\/)?/gi, '');
             url = url !== '/' ? url.replace(/(\/)+$/, '') : url;
 
-            //Detect /current/ part in url and replace it by actual library version
-            if(/\/current\/?/.test(url)) {
+            // Detect /current/ part in url and replace it by actual library version
+            if (/\/current\/?/.test(url)) {
                 var libUrl = url.replace(/\/current\/?.*/, '');
 
                 url = this.findNode(req, libUrl, function (result) {
-                    if(!result || !result.items || !result.items.length) {
+                    if (!result || !result.items || !result.items.length) {
                         return libUrl;
                     }
 
@@ -135,15 +138,15 @@ modules.define('middleware__router', ['config', 'logger', 'constants', 'model', 
          * @param res - {Object} response object
          * @returns {boolean}
          */
-        afterFindNode: function(result, req, res, next) {
-            if(result.items && result.items.length) {
-                //redirect to newest library version
-                if(result.lib) {
+        afterFindNode: function (result, req, res, next) {
+            if (result.items && result.items.length) {
+                // redirect to newest library version
+                if (result.lib) {
                     return res.redirect(301, result.items[0].url);
                 }
 
-                //redirect to first post of child posts
-                if(result.TYPE.GROUP === result.type || result.VIEW.POSTS === result.view) {
+                // redirect to first post of child posts
+                if (result.TYPE.GROUP === result.type || result.VIEW.POSTS === result.view) {
                     return res.redirect(301, result.items.filter(function (item) {
                             return !item.hidden[req.lang];
                         })[0].url

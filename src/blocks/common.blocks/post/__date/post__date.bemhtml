@@ -1,9 +1,9 @@
 block('post').elem('date')(
 
-    match(function(){ return !this.ctx.createDate && !this.ctx.editDate; })(
+    match(function () { return !this.ctx.createDate && !this.ctx.editDate; })(
         def()(false)),
 
-    content()(function(){
+    content()(function () {
         var ctx = this.ctx,
             actionType = ctx.editDate ? 'editDate' : 'createDate';
 

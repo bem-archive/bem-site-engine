@@ -1,5 +1,5 @@
 block('search-button').mod('text', true)(
-    content()(function() {
+    content()(function () {
         return [
             applyNext(),
             {

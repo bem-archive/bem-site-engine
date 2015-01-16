@@ -10,7 +10,7 @@ var util = require('util'),
  * @param people - {Object} people data
  * @constructor
  */
-var PersonNode = function(parent, routes, key, people) {
+var PersonNode = function (parent, routes, key, people) {
     this
         .setTitle(people[key])
         .processRoute(routes, parent, {
@@ -29,8 +29,8 @@ PersonNode.prototype = Object.create(DynamicNode.prototype);
  * @param person - {Object} object data for person
  * @returns {PersonNode}
  */
-PersonNode.prototype.setTitle = function(person) {
-    this.title = utility.getLanguages().reduce(function(prev, lang) {
+PersonNode.prototype.setTitle = function (person) {
+    this.title = utility.getLanguages().reduce(function (prev, lang) {
         prev[lang] = util.format('%s %s', person[lang]['firstName'], person[lang]['lastName']);
         return prev;
     }, {});
@@ -41,7 +41,7 @@ PersonNode.prototype.setTitle = function(person) {
  * Sets view for node
  * @returns {PersonNode}
  */
-PersonNode.prototype.setView = function() {
+PersonNode.prototype.setView = function () {
     this.view = this.VIEW.AUTHOR;
     return this;
 };
@@ -50,7 +50,7 @@ PersonNode.prototype.setView = function() {
  * Sets class for node
  * @returns {PersonNode}
  */
-PersonNode.prototype.setClass = function() {
+PersonNode.prototype.setClass = function () {
     this.class = 'person';
     return this;
 };

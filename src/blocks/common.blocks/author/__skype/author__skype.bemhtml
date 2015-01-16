@@ -2,7 +2,7 @@ block('author').elem('skype')(
 
     def()(match(function () { return !this.ctx.content; })(false)),
 
-    content()(function() {
+    content()(function () {
         return [
             {
                 block: 'author',

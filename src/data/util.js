@@ -14,7 +14,7 @@ var util = require('util'),
  * @param conf - {Object} configuration object
  * @returns {String} html string
  */
-exports.mdToHtml = function(content, conf) {
+exports.mdToHtml = function (content, conf) {
     return md(content, _.extend({
         gfm: true,
         pedantic: false,
@@ -27,13 +27,13 @@ exports.mdToHtml = function(content, conf) {
  * @param  {String} dateStr - staring date in dd-mm-yyy format
  * @return {Number} date in milliseconds
  */
-exports.dateToMilliseconds = function(dateStr) {
+exports.dateToMilliseconds = function (dateStr) {
     var re = /[^\w]+|_+/,
         date = new Date(),
         dateParse = dateStr.split(re),
         dateMaskFrom = 'dd-mm-yyyy'.split(re);
 
-    dateMaskFrom.forEach(function(elem, indx) {
+    dateMaskFrom.forEach(function (elem, indx) {
         switch (elem) {
             case 'dd':
                 date.setDate(dateParse[indx]);
@@ -43,12 +43,12 @@ exports.dateToMilliseconds = function(dateStr) {
                 break;
             default:
                 if (dateParse[indx].length === 2) {
-                    if(date.getFullYear() % 100 >= dateParse[indx]) {
+                    if (date.getFullYear() % 100 >= dateParse[indx]) {
                         date.setFullYear('20' + dateParse[indx]);
-                    }else {
+                    } else {
                         date.setFullYear('19' + dateParse[indx]);
                     }
-                }else {
+                } else {
                     date.setFullYear(dateParse[indx]);
                 }
         }
@@ -63,44 +63,43 @@ exports.dateToMilliseconds = function(dateStr) {
  * @param b - {String} second tag value
  * @returns {Number}
  */
-exports.sortLibraryVerions = function(a, b) {
-
+exports.sortLibraryVerions = function (a, b) {
 
     var BRANCHES = ['master', 'dev'],
         VERSION_REGEXP = /^\d+\.\d+\.\d+$/;
 
-    if(BRANCHES.indexOf(a) !== -1) {
+    if (BRANCHES.indexOf(a) !== -1) {
         return 1;
     }
 
-    if(BRANCHES.indexOf(b) !== -1) {
+    if (BRANCHES.indexOf(b) !== -1) {
         return -1;
     }
 
     a = semver.clean(a);
     b = semver.clean(b);
 
-    if(VERSION_REGEXP.test(a) && VERSION_REGEXP.test(b)) {
+    if (VERSION_REGEXP.test(a) && VERSION_REGEXP.test(b)) {
         return semver.rcompare(a, b);
     }
 
-    if(VERSION_REGEXP.test(a)) {
+    if (VERSION_REGEXP.test(a)) {
         return -1;
     }
 
-    if(VERSION_REGEXP.test(b)) {
+    if (VERSION_REGEXP.test(b)) {
         return 1;
     }
 
-    if(semver.valid(a) && semver.valid(b)) {
+    if (semver.valid(a) && semver.valid(b)) {
         return semver.rcompare(a, b);
     }
 
-    if(semver.valid(a)) {
+    if (semver.valid(a)) {
         return -1;
     }
 
-    if(semver.valid(b)) {
+    if (semver.valid(b)) {
         return 1;
     }
 
@@ -113,14 +112,14 @@ exports.sortLibraryVerions = function(a, b) {
  * @param tree - {Object} sitemap object with removed circular references
  * @returns {Object}
  */
-exports.removeCircularReferences = function(tree) {
-    var traverseTreeNodes = function(node) {
-        if(node.parent) {
+exports.removeCircularReferences = function (tree) {
+    var traverseTreeNodes = function (node) {
+        if (node.parent) {
             node.parent = node.parent.id;
         }
 
-        if(node.items) {
-            node.items = node.items.map(function(item) {
+        if (node.items) {
+            node.items = node.items.map(function (item) {
                 return traverseTreeNodes(item);
             });
         }
@@ -128,7 +127,7 @@ exports.removeCircularReferences = function(tree) {
         return node;
     };
 
-    return tree.map(function(item) {
+    return tree.map(function (item) {
         return traverseTreeNodes(item);
     });
 };
@@ -140,35 +139,35 @@ exports.removeCircularReferences = function(tree) {
  * @param onlyFirst - {Boolean} flag for find only first node
  * @returns {*}
  */
-exports.findNodesByCriteria = function(sitemap, criteria, onlyFirst) {
+exports.findNodesByCriteria = function (sitemap, criteria, onlyFirst) {
 
     var result = [];
 
-    if(!_.isObject(sitemap)) {
+    if (!_.isObject(sitemap)) {
         return result;
     }
 
-    if(!_.isFunction(criteria)) {
+    if (!_.isFunction(criteria)) {
         return result;
     }
 
-    var isFound = function() {
+    var isFound = function () {
             return onlyFirst && result.length;
         },
-        traverseTreeNodes = function(node) {
-            if(criteria.apply(node)) {
+        traverseTreeNodes = function (node) {
+            if (criteria.apply(node)) {
                 result.push(node);
             }
 
-            if(!isFound() && node.items) {
-                node.items.forEach(function(item) {
+            if (!isFound() && node.items) {
+                node.items.forEach(function (item) {
                     traverseTreeNodes(item);
                 });
             }
         };
 
-    sitemap.forEach(function(node) {
-        if(isFound()) {
+    sitemap.forEach(function (node) {
+        if (isFound()) {
             return;
         }
         traverseTreeNodes(node);
@@ -183,7 +182,7 @@ exports.findNodesByCriteria = function(sitemap, criteria, onlyFirst) {
  * @param collection - {Array}
  * @returns {Array}
  */
-exports.uniqCompact = function(collection) {
+exports.uniqCompact = function (collection) {
     return _.uniq(_.compact(collection));
 };
 
@@ -191,7 +190,7 @@ exports.uniqCompact = function(collection) {
  * Returns array of available languages
  * @returns {Array}
  */
-exports.getLanguages = function() {
+exports.getLanguages = function () {
     return config.get('languages') || [config.get('defaultLanguage') || 'en'];
 };
 
@@ -199,7 +198,7 @@ exports.getLanguages = function() {
  * Returns name of snapshot as formatted current date
  * @returns {String}
  */
-exports.getSnapshotName = function() {
+exports.getSnapshotName = function () {
     var date = new Date();
 
     return util.format('snapshot_%s:%s:%s-%s:%s:%s',
@@ -218,48 +217,48 @@ exports.getSnapshotName = function() {
  * @param {String|Number} version - version of snapshot
  * @returns {*}
  */
-exports.getSnapshot = function(provider, version) {
+exports.getSnapshot = function (provider, version) {
     function mapFilterAndSortSnapshotFolderNames(arr) {
         return arr
-            .map(function(snapshot) {
+            .map(function (snapshot) {
                 return _.isObject(snapshot) ? snapshot.displayName : snapshot;
             })
-            .filter(function(snapshot) {
+            .filter(function (snapshot) {
                 return /snapshot_\d{1,2}:\d{1,2}:\d{1,4}-\d{1,2}:\d{1,2}:\d{1,2}/.test(snapshot);
             })
-            .sort(function(a, b) {
+            .sort(function (a, b) {
                 var re = /snapshot_(\d{1,2}):(\d{1,2}):(\d{1,4})-(\d{1,2}):(\d{1,2}):(\d{1,2})/;
                 a = a.match(re);
                 b = b.match(re);
-                a = new Date(a[3], a[2]-1, a[1], a[4], a[5], a[6], 0);
-                b = new Date(b[3], b[2]-1, b[1], b[4], b[5], b[6], 0);
+                a = new Date(a[3], a[2] - 1, a[1], a[4], a[5], a[6], 0);
+                b = new Date(b[3], b[2] - 1, b[1], b[4], b[5], b[6], 0);
                 return b.getTime() - a.getTime();
             });
     }
 
-    if(!version || 'latest' === version) {
+    if (!version || version === 'latest') {
         version = 0;
     }
-    if('previous' === version) {
+    if (version === 'previous') {
         version = -1;
     }
 
     return provider
         .listDir({ path: path.join(config.get('model:dir')) })
-        .then(function(snapshots) {
+        .then(function (snapshots) {
             var result;
             snapshots = mapFilterAndSortSnapshotFolderNames(snapshots);
 
-            if(_.isNumber(+version) && !_.isNaN(+version)) {
-                result = snapshots[(-1)*(+version)];
+            if (_.isNumber(+version) && !_.isNaN(+version)) {
+                result = snapshots[(-1) * (+version)];
 
-                if(!result) {
+                if (!result) {
                     logger.error(util.format('There no available snapshots for rollback step %s', +version), module);
                 }
-            }else {
-                if(snapshots.indexOf(version) < 0) {
+            } else {
+                if (snapshots.indexOf(version) < 0) {
                     logger.error(util.format('Snapshot with name %s was not found in list of snapshots', version), module);
-                }else {
+                } else {
                     result = version;
                 }
             }

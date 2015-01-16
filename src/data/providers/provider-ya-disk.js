@@ -6,7 +6,7 @@ var util = require('util'),
     logger = require('../logger'),
     config = require('../config');
 
-var YaDiskProvider = function() {
+var YaDiskProvider = function () {
     this.init();
 };
 
@@ -17,14 +17,14 @@ YaDiskProvider.prototype = {
     /**
      * Initialize Yandex Disk API with configuration
      */
-    init: function() {
+    init: function () {
         logger.debug('Initialize Yandex Disk provider', module);
         try {
             this.disk = new disk.YandexDisk(
                 config.get('yandexApi:login'),
                 config.get('yandexApi:password')
             );
-        }catch(err) {
+        } catch (err) {
             logger.error(util.format('Can not initialize Yandex Disk API %s', err.message), module);
         }
     },
@@ -35,7 +35,7 @@ YaDiskProvider.prototype = {
      * - path {String} path to file
      * @returns {*}
      */
-    load: function(options) {
+    load: function (options) {
         logger.debug(util.format('load file from %s', options.path), module);
         var def = vow.defer();
         this.disk.readFile(options.path, 'utf8', function (err, content) {
@@ -52,10 +52,10 @@ YaDiskProvider.prototype = {
      * @param options
      * @returns {*}
      */
-    downloadFile: function(options) {
+    downloadFile: function (options) {
         logger.debug(util.format('download file from %s to %s', options.source, options.target), module);
         var def = vow.defer();
-        this.disk.downloadFile(options.source, options.target, function(err) {
+        this.disk.downloadFile(options.source, options.target, function (err) {
             err ? def.reject(err) : def.resolve();
         });
         return def.promise();
@@ -68,10 +68,10 @@ YaDiskProvider.prototype = {
      * - target {String} path to target directory
      * @returns {*}
      */
-    uploadDir: function(options) {
+    uploadDir: function (options) {
         logger.debug(util.format('upload directory from %s to %s', options.source, options.target), module);
         var def = vow.defer();
-        this.disk.uploadDir(options.source, options.target, function(err) {
+        this.disk.uploadDir(options.source, options.target, function (err) {
             err ? def.reject(err) : def.resolve();
         });
         return def.promise();
@@ -84,16 +84,16 @@ YaDiskProvider.prototype = {
      * - data {String} content for file
      * @returns {*}
      */
-    save: function(options) {
-        var self = this,
+    save: function (options) {
+        var _this = this,
             def = vow.defer();
 
         logger.debug(util.format('save data to %s', options.path), module);
-        this.disk.writeFile(options.path, options.data, 'utf8', function(err) {
-            if(err) {
+        this.disk.writeFile(options.path, options.data, 'utf8', function (err) {
+            if (err) {
                 def.reject(err);
             }
-            self.disk.exists(options.path, function(err, exists) {
+            _this.disk.exists(options.path, function (err, exists) {
                 (err || !exists) ? def.reject(err) : def.resolve(exists);
             });
         });
@@ -108,10 +108,10 @@ YaDiskProvider.prototype = {
      * - target {String} path to target file
      * @returns {*}
      */
-    copy: function(options) {
+    copy: function (options) {
         logger.debug(util.format('copy files from %s to %s', options.source, options.target), module);
         var def = vow.defer();
-        this.disk.copy(options.source, options.target, function(err) {
+        this.disk.copy(options.source, options.target, function (err) {
             err ? def.reject(err) : def.resolve();
         });
         return def.promise();
@@ -123,10 +123,10 @@ YaDiskProvider.prototype = {
      * - path {String} path to directory
      * @returns {*}
      */
-    makeDir: function(options) {
+    makeDir: function (options) {
         logger.debug(util.format('make directory %s', options.path), module);
         var def = vow.defer();
-        this.disk.mkdir(options.path, function(err) {
+        this.disk.mkdir(options.path, function (err) {
             err ? def.reject(err) : def.resolve();
         });
         return def.promise();
@@ -138,10 +138,10 @@ YaDiskProvider.prototype = {
      * - path {String} path to directory
      * @returns {*}
      */
-    listDir: function(options) {
+    listDir: function (options) {
         logger.debug(util.format('read content of directory %s', options.path), module);
         var def = vow.defer();
-        this.disk.readdir(options.path, function(err, result) {
+        this.disk.readdir(options.path, function (err, result) {
             (err || !result) ? def.reject(err) : def.resolve(result);
         });
         return def.promise();

@@ -9,22 +9,22 @@ var util = require('util'),
  * Loads people data from github repo
  * @returns {Object} people hash
  */
-module.exports = function(obj) {
+module.exports = function (obj) {
     logger.info('Load all people start', module);
 
     var err,
         pr = config.get('github:people');
 
-    if(!pr) {
+    if (!pr) {
         err = 'Path to people data file has not been set in application configuration';
     }
 
-    if(!err) {
+    if (!err) {
         pr = pr.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
 
         if (!pr) {
             err = 'Path to repository has invalid format';
-        }else {
+        } else {
             pr = {
                 host: pr[1],
                 user: pr[2],
@@ -37,7 +37,7 @@ module.exports = function(obj) {
         }
     }
 
-    if(err) {
+    if (err) {
         logger.warn(err);
         return vow.resolve(obj);
     }
@@ -45,23 +45,23 @@ module.exports = function(obj) {
     return providers.getProviderGhApi()
         .load({ repository: pr })
         .then(
-            function(result) {
+            function (result) {
                 try {
                     logger.info('People successfully loaded', module);
 
                     result = JSON.parse((new Buffer(result.res.content, 'base64')).toString());
-                    obj.people = Object.keys(result).reduce(function(prev, key) {
+                    obj.people = Object.keys(result).reduce(function (prev, key) {
                         prev[key] = result[key];
                         return prev;
                     }, {});
                     return obj;
-                }catch(err) {
+                } catch (err) {
                     logger.error('Error occur while parsing people data', module);
                     return {};
                 }
             }
         )
-        .fail(function(err) {
+        .fail(function (err) {
             logger.error(util.format('Error while loading people %s', err), module);
         });
 };

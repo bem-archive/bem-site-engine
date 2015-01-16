@@ -1,5 +1,5 @@
 block('block-example').elem('blank')(
-    def()(function() {
+    def()(function () {
         var ctx = this.ctx;
 
         return applyCtx({

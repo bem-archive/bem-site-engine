@@ -2,7 +2,7 @@ block('author').mod('view', 'full')(
 
     mix()({ block: 'island' }),
 
-    content()(function() {
+    content()(function () {
         return [
             {
                 elem: 'avatar-wrapper',
@@ -29,7 +29,7 @@ block('author').mod('view', 'full')(
         ];
     }),
 
-    mode('avatar')(function() {
+    mode('avatar')(function () {
         var content = this.ctx.content;
 
         return {
@@ -40,7 +40,7 @@ block('author').mod('view', 'full')(
         };
     }),
 
-    mode('name')(function() {
+    mode('name')(function () {
         return {
             block: 'author',
             elem: 'name',
@@ -48,7 +48,7 @@ block('author').mod('view', 'full')(
         };
     }),
 
-    mode('e-mail')(function() {
+    mode('e-mail')(function () {
         return {
             block: 'author',
             elem: 'e-mail',
@@ -57,7 +57,7 @@ block('author').mod('view', 'full')(
         };
     }),
 
-    mode('github')(function() {
+    mode('github')(function () {
         return {
             block: 'author',
             elem: 'github',
@@ -66,7 +66,7 @@ block('author').mod('view', 'full')(
         };
     }),
 
-    mode('twitter')(function() {
+    mode('twitter')(function () {
         return {
             block: 'author',
             elem: 'twitter',
@@ -75,7 +75,7 @@ block('author').mod('view', 'full')(
         };
     }),
 
-    mode('skype')(function() {
+    mode('skype')(function () {
         return {
             block: 'author',
             elem: 'skype',
@@ -84,7 +84,7 @@ block('author').mod('view', 'full')(
         };
     }),
 
-    mode('info')(function() {
+    mode('info')(function () {
         return {
             block: 'author',
             elem: 'info',
@@ -92,7 +92,7 @@ block('author').mod('view', 'full')(
         };
     }),
 
-    match(function () { return this.isSimple(this.ctx.content); }).content()(function() {
+    match(function () { return this.isSimple(this.ctx.content); }).content()(function () {
         return this.ctx.content;
     })
 );
