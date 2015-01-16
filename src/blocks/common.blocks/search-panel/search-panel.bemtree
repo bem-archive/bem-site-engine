@@ -4,7 +4,7 @@ block('search-panel')(
             { block: 'search-form', mods: { type: 'default' } },
             {
                 block: 'spin',
-                mods: { theme: 'normal', size: 'xl' },
+                mods: { theme: 'islands', size: 'xl' },
                 mix: { block: this.block, elem: 'spin' }
             },
             { elem: 'content' }

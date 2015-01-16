@@ -2,7 +2,7 @@ block('search-form').mod('type', 'default')(
     content()({
         block: 'input',
         mods: {
-            theme: 'normal',
+            theme: 'islands',
             size: 'l',
             type: 'search',
             'has-clear': true
