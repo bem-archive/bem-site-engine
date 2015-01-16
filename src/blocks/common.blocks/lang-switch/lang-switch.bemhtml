@@ -1,5 +1,5 @@
 block('lang-switch')(
-    content()(function() {
+    content()(function () {
         return {
             block: 'link',
             url: this.ctx.url,

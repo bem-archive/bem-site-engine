@@ -1,4 +1,4 @@
-block('block-docs').elem('title').match(function() {
+block('block-docs').elem('title').match(function () {
     return this.ctx.elemMods;
 }).tag()(function () {
     return 'h' + this.ctx.elemMods.h || 1;

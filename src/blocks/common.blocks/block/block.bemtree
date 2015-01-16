@@ -1,36 +1,35 @@
 block('block')(
-    content()(function() {
+    content()(function () {
         var node = this.data.node,
             lang = this.data.lang,
             _source = node.source;
 
-        return [ apply('contents', { ctx: { source: _source, node: node, lang: lang }}) ];
+        return [apply('contents', { ctx: { source: _source, node: node, lang: lang } })];
     }),
 
-    mode('contents')(function() {
+    mode('contents')(function () {
         var _source = this.ctx.source,
             _data = _source.data,
-            _lang = this.ctx.lang,
             _examples = apply('examples'),
             tabsHeader = [],
             tabsContent = [];
 
-        if(!_.isEmpty(_data)) {
+        if (!_.isEmpty(_data)) {
             tabsHeader.push(apply('docs-header'));
             tabsContent.push(apply('docs-content'));
         }
 
-        if(!_.isEmpty(_source.jsdoc)) {
+        if (!_.isEmpty(_source.jsdoc)) {
             tabsHeader.push(apply('jsdoc-header'));
             tabsContent.push(apply('jsdoc-content'));
         }
 
-        if(!_.isEmpty(_examples)) {
+        if (!_.isEmpty(_examples)) {
             tabsHeader.push(_examples.header);
             tabsContent.push(_examples.content);
         }
 
-        if(!tabsHeader.length) {
+        if (!tabsHeader.length) {
             return {
                 elem: 'message',
                 content: [
@@ -65,7 +64,7 @@ block('block')(
         };
     }),
 
-    mode('docs-header')(function() {
+    mode('docs-header')(function () {
         return {
             elem: 'tab',
             attrs: { 'data-tab': 'docs' },
@@ -74,7 +73,7 @@ block('block')(
         };
     }),
 
-    mode('docs-content')(function() {
+    mode('docs-content')(function () {
         return {
             elem: 'pane',
             content: [
@@ -91,7 +90,7 @@ block('block')(
         };
     }),
 
-    mode('jsdoc-header')(function() {
+    mode('jsdoc-header')(function () {
         return {
             elem: 'tab',
             attrs: { 'data-tab': 'jsdoc' },
@@ -99,7 +98,7 @@ block('block')(
         };
     }),
 
-    mode('jsdoc-content')(function() {
+    mode('jsdoc-content')(function () {
         return {
             elem: 'pane',
             content: {
@@ -110,56 +109,56 @@ block('block')(
     }),
 
     mode('examples')(
-        (function(){
+        function () {
             return {
                 header: apply('examples-header'),
                 content: apply('examples-content')
             };
-        }),
+        },
 
-        match(function() {
+        match(function () {
             return !this.ctx.examples;
-        })(function() {
+        })(function () {
             var data = this.ctx.source.data,
                 examples,
                 length;
 
-            if(!data) {
+            if (!data) {
                 return false;
             }
 
             data = data[this.ctx.lang] || data;
             examples = data.examples;
 
-            if(!examples || !examples.length) {
+            if (!examples || !examples.length) {
                 return false;
             }
 
             length = examples.length;
 
-            if(!examples[length - 1].content) {
+            if (!examples[length - 1].content) {
                 // new structure
 
                 // filter not inline examples
-                var defaultExamples = examples.filter(function(example) {
+                var defaultExamples = examples.filter(function (example) {
                     return !example.source;
                 });
 
-                if(!defaultExamples.length) return false;
+                if (!defaultExamples.length) return false;
 
                 this.ctx = this.extend(this.ctx, { examples: defaultExamples });
                 return applyNext();
-            }else if(examples[length - 1].content.length){
+            } else if (examples[length - 1].content.length) {
                 // old structure
                 this.ctx = this.extend(this.ctx, { examples: examples[length - 1].content });
                 return applyNext();
-            }else {
+            } else {
                 return false;
             }
         })
     ),
 
-    mode('examples-header')(function() {
+    mode('examples-header')(function () {
         return {
             elem: 'tab',
             attrs: { 'data-tab': 'examples' },
@@ -168,11 +167,11 @@ block('block')(
         };
     }),
 
-    mode('examples-content')(function() {
+    mode('examples-content')(function () {
         var source = this.ctx.source;
         return {
             elem: 'pane',
-            content: this.ctx.examples.map(function(example) {
+            content: this.ctx.examples.map(function (example) {
                 return [
                     {
                         block: 'block-example',

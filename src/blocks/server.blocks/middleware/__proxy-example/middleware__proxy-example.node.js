@@ -46,7 +46,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                 ws.on('error', function (err) {
                     callback(err);
                 });
-                ws.on('finish', function() {
+                ws.on('finish', function () {
                     var buf = Buffer.concat(this.chunks);
                     zlib.gunzip(buf, function (err, data) {
                         callback(null, (err ? buf : data).toString('utf-8'));
@@ -58,7 +58,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             }
 
             return model.getFromCache(sha(url)).then(function (response) {
-                if(response) {
+                if (response) {
                     return res.end(response);
                 }
 
@@ -74,7 +74,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                                 model.putToCache(sha(url), html);
                                 res.end(html);
                             }).done();
-                        }else {
+                        } else {
                             model.putToCache(sha(url), response);
                             return res.end(response);
                         }

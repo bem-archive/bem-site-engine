@@ -1,8 +1,8 @@
 block('menu-list').mod('type', 'header')(
-    match(function() { return this.ctx.content; }).content()(function() {
+    match(function () { return this.ctx.content; }).content()(function () {
         var menu = this.ctx.content;
 
-        return menu.map(function(menuItem) {
+        return menu.map(function (menuItem) {
             return {
                 block: 'link',
                 url: menuItem.url,

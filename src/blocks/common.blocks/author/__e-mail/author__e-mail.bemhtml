@@ -1,11 +1,11 @@
 block('author').elem('e-mail')(
 
-    def().match(function() {
+    def().match(function () {
         var c = this.ctx.content;
-        return !c || !c.length
+        return !c || !c.length;
     })(false),
 
-    content()(function() {
+    content()(function () {
         return [
             {
                 block: 'author',
@@ -16,8 +16,8 @@ block('author').elem('e-mail')(
         ];
     }),
 
-    mode('transformation')(function() {
-        return this.ctx.content.map(function(item){
+    mode('transformation')(function () {
+        return this.ctx.content.map(function (item) {
             return {
                 block: 'author',
                 elem: 'value',

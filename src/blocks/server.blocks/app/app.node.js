@@ -2,7 +2,7 @@ var path = require('path'),
 
     _ = require('lodash'),
     vow = require('vow'),
-    vowFs = require('vow-fs'),
+    // vowFs = require('vow-fs'),
     express = require('express');
 
 modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updater'],
@@ -41,24 +41,24 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                 middleware().forEach(function (mw) {
                     if (_.isFunction(mw)) {
                         app.use(mw());
-                    }else if (mw.run) {
+                    } else if (mw.run) {
                         app.use(mw.run());
                     }
                 });
 
-                //util.unlinkSocket(port).then(function() {
+                // util.unlinkSocket(port).then(function () {
                     app.listen(port, function (err) {
                         if (err) {
                             def.reject(err);
                             return;
                         }
 
-                        util.chmodSocket(port).then(function() {
+                        util.chmodSocket(port).then(function () {
                             logger.info('start application on port or socket %s', port);
                             def.resolve();
                         });
                     });
-                //});
+                // });
 
                 return def.promise();
             },

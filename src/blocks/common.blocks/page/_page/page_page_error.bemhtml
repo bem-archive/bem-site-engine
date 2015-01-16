@@ -1,5 +1,5 @@
 block('page').mod('page', 'error')(
-    def()(function() {
+    def()(function () {
         return applyNext({ isErrorPage: true });
     })
 );

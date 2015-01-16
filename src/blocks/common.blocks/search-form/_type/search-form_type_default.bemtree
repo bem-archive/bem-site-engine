@@ -1,12 +1,12 @@
 block('search-form').mod('type', 'default')(
     content()({
-        block : 'input',
-        mods : {
+        block: 'input',
+        mods: {
             theme: 'normal',
             size: 'l',
             type: 'search',
             'has-clear': true
         },
-        placeholder : BEM.I18N('search-form', 'placeholder')
+        placeholder: BEM.I18N('search-form', 'placeholder')
     })
 );

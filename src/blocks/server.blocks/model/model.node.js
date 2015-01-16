@@ -11,18 +11,18 @@ var u = require('util'),
 
 modules.define('model', ['config', 'logger', 'util', 'database'], function (provide, config, logger, util, db) {
     logger = logger(module);
-    
+
     var menu,
         people,
         peopleUrls,
-        worker = util.isDev() ? 0 : (luster.id|| 0 ),
+        worker = util.isDev() ? 0 : (luster.id || 0),
         DB_PATH = {
             DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),
             WORKER: path.join(process.cwd(), u.format('db/worker_%s', worker))
         };
 
-    //console.log('isWorker %s %s', luster.isWorker, luster.id, luster.wid);
+    // console.log('isWorker %s %s', luster.isWorker, luster.id, luster.wid);
 
     function loadData () {
         var def = vow.defer(),
@@ -37,7 +37,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
             if (!error && response.statusCode === 200) {
                 request.get(dataLink)
                     .pipe(zlib.Gunzip())
-                    .pipe(tar.Extract({path: DB_PATH.WORKER}))
+                    .pipe(tar.Extract({ path: DB_PATH.WORKER }))
                     .on('error', function (err) {
                         logger.error('Error %s occur while downloading database snapshot', err);
                         def.reject(err);
@@ -49,7 +49,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                         def.resolve(extractedPath);
                     });
 
-            }else {
+            } else {
                 logger.error(error);
                 logger.error('Remote provider is unreachable now. Status code %s', response.statusCode);
                 def.reject(error);
@@ -67,19 +67,19 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
         init: function () {
             logger.info('Initialize model for worker %s', worker);
 
-            //clear page cache
+            // clear page cache
             util.clearPageCache();
 
             var p = path.join(DB_PATH.WORKER, 'run', 'leveldb');
-            return vowFs.exists(p).then(function(exists) {
-                if(exists) {
+            return vowFs.exists(p).then(function (exists) {
+                if (exists) {
                     logger.debug('Database for worker %s already exists. Try to connect to it', worker);
                     return db.connect(p);
                 }
 
                 var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : loadData();
                 return promise
-                    .then(function(snapshot) {
+                    .then(function (snapshot) {
                         logger.debug('remove dir %s', p);
                         return util.removeDir(p)
                             .then(function () {
@@ -108,9 +108,9 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                 p = path.join(DB_PATH.WORKER, 'run', 'leveldb');
 
             return promise
-                .then(function(snapshot) {
+                .then(function (snapshot) {
                     return db.disconnect()
-                        .then(function() {
+                        .then(function () {
                             logger.debug('remove dir %s', p);
                             return util.removeDir(p);
                         })
@@ -283,11 +283,11 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                     tree = [];
 
                 nodes.forEach(function (node) {
-                    if (node.parent ) {
+                    if (node.parent) {
                         nodes[idMap[node.parent]].items = nodes[idMap[node.parent]].items || [];
                         nodes[idMap[node.parent]].items.push(node);
                         nodes[idMap[node.parent]].items =
-                            nodes[ idMap[ node.parent ] ].items.sort(function (a, b) {
+                            nodes[idMap[node.parent]].items.sort(function (a, b) {
                                 return +a.order - +b.order;
                             });
                     } else {
@@ -335,7 +335,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                     (v.translators && v.translators.indexOf(value) > -1));
                 })
                 .then(function (docRecords) {
-                    return vow.all([ this.getNodesBySourceRecords(docRecords), docRecords ]);
+                    return vow.all([this.getNodesBySourceRecords(docRecords), docRecords]);
                 }, this)
                 .spread(function (nodeRecords, docRecords) {
                     return combineResults(nodeRecords, docRecords, lang);
@@ -362,7 +362,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                     return criteria;
                 }, hint)
                 .then(function (docRecords) {
-                    return vow.all([ this.getNodesBySourceRecords(docRecords), docRecords ]);
+                    return vow.all([this.getNodesBySourceRecords(docRecords), docRecords]);
                 }, this)
                 .spread(function (nodeRecords, docRecords) {
                     return combineResults(nodeRecords, docRecords, lang);
@@ -378,7 +378,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
         getNodesByCriteria: function (criteria, onlyFirst) {
             var hint = { gte: 'nodes:', lt: 'people', fillCache: true };
             return db
-                .getByCriteria(function(record) {
+                .getByCriteria(function (record) {
                     return criteria(record);
                 }, hint)
                 .then(function (records) {
@@ -408,22 +408,22 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
 
     function combineResults(nodeRecords, docRecords, lang) {
         var docsMap = docRecords.reduce(function (prev, item) {
-                prev[ item.key ] = item.value;
+                prev[item.key] = item.value;
                 return prev;
             }, {}),
             result = nodeRecords
                 .map(function (record) {
                     var v = record.value;
                     v.source = {};
-                    v.source[ lang ] = docsMap[ u.format('docs:%s:%s', v.id, lang) ];
+                    v.source[lang] = docsMap[u.format('docs:%s:%s', v.id, lang)];
                     return v;
                 })
                 .reduce(function (prev, item) {
-                    prev[ item.route.name ] = prev[ item.route.name ] || {
-                        title: item.title[ lang ],
+                    prev[item.route.name] = prev[item.route.name] || {
+                        title: item.title[lang],
                         items: []
                     };
-                    prev[ item.route.name ].items.push(item);
+                    prev[item.route.name].items.push(item);
                     return prev;
                 }, {});
 

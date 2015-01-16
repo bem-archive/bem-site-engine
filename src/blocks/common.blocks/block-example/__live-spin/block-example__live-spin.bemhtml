@@ -1,8 +1,8 @@
 block('block-example').elem('live-spin')(
-    content()(function() {
+    content()(function () {
         return {
             block: 'spin',
-            mods: { theme : 'normal', size : 'm' }
+            mods: { theme: 'normal', size: 'm' }
         };
     })
 );

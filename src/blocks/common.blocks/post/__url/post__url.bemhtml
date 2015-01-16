@@ -1,9 +1,9 @@
 block('post').elem('url')(
-    match(function() {
+    match(function () {
         return !(this.ctx.content || []).length; }
     ).def()(false),
 
-    content()(function() {
+    content()(function () {
         return {
             block: 'link',
             url: this.ctx.content,
@@ -15,6 +15,6 @@ block('post').elem('url')(
                 },
                 BEM.I18N('post', 'url')
             ]
-         }
+        };
     })
 );

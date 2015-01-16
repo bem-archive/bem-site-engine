@@ -14,7 +14,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
         logger.warn('Data has been changed. Model will be updated to %s for worker %s', snapshotName, worker);
 
         return model.reload(snapshotName)
-            .then(function() {
+            .then(function () {
                 return util.clearPageCache();
             })
             .then(function () {
@@ -29,7 +29,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
         logger.info('Check for update for start for worker %s', worker);
         var link = util.getPingLink();
 
-        if(!link) {
+        if (!link) {
             return;
         }
 

@@ -1,7 +1,7 @@
-modules.define('middleware__page-meta', ['logger', 'model'], function(provide, logger, model) {
+modules.define('middleware__page-meta', ['logger', 'model'], function (provide, logger, model) {
     logger = logger(module);
 
-    provide(function() {
+    provide(function () {
 
         /**
          * Retrieves meta-information for request by request
@@ -14,7 +14,7 @@ modules.define('middleware__page-meta', ['logger', 'model'], function(provide, l
          * ogType - {String} type of source
          * ogUrl - {String} url of source
          */
-        return function(req, res, next) {
+        return function (req, res, next) {
             logger.debug('get meta by request %s', req.url);
 
             var node = req.__data.node,
@@ -24,8 +24,8 @@ modules.define('middleware__page-meta', ['logger', 'model'], function(provide, l
                 };
 
             return model.getSourceOfNode(node, req.lang)
-                .then(function(doc) {
-                    if(doc) {
+                .then(function (doc) {
+                    if (doc) {
                         meta.description = meta.ogDescription = doc.title;
                         meta.keywords = meta.ogKeywords = doc.tags ? doc.tags.join(', ') : '';
                         meta.ogType = 'article';

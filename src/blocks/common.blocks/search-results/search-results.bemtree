@@ -1,20 +1,20 @@
 block('search-results')(
-    match(function() { return this.ctx.text.length < 2; }).content()(function() {
+    match(function () { return this.ctx.text.length < 2; }).content()(function () {
         return {
             elem: 'error',
             content: 'Нужно ввести минимум <strong>2</strong> буквы'
         };
     }),
 
-    match(function() { return !this.ctx.data.length && this.ctx.text.length > 1; }).content()(function() {
+    match(function () { return !this.ctx.data.length && this.ctx.text.length > 1; }).content()(function () {
         return {
             elem: 'error',
             content: 'По запросу <strong>' + this.ctx.text + '</strong> ничего не найдено.'
         };
     }),
 
-    match(function() { return this.ctx.data.length; }).content()(function() {
-        return this.ctx.data.map(function(item) {
+    match(function () { return this.ctx.data.length; }).content()(function () {
+        return this.ctx.data.map(function (item) {
             return {
                 block: 'search-item',
                 mods: { type: item.class },

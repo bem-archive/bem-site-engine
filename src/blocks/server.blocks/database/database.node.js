@@ -83,7 +83,7 @@ modules.define('database', ['logger'], function (provide, logger) {
          * Disconnect from leveldb database
          * @returns {*}
          */
-        disconnect: function() {
+        disconnect: function () {
             var def = vow.defer();
             if (!db) {
                 logger.warn('database was not initialized yet');
