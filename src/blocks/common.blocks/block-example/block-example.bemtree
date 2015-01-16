@@ -75,7 +75,7 @@ block('block-example')(
                     },
                     {
                         block: 'dropdown',
-                        mods: { switcher: 'link', theme: 'normal' },
+                        mods: { switcher: 'link', theme: 'islands', size: 'm' },
                         mix: [
                             { block: 'block-example', elem: 'qr' },
                             { block: 'block-example', elem: 'link' }

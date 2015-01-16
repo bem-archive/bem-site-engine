@@ -1,5 +1,5 @@
 - block: input
-  mods: { theme: normal, size: l, autofocus: true, 'has-clear': true }
+  mods: { theme: islands, size: l, autofocus: true, 'has-clear': true }
 
 - block: functions
   elem: debounce

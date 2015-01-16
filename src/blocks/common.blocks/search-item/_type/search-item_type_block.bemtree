@@ -41,9 +41,11 @@ block('search-item').mod('type', 'block')(
             return [
                 {
                     block: 'select',
-                    mods: { mode: 'radio', theme: 'normal', size: 's' },
+                    mods: { mode: 'radio', theme: 'islands', size: 's' },
                     name: 'versions',
                     mix: { block: this.block, elem: 'select' },
+                    val: listVersions[0],
+                    text: listVersions[0],
                     options: listVersions.map(function (version) {
                         return {
                             val: version,
