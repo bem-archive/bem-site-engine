@@ -3,7 +3,7 @@
   elem: i18n
 
 - block: dropdown
-  mods: { switcher: link, theme: normal }
+  mods: { switcher: link, theme: islands }
 
 - block: link
   mods: { pseudo: true, theme: normal }

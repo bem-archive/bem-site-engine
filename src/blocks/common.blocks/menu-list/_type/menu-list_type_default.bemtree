@@ -28,6 +28,20 @@ block('menu-list').mod('type', 'default')(
             }),
 
             match(function () { return this.ctx.type === 'select'; })(function () {
+                var items = this.ctx.items,
+                    options = items.map(function (subitem) {
+                        return {
+                            val: subitem.url,
+                            text: subitem.title
+                        };
+                    }),
+                    active = items.filter(function (subitem) {
+                        return subitem.active;
+                    });
+
+                // Use fallback if items array doesn`t contain any active item menu
+                active = !active.length ? items[0] : active[0];
+
                 return {
                     elem: 'group-select',
                     elemMods: this.ctx.active ? { active: 'yes' } : undefined,
@@ -40,14 +54,10 @@ block('menu-list').mod('type', 'default')(
                             })(this.ctx) }),
                             {
                                 block: 'select',
-                                mods: { mode: 'radio', theme: 'normal', size: 's' },
-                                options: this.ctx.items.map(function (subitem) {
-                                    return {
-                                        val: subitem.url,
-                                        text: subitem.title,
-                                        checked: subitem.active
-                                    };
-                                })
+                                mods: { mode: 'radio', theme: 'islands', size: 's' },
+                                val: active.url,
+                                text: active.title,
+                                options: options
                             }
                         ]
                     }

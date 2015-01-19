@@ -32,7 +32,9 @@ block('menu-list').mod('type', 'level')(
             content: {
                 block: 'select',
                 mix: { block: this.block, elem: 'level-select' },
-                mods: { mode: 'radio', theme: 'normal', size: 's', width: 'available' },
+                mods: { mode: 'radio', theme: 'islands', size: 's', width: 'available' },
+                val: levels[0],
+                text: levels[0],
                 options: levels.map(function (level) {
                     return {
                         val: level,

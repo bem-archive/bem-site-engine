@@ -11,7 +11,7 @@ modules.define('search-panel', ['i-bem__dom', 'jquery', 'events__channels'], fun
             },
 
             loading: function (modName, modVal) {
-                this._spin.setMod('progress', modVal);
+                this._spin.setMod('visible', modVal);
                 this.setMod(this.elem('content'), 'loading', modVal);
             },
 
