@@ -4,7 +4,7 @@ var util = require('util'),
     _ = require('lodash'),
     vow = require('vow'),
     vowFs = require('vow-fs'),
-    levelup = require('levelup');
+    levelup = require('level');
 
 modules.define('database', ['logger'], function (provide, logger) {
     logger = logger(module);
