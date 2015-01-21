@@ -46,6 +46,9 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
         var code = err.code || 500,
             terr = terror.ensureError(err);
 
+        // For cases, when terrors module work not correct
+        logger.error('native express error', err);
+
         if (terr) {
             logger.error('%s %s', code, terr.message);
         } else {
