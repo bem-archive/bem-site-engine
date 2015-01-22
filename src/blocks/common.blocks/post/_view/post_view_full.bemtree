@@ -9,8 +9,6 @@ block('post').mod('view', 'full')(
             return [];
         }
 
-        // console.log('url %s deps %s', source.url, source.deps);
-
         return [
             apply('date', { ctx: {
                 createDate: source.createDate,
