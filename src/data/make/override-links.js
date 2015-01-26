@@ -294,7 +294,10 @@ function overrideLinks(content, node, urlHash, lang) {
 
             if (replaced) {
                 href = replaced;
+            } else if (!isAbsolute(href)) {
+                href = links[0];
             }
+
             href += (anchor ? '#' + anchor : '');
             // if (nativeHref.indexOf('./javascript-docs.md') > -1) {
             //    logger.debug(util.format('native: %s replaced: %s', nativeHref, href), module);
