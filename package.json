@@ -32,7 +32,7 @@
     "level": "~0.18.0",
     "tar": "1.0.1",
     "luster": "~0.5.1",
-    "bse-admin": "git://github.com/bem/bse-admin.git#v0.4.7"
+    "bse-admin": "git://github.com/bem/bse-admin.git#v0.4.8"
   },
   "devDependencies": {
     "bem-site-codestyle": "~0.1.0",
