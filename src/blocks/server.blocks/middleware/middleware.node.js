@@ -8,15 +8,17 @@ modules.define('middleware', [
         'middleware__redirect',
         'middleware__router',
         'middleware__html-cache',
+        'middleware__next',
         'middleware__page-title',
         'middleware__page-meta',
         'middleware__page-menu',
         'middleware__lang-switcher',
         'middleware__page',
-        'middleware__error'
+        'middleware__error',
+        'config'
     ],
     function (provide, locale, logger, service, proxyExample, search, slashes, redirect, router,
-             htmlCache, pageTitle, pageMeta, pageMenu, langSwitcher, page, error) {
+             htmlCache, next, pageTitle, pageMeta, pageMenu, langSwitcher, page, error, config) {
 
         return provide(function () {
             return [
@@ -28,7 +30,7 @@ modules.define('middleware', [
                 slashes,
                 redirect,
                 router,
-                htmlCache,
+                config.get('NODE_ENV') !== 'development' ? htmlCache : next,
                 pageTitle,
                 pageMeta,
                 pageMenu,
