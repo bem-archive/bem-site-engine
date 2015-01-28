@@ -6,7 +6,7 @@
   mods: { switcher: link, theme: islands }
 
 - block: link
-  mods: { pseudo: true, theme: normal }
+  mods: { pseudo: true, theme: islands }
 
 - block: image
 
