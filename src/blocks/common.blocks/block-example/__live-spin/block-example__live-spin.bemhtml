@@ -2,7 +2,7 @@ block('block-example').elem('live-spin')(
     content()(function () {
         return {
             block: 'spin',
-            mods: { theme: 'normal', size: 'm' }
+            mods: { theme: 'islands', size: 'm' }
         };
     })
 );
