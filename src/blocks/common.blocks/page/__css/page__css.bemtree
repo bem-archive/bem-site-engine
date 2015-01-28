@@ -3,8 +3,8 @@ block('page').elem('css')(
         var elem = this.elem;
 
         return [
-            { elem: elem, url: this._pathToBundle + '.css', ie: false },
-            { elem: elem, url: this._pathToBundle + '.ie.css', ie: 'lte IE 9' }
+            { elem: elem, url: this._pathToBundle + '.css' + '?v=' + (+(new Date())), ie: false },
+            { elem: elem, url: this._pathToBundle + '.ie.css' + '?v=' + (+(new Date())), ie: 'lte IE 9' }
         ];
     })
 );
