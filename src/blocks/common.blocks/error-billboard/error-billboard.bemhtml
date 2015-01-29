@@ -70,10 +70,12 @@ block('error-billboard')(
     ),
 
     elem('sitemap')(
-        content()({
-            block: 'link',
-            url: '/tags',
-            content: BEM.I18N('error-billboard', 'sitemap')
+        content()(function () {
+            return {
+                block: 'link',
+                url: '/tags',
+                content: BEM.I18N('error-billboard', 'sitemap')
+            };
         })
     )
 );
