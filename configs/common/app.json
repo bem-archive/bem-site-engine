@@ -17,13 +17,6 @@
         "stderr": "logs/errors.log"
     },
     "github": {
-        "libraries": {
-            "type": "public",
-            "user": "bem",
-            "repo": "bem-info-libs",
-            "ref": "master",
-            "pattern": "https://raw.githubusercontent.com/%s/%s/%s%s"
-        },
         "public": {
             "token": [
                 "dcf2db2ac0c267630aa3f14f5108df85fa53ea79",
@@ -32,6 +25,19 @@
             ]
         },
         "people": "https://github.com/bem/bem-site-engine/blob/dev/docs/people/people.json"
+    },
+    "storage": {
+        "namespace": "",
+        "get": {
+            "host": "",
+            "port": 80
+        },
+        "post": {
+            "host": "",
+            "port": 1111
+        },
+        "auth": "",
+        "timeout": 300000
     },
     "hosts": {
         "en": "http://you-site-host-en",
