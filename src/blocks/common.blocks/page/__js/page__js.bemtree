@@ -7,7 +7,7 @@ block('page').elem('js')(
             { elem: elem, url: '//yastatic.net/es5-shims/0.0.1/es5-shims.min.js' },
             '<![endif]-->',
             { elem: elem, url: '//yastatic.net/jquery/1.10.2/jquery.min.js' },
-            { elem: elem, url: this._pathToBundle + '.js' }
+            { elem: elem, url: this._pathToBundle + '.js' + '?v=' + (+(new Date())) }
         ];
     })
 );
