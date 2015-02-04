@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "bem-core": "2.5.0",
+    "bem-core": "2.5.1",
     "bem-components": "git://github.com/bem/bem-components.git#v2.0.0"
   },
   "ignore": [
@@ -13,7 +13,7 @@
     ".enb/tmp"
   ],
   "resolutions": {
-    "bem-core": "2.5.0",
+    "bem-core": "2.5.1",
     "bem-components": "v2.0.0"
   }
 }

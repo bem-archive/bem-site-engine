@@ -1,7 +1,9 @@
 block('search-button')(
-    content()({
-        block: 'icon',
-        mods: { action: 'search' },
-        attrs: { title: BEM.I18N('search-button', 'title') }
+    content()(function () {
+        return {
+            block: 'icon',
+            mods: { action: 'search' },
+            attrs: { title: BEM.I18N('search-button', 'title') }
+        };
     })
 );
