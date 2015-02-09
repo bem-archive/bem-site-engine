@@ -5,8 +5,7 @@ var path = require('path'),
     vow = require('vow'),
     vowFs = require('vow-fs'),
     fsExtra = require('fs-extra'),
-    zlib = require('zlib'),
-    vow = require('vow');
+    zlib = require('zlib');
 
 modules.define('util', ['logger', 'constants', 'config'], function (provide, logger, constants, config) {
     logger = logger(module);

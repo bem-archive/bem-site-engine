@@ -2,3 +2,4 @@
 - block: config
 - block: util
 - block: database
+- block: yandex-disk
