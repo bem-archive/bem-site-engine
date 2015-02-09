@@ -1,19 +1,16 @@
-var u = require('util'),
-    vm = require('vm'),
-    zlib = require('zlib'),
-    WritableStream = require('stream').Writable,
+var vm = require('vm'),
 
     vow = require('vow'),
-    request = require('request'),
     sha = require('sha1'),
     html = require('js-beautify').html,
-    mime = require('mime');
+    mime = require('mime'),
+    MDS = require('mds-wrapper');
 
 modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'model'],
     function (provide, config, constants, logger, util, model) {
         logger = logger(module);
 
-        var libRepo = config.get('github:libraries');
+        var mds = new MDS(config.get('storage'));
 
         /**
          * Loads sources for url and sent them to response
@@ -27,60 +24,36 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             var originUrl = url;
 
             // set the content-types by mime type
-            res.type(mime.lookup(url));
-            url = u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url);
-
             // fix firefox charsets for bemjson files
+            res.type(mime.lookup(url));
             if (/\.bemjson\.js$/.test(url)) {
                 res.header('Content-Type', 'application/json; charset=utf-8');
             }
 
-            function getGzipped(url, callback) {
-                var ws = new WritableStream();
-
-                ws.chunks = [];
-                ws._write = function (chunk, enc, next) {
-                    this.chunks.push(chunk);
-                    next();
-                };
-                ws.on('error', function (err) {
-                    callback(err);
-                });
-                ws.on('finish', function () {
-                    var buf = Buffer.concat(this.chunks);
-                    zlib.gunzip(buf, function (err, data) {
-                        callback(null, (err ? buf : data).toString('utf-8'));
-                    });
-
-                });
-
-                request({ url: url }).pipe(ws);
-            }
-
-            return model.getFromCache(sha(url)).then(function (response) {
-                if (response) {
-                    return res.end(response);
-                }
-
-                logger.debug('request to url: %s', url);
-
-                getGzipped(url, function (error, response) {
-                    if (error) {
-                        logger.warn('req to %s failed with err %s', url, error);
-                        return res.end('Error while loading example');
-                    } else {
-                        if (/\.bemhtml\.js$/.test(url)) {
-                            return loadCode(req, originUrl, response).then(function (html) {
-                                model.putToCache(sha(url), html);
-                                res.end(html);
-                            }).done();
-                        } else {
-                            model.putToCache(sha(url), response);
-                            return res.end(response);
-                        }
+            return model.getFromCache(sha(url))
+                .then(function (response) {
+                    if (response) {
+                        return res.end(response);
                     }
-                });
-            }).done();
+                    logger.debug('request to url: %s', url);
+                    return mds.readP(url);
+                })
+                .then(function (response) {
+                    if (/\.bemhtml\.js$/.test(url)) {
+                        return loadCode(req, originUrl, response).then(function (html) {
+                            model.putToCache(sha(url), html);
+                            res.end(html);
+                        }).done();
+                    } else {
+                        model.putToCache(sha(url), response);
+                        return res.end(response);
+                    }
+                })
+                .fail(function (error) {
+                    logger.warn('req to %s failed with err %s', url, error);
+                    return res.end('Error while loading example');
+                })
+                .done();
         };
 
         /**
@@ -90,13 +63,15 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
          */
         function proxyImageFiles(url, res) {
             res.type(mime.lookup(url));
-            request.get(u.format(libRepo.pattern, libRepo.user, libRepo.repo, libRepo.ref, url)).pipe(res);
+            mds.read(url, function (error, result) {
+                res.end(error ? '' : result);
+            });
         }
 
         provide(function () {
             var PATTERN = {
-                    EXAMPLE: '/__example',
-                    FREEZE: '/output'
+                    EXAMPLE: '/__example/',
+                    FREEZE: '/output/'
                 },
                 VERSION_REGEXP = /\/v?\d+\.\d+\.\d+\//;
 
@@ -151,7 +126,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                     htmlStr = bemhtml.BEMHTML.apply(bemjson);
 
                     // return html.prettyPrint(htmlStr);
-                    return html(htmlStr, { indent_size: 4 });
+                    return html(htmlStr, { 'indent_size': 4 });
                 });
         }
 });
