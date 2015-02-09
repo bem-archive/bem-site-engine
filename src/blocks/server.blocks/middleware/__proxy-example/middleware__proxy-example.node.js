@@ -30,28 +30,28 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                 res.header('Content-Type', 'application/json; charset=utf-8');
             }
 
-            return model.getFromCache(sha(url))
+            model.getFromCache(sha(url))
                 .then(function (response) {
                     if (response) {
                         return res.end(response);
                     }
                     logger.debug('request to url: %s', url);
-                    return mds.readP(url);
-                })
-                .then(function (response) {
-                    if (/\.bemhtml\.js$/.test(url)) {
-                        return loadCode(req, originUrl, response).then(function (html) {
-                            model.putToCache(sha(url), html);
-                            res.end(html);
-                        }).done();
-                    } else {
-                        model.putToCache(sha(url), response);
-                        return res.end(response);
-                    }
-                })
-                .fail(function (error) {
-                    logger.warn('req to %s failed with err %s', url, error);
-                    return res.end('Error while loading example');
+                    return mds.readP(url)
+                        .then(function (response) {
+                            if (/\.bemhtml\.js$/.test(url)) {
+                                return loadCode(req, originUrl, response).then(function (html) {
+                                    model.putToCache(sha(url), html);
+                                    res.end(html);
+                                });
+                            } else {
+                                model.putToCache(sha(url), response);
+                                return res.end(response);
+                            }
+                        })
+                        .fail(function (error) {
+                            logger.warn('req to %s failed with err %s', url, error);
+                            return res.end('Error while loading example');
+                        });
                 })
                 .done();
         };
