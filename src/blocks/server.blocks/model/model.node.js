@@ -1,15 +1,14 @@
 var u = require('util'),
     path = require('path'),
-    zlib = require('zlib'),
+    cp = require('child_process'),
 
     luster = require('luster'),
-    tar = require('tar'),
-    request = require('request'),
     _ = require('lodash'),
     vow = require('vow'),
     vowFs = require('vow-fs');
 
-modules.define('model', ['config', 'logger', 'util', 'database'], function (provide, config, logger, util, db) {
+modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
+    function (provide, config, logger, util, db, yd) {
     logger = logger(module);
 
     var menu,
@@ -20,7 +19,9 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
             DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),
             WORKER: path.join(process.cwd(), u.format('db/worker_%s', worker))
-        };
+        },
+        ARCHIVE_NAME = 'leveldb.tar.gz';
+        yd.init(config.get('yandex-disk'));
 
     provide({
         /**
@@ -41,7 +42,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                         return db.connect(p);
                     }
                     var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : this.loadData();
-                    promise.then(function (snapshot) {
+                    return promise.then(function (snapshot) {
                         logger.debug('remove dir %s', p);
                         return util.removeDir(p)
                             .then(function () {
@@ -64,6 +65,42 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                 }, this);
         },
 
+        loadData: function () {
+            return yd.get().readFile(path.join(yd.get().getNamespace(), config.get('NODE_ENV')))
+                .then(function (snapshotName) {
+                    if (!snapshotName) {
+                        return new Error(
+                            u.format('Snapshot name for %s environment undefined', config.get('NODE_ENV')));
+                    }
+                    var extractedPath = path.join(DB_PATH.WORKER, config.get('NODE_ENV')),
+                        remotePath = path.join(yd.get().getNamespace(), snapshotName, ARCHIVE_NAME),
+                        localPath = path.join(extractedPath, ARCHIVE_NAME);
+                    return vowFs
+                        .makeDir(extractedPath).then(function () {
+                            return yd.get().downloadFile(remotePath, localPath);
+                        })
+                        .then(function () {
+                            var def = vow.defer();
+                            cp.exec(u.format('tar -zxvf %s -C %s',
+                                    path.join(extractedPath, ARCHIVE_NAME), extractedPath),
+                                function (error) {
+                                    error ? def.reject(error) : def.resolve();
+                                });
+                            return def.promise();
+                        })
+                        .then(function () {
+                            return path.join(extractedPath, 'leveldb');
+                        });
+
+                })
+                .fail(function (err) {
+                    logger.error(err);
+                    logger.error('Media storage is unreachable now');
+                    return err;
+                });
+        },
+
+        /*
         loadData: function () {
             var def = vow.defer(),
                 pingLink = util.getPingLink(),
@@ -98,6 +135,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
 
             return def.promise();
         },
+        */
 
         /**
          * Reloads model data

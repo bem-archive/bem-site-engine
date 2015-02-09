@@ -33,7 +33,7 @@
     "tar": "1.0.1",
     "luster": "~0.5.1",
     "mds-wrapper": "^1.2.x",
-    "bse-admin": "git://github.com/bem/bse-admin.git#v1.0.0"
+    "bse-admin": "git://github.com/bem/bse-admin.git#v1.1.0"
   },
   "devDependencies": {
     "bem-site-codestyle": "~0.1.0",
