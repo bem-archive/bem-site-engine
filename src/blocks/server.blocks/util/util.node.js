@@ -1,5 +1,4 @@
 var path = require('path'),
-    url = require('url'),
 
     _ = require('lodash'),
     vow = require('vow'),
@@ -109,76 +108,6 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
                 err ? def.reject(err) : def.resolve();
             });
             return def.promise();
-        },
-
-        /**
-         * Constrain link for data updates retrieve
-         * @returns {*}
-         */
-        getDataLink: function () {
-            var provider = config.get('provider'),
-                host,
-                port;
-
-            if (!provider) {
-                logger.warn('Provider is not configured for application. Update will be skipped');
-                return null;
-            }
-
-            host = provider.host;
-            port = provider.port;
-
-            if (!host) {
-                logger.warn('Provider host name is not configured for application. Update will be skipped');
-                return null;
-            }
-
-            if (!port) {
-                logger.warn('Provider port number is not configured for application. Update will be skipped');
-                return null;
-            }
-
-            return url.format({
-                protocol: 'http',
-                hostname: host,
-                port: port,
-                pathname: '/data/' + config.get('NODE_ENV')
-            });
-        },
-
-        /**
-         * Constrain link for data version ping
-         * @returns {*}
-         */
-        getPingLink: function () {
-            var provider = config.get('provider'),
-                host,
-                port;
-
-            if (!provider) {
-                logger.warn('Provider is not configured for application. Update will be skipped');
-                return null;
-            }
-
-            host = provider.host;
-            port = provider.port;
-
-            if (!host) {
-                logger.warn('Provider host name is not configured for application. Update will be skipped');
-                return null;
-            }
-
-            if (!port) {
-                logger.warn('Provider port number is not configured for application. Update will be skipped');
-                return null;
-            }
-
-            return url.format({
-                protocol: 'http',
-                hostname: host,
-                port: port,
-                pathname: '/ping/' + config.get('NODE_ENV')
-            });
         },
 
         /**
