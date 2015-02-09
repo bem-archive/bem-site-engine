@@ -1,8 +1,10 @@
-var request = require('request'),
+var u = require('util'),
+    path = require('path'),
+
     CronJob = require('cron').CronJob;
 
-modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__redirect'],
-    function (provide, logger, config, util, model, redirect) {
+modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__redirect', 'yandex-disk'],
+    function (provide, logger, config, util, model, redirect, yd) {
     logger = logger(module);
 
     var job,
@@ -10,64 +12,17 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
         worker = luster.id || 0,
         marker;
 
-    function update(snapshotName) {
-        logger.warn('Data has been changed. Model will be updated to %s for worker %s', snapshotName, worker);
-
-        return model.reload(snapshotName)
-            .then(function () {
-                return util.clearPageCache();
-            })
-            .then(function () {
-                redirect.init();
-                marker = snapshotName;
-                logger.info('Model has been reloaded successfully for worker %s to version %s', worker, snapshotName);
-                return marker;
-            });
-    }
-
-    function checkForUpdate() {
-        logger.info('Check for update for start for worker %s', worker);
-        var link = util.getPingLink();
-
-        if (!link) {
-            return;
-        }
-
-        request(link, function (error, response, body) {
-            if (!error && response.statusCode === 200) {
-                if (!body) {
-                    logger.error('Can not retrieve request body');
-                    return;
-                }
-
-                // marker is not exist for first check operation
-                if (!marker) {
-                    marker = body;
-                    return;
-                }
-
-                // compare sha sums for data objects
-                if (marker !== body) {
-                    update(body);
-                } else {
-                    logger.debug('Data was not changed for worker %s', worker);
-                }
-            } else {
-                logger.error(error);
-                logger.error('Can not receive data from url %s. ' +
-                'Possible provider is in shutdown mode or other network problems occur', link);
-            }
-        });
-    }
+    yd.init(config.get('yandex-disk'));
 
     provide({
         /**
          * Initialize updater module
          */
         init: function () {
+            var _this = this;
             job = new CronJob({
                 cronTime: config.get('update:cron'),
-                onTick: function () { checkForUpdate(); },
+                onTick: function () { _this.checkForUpdate(); },
                 start: false
             });
         },
@@ -81,6 +36,52 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
 
         getMarker: function () {
             return marker || {};
+        },
+
+        update: function (snapshotName) {
+            logger.warn('Data has been changed. Model will be updated to %s for worker %s', snapshotName, worker);
+
+            return model.reload(snapshotName)
+                .then(function () {
+                    return util.clearPageCache();
+                })
+                .then(function () {
+                    redirect.init();
+                    marker = snapshotName;
+                    logger.info(
+                        'Model has been reloaded successfully for worker %s to version %s', worker, snapshotName);
+                    return marker;
+                });
+        },
+
+        checkForUpdate: function () {
+            logger.info('Check for update for start for worker %s', worker);
+
+            yd.get().readFile(path.join(yd.get().getNamespace(), config.get('NODE_ENV')))
+                .then(function (snapshotName) {
+                    if (!snapshotName) {
+                        logger.error(u.format('Snapshot name for %s environment undefined', config.get('NODE_ENV')));
+                        return;
+                    }
+
+                    // marker is not exist for first check operation
+                    if (!marker) {
+                        marker = snapshotName;
+                        return;
+                    }
+
+                    // compare sha sums for data objects
+                    if (marker !== snapshotName) {
+                        this.update(snapshotName);
+                    } else {
+                        logger.debug('Data was not changed for worker %s', worker);
+                    }
+                })
+                .fail(function (error) {
+                    logger.error(error);
+                    logger.error('Can not receive data from Yandex Disk. Possible network problems occur.');
+                })
+                .done();
         }
     });
 });
