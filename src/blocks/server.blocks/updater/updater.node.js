@@ -76,7 +76,7 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
                     } else {
                         logger.debug('Data was not changed for worker %s', worker);
                     }
-                })
+                }, this)
                 .fail(function (error) {
                     logger.error(error);
                     logger.error('Can not receive data from Yandex Disk. Possible network problems occur.');
