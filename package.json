@@ -33,7 +33,8 @@
     "tar": "1.0.1",
     "luster": "~0.5.1",
     "mds-wrapper": "^1.2.x",
-    "bse-admin": "git://github.com/bem/bse-admin.git#v1.1.0"
+    "bse-admin": "^1.3.x",
+    "yandex-disk": "0.0.6"
   },
   "devDependencies": {
     "bem-site-codestyle": "~0.1.0",
