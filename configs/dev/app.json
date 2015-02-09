@@ -1,3 +1,13 @@
 {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "github": {
+        "public": {
+            "token": [
+                "dcf2db2ac0c267630aa3f14f5108df85fa53ea79",
+                "103e17a373916c13c6f1e9e608da0462d7f1a70e",
+                "5624fcfb3077e797125a492d588c1a9f05012646"
+            ]
+        },
+        "people": "https://github.com/bem/bem-site-engine/blob/dev/docs/people/people.json"
+    }
 }

@@ -16,28 +16,21 @@
         "stdout": "logs/output.log",
         "stderr": "logs/errors.log"
     },
-    "github": {
-        "public": {
-            "token": [
-                "dcf2db2ac0c267630aa3f14f5108df85fa53ea79",
-                "103e17a373916c13c6f1e9e608da0462d7f1a70e",
-                "5624fcfb3077e797125a492d588c1a9f05012646"
-            ]
-        },
-        "people": "https://github.com/bem/bem-site-engine/blob/dev/docs/people/people.json"
-    },
-    "storage": {
+    "mds": {
         "namespace": "",
         "get": {
-            "host": "",
-            "port": 80
+            "host": ""
         },
         "post": {
-            "host": "",
-            "port": 1111
+            "host": ""
         },
         "auth": "",
         "timeout": 300000
+    },
+    "yandex-disk": {
+        "user": "",
+        "password": "",
+        "namespace": ""
     },
     "hosts": {
         "en": "http://you-site-host-en",
