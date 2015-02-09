@@ -3,3 +3,4 @@
 - block: model
 - block: util
 - block: middleware
+- block: yandex-disk

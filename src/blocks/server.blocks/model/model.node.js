@@ -1,15 +1,14 @@
 var u = require('util'),
     path = require('path'),
-    zlib = require('zlib'),
+    cp = require('child_process'),
 
     luster = require('luster'),
-    tar = require('tar'),
-    request = require('request'),
     _ = require('lodash'),
     vow = require('vow'),
     vowFs = require('vow-fs');
 
-modules.define('model', ['config', 'logger', 'util', 'database'], function (provide, config, logger, util, db) {
+modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
+    function (provide, config, logger, util, db, yd) {
     logger = logger(module);
 
     var menu,
@@ -20,44 +19,9 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
             DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),
             WORKER: path.join(process.cwd(), u.format('db/worker_%s', worker))
-        };
-
-    // console.log('isWorker %s %s', luster.isWorker, luster.id, luster.wid);
-
-    function loadData () {
-        var def = vow.defer(),
-            pingLink = util.getPingLink(),
-            dataLink = util.getDataLink();
-
-        if (!pingLink || !dataLink) {
-            return vow.reject();
-        }
-
-        request(pingLink, function (error, response) {
-            if (!error && response.statusCode === 200) {
-                request.get(dataLink)
-                    .pipe(zlib.Gunzip())
-                    .pipe(tar.Extract({ path: DB_PATH.WORKER }))
-                    .on('error', function (err) {
-                        logger.error('Error %s occur while downloading database snapshot', err);
-                        def.reject(err);
-                    })
-                    .on('end', function () {
-                        var extractedPath = path.join(DB_PATH.WORKER, config.get('NODE_ENV'), 'leveldb');
-                        logger.debug(u.format('Data has been successfully loaded from url %s and extracted to path',
-                            dataLink, extractedPath));
-                        def.resolve(extractedPath);
-                    });
-
-            } else {
-                logger.error(error);
-                logger.error('Remote provider is unreachable now. Status code %s', response.statusCode);
-                def.reject(error);
-            }
-        });
-
-        return def.promise();
-    }
+        },
+        ARCHIVE_NAME = 'leveldb.tar.gz';
+        yd.init(config.get('yandex-disk'));
 
     provide({
         /**
@@ -71,15 +35,14 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
             util.clearPageCache();
 
             var p = path.join(DB_PATH.WORKER, 'run', 'leveldb');
-            return vowFs.exists(p).then(function (exists) {
-                if (exists) {
-                    logger.debug('Database for worker %s already exists. Try to connect to it', worker);
-                    return db.connect(p);
-                }
-
-                var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : loadData();
-                return promise
-                    .then(function (snapshot) {
+            return vowFs.exists(p)
+                .then(function (exists) {
+                    if (exists) {
+                        logger.debug('Database for worker %s already exists. Try to connect to it', worker);
+                        return db.connect(p);
+                    }
+                    var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : this.loadData();
+                    return promise.then(function (snapshot) {
                         logger.debug('remove dir %s', p);
                         return util.removeDir(p)
                             .then(function () {
@@ -99,7 +62,42 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                                 return extractSitemapXMLFile();
                             });
                     });
-            });
+                }, this);
+        },
+
+        loadData: function () {
+            return yd.get().readFile(path.join(yd.get().getNamespace(), config.get('NODE_ENV')))
+                .then(function (snapshotName) {
+                    if (!snapshotName) {
+                        return new Error(
+                            u.format('Snapshot name for %s environment undefined', config.get('NODE_ENV')));
+                    }
+                    var extractedPath = path.join(DB_PATH.WORKER, config.get('NODE_ENV')),
+                        remotePath = path.join(yd.get().getNamespace(), snapshotName, ARCHIVE_NAME),
+                        localPath = path.join(extractedPath, ARCHIVE_NAME);
+                    return vowFs
+                        .makeDir(extractedPath).then(function () {
+                            return yd.get().downloadFile(remotePath, localPath);
+                        })
+                        .then(function () {
+                            var def = vow.defer();
+                            cp.exec(u.format('tar -zxvf %s -C %s',
+                                    path.join(extractedPath, ARCHIVE_NAME), extractedPath),
+                                function (error) {
+                                    error ? def.reject(error) : def.resolve();
+                                });
+                            return def.promise();
+                        })
+                        .then(function () {
+                            return path.join(extractedPath, 'leveldb');
+                        });
+
+                })
+                .fail(function (err) {
+                    logger.error(err);
+                    logger.error('Media storage is unreachable now');
+                    return err;
+                });
         },
 
         /**
@@ -108,32 +106,34 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
          */
         reload: function () {
             menu = null;
-            var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : loadData(),
-                p = path.join(DB_PATH.WORKER, 'run', 'leveldb');
+            var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : this.loadData(),
+                p = path.join(DB_PATH.WORKER, 'run', 'leveldb'),
+                snapshot;
 
             return promise
-                .then(function (snapshot) {
-                    return db.disconnect()
-                        .then(function () {
-                            logger.debug('remove dir %s', p);
-                            return util.removeDir(p);
-                        })
-                        .then(function () {
-                            logger.debug('create dir %s', p);
-                            return vowFs.makeDir(p);
-                        })
-                        .then(function () {
-                            logger.debug('copy database files from %s to %s', snapshot, p);
-                            return util.copyDir(snapshot, p);
-                        })
-                        .then(function () {
-                            logger.debug('connect to database in path %s', p);
-                            return db.connect(p);
-                        })
-                        .then(function () {
-                            logger.debug('extract sitemap.xml file', p);
-                            return extractSitemapXMLFile();
-                        });
+                .then(function (_snapshot) {
+                    snapshot = _snapshot;
+                    return db.disconnect();
+                })
+                .then(function () {
+                    logger.debug('remove dir %s', p);
+                    return util.removeDir(p);
+                })
+                .then(function () {
+                    logger.debug('create dir %s', p);
+                    return vowFs.makeDir(p);
+                })
+                .then(function () {
+                    logger.debug('copy database files from %s to %s', snapshot, p);
+                    return util.copyDir(snapshot, p);
+                })
+                .then(function () {
+                    logger.debug('connect to database in path %s', p);
+                    return db.connect(p);
+                })
+                .then(function () {
+                    logger.debug('extract sitemap.xml file', p);
+                    return extractSitemapXMLFile();
                 });
         },
 
@@ -444,7 +444,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
                     return v;
                 })
                 .reduce(function (prev, item) {
-                    prev[ item.route.name ] = prev[ item.route.name ] || {
+                    prev[item.route.name] = prev[item.route.name] || {
                         title: sectionTitlesMap[item.route.name],
                         items: []
                     };
@@ -459,7 +459,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'], function (prov
 
     function extractSitemapXMLFile() {
         return db.get('sitemapXml').then(function (data) {
-            if(!data) {
+            if (!data) {
                 logger.warn('sitemap.xml was not found in database');
                 return vow.resolve();
             }

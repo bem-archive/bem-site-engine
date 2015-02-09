@@ -10,7 +10,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
     function (provide, config, constants, logger, util, model) {
         logger = logger(module);
 
-        var mds = new MDS(config.get('storage'));
+        var mds = new MDS(config.get('mds'));
 
         /**
          * Loads sources for url and sent them to response
