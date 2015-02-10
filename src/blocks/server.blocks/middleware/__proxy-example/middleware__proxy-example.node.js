@@ -1,5 +1,6 @@
 var vm = require('vm'),
 
+    _ = require('lodash'),
     vow = require('vow'),
     sha = require('sha1'),
     html = require('js-beautify').html,
@@ -32,7 +33,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
 
             model.getFromCache(sha(url))
                 .then(function (response) {
-                    if (response) {
+                    if (response && _.isString(response)) {
                         return res.end(response);
                     }
                     logger.debug('request to url: %s', url);
