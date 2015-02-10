@@ -3,6 +3,7 @@ var vm = require('vm'),
     vow = require('vow'),
     sha = require('sha1'),
     html = require('js-beautify').html,
+    request = require('request'),
     mime = require('mime'),
     MDS = require('mds-wrapper');
 
@@ -15,12 +16,11 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
         /**
          * Loads sources for url and sent them to response
          * @param {String} url of request
-         * @param {String} ref - value of reference (branch or tag)
          * @param  {Object} req - response object
          * @param  {Object} res - response object
          * @returns {*}
          */
-        var proxyTextFiles = function (url, ref, req, res) {
+        var proxyTextFiles = function (url, req, res) {
             var originUrl = url;
 
             // set the content-types by mime type
@@ -63,24 +63,20 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
          */
         function proxyImageFiles(url, res) {
             res.type(mime.lookup(url));
-            mds.read(url, function (error, result) {
-                res.end(error ? '' : result);
-            });
+            request.get(mds.getFullUrl(url)).pipe(res);
         }
 
         provide(function () {
             var PATTERN = {
                     EXAMPLE: '/__example/',
                     FREEZE: '/output/'
-                },
-                VERSION_REGEXP = /\/v?\d+\.\d+\.\d+\//;
+                };
 
             return function (req, res, next) {
                 var url = req.path;
 
                 if (url.indexOf(PATTERN.EXAMPLE) > -1) {
-                    return proxyTextFiles(url.replace(PATTERN.EXAMPLE, ''),
-                        VERSION_REGEXP.test(url) ? constants.DIRS.TAG : constants.DIRS.BRANCH, req, res);
+                    return proxyTextFiles(url.replace(PATTERN.EXAMPLE, ''), req, res);
                 }
                 if (url.indexOf(PATTERN.FREEZE) > -1) {
                     return proxyImageFiles(url.replace(PATTERN.FREEZE, ''), res);
@@ -90,7 +86,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
         });
 
         function loadCode(req, url, template) {
-            var urlRegExp = /^\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\.bemhtml\.js$/,
+            var urlRegExp = /^\/?(.+)\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\.bemhtml\.js$/,
                 match = url.match(urlRegExp);
 
             if (!match) { return null; }
@@ -99,7 +95,13 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                 .getNodesByCriteria(function (record) {
                     var v = record.value,
                         r = v.route,
-                        c = r.conditions;
+                        c;
+
+                    if (!r) {
+                        return false;
+                    }
+
+                    c = r.conditions;
                     return v.class === 'block' && r && c &&
                         match[1] === c.lib &&
                         match[2] === c.version &&
