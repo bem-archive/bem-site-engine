@@ -44,6 +44,7 @@ npm run make
 * [Создание модели](./docs/model.ru.md)
 * [Конфигурация](./docs/config.ru.md)
 * [Описание middleware модулей](./docs/middleware.ru.md)
+* [Описание зависимостей](./docs/dependencies.ru.md)
 
 Ответственные за разработку:
 
