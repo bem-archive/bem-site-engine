@@ -1,30 +1,37 @@
 {
+    "defaultLanguage": "en",
     "languages": ["en", "ru"],
-    "defaultLanguage": "ru",
     "port": 3016,
-    "statics": "/src",
     "title": {
         "en": "Your application title",
-        "ru": "Название приложения"
+        "ru": "Название вашего приложения"
     },
     "update": {
-        "enable": false,
+        "enable": true,
         "cron": "0 */1 * * * *"
     },
     "logger": {
         "level": "debug",
-        "stdout": "logs/output.log",
-        "stderr": "logs/errors.log"
+        "stdout": "./logs/stdout.log",
+        "stderr": "./logs/stderr.log"
+    },
+    "statics": "",
+    "metrika": "",
+    "github": {
+        "public": {
+            "token": []
+        },
+        "people": ""
     },
     "mds": {
-        "namespace": "",
+        "namespace": "your application namespace",
         "get": {
-            "host": ""
+            "host": "mds host for read requests"
         },
         "post": {
-            "host": ""
+            "host": "mds host for write requests"
         },
-        "auth": "",
+        "auth": "your application mds auth token",
         "timeout": 300000
     },
     "yandex-disk": {
@@ -33,7 +40,7 @@
         "namespace": ""
     },
     "hosts": {
-        "en": "http://you-site-host-en",
-        "ru": "http://you-site-host-ru"
+        "en": "your application host",
+        "ru": "your application host"
     }
 }

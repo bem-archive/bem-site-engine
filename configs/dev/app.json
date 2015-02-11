@@ -1,9 +1,3 @@
 {
-    "NODE_ENV": "development",
-    "github": {
-        "public": {
-            "token": []
-        },
-        "people": ""
-    }
+    "NODE_ENV": "development"
 }

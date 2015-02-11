@@ -1,4 +1,6 @@
 ![BEM:true](http://img.shields.io/badge/bem-true-yellow.svg?style=flat)
+[![David](https://img.shields.io/david/bem/bem-site-engine.svg)](https://david-dm.org/bem/bem-site-engine)
+[![David](https://img.shields.io/david/dev/bem/bem-site-engine.svg)](https://david-dm.org/bem/bem-site-engine#info=devDependencies)
 
 bem-site-engine
 ========
@@ -33,9 +35,7 @@ npm run make
 
 Сборка данных:
 
-* development: `node bin/data.js development`
-* testing: `node bin/data.js testing`
-* production: `node bin/data.js production -v latest`
+* development: `npm run data`
 
 Более подробно о командах сборки данных можно прочитать в [Соответствующем руководстве](./docs/data_compiling.ru.md).
 
@@ -44,7 +44,6 @@ npm run make
 * [Создание модели](./docs/model.ru.md)
 * [Конфигурация](./docs/config.ru.md)
 * [Описание middleware модулей](./docs/middleware.ru.md)
-* [Описание процесса сборки](./docs/data_compiling.ru.md)
 
 Ответственные за разработку:
 
