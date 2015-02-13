@@ -8,6 +8,11 @@ modules.define('middleware__html-cache', ['logger', 'constants'], function (prov
     provide(function () {
         return function (req, res, next) {
             var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url, req.lang + '.html.gzip');
+            
+            if (req.disableCache) {
+                next();
+            }
+            
             fs.exists(pagePath, function (exists) {
                 if (!exists) {
                     return next();
