@@ -64,6 +64,15 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
          */
         function proxyImageFiles(url, res) {
             res.type(mime.lookup(url));
+
+            // special case for svg,
+            // because it the same like text
+            if (/\.svg$/.test(url)) {
+                return mds.read(url, function(error, value) {
+                    error ? res.status(404).end('Svg not Found') : res.end(value);
+                });
+            }
+
             request.get(mds.getFullUrl(url)).pipe(res);
         }
 
