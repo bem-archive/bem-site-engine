@@ -95,7 +95,10 @@ modules.define('middleware__page', ['config', 'logger', 'util', 'model', 'templa
                             return template.apply(ctx, req, req.query.__mode);
                         })
                         .then(function (html) {
-                            util.putPageToCache(req, html);
+                            if (!req.disableCache) {
+                                util.putPageToCache(req, html);
+                            }
+
                             res.end(html);
                         })
                         .fail(function (err) {

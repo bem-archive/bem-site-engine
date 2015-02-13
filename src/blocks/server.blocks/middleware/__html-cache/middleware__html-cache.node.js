@@ -10,7 +10,7 @@ modules.define('middleware__html-cache', ['logger', 'constants'], function (prov
             var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url, req.lang + '.html.gzip');
             
             if (req.disableCache) {
-                next();
+                return next();
             }
             
             fs.exists(pagePath, function (exists) {
