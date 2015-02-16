@@ -23,7 +23,8 @@ modules.define('database', ['logger'], function (provide, logger) {
                 },
                 buffer: false,
                 type: 'custom'
-            }
+            },
+            cacheSize: 100 * 1024 * 1024
         },
 
         db = null,
@@ -168,12 +169,13 @@ modules.define('database', ['logger'], function (provide, logger) {
         /**
          * Returns records from database by prefix of record key
          * @param {String} prefix of database keys
+         * @param {Object} options - advanced options object
          * @returns {*}
          */
-        getByKeyPrefix: function (prefix) {
+        getByKeyPrefix: function (prefix, options) {
             return this.getByCriteria(function (record) {
                 return record.key.indexOf(prefix) > -1;
-            }, undefined);
+            }, options);
         },
 
         /**
