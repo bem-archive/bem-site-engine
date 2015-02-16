@@ -208,21 +208,13 @@ modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
             return db.get(u.format('docs:%s:%s', node.id, lang));
         },
 
-        /**
-         * Returns all node records from database
-         * @returns {*}
-         */
-        getNodes: function () {
-            return db.getByKeyPrefix('nodes:');
-        },
-
         getPeople: function () {
             if (people) {
                 return vow.resolve(people);
             }
 
             var prefix = 'people:';
-            return db.getByKeyPrefix(prefix).then(function (records) {
+            return db.getByKeyPrefix(prefix, {}).then(function (records) {
                 people = records.reduce(function (prev, item) {
                     prev[item.key.replace(prefix, '')] = item.value;
                     return prev;
@@ -241,8 +233,8 @@ modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
             }
 
             return db.getByCriteria(function (record) {
-                return record.key.indexOf('nodes:') > -1 && record.value.class === 'person';
-            })
+                return record.value.class === 'person';
+            }, { gte: 'nodes:', lt: 'people', fillCache: true })
             .then(function (records) {
                 peopleUrls = records.reduce(function (prev, item) {
                     var value = item.value;
@@ -280,35 +272,38 @@ modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
                 return vow.resolve(menu);
             }
 
-            return this.getNodes().then(function (records) {
-                var nodes = records.map(function (item) {
-                       return item.value;
-                    }),
-                    idMap = nodes.reduce(function (prev, item, index) {
-                        prev[item.id] = index;
-                        return prev;
-                    }, {}),
-                    tree = [];
+            return this.getNodesByCriteria(function () {
+                    return true;
+                }, false)
+                .then(function (records) {
+                    var nodes = records.map(function (item) {
+                           return item.value;
+                        }),
+                        idMap = nodes.reduce(function (prev, item, index) {
+                            prev[item.id] = index;
+                            return prev;
+                        }, {}),
+                        tree = [];
 
-                nodes.forEach(function (node) {
-                    if (node.parent) {
-                        nodes[idMap[node.parent]].items = nodes[idMap[node.parent]].items || [];
-                        nodes[idMap[node.parent]].items.push(node);
-                        nodes[idMap[node.parent]].items =
-                            nodes[idMap[node.parent]].items.sort(function (a, b) {
+                    nodes.forEach(function (node) {
+                        if (node.parent) {
+                            nodes[idMap[node.parent]].items = nodes[idMap[node.parent]].items || [];
+                            nodes[idMap[node.parent]].items.push(node);
+                            nodes[idMap[node.parent]].items =
+                                nodes[idMap[node.parent]].items.sort(function (a, b) {
+                                    return +a.order - +b.order;
+                                });
+                        } else {
+                            tree.push(node);
+                            tree = tree.sort(function (a, b) {
                                 return +a.order - +b.order;
                             });
-                    } else {
-                        tree.push(node);
-                        tree = tree.sort(function (a, b) {
-                            return +a.order - +b.order;
-                        });
-                    }
-                });
+                        }
+                    });
 
-                menu = tree;
-                return menu;
-            });
+                    menu = tree;
+                    return menu;
+                });
         },
 
         /**
@@ -320,11 +315,9 @@ modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
             var nodeIds = docRecords.map(function (record) {
                 return record.key.split(':')[1];
             });
-            return db.getByCriteria(function (record) {
-                var k = record.key,
-                    v = record.value;
-                return k.indexOf('nodes:') > -1 && nodeIds.indexOf(v.id) > -1;
-            });
+            return this.getNodesByCriteria(function (record) {
+                return nodeIds.indexOf(record.key) > -1;
+            }, false);
         },
 
         /**
