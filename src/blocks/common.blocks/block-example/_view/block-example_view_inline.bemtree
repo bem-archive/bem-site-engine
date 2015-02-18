@@ -23,7 +23,7 @@ block('block-example').mod('view', 'inline')(
                         {
                             elem: 'source-code',
                             elemMods: { view: 'text' },
-                            content: this._bemjson
+                            content: this.xmlEscape(this._bemjson)
                         },
                         {
                             elem: 'source-copy',
