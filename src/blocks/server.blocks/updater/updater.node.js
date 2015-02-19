@@ -59,6 +59,12 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
 
             yd.get().readFile(path.join(yd.get().getNamespace(), config.get('NODE_ENV')))
                 .then(function (snapshotName) {
+                    if (!snapshotName.match(/[0-9]{1,}:[0-9]{1,}:[0-9]{4}-[0-9]{1,}:[0-9]{1,}:[0-9]{1,}/)) {
+                        logger.error(
+                            u.format('Snapshot name for %s environment has invalid format', config.get('NODE_ENV')));
+                        return;
+                    }
+
                     if (!snapshotName) {
                         logger.error(u.format('Snapshot name for %s environment undefined', config.get('NODE_ENV')));
                         return;

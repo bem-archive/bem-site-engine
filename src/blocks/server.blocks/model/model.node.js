@@ -68,15 +68,18 @@ modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
         loadData: function () {
             return yd.get().readFile(path.join(yd.get().getNamespace(), config.get('NODE_ENV')))
                 .then(function (snapshotName) {
-                    if (!snapshotName) {
+                    if (!snapshotName ||
+                        !snapshotName.match(/[0-9]{1,}:[0-9]{1,}:[0-9]{4}-[0-9]{1,}:[0-9]{1,}:[0-9]{1,}/)) {
                         return new Error(
-                            u.format('Snapshot name for %s environment undefined', config.get('NODE_ENV')));
+                            u.format('Snapshot name for %s environment undefined or has invalid format',
+                                config.get('NODE_ENV')));
                     }
                     var extractedPath = path.join(DB_PATH.WORKER, config.get('NODE_ENV')),
                         remotePath = path.join(yd.get().getNamespace(), snapshotName, ARCHIVE_NAME),
                         localPath = path.join(extractedPath, ARCHIVE_NAME);
                     return vowFs
-                        .makeDir(extractedPath).then(function () {
+                        .makeDir(extractedPath)
+                        .then(function () {
                             return yd.get().downloadFile(remotePath, localPath);
                         })
                         .then(function () {
@@ -95,8 +98,8 @@ modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
                 })
                 .fail(function (err) {
                     logger.error(err);
-                    logger.error('Media storage is unreachable now');
-                    return err;
+                    logger.error('Yandex Disk is unreachable now');
+                    throw err;
                 });
         },
 
