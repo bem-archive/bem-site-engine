@@ -34,8 +34,16 @@ modules.define('updater', ['logger', 'config', 'util', 'model', 'middleware__red
             job.start();
         },
 
+        getWorker: function () {
+            return worker;
+        },
+
         getMarker: function () {
-            return marker || {};
+            return marker;
+        },
+
+        setMarker: function (m) {
+            marker = m;
         },
 
         update: function (snapshotName) {
