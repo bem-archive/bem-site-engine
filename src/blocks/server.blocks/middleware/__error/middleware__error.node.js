@@ -9,7 +9,8 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
 
     logger = logger(module);
 
-    var staticsUrl = url.format(config.get('statics'));
+    var staticsUrl = url.format(config.get('statics')),
+        metrikaId = config.get('metrika');
 
     /**
      * Loads compiled error pages for testing and production environments
@@ -26,14 +27,28 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
                 vowFs.read(path.join(errorBundlesPath, 'error-500', 'error-500.' + lang + '.html'), 'utf-8')
             ]).spread(function (error404, error500) {
                 errorPages[lang] = {
-                    error404: error404.replace(/\{STATICS_HOST\}/g, staticsUrl),
-                    error500: error500.replace(/\{STATICS_HOST\}/g, staticsUrl)
+                    error404: replaceTmplShortcut(error404),
+                    error500: replaceTmplShortcut(error500)
                 };
             });
         }))
             .then(function () {
                 return errorPages;
             });
+    }
+
+    /**
+     * Replace template shortcut in target file
+     * for example:
+     * {STATICS_HOST\} - /static_host
+     * {METRIKA_ID\} - 123456
+     * @param target - source file (now bemjson)
+     * @returns {*}
+     */
+    function replaceTmplShortcut(target) {
+        return target
+            .replace(/\{STATICS_HOST\}/g, staticsUrl)
+            .replace(/\{METRIKA_ID\}/g, metrikaId ? metrikaId : null);
     }
 
     /**
