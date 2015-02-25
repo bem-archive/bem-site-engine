@@ -43,7 +43,8 @@
             "content": 500
         },
         {
-            "block": "metrika"
+            "block": "metrika",
+            "id": "{METRIKA_ID}"
         }
     ]
 })
