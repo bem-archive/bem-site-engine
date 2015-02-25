@@ -17,7 +17,10 @@ block('page')(
 
     mode('head')(function () {
         var c = [],
-            meta = this.data.meta;
+            data = this.data,
+            meta = data.meta,
+            lang = data.lang,
+            metaSearch = data.node && data.node.meta;
 
         c.push({ elem: 'css' });
 
@@ -45,10 +48,106 @@ block('page')(
 
             if (meta.ogImage)
                 c.push({ elem: 'meta', attrs: { property: 'og:image', content: meta.ogImage } });
+        }
 
+        /**
+         * Special object with meta data for search robots
+         * Contain 2 properties ->
+         * bredcrumbs = { en: ..., ru: ....},
+         * fields = { en: ..., ru: ....}
+         */
+        if (metaSearch && lang) {
+            c = c.concat(apply('metaSearch', {
+                ctx: { _metaSearch: metaSearch, _lang: lang }
+            }));
         }
 
         return applyCtx(c);
+    }),
+
+    mode('metaSearch')(function () {
+        var c = [],
+            lang = this.ctx._lang,
+            metaSearch = this.ctx._metaSearch,
+            fields = metaSearch.fields[lang],
+            breadcrumbs = metaSearch.breadcrumbs[lang];
+
+        if (breadcrumbs) {
+            var breadcrumbsList = breadcrumbs.map(function (item) {
+                return ['<bc><url>', item.url, '</url><name>', item.title, '</name></bc>'].join('');
+            });
+
+            breadcrumbsList = '<breadcrumbs>' + breadcrumbsList.join() + '</breadcrumbs>';
+            c.push({ elem: 'meta', attrs: { name: 'breadcrumbs', content: breadcrumbsList } });
+        }
+
+        if (fields) {
+            /**
+             * All pager need special meta tag -> name: type
+             * for example:
+             * type -> doc, library, block
+             */
+            if (fields.type)
+                c.push({ elem: 'meta', attrs: { name: 'type', content: fields.type } });
+
+            /**
+             * Keywords,
+             * For page type doc -> get from tags
+             * For page type library/block -> get from key parts, name, library, version, ...
+             */
+            if (fields.keywords && this.isArray(fields.keywords) && fields.keywords.length)
+                c.push({ elem: 'meta', attrs: { name: 'keywords', content: fields.keywords.join(',') } });
+
+            /**
+             * Meta block for block pages
+             * for example:
+             * name -> button
+             * library -> bem-components
+             * version -> v2.0.0
+             * level -> desktop
+             * status -> in development, now always set to 'current'
+             */
+            if (fields.block) {
+                var block = fields.block;
+
+                if (block.name)
+                    c.push({ elem: 'meta', attrs: { name: 'block', content: block.name } });
+
+                if (block.library)
+                    c.push({ elem: 'meta', attrs: { name: 'library', content: block.library } });
+
+                if (block.version)
+                    c.push({ elem: 'meta', attrs: { name: 'version', content: block.version } });
+
+                if (block.level)
+                    c.push({ elem: 'meta', attrs: { name: 'level', content: block.level } });
+
+                if (block.status)
+                    c.push({ elem: 'meta', attrs: { name: 'status', content: block.status } });
+            }
+
+            /**
+             * Meta block for library pages
+             * for example:
+             * name -> bem-components
+             * version -> v2.0.0
+             * page -> all types of pages library, e.g. description || notes || changelog || ...
+             */
+            if (fields.library) {
+                var library = fields.library;
+
+                if (library.name)
+                    c.push({ elem: 'meta', attrs: { name: 'library', content: library.name } });
+
+                if (library.version)
+                    c.push({ elem: 'meta', attrs: { name: 'version', content: library.version } });
+
+                if (library.page)
+                    c.push({ elem: 'meta', attrs: { name: 'doc_type', content: library.page } });
+            }
+        }
+
+        return c;
     }),
 
     content()(function () {
