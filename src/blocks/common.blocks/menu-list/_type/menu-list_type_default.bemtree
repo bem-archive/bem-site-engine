@@ -2,11 +2,7 @@ block('menu-list').mod('type', 'default')(
 
     match(function () { return this.ctx.content; }).content()(function () {
         return this.ctx.content.map(function (item) {
-            /*
-            console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
-                        item.title, item.url, item.type, item.active, item.size);
-            */
-            return apply('item', { ctx: item });
+             return apply('item', { ctx: item });
         });
     }),
 
@@ -28,10 +24,13 @@ block('menu-list').mod('type', 'default')(
             }),
 
             match(function () { return this.ctx.type === 'select'; })(function () {
-                var items = this.ctx.items,
+                var ctx = this.ctx,
+                    items = ctx.items,
                     options = items.map(function (subitem) {
                         return {
+                            // link to libs page -> libs/islands/v3.1.0
                             val: subitem.url,
+                            // version libs -> v3.1.0
                             text: subitem.title
                         };
                     }),
@@ -44,20 +43,39 @@ block('menu-list').mod('type', 'default')(
 
                 return {
                     elem: 'group-select',
-                    elemMods: this.ctx.active ? { active: 'yes' } : undefined,
+                    elemMods: ctx.active ? { active: 'yes' } : undefined,
                     content: {
                         block: 'lib-switch',
                         content: [
+
+                            /**
+                             * link to last current version
+                             */
                             apply('item', { ctx: (function (ctx) {
                                 ctx._selectVal = true;
                                 return ctx;
-                            })(this.ctx) }),
+                            })(ctx) }),
+
+                            /**
+                             * Select version
+                             */
                             {
                                 block: 'select',
-                                mods: { mode: 'radio', theme: 'islands', size: 's' },
+                                mods: {
+                                    mode: 'radio',
+                                    theme: 'islands',
+                                    size: 's',
+                                    versions: true
+                                },
                                 val: active.url,
                                 text: active.title,
-                                options: options
+                                options: options,
+                                /**
+                                 *  Lib`s name -> islands
+                                 *  need for build data attr for menu-item
+                                 *  e.g. data-lib-name="islands"
+                                 */
+                                lib: ctx.title
                             }
                         ]
                     }

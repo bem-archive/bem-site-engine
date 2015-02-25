@@ -1,0 +1,5 @@
+block('select').mod('versions', true)(
+    def()(function () {
+        applyNext({ _selectVersion: true });
+    })
+);

@@ -1,0 +1,16 @@
+block('menu-item')(
+    attrs().match(function () { return this._selectVersion; })(function () {
+        /**
+         * Set custom data attrs for search engine
+         */
+        var ctx = this.ctx,
+            attrs = {
+            // TODO: Get thn name of a lib/technology not from privat select variable
+            'data-lib-name': this._select && this._select.lib ? this._select.lib : undefined,
+            'data-lib-version': ctx.content,
+            'data-lib-url': ctx.val
+        };
+
+        return this.extend(applyNext(), attrs);
+    })
+);
