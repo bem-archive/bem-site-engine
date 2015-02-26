@@ -1,5 +1,8 @@
-modules.define('middleware__service', ['config', 'logger', 'updater'],
-    function (provide, config, logger, updater) {
+var path = require('path'),
+    fs = require('fs');
+
+modules.define('middleware__service', ['config', 'logger'],
+    function (provide, config, logger) {
         logger = logger(module);
 
         provide(function () {
@@ -9,6 +12,13 @@ modules.define('middleware__service', ['config', 'logger', 'updater'],
                     return next();
                 }
                 logger.info('Service request has been received');
+
+                var marker;
+                try {
+                    marker = fs.readFileSync(path.join(process.cwd(), 'db', 'marker'));
+                } catch (err) {
+                    logger.error('Marker file can not be read');
+                }
 
                 var result = {
                     config: {
@@ -20,7 +30,7 @@ modules.define('middleware__service', ['config', 'logger', 'updater'],
                             err: config.get('logger:stderr')
                         }
                     },
-                    marker: updater.getMarker()
+                    marker: marker
                 };
 
                 return res.json(result);
