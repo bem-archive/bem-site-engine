@@ -251,7 +251,7 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          */
         getNodesBySourceRecords: function (docRecords) {
             var nodeIds = docRecords.map(function (record) {
-                return record.key.split(':')[1];
+                return 'nodes:' + record.key.split(':')[1];
             });
             return this.getNodesByCriteria(function (record) {
                 return nodeIds.indexOf(record.key) > -1;
