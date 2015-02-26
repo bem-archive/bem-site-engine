@@ -2,11 +2,10 @@ var path = require('path'),
 
     _ = require('lodash'),
     vow = require('vow'),
-    // vowFs = require('vow-fs'),
     express = require('express');
 
-modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updater'],
-    function (provide, config, logger, util, model, middleware, updater) {
+modules.define('app', ['config', 'logger', 'util', 'model', 'middleware'],
+    function (provide, config, logger, util, model, middleware) {
         logger = logger(module);
 
         provide({
@@ -67,13 +66,7 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                 model.init()
                     .then(function () {
                         return this.startServer();
-                    }, this)
-                    .then(function () {
-                        if (config.get('update:enable')) {
-                            updater.init();
-                            updater.start();
-                        }
-                    });
+                    }, this);
             }
         });
 });

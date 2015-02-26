@@ -1,6 +1,0 @@
-- block: logger
-- block: config
-- block: model
-- block: util
-- block: middleware
-- block: yandex-disk

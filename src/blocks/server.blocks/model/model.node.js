@@ -1,106 +1,67 @@
 var u = require('util'),
     path = require('path'),
-    cp = require('child_process'),
 
     luster = require('luster'),
     _ = require('lodash'),
     vow = require('vow'),
     vowFs = require('vow-fs');
 
-modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
-    function (provide, config, logger, util, db, yd) {
+modules.define('model', ['config', 'logger', 'util', 'database'],
+    function (provide, config, logger, util, db) {
     logger = logger(module);
 
     var menu,
         people,
         peopleUrls,
-        worker = util.isDev() ? 0 : (luster.id || 0),
+        worker = luster.id || 0,
         DB_PATH = {
             DB: path.join(process.cwd(), 'db'),
             BASE: path.join(process.cwd(), 'db', 'leveldb'),
             WORKER: path.join(process.cwd(), u.format('db/worker_%s', worker))
         },
-        ARCHIVE_NAME = 'leveldb.tar.gz';
-        yd.init(config.get('yandex-disk'));
+        initDBForWorker = function () {
+            var workerDBPath = path.join(DB_PATH.WORKER, 'leveldb');
+            return vowFs.exists(workerDBPath)
+                .then(function () {
+                    logger.debug('remove dir %s', workerDBPath);
+                    return util.removeDir(workerDBPath);
+                })
+                .then(function () {
+                    logger.debug('create dir %s', workerDBPath);
+                    return vowFs.makeDir(workerDBPath);
+                })
+                .then(function () {
+                    logger.debug('copy database files from %s to %s', DB_PATH.BASE, workerDBPath);
+                    return util.copyDir(DB_PATH.BASE, workerDBPath);
+                })
+                .then(function () {
+                    logger.debug('connect to database in path %s', workerDBPath);
+                    return db.connect(workerDBPath);
+                })
+                .then(function () {
+                    logger.debug('extract sitemap.xml file', workerDBPath);
+                    return extractSitemapXMLFile();
+                });
+        };
 
     provide({
+
         /**
          * Loads data model from local filesystem or yandex Disk depending on environment and fills the model
          * @returns {*}
          */
         init: function () {
             logger.info('Initialize model for worker %s', worker);
-
-            // clear page cache
-            util.clearPageCache();
-
-            var p = path.join(DB_PATH.WORKER, 'run', 'leveldb');
-            return vowFs.exists(p)
-                .then(function (exists) {
-                    if (exists) {
-                        logger.debug('Database for worker %s already exists. Try to connect to it', worker);
-                        return db.connect(p);
-                    }
-                    var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : this.loadData();
-                    return promise.then(function (snapshot) {
-                        logger.debug('remove dir %s', p);
-                        return util.removeDir(p)
-                            .then(function () {
-                                logger.debug('create dir %s', p);
-                                return vowFs.makeDir(p);
-                            })
-                            .then(function () {
-                                logger.debug('copy database files from %s to %s', snapshot, p);
-                                return util.copyDir(snapshot, p);
-                            })
-                            .then(function () {
-                                logger.debug('connect to database in path %s', p);
-                                return db.connect(p);
-                            })
-                            .then(function () {
-                                logger.debug('extract sitemap.xml file', p);
-                                return extractSitemapXMLFile();
-                            });
-                    });
-                }, this);
-        },
-
-        loadData: function () {
-            return yd.get().readFile(path.join(yd.get().getNamespace(), config.get('NODE_ENV')))
-                .then(function (snapshotName) {
-                    if (!snapshotName ||
-                        !snapshotName.match(/[0-9]{1,}:[0-9]{1,}:[0-9]{4}-[0-9]{1,}:[0-9]{1,}:[0-9]{1,}/)) {
-                        return new Error(
-                            u.format('Snapshot name for %s environment undefined or has invalid format',
-                                config.get('NODE_ENV')));
-                    }
-                    var extractedPath = path.join(DB_PATH.WORKER, config.get('NODE_ENV')),
-                        remotePath = path.join(yd.get().getNamespace(), snapshotName, ARCHIVE_NAME),
-                        localPath = path.join(extractedPath, ARCHIVE_NAME);
-                    return vowFs
-                        .makeDir(extractedPath)
-                        .then(function () {
-                            return yd.get().downloadFile(remotePath, localPath);
-                        })
-                        .then(function () {
-                            var def = vow.defer();
-                            cp.exec(u.format('tar -zxvf %s -C %s',
-                                    path.join(extractedPath, ARCHIVE_NAME), extractedPath),
-                                function (error) {
-                                    error ? def.reject(error) : def.resolve();
-                                });
-                            return def.promise();
-                        })
-                        .then(function () {
-                            return path.join(extractedPath, 'leveldb');
-                        });
-
-                })
-                .fail(function (err) {
-                    logger.error(err);
-                    logger.error('Yandex Disk is unreachable now');
-                    throw err;
+            var _this = this;
+            if (luster.isWorker) {
+                console.log('send initWorker command from worker %s', worker);
+                luster.remoteCall('initWorker', worker);
+                luster.registerRemoteCommand('reloadDatabase', function () {
+                    logger.info('Worker %s received "reloadDatabase" command', worker);
+                    return _this.reload();
                 });
+            }
+            return initDBForWorker();
         },
 
         /**
@@ -109,35 +70,9 @@ modules.define('model', ['config', 'logger', 'util', 'database', 'yandex-disk'],
          */
         reload: function () {
             menu = null;
-            var promise = util.isDev() ? vow.resolve(DB_PATH.BASE) : this.loadData(),
-                p = path.join(DB_PATH.WORKER, 'run', 'leveldb'),
-                snapshot;
-
-            return promise
-                .then(function (_snapshot) {
-                    snapshot = _snapshot;
-                    return db.disconnect();
-                })
-                .then(function () {
-                    logger.debug('remove dir %s', p);
-                    return util.removeDir(p);
-                })
-                .then(function () {
-                    logger.debug('create dir %s', p);
-                    return vowFs.makeDir(p);
-                })
-                .then(function () {
-                    logger.debug('copy database files from %s to %s', snapshot, p);
-                    return util.copyDir(snapshot, p);
-                })
-                .then(function () {
-                    logger.debug('connect to database in path %s', p);
-                    return db.connect(p);
-                })
-                .then(function () {
-                    logger.debug('extract sitemap.xml file', p);
-                    return extractSitemapXMLFile();
-                });
+            return db.disconnect().then(function () {
+                return initDBForWorker();
+            });
         },
 
         // TODO implement redirects
