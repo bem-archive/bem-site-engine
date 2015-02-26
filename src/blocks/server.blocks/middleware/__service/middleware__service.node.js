@@ -15,7 +15,7 @@ modules.define('middleware__service', ['config', 'logger'],
 
                 var marker;
                 try {
-                    marker = fs.readFileSync(path.join(process.cwd(), 'db', 'marker'));
+                    marker = fs.readFileSync(path.join(process.cwd(), 'db', 'marker'), { encoding: 'utf-8' });
                 } catch (err) {
                     logger.error('Marker file can not be read');
                 }
