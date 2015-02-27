@@ -70,6 +70,8 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
          */
         reload: function () {
             menu = null;
+            people = null;
+            peopleUrls = null;
             return db.disconnect().then(function () {
                 return initDBForWorker();
             });
