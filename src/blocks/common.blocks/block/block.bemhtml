@@ -1,1 +1,9 @@
-block('block').js()(true);
+block('block')(
+
+    js()(true),
+
+    attrs()(function () {
+        // The attribute is required to specify the search engine that this block's content
+        return { 'data-search': 'content' };
+    })
+);

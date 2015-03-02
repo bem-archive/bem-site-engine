@@ -144,6 +144,9 @@ block('page')(
 
                 if (library.page)
                     c.push({ elem: 'meta', attrs: { name: 'doc_type', content: library.page } });
+
+                if (library.status)
+                    c.push({ elem: 'meta', attrs: { name: 'status', content: library.status } });
             }
         }
 
