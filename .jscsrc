@@ -44,7 +44,6 @@
     "requireBlocksOnNewline": 1,
     "disallowSpacesInsideParentheses": true,
     "requireCommaBeforeLineBreak": true,
-    "requireCamelCaseOrUpperCaseIdentifiers": true,
     "disallowMultipleLineStrings": true,
     "disallowMultipleLineBreaks": true,
     "validateLineBreaks": "LF",

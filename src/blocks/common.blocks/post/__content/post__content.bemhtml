@@ -1,15 +1,28 @@
-block('post').elem('content').match(function () {
-    return !(this.ctx.content || []).length;
-}).content()(function () {
-    return {
-        block: 'plug',
-        content: [
-            BEM.I18N('post', 'plug'),
-            {
-                block: 'link',
-                url: this.ctx.url,
-                content: BEM.I18N('post', 'plugLink')
-            }
-        ]
-    };
-});
+block('post').elem('content')(
+    match(function () {
+        return !(this.ctx.content || []).length;
+    }).content()(function () {
+        return {
+            block: 'plug',
+            content: [
+                BEM.I18N('post', 'plug'),
+                {
+                    block: 'link',
+                    url: this.ctx.url,
+                    content: BEM.I18N('post', 'plugLink')
+                }
+            ]
+        };
+    }),
+
+    content()(function () {
+        var c = applyNext();
+        // The attribute is required to specify the search engine that this page's title
+        return c.replace('<h1', '<h1 data-search="title"');
+    }),
+
+    attrs()(function () {
+        // The attribute is required to specify the search engine that this page's content
+        return { 'data-search': 'content' };
+    })
+);
