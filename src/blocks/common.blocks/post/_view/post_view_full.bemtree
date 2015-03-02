@@ -123,7 +123,9 @@ block('post').mod('view', 'full')(
     }),
 
     mode('issue')(function () {
-        var repo = this.ctx.content;
+        var repo = this.ctx.content,
+            // Match on the tag /technology/bemhtml/[2.3.0]/reference/
+            isTag = /\/v?\d\.\d\.\d\//.test(this.data.node.url);
 
         if (!repo) return [];
 
@@ -139,7 +141,7 @@ block('post').mod('view', 'full')(
             }
         ];
 
-        issueContent = repo.type === 'public' ? issueContent.concat([
+        issueContent = repo.type === 'public' && !isTag ? issueContent.concat([
             {
                 tag: 'span',
                 content: BEM.I18N('post', 'repo-alternative')
