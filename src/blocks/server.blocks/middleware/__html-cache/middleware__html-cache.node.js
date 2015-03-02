@@ -2,17 +2,25 @@ var fs = require('fs'),
     zlib = require('zlib'),
     path = require('path');
 
-modules.define('middleware__html-cache', ['logger', 'constants'], function (provide, logger, constants) {
+modules.define('middleware__html-cache', ['logger', 'constants', 'config'],
+    function (provide, logger, constants, config) {
     logger = logger(module);
 
     provide(function () {
+
+        if (config.get('NODE_ENV') === 'development') {
+            return function (req, res, next) {
+                return next();
+            };
+        }
+
         return function (req, res, next) {
             var pagePath = path.join(constants.PAGE_CACHE, req.__data.node.url, req.lang + '.html.gzip');
-            
+
             if (req.disableCache) {
                 return next();
             }
-            
+
             fs.exists(pagePath, function (exists) {
                 if (!exists) {
                     return next();
