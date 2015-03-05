@@ -24,6 +24,8 @@ block('page')(
 
         c.push({ elem: 'css' });
 
+        c.push({ elem: 'meta', attrs: { 'http-equiv': 'Content-Type', content: 'text/html; charset=utf-8' } });
+
         if (meta) {
             if (meta.description)
                 c.push({ elem: 'meta', attrs: { name: 'description', content: meta.description } });
