@@ -56,6 +56,14 @@ modules.define(
             // remove level suffixes
             // Remove tab parts of url before processing it
             // Remove trailing slash for url
+            var tabSuffix = url.match(/\/docs\/?$/);
+            tabSuffix = tabSuffix || url.match(/\/jsdoc\/?$/);
+            tabSuffix = tabSuffix || url.match(/\/examples\/?$/);
+
+            if (tabSuffix) {
+                tabSuffix = tabSuffix[0];
+            }
+
             url = url.replace(/\.(sets|docs)/, '');
             url = url.replace(/(\/docs\/)|(\/jsdoc\/)|(\/examples\/)?/gi, '');
             url = url !== '/' ? url.replace(/(\/)+$/, '') : url;
@@ -87,6 +95,11 @@ modules.define(
                             })[0];
 
                         url = url.replace(/\/current\/?/, version + '/');
+
+                        if (tabSuffix) {
+                            url += tabSuffix;
+                        }
+
                         res.redirect(301, url);
                         return null;
                     });
