@@ -30,6 +30,8 @@ modules.define('middleware__html-cache', ['logger', 'constants', 'config'],
                 var raw = fs.createReadStream(pagePath),
                     acceptEncoding = req.headers['accept-encoding'] || '';
 
+                res.contentType('text/html; charset=UTF-8');
+
                 if (acceptEncoding.match(/\bgzip\b/)) {
                     res.writeHead(200, { 'content-encoding': 'gzip' });
                     raw.pipe(res);
