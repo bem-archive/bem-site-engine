@@ -31,7 +31,6 @@ modules.define('middleware__html-cache', ['logger', 'constants', 'config'],
                     acceptEncoding = req.headers['accept-encoding'] || '';
 
                 res.contentType('text/html; charset=UTF-8');
-                res.removeHeader('X-Powered-By');
 
                 if (acceptEncoding.match(/\bgzip\b/)) {
                     res.writeHead(200, { 'content-encoding': 'gzip' });

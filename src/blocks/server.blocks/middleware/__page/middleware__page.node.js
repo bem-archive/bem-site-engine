@@ -100,7 +100,6 @@ modules.define('middleware__page', ['config', 'logger', 'util', 'model', 'templa
                             }
 
                             res.contentType('text/html; charset=UTF-8');
-                            res.removeHeader('X-Powered-By');
                             res.end(html);
                         })
                         .fail(function (err) {

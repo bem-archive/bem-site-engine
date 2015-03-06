@@ -22,7 +22,8 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware'],
                 app
                     .use(enbServer.createMiddleware())
                     .use(express.static(rootPath))
-                    .use(express.favicon(path.resolve(staticsDir, 'www/favicon.ico')));
+                    .use(express.favicon(path.resolve(staticsDir, 'www/favicon.ico')))
+                    .disable('x-powered-by');
 
                 return app;
             },
