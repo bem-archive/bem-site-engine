@@ -64,7 +64,11 @@ modules.define(
                 tabSuffix = tabSuffix[0];
             }
 
-            url = url.replace(/\.(sets|docs)/, '');
+            var setsOrDocs = /\.(sets|docs)/;
+            if (url.match(setsOrDocs)) {
+                return res.redirect(301, url.replace(setsOrDocs, ''));
+            }
+
             url = url.replace(/(\/docs\/)|(\/jsdoc\/)|(\/examples\/)?/gi, '');
             url = url !== '/' ? url.replace(/(\/)+$/, '') : url;
 
