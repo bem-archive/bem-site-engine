@@ -133,6 +133,16 @@ modules.define('util', ['logger', 'constants', 'config'], function (provide, log
             return vowFs.exists(constants.PAGE_CACHE).then(function (exists) {
                 return exists ? this.removeDir(constants.PAGE_CACHE) : vow.resolve();
             }, this);
+        },
+        
+        /**
+         * Get domain without subdomain and port/socket
+         * @param host -> ru.bem.info || en.bem.info || bem.info:3015
+         * @returns {string} -> e.g. bem.info
+         */
+        getDomain: function(host) {
+            if (!host || host.indexOf('localhost') > -1) return '';
+            return host.split(':')[0].replace(/^(en|ru)\./, '');
         }
     });
 });
