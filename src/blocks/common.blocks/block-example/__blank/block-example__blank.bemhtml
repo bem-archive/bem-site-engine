@@ -5,10 +5,7 @@ block('block-example').elem('blank')(
         return applyCtx({
             block: 'link',
             url: ctx.url,
-            attrs: {
-                target: '_blank',
-                title: BEM.I18N('block-example', 'example-title')
-            },
+            attrs: ctx.attrs,
             mix: {
                 block: this.block,
                 elem: 'link',

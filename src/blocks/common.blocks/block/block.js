@@ -94,7 +94,8 @@ provide(BEMDOM.decl(this.name, {
 
         this.findBlocksInside('block-example').forEach(function (example) {
             // lazy loading for default examples in tab 'examples'
-            if (example.hasMod('view', 'default') && _this._getTabName() !== 'examples') {
+            // !window.history - hack for browsers, which doesn't support window.history
+            if (example.hasMod('view', 'default') && _this._getTabName() !== 'examples' && !window.history) {
                 return false;
             }
 
