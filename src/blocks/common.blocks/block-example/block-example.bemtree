@@ -71,6 +71,10 @@ block('block-example')(
                     {
                         elem: 'blank',
                         url: url,
+                        attrs: {
+                            target: req.headers['user-agent'].indexOf('MSIE 8.0') < 0 ? '_blank' : undefined,
+                            title: BEM.I18N('block-example', 'examples-title')
+                        },
                         content: (title && name) ? title + ' (' + name + ')' : ''
                     },
                     {
