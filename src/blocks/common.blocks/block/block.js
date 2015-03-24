@@ -39,7 +39,7 @@ modules.define('block', ['i-bem__dom', 'jquery', 'history'], function (provide, 
          * open the tab by changed url in address bar
          * For browsers, that not support history API,
          * bem-history generate `popstate` event on every hashchange for support back/next buttons,
-         * but in our cases this brings us some problem:
+         * but in our cases it brings us some problem:
          * when we click on tab and open needed one pane,
          * we get `popstate` event, like we click on back/next button
          * and call `this._openTab` twice
@@ -56,7 +56,7 @@ modules.define('block', ['i-bem__dom', 'jquery', 'history'], function (provide, 
 
         /**
          * Open tab pane first, when page was loaded
-         * If location.pathname contain tabName, this tab will be activate
+         * If location.pathname contain tabName, this tab will be activated
          * @returns {*}
          * @private
          */
@@ -81,7 +81,7 @@ modules.define('block', ['i-bem__dom', 'jquery', 'history'], function (provide, 
         /**
          * Get jQuery tab elem by passed name
          * @param {String} tabName - name of the tab, that we want to get
-         * @returns {jQuery|null} - if we not found the tab, return null
+         * @returns {jQuery|null} - if we didn't found tab, return null
          * @private
          */
         _getTabByName: function (tabName) {
@@ -101,11 +101,12 @@ modules.define('block', ['i-bem__dom', 'jquery', 'history'], function (provide, 
          * @private
          */
         _getTabNameByPath: function () {
-            var name = window.location.href.match(/\/(docs|jsdoc|examples)/),
+            var href = window.location.href,
+                name = href.match(/\/(docs|jsdoc|examples)/),
                 tabName = name ? name[1] : null;
 
             if (!this._supportHistoryApi() && tabName) {
-                window.location.href = window.location.href.replace(tabName, '#!/' + tabName);
+                href = href.replace(tabName, '#!/' + tabName);
             }
 
             return tabName;
@@ -115,7 +116,7 @@ modules.define('block', ['i-bem__dom', 'jquery', 'history'], function (provide, 
          * Special method to get original path without tab name
          * This is needed to fix duplicating the name of the tab in the browser`s address bar,
          * e.g 'button/docs/jsdoc/examples/docs/'.
-         * When the name of the tab has set already, get path without name of the tab
+         * When the name of the tab has already set, get path without name of the tab
          * For example: /libs/name-of-libs/master/button/docs/ -> get  /libs/name-of-libs/master/button/
          * For old browsers use only the name of the tab for set link, cause use with hashbang '#!/ + tabname'
          * @returns {String}
@@ -148,7 +149,7 @@ modules.define('block', ['i-bem__dom', 'jquery', 'history'], function (provide, 
         /**
          *  Lazy loading for default examples in tab 'examples'
          *  We found all example inside block and check if this example not inline
-         *  and in this time example not active - do not load this example
+         *  and if example isn't activated - do not load this example
          * @param $tab
          * @private
          */
