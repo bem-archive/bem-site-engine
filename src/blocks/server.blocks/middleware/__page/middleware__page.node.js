@@ -16,6 +16,7 @@ modules.define('middleware__page', ['config', 'logger', 'util', 'model', 'templa
             getAdvancedData: function (req, node) {
                 var lang = req.lang,
                     result = {};
+
                 return vow.all([
                         model.getPeople(),
                         model.getPeopleUrls(),
@@ -24,32 +25,32 @@ modules.define('middleware__page', ['config', 'logger', 'util', 'model', 'templa
                     .spread(function (people, peopleUrls, source) {
                         result.people = people;
                         result.peopleUrls = peopleUrls;
+
                         if (source) {
                             node.source = {};
                             node.source[lang] = source;
                         }
+
                         return result;
                     })
                     .then(function (result) {
                         if (node.view === 'block') {
+                            if (!node.source) return vow.resolve(result);
+
                             var s = node.source,
-                                dataKey,
-                                jsdocKey;
-                            if (!s) {
-                                return vow.resolve(result);
-                            }
+                                dataKey = s.data,
+                                jsdocKey = s.jsdoc;
 
-                            dataKey = s.data;
-                            jsdocKey = s.jsdoc;
-
-                            if (!dataKey || !jsdocKey) {
-                                return vow.resolve(result);
-                            }
-
-                            return vow.all([model.getBlock(dataKey), model.getBlock(jsdocKey)])
+                            // If docs or jsdoc not exist, it must be empty object
+                            // for legacy docs data structure
+                            return vow.all([
+                                    dataKey ? model.getBlock(dataKey) : {},
+                                    jsdocKey ? model.getBlock(jsdocKey) : {}
+                                ])
                                 .spread(function (data, jsdoc) {
                                     s.data = data;
                                     s.jsdoc = jsdoc;
+
                                     return vow.resolve(result);
                                 });
                         } else if (node.view === 'authors') {
