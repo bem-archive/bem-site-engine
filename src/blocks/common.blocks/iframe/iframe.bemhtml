@@ -1,0 +1,9 @@
+block('iframe')(
+    tag()('iframe'),
+
+    attrs()(function () {
+        return {
+            src: this.ctx.src
+        };
+    })
+);
