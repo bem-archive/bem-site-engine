@@ -67,7 +67,7 @@ block('block')(
     mode('docs-header')(function () {
         return {
             elem: 'tab',
-            attrs: { 'data-tab': 'docs' },
+            url: 'docs',
             mods: { 'side': 'left' },
             content: BEM.I18N('block', 'docs')
         };
@@ -93,7 +93,7 @@ block('block')(
     mode('jsdoc-header')(function () {
         return {
             elem: 'tab',
-            attrs: { 'data-tab': 'jsdoc' },
+            url: 'jsdoc',
             content: BEM.I18N('block', 'jsdoc')
         };
     }),
@@ -161,7 +161,7 @@ block('block')(
     mode('examples-header')(function () {
         return {
             elem: 'tab',
-            attrs: { 'data-tab': 'examples' },
+            url: 'examples',
             mods: { 'side': 'right', 'examples': 'yes' },
             content: BEM.I18N('block', 'examples')
         };

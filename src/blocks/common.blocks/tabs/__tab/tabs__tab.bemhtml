@@ -1,0 +1,4 @@
+block('tabs').elem('tab')(
+    tag()('a'),
+    attrs()(function () { return { href: this.ctx.url }; })
+);
