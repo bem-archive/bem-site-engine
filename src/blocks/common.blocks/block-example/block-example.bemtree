@@ -57,7 +57,8 @@ block('block-example')(
     content()(function () {
         var title = this._title,
             name = this._name,
-            url = this._url;
+            url = this._url,
+            ua = req.headers['user-agent'];
 
         return [
             {
@@ -72,7 +73,7 @@ block('block-example')(
                         elem: 'blank',
                         url: url,
                         attrs: {
-                            target: req.headers['user-agent'].indexOf('MSIE 8.0') < 0 ? '_blank' : undefined,
+                            target: ua && ua.indexOf('MSIE 8.0') < 0 ? '_blank' : undefined,
                             title: BEM.I18N('block-example', 'examples-title')
                         },
                         content: (title && name) ? title + ' (' + name + ')' : ''
