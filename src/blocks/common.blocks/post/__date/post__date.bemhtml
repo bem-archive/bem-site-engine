@@ -3,25 +3,50 @@ block('post').elem('date')(
     match(function () { return !this.ctx.createDate && !this.ctx.editDate; })(
         def()(false)),
 
+    def()(function () {
+        /**
+         * Get the formatted date
+         * @param {Number} postDate - date in UNIX style, e.g. 1348606800000
+         * @returns {string} example: changed 14 match 2015
+         */
+        var getFormattedDate = function (postDate) {
+            var date = new Date();
+
+            date.setTime(postDate);
+
+            return [
+                date.getDate(),
+                ' ',
+                BEM.I18N('post', 'month' + date.getMonth()),
+                ' ',
+                date.getFullYear()
+            ].join('');
+        }
+        return applyNext({ _getFormattedDate: getFormattedDate });
+    }),
+
     content()(function () {
         var ctx = this.ctx,
             actionType = ctx.editDate ? 'editDate' : 'createDate';
 
-        function format(postDate) {
-            var date = new Date();
-            date.setTime(postDate);
-
-            var d = date.getDate(),
-                m = date.getMonth(),
-                y = date.getFullYear();
-
-            return d + ' ' + BEM.I18N('post', 'month' + m) + ' ' + y;
-        }
-
         return [
             BEM.I18N('post', actionType),
             ' ',
-            format(ctx[actionType])
+            this._getFormattedDate(ctx[actionType])
         ];
+    }),
+
+    match(function () {
+        // Show only if we show edit date,
+        // in else case -> this title not needed
+        return this.ctx.editDate;
+    }).attrs()(function () {
+        var title = [
+            BEM.I18N('post', 'createDate'),
+            ' ',
+            this._getFormattedDate(this.ctx.createDate)
+        ].join('');
+
+        return { title: title };
     })
 );
