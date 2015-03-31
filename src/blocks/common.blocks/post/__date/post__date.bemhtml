@@ -1,7 +1,10 @@
 block('post').elem('date')(
 
-    match(function () { return !this.ctx.createDate && !this.ctx.editDate; })(
-        def()(false)),
+    def().match(function () {
+        var ctx = this.ctx;
+
+        return !ctx.createDate && !ctx.editDate;
+    })(false),
 
     def()(function () {
         /**
@@ -9,44 +12,42 @@ block('post').elem('date')(
          * @param {Number} postDate - date in UNIX style, e.g. 1348606800000
          * @returns {string} example: changed 14 match 2015
          */
-        var getFormattedDate = function (postDate) {
-            var date = new Date();
-
-            date.setTime(postDate);
+        function getFormattedDate (postDate) {
+            var date = new Date(postDate);
 
             return [
                 date.getDate(),
-                ' ',
                 BEM.I18N('post', 'month' + date.getMonth()),
-                ' ',
                 date.getFullYear()
-            ].join('');
+            ].join(' ');
         }
-        return applyNext({ _getFormattedDate: getFormattedDate });
+
+        /**
+         * Get full date string with i18n and date
+         * @param {string} dateType -> type of showing date (edit|created)
+         * @returns {string}
+         */
+        function getDateString (dateType) {
+            return [
+                BEM.I18N('post', dateType),
+                getFormattedDate(this.ctx[dateType])
+            ].join(' ');
+        }
+
+        return applyNext({ _getDateString: getDateString });
     }),
 
     content()(function () {
-        var ctx = this.ctx,
-            actionType = ctx.editDate ? 'editDate' : 'createDate';
-
-        return [
-            BEM.I18N('post', actionType),
-            ' ',
-            this._getFormattedDate(ctx[actionType])
-        ];
+        return this._getDateString(this.ctx.editDate ? 'editDate' : 'createDate');
     }),
 
     match(function () {
-        // Show only if we show edit date,
-        // in else case -> this title not needed
+        /**
+         * Show only if we show edit date,
+         * in else case -> this title not needed
+         */
         return this.ctx.editDate;
     }).attrs()(function () {
-        var title = [
-            BEM.I18N('post', 'createDate'),
-            ' ',
-            this._getFormattedDate(this.ctx.createDate)
-        ].join('');
-
-        return { title: title };
+        return { title: this._getDateString('createDate') };
     })
 );
