@@ -16,6 +16,8 @@ bem-site-engine
 $ git clone git://github.com/bem/bem-site-engine.git && cd bem-site-engine
 ```
 
+Нужно сгенерировать токен (выбрать scope – `repo:status` и `public_repo`) и вставить его в конфиг [configs/common/app.json](https://github.com/bem/bem-site-engine/blob/dev/configs/common/app.json#L36).
+
 ##### Установка, сборка данных и запуск приложения одной командой
 
 ```
