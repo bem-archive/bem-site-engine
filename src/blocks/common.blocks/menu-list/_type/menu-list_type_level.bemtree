@@ -27,22 +27,28 @@ block('menu-list').mod('type', 'level')(
             return apply('item', { ctx: item });
         });
 
-        _content.unshift({
-            elem: 'level-choose',
-            content: {
-                block: 'select',
-                mix: { block: this.block, elem: 'level-select' },
-                mods: { mode: 'radio', theme: 'islands', size: 's', width: 'available' },
-                val: levels[0],
-                text: levels[0],
-                options: levels.map(function (level) {
-                    return {
-                        val: level,
-                        text: level
-                    };
-                })
+        _content.splice(
+            _.findIndex(_content, function (obj) { // find first level-group position
+                return obj.elem === 'level-group';
+            }),
+            0,
+            {
+                elem: 'level-choose',
+                content: {
+                    block: 'select',
+                    mix: { block: this.block, elem: 'level-select' },
+                    mods: { mode: 'radio', theme: 'islands', size: 's', width: 'available' },
+                    val: levels[0],
+                    text: levels[0],
+                    options: levels.map(function (level) {
+                        return {
+                            val: level,
+                            text: level
+                        };
+                    })
+                }
             }
-        });
+        );
 
         return _content;
     }),
