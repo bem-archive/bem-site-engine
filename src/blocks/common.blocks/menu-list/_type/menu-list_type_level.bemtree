@@ -2,37 +2,34 @@ block('menu-list').mod('type', 'level')(
     match(function () { return this.ctx.content; }).content()(function () {
         var levels = ['all levels'],
             _content = this.ctx.content.map(function (item) {
-        /* console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
-                        item.title, item.url, item.type, item.active, item.size);*/
+                /* console.log('menu item: title: %s url: %s type: %s active: %s size: %s',
+                            item.title, item.url, item.type, item.active, item.size);*/
 
-            if (item.type === 'group' && item.items) {
+                if (item.type === 'group' && item.items) {
 
-                levels.push(item.title);
+                    levels.push(item.title);
 
-                return {
-                    elem: 'level-group',
-                    attrs: { 'data-level': item.title },
-                    content: [
-                        {
-                            elem: 'title',
-                            content: item.title
-                        },
-                        item.items.map(function (subitem) {
-                            return apply('item', { ctx: subitem });
-                        })
-                    ]
-                };
-            }
+                    return {
+                        elem: 'level-group',
+                        attrs: { 'data-level': item.title },
+                        content: [
+                            {
+                                elem: 'title',
+                                content: item.title
+                            },
+                            item.items.map(function (subitem) {
+                                return apply('item', { ctx: subitem });
+                            })
+                        ]
+                    };
+                }
 
-            return apply('item', { ctx: item });
-        });
-
-        _content.splice(
-            _.findIndex(_content, function (obj) { // find first level-group position
+                return apply('item', { ctx: item });
+            }),
+            lvlGroupIndex = _.findIndex(_content, function (obj) { // find first level-group position
                 return obj.elem === 'level-group';
             }),
-            0,
-            [
+            levelSelect = [
                 { elem: 'delimeter' },
                 {
                     elem: 'level-choose',
@@ -50,8 +47,9 @@ block('menu-list').mod('type', 'level')(
                         })
                     }
                 }
-            ]
-        );
+            ];
+
+        _content.splice(lvlGroupIndex, 0, levelSelect);
 
         return _content;
     }),
