@@ -32,22 +32,25 @@ block('menu-list').mod('type', 'level')(
                 return obj.elem === 'level-group';
             }),
             0,
-            {
-                elem: 'level-choose',
-                content: {
-                    block: 'select',
-                    mix: { block: this.block, elem: 'level-select' },
-                    mods: { mode: 'radio', theme: 'islands', size: 's', width: 'available' },
-                    val: levels[0],
-                    text: levels[0],
-                    options: levels.map(function (level) {
-                        return {
-                            val: level,
-                            text: level
-                        };
-                    })
+            [
+                { elem: 'delimeter' },
+                {
+                    elem: 'level-choose',
+                    content: {
+                        block: 'select',
+                        mix: { block: this.block, elem: 'level-select' },
+                        mods: { mode: 'radio', theme: 'islands', size: 's', width: 'available' },
+                        val: levels[0],
+                        text: levels[0],
+                        options: levels.map(function (level) {
+                            return {
+                                val: level,
+                                text: level
+                            };
+                        })
+                    }
                 }
-            }
+            ]
         );
 
         return _content;

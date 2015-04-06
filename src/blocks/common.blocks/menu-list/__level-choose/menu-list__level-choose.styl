@@ -1,4 +1,14 @@
 .menu-list__level-choose
 {
-    margin: 3px 12px 2px 12px;
+    margin: 15px 12px 2px 12px;
+
+    & + .menu-list__level-group .menu-list__title
+    {
+        margin-top: 0;
+
+        &:before
+        {
+            content: none;
+        }
+    }
 }
