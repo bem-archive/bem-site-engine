@@ -125,7 +125,9 @@ block('post').mod('view', 'full')(
     mode('issue')(function () {
         var repo = this.ctx.content,
             // Match on the tag /technology/bemhtml/[2.3.0]/reference/
-            isTag = /\/v?\d\.\d\.\d\//.test(this.data.node.url);
+            isTag = /\/v?\d\.\d\.\d\//.test(this.data.node.url),
+            // some repos which doesn't have repo-issues-link need this check
+            issue = repo.issue || 'https://' + repo.host + '/' + repo.user + '/' + repo.repo + '/' + 'issues/new';
 
         if (!repo) return [];
 
@@ -136,7 +138,7 @@ block('post').mod('view', 'full')(
             },
             {
                 block: 'link',
-                url: repo.issue,
+                url: issue,
                 content: BEM.I18N('post', 'repo-issue')
             }
         ];
