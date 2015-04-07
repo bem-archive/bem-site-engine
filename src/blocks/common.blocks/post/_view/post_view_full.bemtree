@@ -124,44 +124,28 @@ block('post').mod('view', 'full')(
 
     mode('issue')(function () {
         var repo = this.ctx.content,
-            // Match on the tag /technology/bemhtml/[2.3.0]/reference/
-            isTag = /\/v?\d\.\d\.\d\//.test(this.data.node.url),
             // some repos which doesn't have repo-issues-link need this check
             issue = repo.issue || 'https://' + repo.host + '/' + repo.user + '/' + repo.repo + '/' + 'issues/new';
 
         if (!repo) return [];
 
-        var issueContent = [
-            {
-                tag: 'span',
-                content: BEM.I18N('post', 'repo-text')
-            },
-            {
-                block: 'link',
-                url: issue,
-                content: BEM.I18N('post', 'repo-issue')
-            }
-        ];
-
-        issueContent = repo.type === 'public' && !isTag ? issueContent.concat([
-            {
-                tag: 'span',
-                content: BEM.I18N('post', 'repo-alternative')
-            },
-            {
-                block: 'link',
-                url: repo.prose,
-                content: BEM.I18N('post', 'repo-prose')
-            },
-            {
-                tag: 'span',
-                content: BEM.I18N('post', 'repo-with-prose')
-            }
-        ]) : issueContent;
-
         return {
             elem: 'issue',
-            content: issueContent
+            content: [
+                {
+                    tag: 'span',
+                    content: BEM.I18N('post', 'repo-text')
+                },
+                {
+                    block: 'link',
+                    url: issue,
+                    content: BEM.I18N('post', 'repo-issue')
+                },
+                {
+                    tag: 'span',
+                    content: BEM.I18N('post', 'repo-on-github')
+                }
+            ]
         };
     }),
 
