@@ -35,11 +35,8 @@ module.exports = {
         "translate": "translate",
 
         "repo-text": "If you've spotted a typo or a mistake, or wish to add something on, you could ",
-        "repo-on-github": " on GitHub",
-        "repo-alternative": ", either ",
-        "repo-with-prose": " with prose.io.",
         "repo-issue": "write about this",
-        "repo-prose": "edit this article",
+        "repo-on-github": " on GitHub.",
 
         "url": "View it on Github",
         "deps": "Dependencies:"
