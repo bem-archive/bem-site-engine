@@ -6,7 +6,7 @@
   "dependencies": {
     "bem-core": "2.6.0",
     "bem-components": "2.1.0",
-    "bem-history": "git://github.com/bem/bem-history.git#v2"
+    "bem-history": "git://github.com/bem/bem-history.git#107bc24bcfe8995ea42608de21561ef0457ca797"
   },
   "ignore": [
     "node_modules",
