@@ -3,27 +3,14 @@ block('error-billboard')(
         var code = this.ctx.code;
 
         return [
-            {
-                elem: 'logo'
-            },
+            { elem: 'logo' },
             {
                 elem: 'panel',
                 content: [
-                    {
-                        elem: 'title',
-                        code: code
-                    },
-                    {
-                        elem: 'description',
-                        code: code
-                    },
-                    {
-                        elem: 'report'
-                    },
-                    {
-                        elem: 'sitemap'
-                    }
-
+                    { elem: 'title', code: code },
+                    { elem: 'description', code: code },
+                    { elem: 'report' },
+                    { elem: 'text' }
                 ]
             }
         ];
@@ -44,38 +31,30 @@ block('error-billboard')(
             return !this.ctx.code;
         })(false)),
 
-        tag()('h3'),
-
         content()(function () {
-            return BEM.I18N('error-billboard', 'description') + this.ctx.code;
+            return BEM.I18N('error-billboard', 'description') + ' ' + this.ctx.code;
         })
     ),
 
-    elem('report')(
-        tag()('h3'),
-
-        content()(function () {
-            return [
-                {
-                    tag: 'span',
-                    content: BEM.I18N('error-billboard', 'report')
-                },
-                {
-                    block: 'link',
-                    url: 'mailto:info@bem.info',
-                    content: 'info@bem.info'
-                }
-            ];
-        })
-    ),
-
-    elem('sitemap')(
-        content()(function () {
-            return {
+    elem('report').content()(function () {
+        return [
+            BEM.I18N('error-billboard', 'report'),
+            {
                 block: 'link',
-                url: '/tags',
-                content: BEM.I18N('error-billboard', 'sitemap')
-            };
-        })
-    )
+                url: 'mailto:info@bem.info',
+                content: 'info@bem.info'
+            }
+        ];
+    }),
+
+    elem('text').content()(function () {
+        return [
+            BEM.I18N('error-billboard', 'text'),
+            {
+                block: 'link',
+                url: '/',
+                content: BEM.I18N('error-billboard', 'main-page'),
+            }
+        ];
+    })
 );

@@ -5,6 +5,8 @@ module.exports = {
         "description404": "Resource not found",
         "description500": "Error occured on server",
         "report": "You can report this issue to: ",
-        "sitemap": "sitemap"
+        "sitemap": "sitemap",
+        "text": "Please, use search on ",
+        "main-page": "main page"
     }
 };
