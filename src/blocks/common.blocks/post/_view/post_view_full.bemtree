@@ -127,9 +127,6 @@ block('post').mod('view', 'full')(
 
         if (!repo) return [];
 
-        // some repos which doesn't have repo-issues-link need this check
-        var issue = repo.issue || 'https://' + repo.host + '/' + repo.user + '/' + repo.repo + '/' + 'issues/new' || '';
-
         return {
             elem: 'issue',
             content: [
@@ -139,12 +136,8 @@ block('post').mod('view', 'full')(
                 },
                 {
                     block: 'link',
-                    url: issue,
+                    url: repo.issue,
                     content: BEM.I18N('post', 'repo-issue')
-                },
-                {
-                    tag: 'span',
-                    content: BEM.I18N('post', 'repo-on-github')
                 }
             ]
         };
