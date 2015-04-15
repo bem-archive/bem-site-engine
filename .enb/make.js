@@ -122,9 +122,9 @@ var techs = {
     bemhtml         : require('enb-bemxjst/techs/bemhtml-old'),
     bemtree         : require('enb-bemxjst/techs/bemtree-old'),
     'template-i18n' : require('./techs/template-i18n'),
-    'i18n-keysets'  : require('enb/techs/i18n-merge-keysets'),
-    'i18n-lang'     : require('enb/techs/i18n-lang-js'),
-    'i18n-html'     : require('enb/techs/html-from-bemjson-i18n'),
+    'i18n-keysets'  : require('enb-bem-i18n/techs/i18n-merge-keysets'),
+    'i18n-lang'     : require('enb-bem-i18n/techs/i18n-lang-js'),
+    'i18n-html'     : require('enb-bemxjst/techs/html-from-bemjson-i18n'),
     borschik        : require('enb-borschik/techs/borschik'),
     nodejs          : require('enb-diverse-js/techs/node-js'),
     'enb-modules'   : require('enb-modules/techs/prepend-modules')
