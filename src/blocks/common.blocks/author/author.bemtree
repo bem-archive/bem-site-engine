@@ -2,7 +2,9 @@ block('author')(
     content()(function () {
         var data = this.data,
             id = this.ctx.id,
+            gravatarUrl = this.data.gravatarUrl,
             author = data.people[id][data.lang] || id;
-        return this.extend(author, { url: data.peopleUrls[id] });
+
+        return this.extend(author, { url: data.peopleUrls[id], gravatarUrl: gravatarUrl });
     })
 );
