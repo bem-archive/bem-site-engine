@@ -1,4 +1,5 @@
 - elems:
+    - gravatar
     - lang-switcher
     - locale
     - logger

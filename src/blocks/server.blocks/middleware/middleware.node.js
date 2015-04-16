@@ -13,10 +13,11 @@ modules.define('middleware', [
         'middleware__page-menu',
         'middleware__lang-switcher',
         'middleware__page',
-        'middleware__error'
+        'middleware__error',
+        'middleware__gravatar'
     ],
     function (provide, locale, logger, service, proxyExample, search, slashes, redirect, router,
-             htmlCache, pageTitle, pageMeta, pageMenu, langSwitcher, page, error) {
+             htmlCache, pageTitle, pageMeta, pageMenu, langSwitcher, gravatar, page, error) {
         return provide(function () {
             return [
                 locale,
@@ -32,6 +33,7 @@ modules.define('middleware', [
                 pageMeta,
                 pageMenu,
                 langSwitcher,
+                gravatar,
                 page,
                 error
             ];

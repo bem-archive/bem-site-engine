@@ -9,7 +9,7 @@ block('author').elem('avatar')(
             var content = this.ctx.content;
 
             return {
-                src: content.avatar,
+                src: content.gravatarUrl || content.avatar,
                 alt: content.slug
             };
         })
