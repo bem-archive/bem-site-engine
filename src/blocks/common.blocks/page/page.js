@@ -40,12 +40,20 @@ provide(BEMDOM.decl(this.name, {
         /* jshint ignore:end */
 
         return false;
+    },
+
+    _pageScrollTop: function () {
+        this.findBlockInside('content').domElem.scrollTop(0);
     }
 },
 {
     live: function () {
         this.liveBindTo('fullscreen', 'pointerclick', function () {
             this._onClick();
+        });
+
+        this.liveBindTo('arrow-up', 'pointerclick', function () {
+            this._pageScrollTop();
         });
 
         return false;
