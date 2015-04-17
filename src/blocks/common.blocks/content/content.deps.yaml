@@ -5,6 +5,6 @@
 - block: code
 
 - mods:
-    view: [post, posts, index, authors, author, block, tags]
+    view: [post, posts, index, authors, author, block, tags, showcase]
 
 - elems: [fullscreen]
