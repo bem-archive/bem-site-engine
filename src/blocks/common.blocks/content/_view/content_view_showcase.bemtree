@@ -1,0 +1,14 @@
+block('content').mod('view', 'showcase')(
+    content()(function () {
+        var data = this.data.node.route.conditions;
+
+        return {
+            block: 'iframe',
+            src: '/__example/' + data.lib + '/' + data.version + apply('path')
+        };
+    }),
+
+    mode('path')(function () {
+        return ''; // mock for path to html. Ex: '/desktop.pages/showcase/showcase.html'
+    })
+);
