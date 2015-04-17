@@ -1,0 +1,40 @@
+.page__arrow-up
+{
+    position: absolute;
+    z-index: 1001;
+
+    width: 26px;
+    height: 100%;
+
+    opacity: 0;
+
+    background: rgba(0, 0, 0, .2);
+
+    &:before
+    {
+        content: '▲';
+
+        font-size: 20px;
+
+        position: absolute;
+        top: 50%;
+        left: 2px;
+
+        color: #666;
+    }
+
+    &:hover
+    {
+        opacity: 1;
+
+        transition: opacity 0.2s ease-out;
+    }
+}
+
+@media screen and (max-width: 768px)
+{
+    .page__arrow-up
+    {
+        display: none;
+    }
+}

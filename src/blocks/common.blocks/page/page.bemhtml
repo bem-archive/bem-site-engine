@@ -1,1 +1,10 @@
-block('page').js()(true);
+block('page')(
+    content()(function () {
+        return [
+            { elem: 'arrow-up' },
+            applyNext()
+        ];
+    }),
+
+    js()(true)
+);

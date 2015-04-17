@@ -1,4 +1,4 @@
-- elems: [css, js, fullscreen]
+- elems: [css, js, fullscreen, arrow-up]
 - mods: { page: error, touch: yes, fullscreen: true, search: true }
 
 - block: styling
