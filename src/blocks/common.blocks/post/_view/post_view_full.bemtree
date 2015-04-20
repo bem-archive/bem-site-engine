@@ -122,10 +122,8 @@ block('post').mod('view', 'full')(
         };
     }),
 
-    mode('issue')(function () {
+    mode('issue').match(function () { return this.ctx.content; })(function () {
         var repo = this.ctx.content;
-
-        if (!repo) return [];
 
         return {
             elem: 'issue',
@@ -136,11 +134,17 @@ block('post').mod('view', 'full')(
                 },
                 {
                     block: 'link',
-                    url: repo.issue,
+                    url: apply('repoIssue', { 'ctx.content': repo }),
                     content: BEM.I18N('post', 'repo-issue')
                 }
             ]
         };
+    }),
+
+    mode('repoIssue').match(function () { return this.ctx.content; })(function () {
+        var repo = this.ctx.content;
+
+        return repo.issue || '';
     }),
 
     // library url on github
