@@ -1,0 +1,37 @@
+block('block-jsdoc')(
+
+    elem('block-name').tag()('h1'),
+
+    elem('method-link')(
+        tag()('a'),
+
+        attrs()(function () {
+            return { href: '#' + this.ctx.content };
+        })
+    ),
+
+    elem('anchor').tag()('a'),
+
+    elem('toc-title').tag()('h3'),
+    elem('methods-type').tag()('h2'),
+    elem('method-labels').tag()('span'),
+    elem('method-label').tag()('span'),
+    elem('method-name').tag()('span'),
+    elem('method-returns').tag()('span'),
+    elem('arg-title').tag()('span'),
+    elem('arg-description').tag()('span'),
+    elem('arg-type').tag()('span'),
+    elem('arg-desc-item').tag()('span'),
+    elem('arg').tag()('span'),
+    elem('arg').elemMod('optional', true).content()(function () {
+        return applyCtx(['[', this.ctx.content, ']']);
+    }),
+
+    elem('args-list')(
+        tag()('span'),
+
+        content()(function () {
+            return ['(', applyNext(), ')'];
+        })
+    )
+);

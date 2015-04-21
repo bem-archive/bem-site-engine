@@ -1,3 +1,0 @@
-block('block-jsdoc').elem('title').elemMod('mix', 'post-title')(
-    mix()([{ block: 'post', elem: 'title' }])
-);

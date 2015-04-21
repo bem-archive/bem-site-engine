@@ -102,8 +102,7 @@ block('block')(
         return {
             elem: 'pane',
             content: {
-                block: 'block-jsdoc',
-                mix: { block: 'post', elem: 'content' }
+                block: 'block-jsdoc'
             }
         };
     }),

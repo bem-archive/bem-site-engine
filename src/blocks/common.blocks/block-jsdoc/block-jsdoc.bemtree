@@ -1,248 +1,210 @@
 block('block-jsdoc')(
-    content()(
-        function () {
-            var jsdoc = this.data.node.source.jsdoc;
+    content()(function () {
+        // if we get html display it
+        if (typeof this.data.node.source.jsdoc === 'string') return this.data.node.source.jsdoc;
 
-            return [
-                apply('description', { ctx: { description: jsdoc.description } }),
-                apply('methods', { ctx: { methods: jsdoc.methods } }),
-                apply('events', { ctx: { events: jsdoc.events } })
-            ];
-        },
+        // TODO: завести баг про генерацию jsdoc для блоков, где нет js
+        if (!this.data.node.source.jsdoc.modules) return;
 
-        match(function () {
-            return typeof this.data.node.source.jsdoc === 'string';
-        })(function () {
-            return this.data.node.source.jsdoc;
-        })
-    ),
+        // TODO: генерировать для всех modules, когда будет исправлен баг в jsd
+        var data = this.data.node.source.jsdoc.modules[0],
+            proto = data.exports.proto,
+            static = data.exports.static;
 
-    mode('description')(function () {
-        return {
-            elem: 'description',
-            content: this.ctx.description
-        };
+        if (!proto) return; // TODO: посмотреть случаи, когда нет proto
+
+        return [
+            { elem: 'block-name', content: data },
+            { elem: 'toc', content: data },
+            { elem: 'methods', content: proto.props },
+            static ? { elem: 'methods', content: static.props, name: 'static' } : ''
+        ];
     }),
 
-    mode('methods-title')(function () {
-        return {
-            elem: 'title',
-            elemMods: { mix: 'post-title', h: '2' },
-            content: BEM.I18N('block-jsdoc', 'methods-title')
-        };
+    elem('block-name').content()(function () {
+        var data = applyNext();
+        return (data.exports.bem ? 'Блок ' : 'Модуль ') + data.name;
     }),
 
-    mode('events-title')(function () {
-        return {
-            elem: 'title',
-            elemMods: { mix: 'post-title', h: '2' },
-            content: BEM.I18N('block-jsdoc', 'events-title')
-        };
-    }),
+    elem('toc').content()(function () {
+        var data = applyNext().exports,
+            list = [];
 
-    mode('methods')(
-        function () {
-            return [
-                apply('methods-title'),
-                this.ctx.methods.map(function (method) {
-                    return {
-                        elem: 'item',
-                        content: [
-                            {
-                                elem: 'title',
-                                elemMods: { h: '5' },
-                                mix: { block: 'post', elem: 'title', mods: { inline: 'yes' } },
-                                content: {
-                                    elem: 'selection',
-                                    elemMods: { color: 'gold' },
-                                    content: method.name + '()'
-                                }
-                            },
-                            {
-                                elem: 'access',
-                                content: method.access
-                            },
-                            {
-                                elem: 'description',
-                                content: method.description
-                            },
-                            apply('method-params', { ctx: { method: method } }),
-                            apply('method-returns', { ctx: { method: method } })
-                        ]
-                    };
-                })
-            ];
-        },
+        // list.push({ tag: 'h2', content: 'Table of Contents' });
 
-        match(function () {
-            var methods = this.ctx.methods;
-            return !methods || !methods.length;
-        })(function () {
-            return null;
-        })
-    ),
-
-    mode('method-params')(
-        function () {
-            return [
-                {
-                    elem: 'title',
-                    elemMods: { mix: 'post-title', h: '6' },
-                    content: BEM.I18N('block-jsdoc', 'params') + ':'
-                },
-                this.ctx.method.params.map(function (param) {
-                    return [
-                        {
-                            elem: 'value',
-                            mix: [{ elem: 'selection', elemMods: { color: 'grey' } }],
-                            content: param.name
-                        },
-                        apply('method-params-type', { ctx: { param: param } }),
-                        {
-                            elem: 'js-description',
-                            content: param.description
-                        }
-                    ];
-                })
-            ];
-        },
-
-        match(function () {
-            var params = this.ctx.method.params;
-            return !params || !params.length;
-        })(function () {
-            return null;
-        })
-    ),
-
-    mode('method-params-type')(
-        function () {
-            return this.ctx.param.types.map(function (type) {
-                return {
-                    elem: 'type',
-                    content: {
-                        elem: 'type-value',
-                        content: type
-                    }
-                };
+        var getList = function (prop) {
+            if (prop.val.accessLevel === 'private') return;
+            list.push({
+                elem: 'method-link',
+                content: prop.key
             });
-        },
+        };
 
-        match(function () {
-            var types = this.ctx.param.types;
-            return !types || !types.length;
-        })(function () {
-            return null;
+        // make list for Instance methods
+        list.push({ elem: 'toc-title', content: 'Instance methods:' });
+        data.proto.props.map(getList);
+
+        // make list for Static methods
+        data.static && list.push({ elem: 'toc-title', content: 'Static methods:' }) && data.static.props.map(getList);
+
+        return list;
+    }),
+
+    elem('methods').content()(function () {
+        return [
+            {
+                elem: 'methods-type',
+                content: (this.ctx.name === 'static' ? 'Static' : 'Instance') + ' methods'
+            },
+            applyNext().map(function (method) {
+                return method.val.accessLevel === 'private' ? '' : {
+                    elem: 'method',
+                    content: method
+                };
+            })
+        ];
+    }),
+
+    elem('method').content()(function () {
+        var method = applyNext(),
+            val = method.val;
+
+        return [
+            { elem: 'method-title', content: method },
+            val.deprecated ? { elem: 'desc-deprecated', content: val.deprecated.description } : '',
+            val.description ? { elem: 'desc', content: val.description } : '',
+            val.params ? { elem: 'args', content: val.params } : ''
+        ];
+    }),
+
+    elem('method-title').content()(function () {
+        var method = applyNext(),
+            key = method.key,
+            val = method.val;
+
+        return [
+            { elem: 'anchor', attrs: { name: key } }, // TODO: problem: we have indentical method's names on levels
+            { elem: 'method-name', content: key },
+            { elem: 'args-list', content: val.params },
+            { elem: 'method-returns', content: val.returns },
+            { elem: 'method-labels', content: val }
+        ];
+    }),
+
+    elem('method-labels')(
+        tag()('span'),
+
+        content()(function () {
+            var val = applyNext(),
+                labels = [];
+
+            (val.accessLevel === 'protected') && labels.push({ elem: 'method-label', content: 'protected' });
+            (val.isAbstract) && labels.push({ elem: 'method-label', content: 'abstract' });
+            // TODO link to source code
+            (val.isOverridden) && labels.push({ elem: 'method-label', content: 'override' });
+
+            return labels;
         })
     ),
 
-    mode('method-returns')(
-        function () {
-            return [
-                {
-                    elem: 'title',
-                    elemMods: { mix: 'post-title-inline', h: '6' },
-                    content: BEM.I18N('block-jsdoc', 'returns') + ':'
-                },
-                this.ctx.method.returns.map(function (returns) {
-                    return [
-                        {
-                            elem: 'types',
-                            content: returns.types.map(function (type) {
-                                return {
-                                    elem: 'type',
-                                    content: '<code>' + type + '</code>'
-                                };
-                            })
-                        },
-                        {
-                            elem: 'description',
-                            content: returns.description
-                        }
-                    ];
-                })
-            ];
-        },
+    elem('args-list').content()(function () {
+        var params = applyNext(),
+            argsList = [];
 
-        match(function () {
-            var returns = this.ctx.method.returns;
-            return !returns || !returns.length;
-        })(function () {
-            return null;
-        })
-    ),
+        params && params.map(function (param) {
+            argsList.push({
+                elem: 'arg',
+                elemMods: { optional: param.isOptional },
+                content: param.name
+            }, ',');
+        });
 
-    mode('events')(
-        function () {
-            return [
-                apply('events-title'),
-                this.ctx.events.map(function (event) {
+        argsList.pop(); // delete last comma
+
+        return argsList;
+    }),
+
+    elem('method-returns').content()(function () {
+        var returns = applyNext();
+        if (!returns) return;
+        var jsType = returns.jsType;
+        jsType = jsType.jsType || jsType;
+
+        return ':' + (jsType === '*' ? 'Any' : jsType);
+    }),
+
+    elem('desc').content()(function () {
+        return [
+            {
+                elem: 'desc-title',
+                content: 'description'
+            },
+            {
+                elem: 'desc-content',
+                content: applyNext()
+            }
+        ];
+    }),
+
+    elem('desc-deprecated').content()(function () {
+        return [
+            {
+                elem: 'desc-title',
+                content: 'deprecated'
+            },
+            {
+                elem: 'desc-content',
+                content: applyNext()
+            }
+        ];
+    }),
+
+    elem('args').content()(function () {
+        return [
+            {
+                elem: 'args-title',
+                content: 'arguments'
+            },
+            {
+                elem: 'args-content',
+                content: applyNext().map(function (param) {
                     return {
-                        elem: 'item',
-                        content: [
-                            {
-                                elem: 'title',
-                                elemMods: { mix: 'post-title', h: '5' },
-                                content: {
-                                    elem: 'selection',
-                                    elemMods: { color: 'gold' },
-                                    content: event.name
-                                }
-                            },
-                            {
-                                elem: 'description',
-                                content: event.description
-                            },
-                            apply('event-params', { ctx: { event: event } })
-                        ]
+                        elem: 'row',
+                        content: param
                     };
                 })
-            ];
-        },
+            }
+        ];
+    }),
 
-        match(function () {
-            var events = this.ctx.events;
-            return !events || !events.length;
-        })(function () {
-            return null;
-        })
-    ),
+    elem('row').content()(function () {
+        var param = applyNext();
+        return [
+            {
+                elem: 'arg-title',
+                content: param.name
+            },
+            {
+                elem: 'arg-description',
+                content: [
+                    param.jsType ? {
+                        elem: 'arg-type',
+                        content: param.jsType
+                    } : '',
+                    '<br>',
+                    {
+                        elem: 'arg-desc-item',
+                        content: param.description
+                    }
+                ]
+            }
+        ];
+    }),
 
-    mode('event-params')(
-        function () {
-            return [
-                {
-                    elem: 'title',
-                    elemMods: { mix: 'post-title', h: '6' },
-                    content: BEM.I18N('block-jsdoc', 'params') + ':'
-                },
-                this.ctx.event.params.map(function (param) {
-                    return [
-                        {
-                            elem: 'value',
-                            mix: [{ elem: 'selection', elemMods: { color: 'grey' } }],
-                            content: param.name
-                        },
-                        param.types.map(function (type) {
-                            return {
-                                elem: 'type',
-                                content: '<code>' + type + '</code>'
-                            };
-                        }),
-                        {
-                            elem: 'js-description',
-                            content: param.description
-                        }
-                    ];
-                })
-            ];
-        },
+    elem('arg-type').content()(function () {
+        var jsType = applyNext();
 
-        match(function () {
-            var params = this.ctx.event.params;
-            return !params || !params.length;
-        })(function () {
-            return null;
-        })
-    )
+        if (!jsType) return;
+        return jsType.jsType ? jsType.jsType : Array.isArray(jsType) ? jsType.join(', ') : jsType;
+    })
 );
