@@ -1,3 +1,0 @@
-block('block-jsdoc').elem('type')(
-    tag()('code')
-);
