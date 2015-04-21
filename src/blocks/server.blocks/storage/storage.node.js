@@ -5,21 +5,21 @@ var url = require('url'),
 
 modules.define('storage', ['logger', 'config'],
     function (provide, logger, config) {
-        var mds;
 
+        var storage;
         provide({
 
-            getStorage: function () {
-                mds = mds || new MDS(config.get('mds'));
-                return mds;
+            init: function () {
+                storage = new MDS(config.get('mds'));
+                return storage;
             },
 
             read: function (url, callback) {
-                this.getStorage().read(arguments);
+                storage.read(url, callback);
             },
 
             getFullUrl: function (url) {
-                return this.getStorage().getFullUrl(url);
+                storage.getFullUrl(url);
             }
         });
     }

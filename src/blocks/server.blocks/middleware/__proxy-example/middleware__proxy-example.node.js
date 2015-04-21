@@ -10,9 +10,7 @@ var vm = require('vm'),
 modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'model', 'storage'],
     function (provide, config, constants, logger, util, model, storage) {
         logger = logger(module);
-
         storage.init();
-
         /**
          * Loads sources for url and sent them to response
          * @param {String} url of request
