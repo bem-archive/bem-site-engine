@@ -1,0 +1,7 @@
+({
+    shouldDeps: [
+        'config',
+        'logger',
+        'model'
+    ]
+});
