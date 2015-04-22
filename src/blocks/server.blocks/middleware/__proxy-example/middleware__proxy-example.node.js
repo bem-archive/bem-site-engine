@@ -5,15 +5,12 @@ var vm = require('vm'),
     sha = require('sha1'),
     html = require('js-beautify').html,
     request = require('request'),
-    mime = require('mime'),
-    MDS = require('mds-wrapper');
+    mime = require('mime');
 
-modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'model'],
-    function (provide, config, constants, logger, util, model) {
+modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'model', 'storage'],
+    function (provide, config, constants, logger, util, model, storage) {
         logger = logger(module);
-
-        var mds = new MDS(config.get('mds'));
-
+        storage.init();
         /**
          * Loads sources for url and sent them to response
          * @param {String} url of request
@@ -37,22 +34,22 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                         return res.end(response);
                     }
                     logger.debug('request to url: %s', url);
-                    return mds.readP(url)
-                        .then(function (response) {
-                            if (/\.bemhtml\.js$/.test(url)) {
-                                return loadCode(req, originUrl, response).then(function (html) {
-                                    model.putToCache(sha(url), html);
-                                    res.end(html);
-                                });
-                            } else {
-                                model.putToCache(sha(url), response);
-                                return res.end(response);
-                            }
-                        })
-                        .fail(function (error) {
+                    return storage.read(url, function (error, response) {
+                        if (error) {
                             logger.warn('req to %s failed with err %s', url, error);
                             return res.end('Error while loading example');
-                        });
+                        }
+
+                        if (/\.bemhtml\.js$/.test(url)) {
+                            return loadCode(req, originUrl, response).then(function (html) {
+                                model.putToCache(sha(url), html);
+                                res.end(html);
+                            });
+                        } else {
+                            model.putToCache(sha(url), response);
+                            return res.end(response);
+                        }
+                    });
                 })
                 .done();
         };
@@ -68,12 +65,12 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             // special case for svg,
             // because it the same like text
             if (/\.svg$/.test(url)) {
-                return mds.read(url, function(error, value) {
+                return storage.read(url, function(error, value) {
                     error ? res.status(404).end('Svg not Found') : res.end(value);
                 });
             }
 
-            request.get(mds.getFullUrl(url)).pipe(res);
+            request.get(storage.getFullUrl(url)).pipe(res);
         }
 
         provide(function () {

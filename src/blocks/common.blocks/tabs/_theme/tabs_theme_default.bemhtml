@@ -1,0 +1,4 @@
+block('tabs').mod('theme', 'default')(
+    elem('header').tag()('ul'),
+    elem('tab').tag()('li')
+);

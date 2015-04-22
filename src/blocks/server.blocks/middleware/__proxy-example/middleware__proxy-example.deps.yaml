@@ -3,3 +3,4 @@
 - block: logger
 - block: util
 - block: model
+- block: storage
