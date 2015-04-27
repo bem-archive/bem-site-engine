@@ -1,9 +1,8 @@
 var path = require('path'),
     url = require('url'),
-
+    _ = require('lodash'),
     vow = require('vow'),
-    vowFs = require('vow-fs'),
-    terror = require('terror');
+    vowFs = require('vow-fs');
 
 modules.define('middleware__error', ['config', 'logger', 'util'], function (provide, config, logger, util) {
 
@@ -53,23 +52,42 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
 
     /**
      * Log error message and set statusCode to response
+     * If the error code does not have its own template
+     * show 500 page and logging this error in console
      * @param err - {Error} error
-     * @param req - {Object} request object
      * @param res - {Object} response object
      */
-    function preparation(err, req, res) {
-        var code = err.code || 500,
-            terr = terror.ensureError(err);
+    function preparation(err, res) {
+        var supportedCodes = [404, 500],
+            code = supportedCodes.indexOf(err.code) !== -1 ? err.code : 500;
 
-        // For cases, when terrors module work not correct
-        logger.error('native express error', err);
-
-        if (terr) {
-            logger.error('%s %s', code, terr.message);
-        } else {
-            logger.error(err);
+        if (!err.stack) {
+            // Module intel waiting field stack in error object
+            err.stack = '';
         }
 
+        if (err.app) {
+            // Support detail error message from inner site app (forum)
+            var message = err.message || "{}";
+
+            try {
+                message = JSON.parse(err.message);
+            } catch (errMessage) {
+                logger.error('Could not parse error app: %s message: %s', err.app, errMessage);
+            }
+
+            // Makes a complete error message data from the application
+            _.extend(message, {
+                code: err.code,
+                app: err.app,
+                apiMethod: err.apiMethod,
+                apiOptions: err.apiOptions
+            });
+
+            err.message = JSON.stringify(message, null, 4);
+        }
+
+        // Set supported status code for choose template
         res.statusCode = code;
     }
 
@@ -77,7 +95,9 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
         return function (err, req, res, next) {
             loadErrorPages()
                 .then(function (errorPages) {
-                    preparation(err, req, res, next);
+                    preparation(err, res);
+                    logger.error('Error: %s', err);
+
                     return res.send(errorPages[req.lang]['error' + res.statusCode]);
                 }).done();
         };
