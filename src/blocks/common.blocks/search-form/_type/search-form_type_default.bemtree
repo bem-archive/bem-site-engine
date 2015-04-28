@@ -2,10 +2,12 @@ block('search-form').mod('type', 'default')(
     content()(function () {
         return {
             block: 'input',
+            mix: { block: this.block, elem: 'input' },
             mods: {
                 theme: 'islands',
                 size: 'l',
                 type: 'search',
+                width : 'available',
                 'has-clear': true
             },
             placeholder: BEM.I18N('search-form', 'placeholder')
