@@ -1,13 +1,13 @@
 modules.define(
     'search-form',
-    ['i-bem__dom', 'functions__debounce', 'events__channels'],
-    function (provide, BEMDOM, debounce, channels) {
+    ['functions__debounce', 'events__channels'],
+    function (provide, debounce, channels, SearchForm) {
 
-    provide(BEMDOM.decl({ block: this.name, modName: 'type', modVal: 'default' }, {
+    provide(SearchForm.decl({ block: this.name, modName: 'type', modVal: 'default' }, {
         onSetMod: {
             js: {
                 inited: function () {
-                    this._input = this.findBlockInside('input');
+                    this.__base.apply(this, arguments);
 
                     this._freezeVal();
                     this._debounceChange = debounce(this._checkChange, 500, this);
@@ -18,14 +18,6 @@ modules.define(
                     });
                 }
             }
-        },
-
-        activate: function () {
-            var _this = this;
-
-            setTimeout(function () {
-                _this._input.setMod('focused', true);
-            }, 500);
         },
 
         _doChange: function (needDebounce) {

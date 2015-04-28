@@ -1,7 +1,11 @@
 block('search-panel')(
     content()(function () {
         return [
-            { block: 'search-form', mods: { type: 'default' } },
+            {
+                block: 'search-form',
+                mix: { block: this.block, elem: 'form' },
+                mods: { type: 'default' }
+            },
             {
                 block: 'spin',
                 mods: { theme: 'islands', size: 'xl' },
