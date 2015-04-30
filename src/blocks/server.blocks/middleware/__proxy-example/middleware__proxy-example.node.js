@@ -5,7 +5,8 @@ var vm = require('vm'),
     sha = require('sha1'),
     html = require('js-beautify').html,
     request = require('request'),
-    mime = require('mime');
+    mime = require('mime'),
+    u = require('util');
 
 modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'util', 'model', 'storage'],
     function (provide, config, constants, logger, util, model, storage) {
@@ -45,6 +46,21 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                                 model.putToCache(sha(url), html);
                                 res.end(html);
                             });
+                        } else if (/showcase\.html$/.test(url)) {
+                            var urlArr = url.split('/'),
+                                lib = urlArr[0],
+                                version = urlArr[1];
+
+                            // href="../../common.blocks/menu/menu.ru.md" -> href="lib/version/desktop/menu"
+                            response = response.replace(/href="([^"]*)"/g, function (str) {
+                                if (str.indexOf('showcase') > -1) return str; // ignore _showcase.css|js
+                                var _path = str.match(/\/(\w+|\w+-\w+)\.(ru|en)\.md(#.+[^"])?/g)[0]
+                                    .replace(/\.(ru|en)\.md/, '/');
+
+                                return u.format('target="_top" href="' + '/libs/%s/%s/desktop%s"', lib, version, _path);
+                            });
+                            model.putToCache(sha(url), response);
+                            res.end(response);
                         } else {
                             model.putToCache(sha(url), response);
                             return res.end(response);
@@ -65,7 +81,7 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
             // special case for svg,
             // because it the same like text
             if (/\.svg$/.test(url)) {
-                return storage.read(url, function(error, value) {
+                return storage.read(url, function (error, value) {
                     error ? res.status(404).end('Svg not Found') : res.end(value);
                 });
             }
