@@ -29,6 +29,22 @@ block('block')(
             tabsContent.push(_examples.content);
         }
 
+        if (!_.isEmpty(_source.blocksData)) {
+            tabsHeader.push({
+                elem: 'tab',
+                url: 'sources',
+                content: BEM.I18N('block', 'sources')
+            });
+            tabsContent.push({
+                elem: 'pane',
+                content: {
+                    block: 'block-source',
+                    mix: { block: 'post', elem: 'content' },
+                    content: _source.blocksData
+                }
+            });
+        }
+
         if (!tabsHeader.length) {
             return {
                 elem: 'message',

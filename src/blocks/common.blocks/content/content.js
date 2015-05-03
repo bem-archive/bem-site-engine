@@ -25,13 +25,18 @@ provide(BEMDOM.decl(this.name, {
 
     _scrollToExample: function () {
         var _this = this,
-            anchor = window.location.hash,
-            examplePosTop = $(anchor).position().top,
-            tabsHeight = this.findBlockInside('tabs').elem('header').height();
+            anchor = window.location.hash;
+
+        if (!anchor) return;
+
+        anchor = $(anchor);
+        if (!anchor.length) return;
+
+        var examplePosTop = $(anchor).position().top;
 
         // hack for skipping default browser actions with anchor
         setTimeout(function () {
-            _this.domElem.scrollTop(examplePosTop - tabsHeight);
+            _this.domElem.scrollTop(examplePosTop);
         }, 500);
     },
 
