@@ -14,6 +14,7 @@ modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
                 leStatics: new (statics.Statics)(config.get('statics')),
                 leBundles: new (bundles.Bundles)({ defaultLOD: 'desktop' }),
                 console: console,
+                require: require,
                 _: _
             };
 
