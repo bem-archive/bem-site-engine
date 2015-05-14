@@ -2,10 +2,6 @@ var nconf = require('nconf'),
     path = require('path');
 
 modules.define('config', function (provide) {
-    nconf
-        .argv()
-        .env();
-
     [
         'current/common',
         'current/app',
