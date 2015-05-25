@@ -40,9 +40,9 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware'],
 
                 middleware().forEach(function (mw) {
                     if (_.isFunction(mw)) {
-                        app.use(mw());
+                        app.use(mw(app));
                     } else if (mw.run) {
-                        app.use(mw.run());
+                        app.use(mw.run(app));
                     }
                 });
 

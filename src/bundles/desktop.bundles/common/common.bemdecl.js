@@ -1,7 +1,4 @@
 exports.blocks = [
-    { "name": "error" },
-    { "name": "i-global" },
-    { "name": "page" },
-
-    { "name": "index"}
+    { "name": "index" }, // server
+    { "name": "root" } // template
 ];
