@@ -1,0 +1,14 @@
+block('root')(
+    def()(function () {
+        var ctx = this.ctx,
+            context = ctx.context;
+
+        this.data = ctx.data;
+        return applyCtx(context ? context : { block: 'page' });
+    }),
+
+    match(BEM && BEM.I18N)(function () {
+        BEM.I18N.lang(this.ctx.lang);
+        return applyNext();
+    })
+);

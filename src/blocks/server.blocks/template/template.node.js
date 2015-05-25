@@ -19,7 +19,7 @@ modules.define('template', ['config', 'util', 'builder', 'bundles', 'statics'],
             };
 
         provide({
-            apply: function (ctx, req, mode) {
+            apply: function (ctx, req, res, mode) {
                 return builder
                     .build([target])
                     .then(function () {

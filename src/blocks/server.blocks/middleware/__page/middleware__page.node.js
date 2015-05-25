@@ -82,18 +82,23 @@ modules.define('middleware__page', ['config', 'logger', 'util', 'model', 'templa
                  */
                 return function (req, res, next) {
                     var node = req.__data.node,
+                        locals = res.locals,
                         ctx = {
-                            block: 'i-global',
-                            req: req, // request object // TODO remove it and fix templates
-                            bundleName: 'common',
-                            lang: req.lang, // selected language
-                            statics: ''
+                            block: 'root',
+                            data: {
+                                title: locals.pageTitle,
+                                forum: locals,
+                                req: req, // request object TODO remove it and fix templates
+                                bundleName: 'common',
+                                lang: req.lang, // selected language
+                                statics: ''
+                            }
                         };
 
                     return _this.getAdvancedData(req, node)
                         .then(function (advanced) {
-                            ctx = _.extend(ctx, req.__data, advanced);
-                            return template.apply(ctx, req, req.query.__mode);
+                            ctx.data = _.extend(ctx.data, req.__data, advanced);
+                            return template.apply(ctx, req, res, req.query.__mode);
                         })
                         .then(function (html) {
                             if (!req.disableCache) {

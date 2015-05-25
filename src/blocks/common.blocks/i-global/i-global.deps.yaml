@@ -1,6 +1,0 @@
-- block: i-bem
-  required: true
-  elems: [tree]
-
-- block: page
-  mods: { theme: white }

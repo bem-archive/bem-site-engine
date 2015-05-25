@@ -11,7 +11,7 @@ modules.define('middleware__page-title', ['config', 'logger', 'model'], function
 
                 var node = req.__data.node;
 
-                if (_this.hasExceptions(req, node)) {
+                if (_this.hasExceptions(req, res, node)) {
                     return next();
                 }
 
@@ -25,15 +25,15 @@ modules.define('middleware__page-title', ['config', 'logger', 'model'], function
 
                     // add common suffix from application configuration
                     titles.push(config.get('title')[req.lang]);
-                    req.__data.title = titles.join(' / ');
+                    res.locals.pageTitle = titles.join(' / ');
                     return next();
                 });
-            }
+            };
         },
 
-        hasExceptions: function (req, node) {
+        hasExceptions: function (req, res, node) {
             if (req.url === '/') {
-                req.__data.title = node.title[req.lang];
+                res.locals.pageTitle = node.title[req.lang];
                 return true;
             }
         }
