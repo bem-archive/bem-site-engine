@@ -21,7 +21,10 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware'],
 
                 app
                     .use(enbServer.createMiddleware())
+                    // use for relative path to blocks files
                     .use(express.static(rootPath))
+                    // use for resolve path like in production files from src/www/ moved to /
+                    .use(express.static(path.resolve(staticsDir, 'www')))
                     .use(express.favicon(path.resolve(staticsDir, 'www/favicon.ico')))
                     .disable('x-powered-by');
 
