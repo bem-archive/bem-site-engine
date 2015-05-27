@@ -1,0 +1,7 @@
+({
+    shouldDeps: [
+        {
+            mods: { inline: 'yes' }
+        }
+    ]
+});

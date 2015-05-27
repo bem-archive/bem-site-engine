@@ -1,5 +1,0 @@
-- block: i-bem
-  required: true
-  elem: i18n
-
-- elems: [description, sublevel, value, title]
