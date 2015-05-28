@@ -5,6 +5,8 @@ modules.define('middleware__search', ['config', 'logger', 'model', 'template',
     'search_type_blocks', 'search_type_libs', 'search_type_tags'],
     function (provide, config, logger, model, template, searchBlocks, searchLibs, searchTags) {
 
+    logger = logger(module);
+
     var BASE_CTX = {
         bundleName: 'common',
         statics: '',
@@ -40,11 +42,12 @@ modules.define('middleware__search', ['config', 'logger', 'model', 'template',
                 .then(function (results) {
                     return template.apply(_.extend({ data: results }, ctx), req, req.query.__mode);
                 })
+                .fail(function (err) {
+                    logger.error('SEARCH ERROR: %s', err);
+                    return template.apply(_.extend({ data: [] }, ctx), req, req.query.__mode);
+                })
                 .then(function (html) {
                     return res.end(html);
-                })
-                .fail(function (err) {
-                    return next(err);
                 });
         };
     });
