@@ -3,6 +3,8 @@ var vow = require('vow'),
 
 modules.define('search_type_blocks', ['logger', 'model'], function (provide, logger, model) {
 
+    logger = logger(module);
+
     function getDescription(item, lang) {
         return model.getBlock(item.description)
             .then(function (data) {
@@ -21,6 +23,9 @@ modules.define('search_type_blocks', ['logger', 'model'], function (provide, log
                 }
                 item.description = description;
                 return item;
+            })
+            .fail(function (err) {
+                logger.warn('Search getDescription fail', err);
             });
     }
 
@@ -73,6 +78,14 @@ modules.define('search_type_blocks', ['logger', 'model'], function (provide, log
                     }));
                 }, this)
                 .then(function (results) {
+                    /*
+                        Filter empty results.
+                        Partial fix https://st.yandex-team.ru/BEMINFO-1095
+                    */
+                    results = results.filter(function (item) {
+                        return item;
+                    });
+
                     return _.sortBy(results, function (result) {
                         return result.block;
                     });
