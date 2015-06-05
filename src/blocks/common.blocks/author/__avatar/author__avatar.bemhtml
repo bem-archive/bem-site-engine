@@ -6,10 +6,12 @@ block('author').elem('avatar')(
     })(
         tag()('img'),
         attrs()(function () {
-            var content = this.ctx.content;
+            var content = this.ctx.content,
+                gravatarUrl = content.gravatarUrl,
+                avatar = content.avatar;
 
             return {
-                src: content.gravatarUrl || content.avatar,
+                src: gravatarUrl ? (gravatarUrl + '&d=' + avatar) : avatar,
                 alt: content.slug
             };
         })
