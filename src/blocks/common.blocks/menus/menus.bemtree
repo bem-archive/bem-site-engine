@@ -1,14 +1,18 @@
 block('menus')(
     def().match(function () { return this.data.menu; })(function () {
+        var menu = this.data.menu;
+
         return applyCtx([
-            this.data.menu.map(function (column) {
+            menu.filter(function (column) {
+                return column.items.length;
+            }).map(function (column) {
                 return {
                     block: 'menu-list',
                     content: column.items,
                     mods: { type: column.type }
                 };
             }),
-            this.data.menu.length > 1 ? {
+            menu.length > 1 ? {
                 block: 'page',
                 elem: 'fullscreen'
             } : ''
