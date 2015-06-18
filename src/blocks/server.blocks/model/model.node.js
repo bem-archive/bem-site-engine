@@ -1,13 +1,12 @@
 var u = require('util'),
     path = require('path'),
 
-    luster = require('luster'),
     _ = require('lodash'),
     vow = require('vow'),
     vowFs = require('vow-fs');
 
-modules.define('model', ['config', 'logger', 'util', 'database'],
-    function (provide, config, logger, util, db) {
+modules.define('model', ['logger', 'util', 'database', 'luster'],
+    function (provide, logger, util, db, luster) {
     logger = logger(module);
 
     var menu,
@@ -37,10 +36,6 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
                 .then(function () {
                     logger.debug('connect to database in path %s', workerDBPath);
                     return db.connect(workerDBPath);
-                })
-                .then(function () {
-                    logger.debug('extract sitemap.xml file', workerDBPath);
-                    return extractSitemapXMLFile();
                 });
         };
 
@@ -72,9 +67,19 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
             menu = null;
             people = null;
             peopleUrls = null;
-            return db.disconnect().then(function () {
-                return initDBForWorker();
-            });
+            return db.disconnect()
+                .then(initDBForWorker)
+                .then(this.afterReloadDb.bind(this));
+        },
+
+        /**
+         * Execute custom actions after reloaded the model
+         * Used on levels websites like bem-info,
+         * for example – build sitemap.xml
+         * @returns {*}
+         */
+        afterReloadDb: function () {
+            return vow.resolve();
         },
 
         // TODO implement redirects
@@ -387,17 +392,6 @@ modules.define('model', ['config', 'logger', 'util', 'database'],
 
         return _.values(result).filter(function (item) {
             return item.items.length;
-        });
-    }
-
-    function extractSitemapXMLFile() {
-        return db.get('sitemapXml').then(function (data) {
-            if (!data) {
-                logger.warn('sitemap.xml was not found in database');
-                return vow.resolve();
-            }
-
-            return vowFs.write(path.join(process.cwd(), 'sitemap.xml'), data, 'utf-8');
         });
     }
 });
