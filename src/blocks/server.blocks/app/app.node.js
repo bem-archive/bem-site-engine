@@ -49,28 +49,34 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware'],
                     }
                 });
 
-                // util.unlinkSocket(port).then(function () {
-                    app.listen(port, function (err) {
-                        if (err) {
-                            def.reject(err);
-                            return;
-                        }
+                app.listen(port, function (err) {
+                    if (err) {
+                        def.reject(err);
+                        return;
+                    }
 
-                        util.chmodSocket(port).then(function () {
-                            logger.info('start application on port or socket %s', port);
-                            def.resolve();
-                        });
+                    util.chmodSocket(port).then(function () {
+                        logger.info('start application on port or socket %s', port);
+                        def.resolve();
                     });
-                // });
+                });
 
                 return def.promise();
             },
 
+            /**
+             * Execute custom actions after starting the server
+             * Used on levels websites like bem-info
+             * @returns {*}
+             */
+            afterStartServer: function () {
+                return vow.resolve();
+            },
+
             init: function () {
                 model.init()
-                    .then(function () {
-                        return this.startServer();
-                    }, this);
+                    .then(this.startServer.bind(this))
+                    .then(this.afterStartServer.bind(this));
             }
         });
 });
