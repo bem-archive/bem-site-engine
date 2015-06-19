@@ -1,12 +1,13 @@
 var u = require('util'),
     path = require('path'),
 
+    luster = require('luster'),
     _ = require('lodash'),
     vow = require('vow'),
     vowFs = require('vow-fs');
 
-modules.define('model', ['logger', 'util', 'database', 'luster'],
-    function (provide, logger, util, db, luster) {
+modules.define('model', ['logger', 'util', 'database'],
+    function (provide, logger, util, db) {
     logger = logger(module);
 
     var menu,
