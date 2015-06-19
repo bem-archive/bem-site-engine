@@ -1,5 +1,6 @@
 .search-panel
 {
+    display: none;
     position: absolute;
     z-index: 1001;
     top: 0;
@@ -12,13 +13,20 @@
     height: 100%;
     padding: 20px;
 
-    transition: right .3s ease-out;
-
     background-color: #fafafa;
     box-shadow: 0 0 2px 0 rgba(0,0,0,.3);
 
     &_state_open
     {
-        right: 0;
+        display: block;
+
+        animation: slideLeft .6s .1s 1 both;
     }
+}
+
+
+@keyframes slideLeft
+{
+    0% { right: -350px; }
+    100% { right: 0; }
 }
