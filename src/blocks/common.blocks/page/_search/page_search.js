@@ -8,6 +8,7 @@ modules.define('page', ['jquery', 'keyboard__codes'], function (provide, $, keyb
                     var _this = this;
                     this._searchButton = this.findBlockInside('search-button');
                     this._searchPanel = this.findBlockInside('search-panel');
+                    this._searchForm = this.findBlockInside('search-form');
                     this._contentWrapper = this.findBlockInside('content-wrapper');
 
                     this.bindToDoc('click keyup', function (e) {
@@ -20,18 +21,24 @@ modules.define('page', ['jquery', 'keyboard__codes'], function (provide, $, keyb
         },
 
         _toggleSearch: function (e, target) {
-            if (e.type === 'keyup' && e.which === keyboard.ESC) {
-                this._searchPanel.delMod('state');
+            var sBtn = this._searchButton,
+                sPanel = this._searchPanel,
+                sForm = this._searchForm,
+                cWrapper = this._contentWrapper;
 
+            if (sForm.containsDomElem(target)) return false;
+
+            if (e.type === 'keyup' && e.which === keyboard.ESC) {
+                sPanel.delMod('state');
                 return false;
             }
 
-            if (this._searchButton.containsDomElem(target) || this._searchPanel.containsDomElem(target)) {
-                this._searchPanel.setMod('state', 'open');
-                this._searchButton.setMod('active', true);
-            } else if (this._contentWrapper.containsDomElem(target)) {
-                this._searchPanel.delMod('state');
-                this._searchButton.delMod('active');
+            if (sPanel.containsDomElem(target) || sBtn.containsDomElem(target)) {
+                sPanel.toggleMod('state', 'open');
+                sBtn.toggleMod('active', true);
+            } else if (cWrapper.containsDomElem(target)) {
+                sPanel.delMod('state');
+                sBtn.delMod('active');
             }
         }
     }));
