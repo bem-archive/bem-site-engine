@@ -79,6 +79,7 @@ modules.define('model', ['logger', 'util', 'database', 'luster'],
          * @returns {*}
          */
         afterReloadDb: function () {
+            logger.debug('afterReloadDb');
             return vow.resolve();
         },
 
