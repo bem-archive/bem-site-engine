@@ -49,15 +49,23 @@ modules.define('model', ['logger', 'util', 'database', 'luster'],
             logger.info('Initialize model for worker %s', worker);
             var _this = this;
             if (luster.isWorker) {
-                console.log('send initWorker command from worker %s', worker);
+                logger.info('send initWorker command from worker %s', worker);
                 luster.remoteCall('initWorker', worker);
                 luster.registerRemoteCommand('reloadDatabase', function () {
                     logger.info('Worker %s received "reloadDatabase" command', worker);
                     return _this.reload();
                 });
+                this.addLusterListeners();
             }
             return initDBForWorker();
         },
+
+        /**
+         * Additional subscribe to event workers
+         * Used on levels websites like bem-info
+         * @returns {*}
+         */
+        addLusterListeners: function () {},
 
         /**
          * Reloads model data
@@ -79,6 +87,7 @@ modules.define('model', ['logger', 'util', 'database', 'luster'],
          * @returns {*}
          */
         afterReloadDb: function () {
+            logger.debug('afterReloadDb');
             return vow.resolve();
         },
 
