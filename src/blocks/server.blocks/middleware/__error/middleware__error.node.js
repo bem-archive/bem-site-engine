@@ -96,7 +96,13 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
             loadErrorPages()
                 .then(function (errorPages) {
                     preparation(err, res);
-                    logger.error('Error: %s', err);
+                    var statusCode = res.statusCode;
+
+                    if (statusCode === 404) {
+                        logger.warn('404: Resource not found, url: %s', req.url);
+                    } else {
+                        logger.error(err + 'code: %s', statusCode);
+                    }
 
                     return res.send(errorPages[req.lang]['error' + res.statusCode]);
                 }).done();

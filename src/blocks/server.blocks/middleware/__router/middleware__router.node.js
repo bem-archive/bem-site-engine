@@ -32,13 +32,11 @@ modules.define(
          * Find node from model by url comparison
          * @param req - {Object} request object
          * @param url - {String} url string
-         * @param callback - {Function} function that should be called for result
          * @returns {*}
          */
         findNode: function (req, url) {
             return model.getNodeByUrl(url).then(function (node) {
                 if (!node || node.hidden[req.lang]) {
-                    logger.error('cannot find node by url %s', url);
                     return vow.reject(error.HttpError.createError(404));
                 }
 
