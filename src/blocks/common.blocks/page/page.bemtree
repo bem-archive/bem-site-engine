@@ -8,7 +8,7 @@ block('page')(
 
         return applyCtx({
             block: this.block,
-            title: this.data.title,
+            title: this.ctx.title || this.data.title,
             mods: this.extend({ theme: 'normal', page: this.data.node.route.name }, this.ctx.mods),
             head: apply('head'),
             favicon: this.data.statics + '/favicon.ico'
