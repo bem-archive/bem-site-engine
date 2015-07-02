@@ -11,11 +11,21 @@ modules.define(
 
         run: function () {
             var _this = this;
-            return function (req, res, next) {
-                req.__data = req.__data || {};
-                logger.debug('get node by request %s', req.path);
 
-                return _this.beforeFindNode(req, res, decodeURIComponent(req.path))
+            return function (req, res, next) {
+                var url = decodeURIComponent(req.path);
+
+                req.__data = req.__data || {};
+                logger.debug('get node by request %s', url);
+
+                // If the url contains a obsolete part (.sets || .docs),
+                // for example: libs/bem-core/desktop.sets/i-bem/, cut '.sets' and do a redirect
+                var setsOrDocs = /\.(sets|docs)/;
+                if (url.match(setsOrDocs)) {
+                    return res.redirect(301, url.replace(setsOrDocs, ''));
+                }
+
+                return _this.beforeFindNode(req, res, url)
                     .then(function (url) {
                         return _this.findNode(req, url, next);
                     })
@@ -47,6 +57,7 @@ modules.define(
         /**
          * Callback function before find node
          * @param req - {Object} request object
+         * @param res - {Object} response object
          * @param url - {String} request url
          * @returns {String} processed url
          */
@@ -60,11 +71,6 @@ modules.define(
 
             if (tabSuffix) {
                 tabSuffix = tabSuffix[0];
-            }
-
-            var setsOrDocs = /\.(sets|docs)/;
-            if (url.match(setsOrDocs)) {
-                return res.redirect(301, url.replace(setsOrDocs, ''));
             }
 
             url = url.replace(/(\/docs\/)|(\/jsdoc\/)|(\/examples\/)?/gi, '');
@@ -110,8 +116,10 @@ modules.define(
 
         /**
          * Callback function after find node
-         * @param result - {BaseNode} node that was found
+         * @param node - {BaseNode} node that was found
+         * @param req - {BaseNode} request object
          * @param res - {Object} response object
+         * @param next - {Function} invoke next middleware
          * @returns {boolean}
          */
         afterFindNode: function (node, req, res, next) {
