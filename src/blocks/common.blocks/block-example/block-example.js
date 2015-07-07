@@ -1,6 +1,6 @@
-modules.define('i-bem__dom', ['jquery'], function (provide, $, BEMDOM) {
+modules.define('block-example', ['i-bem__dom', 'jquery', 'dropdown'], function (provide, BEMDOM, $, Dropdown) {
 
-BEMDOM.decl('block-example', {
+provide(BEMDOM.decl(this.name, {
 
     onSetMod: {
         'js': {
@@ -32,7 +32,18 @@ BEMDOM.decl('block-example', {
                     }
                 });
 
+                Dropdown.on(this.elem('qr'), { modName: 'js', modVal: 'inited' }, function (e) {
+                    var dropdown = e.target,
+                        src = this.elemParams(this.elem('qr')).url,
+                        image = dropdown.findBlockInside('image');
+
+                    image.domElem.attr('src', src);
+                }, this);
+
                 this.loadComplete = {};
+            },
+            '': function () {
+                Dropdown.un(this.elem('qr'), { modName: 'js', modVal: 'inited' });
             }
         }
     },
@@ -99,8 +110,6 @@ BEMDOM.decl('block-example', {
         this.findBlockInside('live-spin', 'spin').toggleMod('progress', true, '');
     }
 
-});
-
-provide(BEMDOM);
+}));
 
 });
