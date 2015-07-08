@@ -82,13 +82,19 @@ block('block-example')(
                         block: 'dropdown',
                         mods: { switcher: 'link', theme: 'islands', size: 'm' },
                         mix: [
-                            { block: 'block-example', elem: 'qr' },
+                            {
+                                block: 'block-example',
+                                elem: 'qr',
+                                js: {
+                                    url: 'https://disk.yandex.net/qr/?format=svg&text=' +
+                                        'http://' + encodeURIComponent(req.headers.host) + url
+                                }
+                            },
                             { block: 'block-example', elem: 'link' }
                         ],
                         switcher: 'QR',
                         popup: {
                             block: 'image',
-                            url: 'https://disk.yandex.net/qr/?format=svg&text=' + 'http://' + req.headers.host + url,
                             width: 220
                         }
                     },
