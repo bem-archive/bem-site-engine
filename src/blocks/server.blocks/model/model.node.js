@@ -179,7 +179,7 @@ modules.define('model', ['config', 'logger', 'util', 'providerFile', 'providerDi
                 }
             })
             .fail(function (err) {
-                logger.err('Error occur while loading model %s', err.message);
+                logger.error('Error occur while loading model %s', err.message);
             });
     }
 
