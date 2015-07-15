@@ -28,6 +28,8 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
             },
 
             startServer: function () {
+                logger.debug('starting server');
+
                 var def = vow.defer(),
                     app = express(),
                     port = config.get('port') || process.env.port || 8080;
@@ -62,6 +64,8 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
             },
 
             init: function () {
+                logger.debug('app initialization');
+
                 model.init()
                     .then(function () {
                         return this.startServer();
@@ -71,6 +75,9 @@ modules.define('app', ['config', 'logger', 'util', 'model', 'middleware', 'updat
                             updater.init();
                             updater.start();
                         }
+                    })
+                    .fail(function (e) {
+                        logger.error(e);
                     });
             }
         });
