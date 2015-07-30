@@ -7,7 +7,7 @@ block('search-form').mod('type', 'default')(
                 theme: 'islands',
                 size: 'l',
                 type: 'search',
-                width : 'available',
+                width: 'available',
                 'has-clear': true
             },
             placeholder: BEM.I18N('search-form', 'placeholder')
