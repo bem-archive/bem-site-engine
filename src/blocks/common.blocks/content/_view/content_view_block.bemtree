@@ -1,1 +1,6 @@
-block('content').mod('view', 'block').content()({ block: 'block' });
+block('content').mod('view', 'block').content()(function () {
+    return [
+        applyNext(),
+        { block: 'block' }
+    ];
+});

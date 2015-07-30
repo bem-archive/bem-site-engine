@@ -1,0 +1,31 @@
+.content__arrow-up
+{
+    font-size: 23px;
+
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+
+    visibility: hidden;
+    opacity: 0; /* нужно для анимации */
+    width: 35px;
+    height: 35px;
+
+    color: #d9d9d9;
+
+    transition: color .3s ease-out 0s, opacity .3s ease-out 0s;
+
+    &_visible
+    {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    &:hover
+    {
+        cursor: pointer;
+
+        color: #999;
+    }
+}

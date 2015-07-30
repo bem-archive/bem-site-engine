@@ -1,6 +1,9 @@
 block('content').mod('view', 'posts').content()(function () {
-    return {
-        block: 'posts',
-        node: this.data.node
-    };
+    return [
+        applyNext(),
+        {
+            block: 'posts',
+            node: this.data.node
+        }
+    ];
 });
