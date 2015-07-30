@@ -1,4 +1,4 @@
-modules.define('content', ['i-bem__dom', 'jquery'], function (provide, BEMDOM, $) {
+modules.define('content', ['functions__throttle', 'i-bem__dom', 'jquery'], function (provide, throttle, BEMDOM, $) {
 
 provide(BEMDOM.decl(this.name, {
 
@@ -7,6 +7,14 @@ provide(BEMDOM.decl(this.name, {
             inited: function () {
                 this.countExamples = this.findBlocksInside('block-example').length;
                 this.count = 0;
+                this._content = this.findBlockInside('content').domElem;
+
+                var onScroll = throttle(
+                    function () { this.setMod(this.elem('arrow-up'), 'visible', this.domElem.scrollTop() > 100); },
+                    100
+                );
+
+                this.bindTo('scroll', onScroll);
             }
         }
     },
@@ -32,6 +40,10 @@ provide(BEMDOM.decl(this.name, {
         if (this.countExamples === this.count) {
             this._scrollToExample();
         }
+    },
+
+    _pageScrollTop: function () {
+        this._content.scrollTop(0);
     }
 
 }, {
@@ -41,6 +53,10 @@ provide(BEMDOM.decl(this.name, {
         if (ptp._hasAnchorUrl()) {
             this.liveInitOnBlockInsideEvent('iframeLoaded', 'block-example', ptp._iframesLoaded);
         }
+
+        this.liveBindTo('arrow-up', 'pointerclick', function () {
+            this._pageScrollTop();
+        });
 
         return false;
     }

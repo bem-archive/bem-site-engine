@@ -2,6 +2,7 @@ block('content').mod('view', 'author').content()(function () {
     var data = this.data;
 
     return [
+        applyNext(),
         {
             block: 'author',
             mods: { view: 'full' },

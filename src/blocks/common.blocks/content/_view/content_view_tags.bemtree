@@ -1,6 +1,7 @@
-block('content').mod('view', 'tags')
-    .content()(function () {
-        return {
+block('content').mod('view', 'tags').content()(function () {
+    return [
+        applyNext(),
+        {
             block: this.block,
             elem: 'tag-posts',
             content: this.data.posts.map(function (node) {
@@ -10,5 +11,6 @@ block('content').mod('view', 'tags')
                     node: node
                 };
             })
-        };
+        }
+    ];
 });
