@@ -4,7 +4,7 @@ block('post').elem('content')(
         // The attribute is required to specify the search engine that this page's title
         return c.replace('<h1', '<h1 data-search="title"');
     }),
-    
+
     match(function () {
         return !(this.ctx.content || []).length;
     }).content()(function () {

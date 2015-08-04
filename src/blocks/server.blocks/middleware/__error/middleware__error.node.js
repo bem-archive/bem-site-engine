@@ -68,7 +68,7 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
 
         if (err.app) {
             // Support detail error message from inner site app (forum)
-            var message = err.message || "{}";
+            var message = err.message || '{}';
 
             try {
                 message = JSON.parse(err.message);
@@ -92,7 +92,7 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
     }
 
     provide(function () {
-        return function (err, req, res, next) {
+        return function (err, req, res) {
             loadErrorPages()
                 .then(function (errorPages) {
                     preparation(err, res);

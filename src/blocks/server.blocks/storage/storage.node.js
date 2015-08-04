@@ -1,7 +1,4 @@
-var url = require('url'),
-    util = require('util'),
-    _ = require('lodash'),
-    MDS = require('mds-wrapper');
+var MDS = require('mds-wrapper');
 
 modules.define('storage', ['logger', 'config'],
     function (provide, logger, config) {
