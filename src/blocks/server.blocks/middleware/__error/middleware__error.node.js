@@ -92,7 +92,8 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
     }
 
     provide(function () {
-        return function (err, req, res) {
+        return function (err, req, res, next) {
+            next;
             loadErrorPages()
                 .then(function (errorPages) {
                     preparation(err, res);
