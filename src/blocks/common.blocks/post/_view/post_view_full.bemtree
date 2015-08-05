@@ -122,8 +122,10 @@ block('post').mod('view', 'full')(
         };
     }),
 
-    mode('issue').match(function () { return this.ctx.content; })(function () {
+    mode('issue')(function () {
         var repo = this.ctx.content;
+
+        if(!repo) return;
 
         return {
             elem: 'issue',
