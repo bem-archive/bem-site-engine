@@ -85,7 +85,6 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                     error ? res.status(404).end('Svg not Found') : res.end(value);
                 });
             }
-
             request.get(storage.getFullUrl(url)).pipe(res);
         }
 
@@ -99,7 +98,11 @@ modules.define('middleware__proxy-example', ['config', 'constants', 'logger', 'u
                 var url = req.path;
 
                 if (url.indexOf(PATTERN.EXAMPLE) > -1) {
-                    return proxyTextFiles(url.replace(PATTERN.EXAMPLE, ''), req, res);
+                    if (/\.png$/.test(url) || /\.ico$/.test(url)) {
+                        return proxyImageFiles(url.replace(PATTERN.EXAMPLE, ''), res);
+                    } else {
+                        return proxyTextFiles(url.replace(PATTERN.EXAMPLE, ''), req, res);
+                    }
                 }
                 if (url.indexOf(PATTERN.FREEZE) > -1) {
                     return proxyImageFiles(url.replace(PATTERN.FREEZE, ''), res);

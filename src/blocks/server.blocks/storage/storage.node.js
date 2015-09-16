@@ -16,9 +16,8 @@ modules.define('storage', ['logger', 'config'],
             },
 
             getFullUrl: function (url) {
-                storage.getFullUrl(url);
+                return storage.getFullUrl(url);
             }
         });
     }
 );
-
