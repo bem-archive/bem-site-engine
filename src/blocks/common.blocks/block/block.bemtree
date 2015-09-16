@@ -141,7 +141,7 @@ block('block')(
 
                 // filter not inline examples
                 var defaultExamples = examples.filter(function (example) {
-                    return !example.source;
+                    return example && !example.source;
                 });
 
                 if (!defaultExamples.length) return false;

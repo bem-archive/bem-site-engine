@@ -32,7 +32,7 @@ block('block-example')(
 
                 // get source bemjson if it inline example
                 examplesData.forEach(function (example) {
-                    if (example.source && example.name === name) {
+                    if (example && example.source && example.name === name) {
                         bemjson = example.source;
                         urlBemhtml = prefix + '/' + path + '/' + name + '.bemhtml.js';
                     }
