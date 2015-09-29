@@ -102,6 +102,7 @@ modules.define('middleware__error', ['config', 'logger', 'util'], function (prov
                     if (statusCode === 404) {
                         logger.warn('404: Resource not found, url: %s', req.url);
                     } else {
+                        logger.error(err.stack);
                         logger.error(err + 'code: %s', statusCode);
                     }
 
