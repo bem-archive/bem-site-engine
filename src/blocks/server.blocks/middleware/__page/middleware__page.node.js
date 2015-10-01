@@ -35,24 +35,24 @@ modules.define('middleware__page', ['config', 'logger', 'util', 'model', 'templa
                     })
                     .then(function (result) {
                         if (node.view === 'block') {
-                            if (!node.source) return vow.resolve(result);
+                            var source = node.source;
 
-                            var s = node.source,
-                                dataKey = s.data,
-                                jsdocKey = s.jsdoc;
+                            if (!source) return vow.resolve(result);
 
-                            // If docs or jsdoc not exist, it must be empty object
-                            // for legacy docs data structure
-                            return vow.all([
-                                    dataKey ? model.getBlock(dataKey) : {},
-                                    jsdocKey ? model.getBlock(jsdocKey) : {}
-                                ])
-                                .spread(function (data, jsdoc) {
-                                    s.data = data;
-                                    s.jsdoc = jsdoc;
+                            var fields = ['data', 'jsdoc'];
 
-                                    return vow.resolve(result);
+                            return vow.all(fields.map(function (field) {
+                                var key = source[field];
+                                // If docs or jsdoc not exist, it must be empty object
+                                // for legacy docs data structure
+                                return key ? model.getBlock(key) : {};
+                            })).then(function (vals) {
+                                vals.forEach(function (val, idx) {
+                                    source[fields[idx]] = val;
                                 });
+
+                                return vow.resolve(result);
+                            });
                         } else if (node.view === 'authors') {
                             return model.getAuthors().then(function (authors) {
                                 return _.extend(result, { authors: authors });
