@@ -130,9 +130,8 @@ block('block')(
             data = data[this.ctx.lang] || data;
             examples = data.examples;
 
-            if (!examples || !examples.length) {
-                return false;
-            }
+            // FEI-593
+            if (!examples || !examples.filter(Boolean).length) return false;
 
             length = examples.length;
 
