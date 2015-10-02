@@ -69,9 +69,7 @@ block('block-docs')(
 
         match(function () {
             return !this.ctx.description;
-        })(function () {
-            return null;
-        })
+        })(false)
     ),
 
     mode('examples')(
@@ -91,9 +89,7 @@ block('block-docs')(
 
         match(function () {
             return !this.ctx.examples || !this.ctx.examples.length;
-        })(function () {
-            return null;
-        })
+        })(false)
     ),
 
     mode('mods')(

@@ -6,15 +6,12 @@
   "dependencies": {
     "bem-core": "2.6.0",
     "bem-components": "2.1.0",
-    "bem-history": "git://github.com/bem/bem-history.git#v3.0.0"
+    "bem-history": "3.0.0",
+    "js-beautify": "~1.5.10"
   },
   "ignore": [
     "node_modules",
     "configs/current",
     ".enb/tmp"
-  ],
-  "resolutions": {
-    "bem-core": "2.6.0",
-    "bem-components": "2.1.0"
-  }
+  ]
 }

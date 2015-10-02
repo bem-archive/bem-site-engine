@@ -1,0 +1,23 @@
+block('block-example-custom-blocks').content()(function() {
+    var sourceUrl = this.data.node.sourceUrl;
+
+    return {
+        tag: 'ul',
+        content: applyNext()
+            .filter(function(file) {
+                return !file.isDir;
+            })
+            .map(function(file) {
+                var path = file.path;
+
+                return {
+                    tag: 'li',
+                    content: sourceUrl ? {
+                        block: 'link',
+                        url: sourceUrl + path,
+                        content: path
+                    } : path
+                };
+            })
+    };
+});
