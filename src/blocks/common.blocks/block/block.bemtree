@@ -148,6 +148,7 @@ block('block')(
 
             // FEI-593
             if (!examples || !examples.filter(Boolean).length) return false;
+            examples = examples.filter(Boolean);
 
             length = examples.length;
 
