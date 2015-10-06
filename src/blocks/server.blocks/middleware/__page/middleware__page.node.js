@@ -39,7 +39,7 @@ modules.define('middleware__page', ['config', 'logger', 'util', 'model', 'templa
 
                             if (!source) return vow.resolve(result);
 
-                            var fields = ['data', 'jsdoc', 'blocksData', 'examplesData'];
+                            var fields = ['data', 'jsdoc'];
 
                             return vow.all(fields.map(function (field) {
                                 var key = source[field];

@@ -10,10 +10,6 @@
 
 - block: image
 
-- block: block-example-custom-blocks
-
-- block: js-beautify
-
 - elems:
   - anchor
   - blank

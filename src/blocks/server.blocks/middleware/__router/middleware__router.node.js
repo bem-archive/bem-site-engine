@@ -68,13 +68,12 @@ modules.define(
             var tabSuffix = url.match(/\/docs\/?$/);
             tabSuffix = tabSuffix || url.match(/\/jsdoc\/?$/);
             tabSuffix = tabSuffix || url.match(/\/examples\/?$/);
-            tabSuffix = tabSuffix || url.match(/\/sources\/?$/);
 
             if (tabSuffix) {
                 tabSuffix = tabSuffix[0];
             }
 
-            url = url.replace(/(\/docs\/)|(\/jsdoc\/)|(\/examples\/)|(\/sources\/)?/gi, '');
+            url = url.replace(/(\/docs\/)|(\/jsdoc\/)|(\/examples\/)?/gi, '');
             url = url !== '/' ? url.replace(/(\/)+$/, '') : url;
 
             // TODO implement this case

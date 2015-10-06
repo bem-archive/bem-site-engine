@@ -102,7 +102,7 @@ modules.define('block', ['i-bem__dom', 'jquery', 'history'], function (provide, 
          */
         _getTabNameByPath: function () {
             var href = window.location.href,
-                name = href.match(/\/(docs|jsdoc|examples|sources)/),
+                name = href.match(/\/(docs|jsdoc|examples)/),
                 tabName = name ? name[1] : null;
 
             if (!this._supportHistoryApi() && tabName) {
@@ -128,7 +128,7 @@ modules.define('block', ['i-bem__dom', 'jquery', 'history'], function (provide, 
                 path;
 
             if (this._supportHistoryApi()) {
-                path = this._isTabNameInPath() ? location.pathname.match(/\S+(?=(docs)|(jsdoc)|(examples)|(sources))/)[0] : '';
+                path = this._isTabNameInPath() ? location.pathname.match(/\S+(?=(docs)|(jsdoc)|(examples))/)[0] : '';
                 url = path + tabName + '/';
             }
 
@@ -184,7 +184,7 @@ modules.define('block', ['i-bem__dom', 'jquery', 'history'], function (provide, 
          * @private
          */
         _isTabNameInPath: function () {
-            return (/\/(docs|jsdoc|examples|sources)\/$/).test(window.location.pathname);
+            return (/\/(docs|jsdoc|examples)\/$/).test(window.location.pathname);
         },
 
         /**

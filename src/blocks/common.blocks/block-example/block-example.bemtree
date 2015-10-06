@@ -1,4 +1,5 @@
 block('block-example')(
+
     def()(function () {
         var enb = this.ctx.builder && this.ctx.builder.enb,
             prefix = this.ctx.prefix,
@@ -7,8 +8,7 @@ block('block-example')(
             title,
             name,
             url,
-            urlBemhtml,
-            deps;
+            urlBemhtml;
 
         if (enb) {
             var path = (example.url || example.path).replace(/\.(ru|en)/, ''),
@@ -32,13 +32,9 @@ block('block-example')(
 
                 // get source bemjson if it inline example
                 examplesData.forEach(function (example) {
-                    if (example && example.name === name) {
-                        example.entityDeps && (deps = example.entityDeps);
-
-                        if (example.source) {
-                            bemjson = example.source;
-                            urlBemhtml = prefix + '/' + path + '/' + name + '.bemhtml.js';
-                        }
+                    if (example && example.source && example.name === name) {
+                        bemjson = example.source;
+                        urlBemhtml = prefix + '/' + path + '/' + name + '.bemhtml.js';
                     }
                 });
             }
@@ -53,7 +49,6 @@ block('block-example')(
             _title: title,
             _name: name,
             _url: url,
-            _deps: deps,
             _bemjson: bemjson,
             _urlBemhtml: urlBemhtml
         });
@@ -63,10 +58,7 @@ block('block-example')(
         var title = this._title,
             name = this._name,
             url = this._url,
-            deps = this._deps,
-            ua = req.headers['user-agent'],
-            examplesData = this.data.node.source.examplesData,
-            exampleData = examplesData && examplesData[this._name];
+            ua = req.headers['user-agent'];
 
         return [
             {
@@ -106,33 +98,14 @@ block('block-example')(
                             width: 220
                         }
                     },
-                    deps ? {
-                        elem: 'source-switcher',
-                        elemMods: { type: 'deps' },
-                        content: 'deps'
-                    } : '',
-                    exampleData ? {
-                        elem: 'source-switcher',
-                        elemMods: { type: 'custom-blocks' },
-                        content: 'custom blocks'
-                    } : '',
                     {
                         elem: 'source-switcher',
                         elemMods: { type: 'bemjson' },
                         content: 'bemjson'
-                    },
-                    {
-                        elem: 'source-switcher',
-                        elemMods: { type: 'html' },
-                        js: { urlBemhtml: this._urlBemhtml },
-                        content: 'html'
                     }
                 ]
             },
-            {
-                elem: 'source',
-                exampleData: exampleData
-            },
+            { elem: 'source' },
             {
                 elem: 'live-wrap',
                 content: [
@@ -147,73 +120,6 @@ block('block-example')(
             }
         ];
     }),
-
-    elem('source').content()(function () {
-        var stringify = require('stringify-object'),
-            exampleData = this.ctx.exampleData;
-
-        return [
-            this._deps ? {
-                elem: 'source-item',
-                elemMods: { type: 'deps' },
-                content: {
-                    elem: 'source-code',
-                    elemMods: { view: 'text' },
-                    content: stringify(this._deps, { indent: '    ' })
-                }
-            } : '',
-            exampleData ? {
-                elem: 'source-item',
-                elemMods: { type: 'custom-blocks' },
-                content: {
-                    block: 'block-example-custom-blocks',
-                    content: exampleData
-                }
-            } : '',
-            {
-                elem: 'source-item',
-                elemMods: { type: 'bemjson' }
-            },
-            {
-                elem: 'source-item',
-                elemMods: { type: 'html' },
-                content: {
-                    elem: 'source-code',
-                    elemMods: { view: 'text', type: 'html' },
-                    content: ' '
-                }
-            }
-        ];
-    }),
-
-    elem('source-item').elemMod('type', 'bemjson')(
-        mod('view', 'default').content()(function() {
-            return [
-                {
-                    elem: 'source-code',
-                    elemMods: { view: 'iframe' },
-                    attrs: { 'data-url': this._bemjson }
-                },
-                {
-                    elem: 'source-copy',
-                    js: { urlBemjson: this._bemjson }
-                }
-            ];
-        }),
-        mod('view', 'inline').content()(function() {
-            return [
-                {
-                    elem: 'source-code',
-                    elemMods: { view: 'text' },
-                    content: this.xmlEscape(this._bemjson)
-                },
-                {
-                    elem: 'source-copy',
-                    js: { inlineBemjson: this._bemjson }
-                }
-            ];
-        })
-    ),
 
     match(function () { return !this._bemjson; })(
         elem('source-switcher')(

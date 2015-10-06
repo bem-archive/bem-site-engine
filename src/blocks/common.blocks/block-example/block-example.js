@@ -1,4 +1,4 @@
-modules.define('block-example', ['i-bem__dom', 'jquery', 'dropdown', 'js-beautify', 'highlightjs'], function (provide, BEMDOM, $, Dropdown, beautify, hljs) {
+modules.define('block-example', ['i-bem__dom', 'jquery', 'dropdown'], function (provide, BEMDOM, $, Dropdown) {
 
 provide(BEMDOM.decl(this.name, {
 
@@ -28,7 +28,7 @@ provide(BEMDOM.decl(this.name, {
                     }
 
                     if (typeSource === 'bemjson') {
-                        _this.loadIframe('source-code', 'bemjson');
+                        _this.loadIframe('source-code');
                     }
                 });
 
@@ -69,41 +69,25 @@ provide(BEMDOM.decl(this.name, {
     },
 
     toggleSource: function (type) {
-        var sourceItem = this.elem('source-item', 'type', type);
-
         this
             .toggleMod(this.elem('source-switcher', 'type', type), 'active', 'yes', '')
-            .toggleMod(sourceItem, 'visible', true, '');
-
-            if (!window.legacyIE && type === 'bemjson' || type === 'deps') {
-                hljs.highlightBlock(sourceItem.get(0));
-            }
+            .toggleMod(this.elem('source-item', 'type', type), 'visible', true, '');
     },
 
     _getHtml: function (url) {
         $.ajax({ url: url, dataType: 'text', context: this })
             .done(function (html) {
-
-                html = beautify.html(html, { unformatted: [
-                    'a', 'img', 'bdo', 'em', 'strong', 'dfn', 'code', 'samp',
-                    'kbd', 'var', 'cite', 'abbr', 'acronym', 'q', 'sub', 'sup',
-                    'tt', 'i', 'b', 'big', 'small', 'u', 's', 'strike', 'font',
-                    'ins', 'del', 'pre', 'address', 'dt'
-                ] });
-
-                var htmlSource = this.elem('source-code', 'type', 'html').text(html + ' ');
-
-                !window.legacyIE && hljs.highlightBlock(htmlSource.get(0));
+                html += ' ';
+                this.elem('source-code', 'type', 'html').text(html);
             })
             .fail(function (error) { console.log('error', error); });
     },
 
-    loadIframe: function (el, type) {
+    loadIframe: function (el) {
         if (this.loadComplete[el]) return;
 
         var _this = this,
-            $el = _this.elem(el),
-            iframe = type === 'bemjson' ? _this.elem('source-item', 'type', 'bemjson').find($el) : $el,
+            iframe = _this.elem(el),
             url = iframe.data('url'),
             isLive = (el === 'live');
 
