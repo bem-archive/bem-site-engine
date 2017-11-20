@@ -23,7 +23,7 @@
     "mds-wrapper": "^1.3.x",
     "mime": "^1.3.x",
     "nconf": "^0.7.x",
-    "request": "^2.53.x",
+    "request": "2.53.0",
     "sha1": "~1.1.0",
     "stringify-object": "^2.3.0",
     "terror": "0.3.4",
